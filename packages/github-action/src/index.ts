@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import * as github from '@actions/github';
 import {
   EslintRunner,
   AxeDetector,
@@ -9,8 +10,9 @@ import {
   AltTextFixer,
   LinkTextFixer,
   AnthropicProvider,
+  PullRequestBuilder,
 } from '@a11y-fixer/core';
-import type { A11yViolation } from '@a11y-fixer/core';
+import type { A11yViolation, FixResult } from '@a11y-fixer/core';
 import path from 'node:path';
 
 /** Scans via axe (URL) or ESLint (static). URL nodes are mapped back to source. */
@@ -33,12 +35,66 @@ async function scan(rootDir: string, url: string | undefined): Promise<A11yViola
   return violations;
 }
 
-async function run(): Promise<void> {
+/** Repo-absolute source files touched by applied fixes, de-duplicated. */
+function dedupeFixFiles(fixes: FixResult[]): string[] {
+  const set = new Set<string>();
+  for (const f of fixes) {
+    if (f.applied && f.sourceLocation) set.add(f.sourceLocation.file);
+  }
+  return [...set];
+}
+
+/**
+ * Opens a PR with the applied fixes when running in a GitHub context with a
+ * token. No-ops (with a log line) when nothing was applied, no files changed,
+ * or no token is available — a missing PR must never fail an otherwise-successful
+ * fix run.
+ */
+async function maybeOpenPR(
+  fixes: FixResult[],
+  before: A11yViolation[],
+  after: A11yViolation[],
+  applied: FixResult[],
+  baseBranch: string,
+  hasToken: boolean,
+): Promise<void> {
+  if (applied.length === 0) {
+    core.info('No fixes were applied — skipping PR.');
+    return;
+  }
+  if (!hasToken) {
+    core.info('No github-token provided — skipping PR.');
+    return;
+  }
+
+  const changedFiles = dedupeFixFiles(fixes);
+  if (changedFiles.length === 0) {
+    core.info('No files were changed — skipping PR.');
+    return;
+  }
+
+  const { owner, repo } = github.context.repo;
+  core.info(`Opening PR against ${owner}/${repo}@${baseBranch}...`);
+
+  const prBuilder = new PullRequestBuilder({
+    owner,
+    repo,
+    baseBranch,
+    repoRoot: process.cwd(),
+  });
+  const pr = await prBuilder.createPR(fixes, before, after, changedFiles);
+
+  core.setOutput('pr-url', pr.url);
+  core.info(`PR created: ${pr.url}`);
+}
+
+export async function run(): Promise<void> {
   const dir = core.getInput('dir') || '.';
   const mode = core.getInput('mode') || 'check';
   const githubToken = core.getInput('github-token');
   const anthropicKey = core.getInput('anthropic-api-key');
   const url = core.getInput('url');
+  const baseBranch = core.getInput('base-branch') || 'main';
 
   if (anthropicKey) process.env['ANTHROPIC_API_KEY'] = anthropicKey;
   if (githubToken) process.env['GITHUB_TOKEN'] = githubToken;
@@ -81,6 +137,8 @@ async function run(): Promise<void> {
         core.setOutput('violations-before', String(before.length));
         core.setOutput('violations-after', String(after.length));
         core.info(`Applied ${applied.length} fix(es). Violations: ${before.length} → ${after.length}.`);
+
+        await maybeOpenPR(fixes, before, after, applied, baseBranch, Boolean(githubToken));
       } finally {
         await puppeteer?.close();
       }
@@ -90,4 +148,6 @@ async function run(): Promise<void> {
   }
 }
 
-run();
+// Auto-invoke as the action entrypoint; suppressed under vitest, where the
+// test drives run() explicitly with controlled inputs.
+if (!process.env['VITEST']) run();

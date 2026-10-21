@@ -4,7 +4,9 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && ncc build src/index.ts -o dist --minify -e puppeteer -e @axe-core/puppeteer",
+    "test": "vitest run"
   },
   "dependencies": {
     "@a11y-fixer/core": "workspace:*",
@@ -12,7 +14,9 @@
     "@actions/github": "^6.0.0"
   },
   "devDependencies": {
+    "@vercel/ncc": "^0.38.1",
     "typescript": "^5.5.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "vitest": "^2.0.0"
   }
 }
