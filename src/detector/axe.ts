@@ -17,8 +17,10 @@ function toWcagId(axeRuleId: string): string {
 
 export class AxeDetector implements Detector {
   async scan(options: DetectorOptions): Promise<A11yViolation[]> {
-    let puppeteer: typeof import('puppeteer');
-    let AxePuppeteer: typeof import('@axe-core/puppeteer').default;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let puppeteer: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let AxePuppeteer: any;
 
     try {
       puppeteer = await import('puppeteer');
@@ -49,13 +51,15 @@ export class AxeDetector implements Detector {
       }
       const results = await axe.analyze();
 
-      return results.violations.map((v): A11yViolation => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return results.violations.map((v: any): A11yViolation => ({
         id: v.id,
         wcagId: toWcagId(v.id),
         impact: (v.impact ?? 'moderate') as A11yViolation['impact'],
         description: v.description,
         helpUrl: v.helpUrl,
-        nodes: v.nodes.map((n): A11yNode => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        nodes: v.nodes.map((n: any): A11yNode => ({
           html: n.html,
           target: n.target.map(String),
           failureSummary: n.failureSummary ?? '',
