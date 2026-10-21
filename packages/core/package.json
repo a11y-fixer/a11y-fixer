@@ -18,7 +18,11 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.0",
     "@axe-core/puppeteer": "^4.14.0",
-    "axe-core": "^4.10.0"
+    "@octokit/rest": "^22.0.1",
+    "@typescript-eslint/parser": "^8.72.0",
+    "axe-core": "^4.10.0",
+    "eslint": "^10.13.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2"
   },
   "optionalDependencies": {
     "puppeteer": "^23.0.0"

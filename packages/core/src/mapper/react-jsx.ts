@@ -1,7 +1,6 @@
 import type { SourceMapper, SourceLocation } from './index.js';
 import type { A11yNode } from '../detector/index.js';
-import { readFile } from 'node:fs/promises';
-import { glob } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 interface SourceAttr {
@@ -78,14 +77,26 @@ function capitalize(s: string): string {
 
 async function collectJSXFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
-  try {
-    for await (const entry of glob('**/*.{tsx,jsx}', { cwd: dir })) {
-      if (!entry.includes('node_modules') && !entry.includes('dist')) {
-        files.push(path.join(dir, entry));
-      }
-    }
-  } catch {
-    // glob not available in older Node — fall back silently
-  }
+  await walkDir(dir, files);
   return files;
+}
+
+async function walkDir(dir: string, out: string[]): Promise<void> {
+  let entries;
+  try {
+    entries = await readdir(dir);
+  } catch {
+    return;
+  }
+  for (const entry of entries) {
+    if (entry === 'node_modules' || entry === 'dist' || entry.startsWith('.')) continue;
+    const full = path.join(dir, entry);
+    const s = await stat(full).catch(() => null);
+    if (!s) continue;
+    if (s.isDirectory()) {
+      await walkDir(full, out);
+    } else if (/\.(tsx|jsx)$/.test(entry)) {
+      out.push(full);
+    }
+  }
 }
