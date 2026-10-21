@@ -1,0 +1,16 @@
+packages:
+  - 'packages/*'
+  - 'adapters/*'
+allowBuild: esbuild,puppeteer
+allowBuilds:
+  ',': true
+  b: true
+  d: true
+  e: true
+  i: true
+  l: true
+  p: true
+  r: true
+  s: true
+  t: true
+  u: true
