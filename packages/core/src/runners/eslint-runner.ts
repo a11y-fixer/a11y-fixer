@@ -57,6 +57,9 @@ export class EslintRunner {
         },
       ],
       ignore: false,
+      // An empty dir or a path that matches no source files should yield no
+      // violations, not crash the caller with a NoFilesFoundError.
+      errorOnUnmatchedPattern: false,
     } as ConstructorParameters<typeof ESLint>[0]);
   }
 
