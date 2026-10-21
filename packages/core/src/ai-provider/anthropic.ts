@@ -41,6 +41,23 @@ export class AnthropicProvider implements AIProvider {
     return block.text.trim();
   }
 
+  async suggestAltText(context: string): Promise<string> {
+    const client = await this.getClient();
+
+    const response = await client.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 100,
+      messages: [{
+        role: 'user',
+        content: `Write concise, descriptive alt text for an image based on the surrounding code and context. Context: ${context}. Return only the alt text string, no quotes, no explanation.`,
+      }],
+    });
+
+    const block = response.content[0];
+    if (block.type !== 'text') throw new Error('Unexpected response type from Claude');
+    return block.text.trim();
+  }
+
   async rewriteLinkText(current: string, context: string): Promise<string> {
     const client = await this.getClient();
 
