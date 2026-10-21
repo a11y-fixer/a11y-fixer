@@ -1,0 +1,43 @@
+{
+  "name": "@a11y-fixer/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "@axe-core/puppeteer": "^4.14.0",
+    "axe-core": "^4.10.0"
+  },
+  "optionalDependencies": {
+    "puppeteer": "^23.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@axe-core/puppeteer": ">=4.0.0",
+    "puppeteer": ">=21.0.0"
+  },
+  "peerDependenciesMeta": {
+    "puppeteer": {
+      "optional": true
+    },
+    "@axe-core/puppeteer": {
+      "optional": true
+    }
+  }
+}
