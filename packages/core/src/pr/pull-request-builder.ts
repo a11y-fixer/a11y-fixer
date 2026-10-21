@@ -1,4 +1,6 @@
 import { Octokit } from '@octokit/rest';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import type { FixResult } from '../fixer/index.js';
 import type { A11yViolation } from '../detector/index.js';
 
@@ -19,6 +21,8 @@ export interface PROptions {
   repo: string;
   baseBranch?: string;
   token?: string;
+  /** Git repo root; PR paths are computed relative to this. Defaults to cwd. */
+  repoRoot?: string;
 }
 
 export interface PRResult {
@@ -40,12 +44,25 @@ export class PullRequestBuilder {
     this.octokit = new Octokit({ auth: token });
   }
 
+  /**
+   * Opens a PR containing the fixed files.
+   *
+   * `changedFiles` are the working-tree files to commit onto the new branch.
+   * When omitted, the applied fixes' source locations are used. Throws if the
+   * resulting set is empty — an a11y-fixer PR with no diff is never useful.
+   */
   async createPR(
     fixes: FixResult[],
     beforeViolations: A11yViolation[],
     afterViolations: A11yViolation[],
+    changedFiles?: string[],
   ): Promise<PRResult> {
     const { owner, repo, baseBranch = 'main' } = this.options;
+
+    const files = this.resolveChangedFiles(fixes, changedFiles);
+    if (files.length === 0) {
+      throw new Error('No changed files to commit — refusing to open an empty PR.');
+    }
 
     const branch = `a11y-fixer/${this.timestamp()}`;
 
@@ -60,6 +77,15 @@ export class PullRequestBuilder {
     });
 
     const applied = fixes.filter(f => f.applied);
+    const commitSha = await this.commitFiles(baseSha, files, applied.length);
+
+    await this.octokit.git.updateRef({
+      owner,
+      repo,
+      ref: `heads/${branch}`,
+      sha: commitSha,
+    });
+
     const body = this.buildPRBody(fixes, beforeViolations, afterViolations);
 
     const pr = await this.octokit.pulls.create({
@@ -73,6 +99,61 @@ export class PullRequestBuilder {
     });
 
     return { url: pr.data.html_url, branch, number: pr.data.number };
+  }
+
+  /** De-dupes an explicit file list with the applied fixes' source files. */
+  private resolveChangedFiles(fixes: FixResult[], changedFiles?: string[]): string[] {
+    const set = new Set<string>(changedFiles ?? []);
+    for (const f of fixes) {
+      if (f.applied && f.sourceLocation) set.add(f.sourceLocation.file);
+    }
+    return [...set];
+  }
+
+  /** Reads each working-tree file, writes blobs + a tree + a commit, returns its SHA. */
+  private async commitFiles(baseSha: string, files: string[], appliedCount: number): Promise<string> {
+    const { owner, repo } = this.options;
+    const repoRoot = this.options.repoRoot ?? process.cwd();
+
+    const tree = await Promise.all(
+      files.map(async file => {
+        const content = await readFile(file, 'utf8');
+        const blob = await this.octokit.git.createBlob({
+          owner,
+          repo,
+          content,
+          encoding: 'utf-8',
+        });
+        return {
+          path: this.toRepoPath(repoRoot, file),
+          mode: '100644' as const,
+          type: 'blob' as const,
+          sha: blob.data.sha,
+        };
+      }),
+    );
+
+    const newTree = await this.octokit.git.createTree({
+      owner,
+      repo,
+      base_tree: baseSha,
+      tree,
+    });
+
+    const commit = await this.octokit.git.createCommit({
+      owner,
+      repo,
+      message: `a11y-fixer: fix ${appliedCount} accessibility violation${appliedCount === 1 ? '' : 's'}`,
+      tree: newTree.data.sha,
+      parents: [baseSha],
+    });
+
+    return commit.data.sha;
+  }
+
+  /** Repo-root-relative POSIX path, as required by the GitHub trees API. */
+  private toRepoPath(repoRoot: string, file: string): string {
+    return path.relative(repoRoot, file).split(path.sep).join('/');
   }
 
   private buildPRBody(

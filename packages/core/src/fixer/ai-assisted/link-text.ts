@@ -2,6 +2,7 @@ import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
 import type { AIProvider } from '../../ai-provider/index.js';
 import { readFile, writeFile } from 'node:fs/promises';
+import { readSourceLine } from './source-line.js';
 
 const GENERIC_LINK_PATTERNS = /^(click here|here|learn more|read more|more|details|link|go|continue)$/i;
 
@@ -26,15 +27,22 @@ export class LinkTextFixer implements Fixer {
     const node = violation.nodes[0];
     if (!node) return this.humanFlag(violation, 'No node data');
 
-    const textMatch = node.html.match(/>([^<]+)</);
+    // On the ESLint path node.html is "file:line:col", so read the real source
+    // line for the anchor markup, text and href.
+    const source = node.sourceFile && node.sourceLine
+      ? await readSourceLine(node.sourceFile, node.sourceLine)
+      : null;
+    const markup = source?.line ?? node.html;
+
+    const textMatch = markup.match(/>([^<]+)</);
     const currentText = textMatch?.[1]?.trim() ?? '';
 
     if (!GENERIC_LINK_PATTERNS.test(currentText)) {
       return this.humanFlag(violation, `Link text "${currentText}" may not be generic — flagging for manual review`);
     }
 
-    const hrefMatch = node.html.match(/href=["']([^"']+)["']/);
-    const context = `Link href: ${hrefMatch?.[1] ?? 'unknown'}. Surrounding HTML: ${node.html}`;
+    const hrefMatch = markup.match(/href=["']([^"']+)["']/);
+    const context = `Link href: ${hrefMatch?.[1] ?? 'unknown'}. Surrounding code: ${source?.context ?? markup}`;
 
     let newText: string;
     try {
@@ -44,7 +52,7 @@ export class LinkTextFixer implements Fixer {
     }
 
     if (node.sourceFile && node.sourceLine) {
-      const before = node.html;
+      const before = markup;
       const after = await this.applyLinkTextToSource(node.sourceFile, node.sourceLine, currentText, newText);
       return {
         wcagId: this.wcagId,
