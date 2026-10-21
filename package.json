@@ -1,0 +1,21 @@
+{
+  "name": "@a11y-fixer/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "a11y-fixer": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --loader ts-node/esm src/index.ts"
+  },
+  "dependencies": {
+    "@a11y-fixer/core": "workspace:*",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
+  }
+}
