@@ -1,0 +1,27 @@
+name: 'a11y-fixer'
+description: 'Automatically find and fix accessibility violations in your React/JSX source code'
+author: 'a11y-fixer'
+
+inputs:
+  dir:
+    description: 'Directory to scan (default: .)'
+    required: false
+    default: '.'
+  mode:
+    description: 'scan | fix | check (default: check for CI)'
+    required: false
+    default: 'check'
+  github-token:
+    description: 'GitHub token for creating PRs (required for fix mode)'
+    required: false
+    default: ${{ github.token }}
+  anthropic-api-key:
+    description: 'Anthropic API key for AI-assisted fixes (optional)'
+    required: false
+  url:
+    description: 'URL to scan with axe-core (optional, requires puppeteer)'
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

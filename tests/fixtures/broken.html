@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Broken accessibility fixture</title>
+</head>
+<body>
+  <!-- 1.1.1: img missing alt -->
+  <img src="logo.png">
+
+  <!-- 4.1.2: button with no accessible name -->
+  <button><svg aria-hidden="true"><path d="M0 0"/></svg></button>
+
+  <!-- 1.3.1: input with no associated label -->
+  <input type="text" placeholder="Enter your email">
+
+  <!-- 3.1.1: html element missing lang -->
+  <!-- (the html element above has no lang attr) -->
+
+  <!-- 2.4.4: generic link text -->
+  <a href="/about">click here</a>
+
+  <!-- 2.4.6: heading order skip (h1 → h3) -->
+  <h1>Main heading</h1>
+  <h3>Skipped h2</h3>
+</body>
+</html>
