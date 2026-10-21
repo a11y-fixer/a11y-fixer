@@ -19,8 +19,24 @@ inputs:
     description: 'Anthropic API key for AI-assisted fixes (optional)'
     required: false
   url:
-    description: 'URL to scan with axe-core (optional, requires puppeteer)'
+    description: 'URL to scan with axe-core (optional; not supported in the published action — static JSX scanning only)'
     required: false
+  base-branch:
+    description: 'Base branch for the fix-mode PR (default: main)'
+    required: false
+    default: 'main'
+
+outputs:
+  pr-url:
+    description: 'URL of the PR opened in fix mode (empty if none)'
+  fixes-applied:
+    description: 'Number of fixes applied in fix mode'
+  violations-before:
+    description: 'Violation count before fixing'
+  violations-after:
+    description: 'Violation count after fixing'
+  violations:
+    description: 'JSON array of violations (scan mode)'
 
 runs:
   using: 'node20'
