@@ -1,0 +1,1 @@
+/Users/jacobjensen/.gstack/render/installs/claude-3958929988/document-release/sections/audit-scope.md

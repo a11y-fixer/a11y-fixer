@@ -1,0 +1,1 @@
+/Users/jacobjensen/conductor/repos/ada/.claude/skills/gstack/review/design-checklist.md

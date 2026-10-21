@@ -1,0 +1,1 @@
+/Users/jacobjensen/.gstack/render/installs/claude-3958929988/land-and-deploy/sections/first-run-validation.md

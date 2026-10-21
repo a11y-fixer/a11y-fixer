@@ -1,0 +1,1 @@
+/Users/jacobjensen/.gstack/render/installs/claude-3958929988/devex-review/SKILL.md

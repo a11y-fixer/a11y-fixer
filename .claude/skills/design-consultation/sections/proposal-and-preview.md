@@ -1,0 +1,1 @@
+/Users/jacobjensen/.gstack/render/installs/claude-3958929988/design-consultation/sections/proposal-and-preview.md
