@@ -16,7 +16,11 @@ export class EslintFixer implements Fixer {
   ) {}
 
   canFix(violation: A11yViolation): boolean {
-    return violation.wcagId === this.wcagId;
+    // Only claim ESLint-sourced violations. Axe violations share WCAG ids
+    // (e.g. button-name/label map to 4.1.2/1.3.1) but ESLint --fix can't fix
+    // them; their ids don't carry the jsx-a11y/ prefix, so they fall through
+    // to the AI-assisted fixers.
+    return violation.wcagId === this.wcagId && violation.id.startsWith('jsx-a11y/');
   }
 
   async fix(violation: A11yViolation): Promise<FixResult> {

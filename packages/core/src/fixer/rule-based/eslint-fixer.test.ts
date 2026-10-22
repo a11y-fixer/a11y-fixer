@@ -16,9 +16,9 @@ import { EslintFixer } from './eslint-fixer.js';
 
 const ROOT = '/repo';
 
-function violation(wcagId: string, sourceFiles: (string | undefined)[]): A11yViolation {
+function violation(wcagId: string, sourceFiles: (string | undefined)[], id = 'jsx-a11y/html-has-lang'): A11yViolation {
   return {
-    id: 'html-has-lang',
+    id,
     wcagId,
     impact: 'serious',
     description: 'missing lang',
@@ -37,10 +37,12 @@ function violation(wcagId: string, sourceFiles: (string | undefined)[]): A11yVio
 describe('EslintFixer', () => {
   beforeEach(() => { fixMock.mockReset(); });
 
-  it('canFix matches on wcagId', () => {
+  it('canFix matches on wcagId for ESLint-sourced violations only', () => {
     const fixer = new EslintFixer('4.1.2', ROOT);
-    expect(fixer.canFix(violation('4.1.2', ['/repo/App.tsx']))).toBe(true);
+    expect(fixer.canFix(violation('4.1.2', ['/repo/App.tsx'], 'jsx-a11y/aria-props'))).toBe(true);
     expect(fixer.canFix(violation('1.1.1', ['/repo/App.tsx']))).toBe(false);
+    // An axe violation sharing WCAG 4.1.2 (e.g. button-name) must not be claimed.
+    expect(fixer.canFix(violation('4.1.2', ['/repo/App.tsx'], 'button-name'))).toBe(false);
   });
 
   it('human-flags when no node carries a source file', async () => {

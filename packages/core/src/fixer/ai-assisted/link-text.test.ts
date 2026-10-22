@@ -12,6 +12,7 @@ function makeProvider(overrides: Partial<AIProvider> = {}): AIProvider {
     describeImage: vi.fn(),
     suggestAltText: vi.fn(),
     rewriteLinkText: vi.fn().mockResolvedValue('View pricing details'),
+    suggestAccessibleName: vi.fn(),
     ...overrides,
   };
 }
@@ -39,12 +40,12 @@ describe('LinkTextFixer', () => {
   beforeEach(async () => { dir = await mkdtemp(path.join(tmpdir(), 'linktext-')); });
   afterEach(async () => { await rm(dir, { recursive: true, force: true }); });
 
-  it('canFix matches 2.4.4 only when the provider is available', () => {
+  it('canFix matches 2.4.4 regardless of provider availability (fix() reports the key)', () => {
     const fixer = new LinkTextFixer(makeProvider(), dir);
     expect(fixer.canFix(violation('x.tsx', 1))).toBe(true);
 
     const unavailable = new LinkTextFixer(makeProvider({ available: () => false }), dir);
-    expect(unavailable.canFix(violation('x.tsx', 1))).toBe(false);
+    expect(unavailable.canFix(violation('x.tsx', 1))).toBe(true);
   });
 
   it('human-flags when the provider is unavailable (no API key)', async () => {

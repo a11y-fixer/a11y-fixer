@@ -5,10 +5,7 @@ import {
   AxeDetector,
   PuppeteerRunner,
   ReactJSXMapper,
-  FixerRegistry,
-  EslintFixer,
-  AltTextFixer,
-  LinkTextFixer,
+  buildDefaultRegistry,
   AnthropicProvider,
   PullRequestBuilder,
 } from '@a11y-fixer/core';
@@ -121,12 +118,7 @@ export async function run(): Promise<void> {
       const aiProvider = new AnthropicProvider();
       const puppeteer = url ? new PuppeteerRunner(url) : undefined;
       try {
-        const registry = new FixerRegistry();
-        for (const wcagId of ['3.1.1', '4.1.2', '1.3.1', '2.4.6']) {
-          registry.register(new EslintFixer(wcagId, rootDir));
-        }
-        registry.register(new AltTextFixer(aiProvider, rootDir, puppeteer));
-        registry.register(new LinkTextFixer(aiProvider, rootDir));
+        const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
 
         const before = await scan(rootDir, url);
         const fixes = await registry.applyAll(before);

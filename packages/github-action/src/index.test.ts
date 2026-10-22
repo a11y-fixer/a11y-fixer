@@ -39,13 +39,11 @@ vi.mock('@a11y-fixer/core', () => {
   return {
     EslintRunner,
     FixerRegistry,
+    buildDefaultRegistry: () => new FixerRegistry(),
     PullRequestBuilder,
     AxeDetector: noop,
     PuppeteerRunner: noop,
     ReactJSXMapper: noop,
-    EslintFixer: noop,
-    AltTextFixer: noop,
-    LinkTextFixer: noop,
     AnthropicProvider: noop,
   };
 });

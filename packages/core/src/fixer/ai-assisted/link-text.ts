@@ -16,7 +16,8 @@ export class LinkTextFixer implements Fixer {
   ) {}
 
   canFix(violation: A11yViolation): boolean {
-    return violation.wcagId === '2.4.4' && this.aiProvider.available();
+    // Responsibility only — fix() reports the missing-API-key case.
+    return violation.wcagId === '2.4.4';
   }
 
   async fix(violation: A11yViolation): Promise<FixResult> {
