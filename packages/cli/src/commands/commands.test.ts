@@ -73,6 +73,17 @@ describe('scan command', () => {
     const out = await captureOutput(() => scanCommand().parseAsync([dir], { from: 'user' }));
     expect(out).toContain('No accessibility violations found.');
   });
+
+  it('routes --html to the static HTML runner (no browser for an empty dir)', async () => {
+    // An empty dir has no .html files, so the HtmlFileRunner never launches a
+    // browser — this exercises the flag wiring hermetically.
+    const dir = await makeTmpDir();
+    const out = await captureOutput(() =>
+      scanCommand().parseAsync([dir, '--html'], { from: 'user' }),
+    );
+    expect(out).toContain('(static HTML)');
+    expect(out).toContain('No accessibility violations found.');
+  });
 });
 
 describe('fix command', () => {

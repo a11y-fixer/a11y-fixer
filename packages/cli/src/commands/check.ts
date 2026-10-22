@@ -1,19 +1,23 @@
 import { Command } from 'commander';
-import { EslintRunner, AxeDetector } from '@a11y-fixer/core';
+import { EslintRunner, HtmlFileRunner, AxeDetector } from '@a11y-fixer/core';
 import path from 'node:path';
 
 export function checkCommand(): Command {
   return new Command('check')
     .description('CI gate: exits 1 if new accessibility violations are found')
     .argument('<dir>', 'Directory to check')
+    .option('--html', 'Check static .html/.htm files with axe-core (requires puppeteer)', false)
     .option('--url <url>', 'URL to check with axe-core (requires puppeteer)')
-    .action(async (dir: string, opts: { url?: string }) => {
+    .action(async (dir: string, opts: { html?: boolean; url?: string }) => {
       const rootDir = path.resolve(dir);
 
       let violations;
       if (opts.url) {
         const detector = new AxeDetector();
         violations = await detector.scan({ url: opts.url });
+      } else if (opts.html) {
+        const runner = new HtmlFileRunner(rootDir);
+        violations = await runner.scan();
       } else {
         const runner = new EslintRunner(rootDir);
         violations = await runner.scan();

@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import {
   EslintRunner,
+  HtmlFileRunner,
   AxeDetector,
   PuppeteerRunner,
   ReactJSXMapper,
@@ -12,9 +13,12 @@ import {
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
 import path from 'node:path';
 
-/** Scans via axe (URL) or ESLint (static). URL nodes are mapped back to source. */
-async function scan(rootDir: string, url: string | undefined): Promise<A11yViolation[]> {
-  if (!url) return new EslintRunner(rootDir).scan();
+/**
+ * Scans via axe (URL), static HTML files, or ESLint (static JSX). URL nodes are
+ * mapped back to source; the HTML runner stamps source locations itself.
+ */
+async function scan(rootDir: string, url: string | undefined, html: boolean): Promise<A11yViolation[]> {
+  if (!url) return html ? new HtmlFileRunner(rootDir).scan() : new EslintRunner(rootDir).scan();
 
   const violations = await new AxeDetector().scan({ url });
   const mapper = new ReactJSXMapper(rootDir);
@@ -91,6 +95,9 @@ export async function run(): Promise<void> {
   const githubToken = core.getInput('github-token');
   const anthropicKey = core.getInput('anthropic-api-key');
   const url = core.getInput('url');
+  // getInput, not getBooleanInput: the latter throws when the input is absent
+  // (e.g. older workflow files that predate this option).
+  const html = core.getInput('html').toLowerCase() === 'true';
   const baseBranch = core.getInput('base-branch') || 'main';
 
   if (anthropicKey) process.env['ANTHROPIC_API_KEY'] = anthropicKey;
@@ -100,7 +107,7 @@ export async function run(): Promise<void> {
 
   try {
     if (mode === 'check') {
-      const violations = await scan(rootDir, url);
+      const violations = await scan(rootDir, url, html);
 
       if (violations.length > 0) {
         const summary = violations
@@ -111,7 +118,7 @@ export async function run(): Promise<void> {
         core.info('No accessibility violations found. ✓');
       }
     } else if (mode === 'scan') {
-      const violations = await scan(rootDir, url);
+      const violations = await scan(rootDir, url, html);
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
     } else if (mode === 'fix') {
@@ -120,10 +127,10 @@ export async function run(): Promise<void> {
       try {
         const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
 
-        const before = await scan(rootDir, url);
+        const before = await scan(rootDir, url, html);
         const fixes = await registry.applyAll(before);
         const applied = fixes.filter(f => f.applied);
-        const after = await scan(rootDir, url);
+        const after = await scan(rootDir, url, html);
 
         core.setOutput('fixes-applied', String(applied.length));
         core.setOutput('violations-before', String(before.length));
