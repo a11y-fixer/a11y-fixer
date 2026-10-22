@@ -22,7 +22,8 @@
     "@typescript-eslint/parser": "^8.72.0",
     "axe-core": "^4.10.0",
     "eslint": "^10.13.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2"
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "parse5": "^7.2.1"
   },
   "optionalDependencies": {
     "puppeteer": "^23.0.0"
