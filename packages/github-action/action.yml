@@ -21,6 +21,10 @@ inputs:
   url:
     description: 'URL to scan with axe-core (optional; not supported in the published action — static JSX scanning only)'
     required: false
+  html:
+    description: 'Scan static .html/.htm files with axe-core instead of JSX (requires puppeteer)'
+    required: false
+    default: 'false'
   base-branch:
     description: 'Base branch for the fix-mode PR (default: main)'
     required: false

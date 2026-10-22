@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import {
   EslintRunner,
+  HtmlFileRunner,
   AxeDetector,
   PuppeteerRunner,
   ReactJSXMapper,
@@ -16,6 +17,7 @@ export function fixCommand(): Command {
     .description('Fix accessibility violations and open an annotated PR')
     .argument('<dir>', 'Directory to fix')
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
+    .option('--html', 'Fix static .html/.htm files with axe-core (requires puppeteer)', false)
     .option('--owner <owner>', 'GitHub repo owner (required for PR)')
     .option('--repo <repo>', 'GitHub repo name (required for PR)')
     .option('--base <branch>', 'Base branch for PR', 'main')
@@ -23,6 +25,7 @@ export function fixCommand(): Command {
     .option('--dry-run', 'Print fixes without applying or creating PR', false)
     .action(async (dir: string, opts: {
       url?: string;
+      html: boolean;
       owner?: string;
       repo?: string;
       base: string;
@@ -39,11 +42,12 @@ export function fixCommand(): Command {
       const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
 
       const eslintRunner = new EslintRunner(rootDir);
+      const htmlRunner = opts.html ? new HtmlFileRunner(rootDir) : undefined;
 
       try {
         // Scan
         console.log(`Scanning ${opts.url ?? rootDir}...`);
-        const beforeViolations = await scan(rootDir, opts.url, eslintRunner);
+        const beforeViolations = await scan(rootDir, opts.url, eslintRunner, htmlRunner);
 
         if (beforeViolations.length === 0) {
           console.log('No violations found.');
@@ -74,7 +78,7 @@ export function fixCommand(): Command {
 
         if (opts.owner && opts.repo) {
           // Re-scan so the PR delta table reflects reality.
-          const afterViolations = await scan(rootDir, opts.url, eslintRunner);
+          const afterViolations = await scan(rootDir, opts.url, eslintRunner, htmlRunner);
           const changedFiles = dedupeFixFiles(fixes);
 
           if (changedFiles.length === 0) {
@@ -98,13 +102,17 @@ export function fixCommand(): Command {
     });
 }
 
-/** Scans via axe (URL) or ESLint (static). URL nodes are mapped back to source. */
+/**
+ * Scans via axe (URL), static HTML files, or ESLint (static JSX). URL nodes are
+ * mapped back to source; the HTML runner stamps source locations itself.
+ */
 async function scan(
   rootDir: string,
   url: string | undefined,
   eslintRunner: EslintRunner,
+  htmlRunner?: HtmlFileRunner,
 ): Promise<A11yViolation[]> {
-  if (!url) return eslintRunner.scan();
+  if (!url) return htmlRunner ? htmlRunner.scan() : eslintRunner.scan();
 
   const violations = await new AxeDetector().scan({ url });
   const mapper = new ReactJSXMapper(rootDir);

@@ -1,7 +1,7 @@
 import type { SourceMapper, SourceLocation } from './index.js';
 import type { A11yNode } from '../detector/index.js';
-import { readFile, readdir, stat } from 'node:fs/promises';
-import path from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { collectFiles } from './walk-files.js';
 
 interface SourceAttr {
   fileName: string;
@@ -33,7 +33,7 @@ export class ReactJSXMapper implements SourceMapper {
     const textMatch = node.html.match(/>([^<]{3,50})</);
     const text = textMatch?.[1]?.trim();
 
-    const jsxFiles = await collectJSXFiles(this.rootDir);
+    const jsxFiles = await collectFiles(this.rootDir, /\.(tsx|jsx)$/);
 
     for (const file of jsxFiles) {
       const content = await readFile(file, 'utf8').catch(() => null);
@@ -73,30 +73,4 @@ function tryParseSourceAttr(html: string): SourceAttr | null {
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-async function collectJSXFiles(dir: string): Promise<string[]> {
-  const files: string[] = [];
-  await walkDir(dir, files);
-  return files;
-}
-
-async function walkDir(dir: string, out: string[]): Promise<void> {
-  let entries;
-  try {
-    entries = await readdir(dir);
-  } catch {
-    return;
-  }
-  for (const entry of entries) {
-    if (entry === 'node_modules' || entry === 'dist' || entry.startsWith('.')) continue;
-    const full = path.join(dir, entry);
-    const s = await stat(full).catch(() => null);
-    if (!s) continue;
-    if (s.isDirectory()) {
-      await walkDir(full, out);
-    } else if (/\.(tsx|jsx)$/.test(entry)) {
-      out.push(full);
-    }
-  }
 }
