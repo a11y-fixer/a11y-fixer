@@ -74,4 +74,21 @@ export class AnthropicProvider implements AIProvider {
     if (block.type !== 'text') throw new Error('Unexpected response type from Claude');
     return block.text.trim();
   }
+
+  async suggestAccessibleName(element: string, context: string): Promise<string> {
+    const client = await this.getClient();
+
+    const response = await client.messages.create({
+      model: 'claude-haiku-4-5',
+      max_tokens: 60,
+      messages: [{
+        role: 'user',
+        content: `Write a short, descriptive accessible name (for an aria-label) for this UI control, so screen reader users understand its purpose. Element: ${element}. Context: ${context}. Return only the accessible name, no quotes, no explanation.`,
+      }],
+    });
+
+    const block = response.content[0];
+    if (block.type !== 'text') throw new Error('Unexpected response type from Claude');
+    return block.text.trim();
+  }
 }

@@ -2,23 +2,24 @@ import type { Fixer, FixResult } from './index.js';
 import type { A11yViolation } from '../detector/index.js';
 
 export class FixerRegistry {
-  private readonly fixers = new Map<string, Fixer>();
+  // Ordered list: the first fixer whose canFix() matches a violation wins.
+  // A list (not a wcagId map) lets several fixers serve one WCAG id — e.g.
+  // axe button-name and aria-props both map to 4.1.2 but need different fixers.
+  private readonly fixers: Fixer[] = [];
 
   register(fixer: Fixer): void {
-    this.fixers.set(fixer.wcagId, fixer);
+    this.fixers.push(fixer);
   }
 
-  getFixer(wcagId: string): Fixer | undefined {
-    return this.fixers.get(wcagId);
+  getFixer(violation: A11yViolation): Fixer | undefined {
+    return this.fixers.find(f => f.canFix(violation));
   }
 
   async applyAll(violations: A11yViolation[]): Promise<FixResult[]> {
     const results: FixResult[] = [];
 
-    // Group edits by fixer, then apply all at once per file to ensure atomicity.
-    // Each fixer collects in-memory edits and flushes only when all succeed.
     for (const violation of violations) {
-      const fixer = this.fixers.get(violation.wcagId);
+      const fixer = this.getFixer(violation);
       if (!fixer) {
         results.push({
           wcagId: violation.wcagId,

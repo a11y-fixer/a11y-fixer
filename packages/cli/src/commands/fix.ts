@@ -4,10 +4,7 @@ import {
   AxeDetector,
   PuppeteerRunner,
   ReactJSXMapper,
-  FixerRegistry,
-  EslintFixer,
-  AltTextFixer,
-  LinkTextFixer,
+  buildDefaultRegistry,
   AnthropicProvider,
   PullRequestBuilder,
 } from '@a11y-fixer/core';
@@ -38,14 +35,8 @@ export function fixCommand(): Command {
       // When scanning a URL, screenshots let the alt-text fixer use vision.
       const puppeteer = opts.url ? new PuppeteerRunner(opts.url) : undefined;
 
-      // Build registry
-      const registry = new FixerRegistry();
-      const eslintFixableIds = ['3.1.1', '4.1.2', '1.3.1', '2.4.6'];
-      for (const wcagId of eslintFixableIds) {
-        registry.register(new EslintFixer(wcagId, rootDir));
-      }
-      registry.register(new AltTextFixer(aiProvider, rootDir, puppeteer));
-      registry.register(new LinkTextFixer(aiProvider, rootDir));
+      // Build registry (shared with the GitHub Action via buildDefaultRegistry).
+      const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
 
       const eslintRunner = new EslintRunner(rootDir);
 
