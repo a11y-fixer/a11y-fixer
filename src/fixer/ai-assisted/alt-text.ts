@@ -1,8 +1,8 @@
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation, A11yNode } from '../../detector/index.js';
 import type { AIProvider } from '../../ai-provider/index.js';
-import { readFile, writeFile } from 'node:fs/promises';
 import { readSourceLine } from './source-line.js';
+import { addAttributeToElement } from './apply-attribute.js';
 
 /** Supplies a screenshot buffer for an element, enabling vision-based alt text. */
 export interface ScreenshotProvider {
@@ -20,7 +20,9 @@ export class AltTextFixer implements Fixer {
   ) {}
 
   canFix(violation: A11yViolation): boolean {
-    return violation.wcagId === '1.1.1' && this.aiProvider.available();
+    // Responsibility only — fix() reports the missing-API-key case so the user
+    // gets a precise hint rather than a generic "no fixer registered".
+    return violation.wcagId === '1.1.1';
   }
 
   async fix(violation: A11yViolation): Promise<FixResult> {
@@ -81,24 +83,9 @@ export class AltTextFixer implements Fixer {
   }
 
   private async applyAltToSource(file: string, line: number, altText: string): Promise<string | null> {
-    try {
-      const content = await readFile(file, 'utf8');
-      const lines = content.split('\n');
-      const lineIdx = line - 1;
-      const original = lines[lineIdx];
-
-      if (!original) return null;
-
-      // Add alt prop to <img> tag if missing
-      const updated = original.replace(/<img(\s)/g, `<img alt="${altText}"$1`);
-      if (updated === original) return null; // already has alt or pattern didn't match
-
-      lines[lineIdx] = updated;
-      await writeFile(file, lines.join('\n'), 'utf8');
-      return updated;
-    } catch {
-      return null;
-    }
+    // Add an alt attribute to the <img> tag; returns null if it already has one
+    // or the pattern didn't match.
+    return addAttributeToElement(file, line, /<img(\s)/g, 'alt', altText);
   }
 
   private humanFlag(violation: A11yViolation, note: string): FixResult {

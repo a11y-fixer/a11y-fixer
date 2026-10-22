@@ -6,6 +6,7 @@ export { ReactJSXMapper } from './mapper/react-jsx.js';
 
 export type { Fixer, FixResult, FixerBucket } from './fixer/index.js';
 export { FixerRegistry } from './fixer/registry.js';
+export { buildDefaultRegistry } from './fixer/defaults.js';
 
 export type { AIProvider } from './ai-provider/index.js';
 export { AnthropicProvider } from './ai-provider/anthropic.js';
@@ -18,6 +19,8 @@ export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';
 export { AltTextFixer } from './fixer/ai-assisted/alt-text.js';
 export type { ScreenshotProvider } from './fixer/ai-assisted/alt-text.js';
 export { LinkTextFixer } from './fixer/ai-assisted/link-text.js';
+export { ButtonNameFixer } from './fixer/ai-assisted/button-name.js';
+export { FormLabelFixer } from './fixer/ai-assisted/form-label.js';
 
 export { PullRequestBuilder } from './pr/pull-request-builder.js';
 export type { PROptions, PRResult } from './pr/pull-request-builder.js';

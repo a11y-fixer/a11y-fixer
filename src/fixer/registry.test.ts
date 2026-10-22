@@ -51,13 +51,13 @@ describe('FixerRegistry', () => {
     const badFixer: Fixer = {
       wcagId: '1.1.1',
       bucket: 'ai-assisted',
-      canFix: () => true,
+      canFix: (v) => v.wcagId === '1.1.1',
       fix: async () => { throw new Error('Vision API unavailable'); },
     };
     const goodFixer: Fixer = {
       wcagId: '3.1.1',
       bucket: 'rule-based',
-      canFix: () => true,
+      canFix: (v) => v.wcagId === '3.1.1',
       fix: async (v) => ({ wcagId: v.wcagId, bucket: 'rule-based', applied: true, description: 'Added lang', before: v.nodes[0].html }),
     };
 

@@ -13,6 +13,7 @@ function makeProvider(overrides: Partial<AIProvider> = {}): AIProvider {
     describeImage: vi.fn().mockResolvedValue('from vision'),
     suggestAltText: vi.fn().mockResolvedValue('from context'),
     rewriteLinkText: vi.fn(),
+    suggestAccessibleName: vi.fn(),
     ...overrides,
   };
 }
