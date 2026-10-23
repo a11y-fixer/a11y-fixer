@@ -3,6 +3,7 @@ import { buildDefaultRegistry } from './defaults.js';
 import { ButtonNameFixer } from './ai-assisted/button-name.js';
 import { FormLabelFixer } from './ai-assisted/form-label.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
+import { HtmlLangFixer } from './rule-based/html-lang.js';
 import type { AIProvider } from '../ai-provider/index.js';
 import type { A11yViolation } from '../detector/index.js';
 
@@ -36,6 +37,11 @@ describe('buildDefaultRegistry dispatch', () => {
   it('routes axe label (WCAG 1.3.1) to FormLabelFixer, not EslintFixer', () => {
     const fixer = registry.getFixer(violation('label', '1.3.1'));
     expect(fixer).toBeInstanceOf(FormLabelFixer);
+  });
+
+  it('routes axe html-has-lang (WCAG 3.1.1) to HtmlLangFixer, not EslintFixer', () => {
+    const fixer = registry.getFixer(violation('html-has-lang', '3.1.1'));
+    expect(fixer).toBeInstanceOf(HtmlLangFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
