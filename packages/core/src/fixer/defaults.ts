@@ -1,5 +1,6 @@
 import { FixerRegistry } from './registry.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
+import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { AltTextFixer, type ScreenshotProvider } from './ai-assisted/alt-text.js';
 import { LinkTextFixer } from './ai-assisted/link-text.js';
 import { ButtonNameFixer } from './ai-assisted/button-name.js';
@@ -27,6 +28,7 @@ export function buildDefaultRegistry(
   registry.register(new LinkTextFixer(aiProvider, rootDir));
   registry.register(new ButtonNameFixer(aiProvider, rootDir));
   registry.register(new FormLabelFixer(aiProvider, rootDir));
+  registry.register(new HtmlLangFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));

@@ -23,6 +23,7 @@ export type { ScanSourceOptions } from './runners/scan-source.js';
 export { WCAG_TO_ESLINT, ESLINT_TO_WCAG, AUTO_FIXABLE_RULES } from './runners/wcag-eslint-map.js';
 
 export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';
+export { HtmlLangFixer } from './fixer/rule-based/html-lang.js';
 export { AltTextFixer } from './fixer/ai-assisted/alt-text.js';
 export type { ScreenshotProvider } from './fixer/ai-assisted/alt-text.js';
 export { LinkTextFixer } from './fixer/ai-assisted/link-text.js';
