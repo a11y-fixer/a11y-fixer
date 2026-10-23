@@ -1,6 +1,7 @@
 import { Command } from 'commander';
-import { EslintRunner, HtmlFileRunner, AxeDetector } from '@a11y-fixer/core';
+import { scanSource } from '@a11y-fixer/core';
 import path from 'node:path';
+import { printViolations } from './report.js';
 
 export function scanCommand(): Command {
   return new Command('scan')
@@ -12,63 +13,25 @@ export function scanCommand(): Command {
     .option('--concurrency <n>', 'Parallel scan concurrency', '4')
     .action(async (dir: string, opts: { static: boolean; html: boolean; url?: string; concurrency: string }) => {
       const rootDir = path.resolve(dir);
+      // --static forces the offline JSX path even when a --url is given.
+      const url = opts.static ? undefined : opts.url;
 
-      if (opts.html && !opts.url) {
+      if (url) {
+        console.log(`Scanning ${url} with axe-core...`);
+      } else if (opts.html) {
         console.log(`Scanning ${rootDir} (static HTML)...`);
-        const runner = new HtmlFileRunner(rootDir);
-        const violations = await runner.scan();
+      } else {
+        console.log(`Scanning ${rootDir} (static JSX)...`);
+      }
 
-        if (violations.length === 0) {
-          console.log('No accessibility violations found.');
-          return;
-        }
+      const violations = await scanSource(rootDir, { url, html: opts.html });
 
-        console.log(`Found ${violations.length} violation type(s):\n`);
-        for (const v of violations) {
-          console.log(`  WCAG ${v.wcagId} [${v.impact}] ${v.description}`);
-          for (const node of v.nodes) {
-            if (node.sourceFile) {
-              console.log(`    → ${node.sourceFile}:${node.sourceLine ?? '?'}`);
-            }
-          }
-        }
+      if (violations.length === 0) {
+        console.log('No accessibility violations found.');
         return;
       }
 
-      if (opts.static || !opts.url) {
-        console.log(`Scanning ${rootDir} (static JSX)...`);
-        const runner = new EslintRunner(rootDir);
-        const violations = await runner.scan();
-
-        if (violations.length === 0) {
-          console.log('No accessibility violations found.');
-          return;
-        }
-
-        console.log(`Found ${violations.length} violation type(s):\n`);
-        for (const v of violations) {
-          console.log(`  WCAG ${v.wcagId} [${v.impact}] ${v.description}`);
-          for (const node of v.nodes) {
-            if (node.sourceFile) {
-              console.log(`    → ${node.sourceFile}:${node.sourceLine}`);
-            }
-          }
-        }
-      } else {
-        console.log(`Scanning ${opts.url} with axe-core...`);
-        const detector = new AxeDetector();
-        const violations = await detector.scan({ url: opts.url });
-
-        if (violations.length === 0) {
-          console.log('No accessibility violations found.');
-          return;
-        }
-
-        console.log(`Found ${violations.length} violation type(s):\n`);
-        for (const v of violations) {
-          console.log(`  WCAG ${v.wcagId} [${v.impact}] ${v.description}`);
-          console.log(`    Help: ${v.helpUrl}`);
-        }
-      }
+      console.log(`Found ${violations.length} violation type(s):\n`);
+      printViolations(violations, { showHelpUrl: true });
     });
 }

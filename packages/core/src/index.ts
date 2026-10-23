@@ -8,6 +8,7 @@ export { locateElementInHtml } from './mapper/html-locate.js';
 export type { HtmlPosition } from './mapper/html-locate.js';
 
 export type { Fixer, FixResult, FixerBucket } from './fixer/index.js';
+export { dedupeFixFiles } from './fixer/index.js';
 export { FixerRegistry } from './fixer/registry.js';
 export { buildDefaultRegistry } from './fixer/defaults.js';
 
@@ -17,6 +18,8 @@ export { AnthropicProvider } from './ai-provider/anthropic.js';
 export { EslintRunner } from './runners/eslint-runner.js';
 export { HtmlFileRunner } from './runners/html-runner.js';
 export { PuppeteerRunner } from './runners/puppeteer-runner.js';
+export { scanSource } from './runners/scan-source.js';
+export type { ScanSourceOptions } from './runners/scan-source.js';
 export { WCAG_TO_ESLINT, ESLINT_TO_WCAG, AUTO_FIXABLE_RULES } from './runners/wcag-eslint-map.js';
 
 export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';

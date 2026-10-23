@@ -45,6 +45,16 @@ vi.mock('@a11y-fixer/core', () => {
     PuppeteerRunner: noop,
     ReactJSXMapper: noop,
     AnthropicProvider: noop,
+    // The action delegates scanning to core's scanSource; route it to the spy.
+    scanSource: () => h.scan(),
+    // Real behavior: repo-absolute files of applied fixes, de-duplicated.
+    dedupeFixFiles: (fixes: Array<{ applied?: boolean; sourceLocation?: { file: string } }>) => {
+      const set = new Set<string>();
+      for (const f of fixes) {
+        if (f.applied && f.sourceLocation) set.add(f.sourceLocation.file);
+      }
+      return [...set];
+    },
   };
 });
 

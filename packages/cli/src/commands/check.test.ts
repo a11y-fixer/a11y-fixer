@@ -5,12 +5,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { A11yViolation } from '@a11y-fixer/core';
 
-// Mock only AxeDetector (the --url path); keep the real EslintRunner for the
-// static-path tests below.
+// Stub only the --url path of scanSource; the static path (no url) still runs
+// the real EslintRunner-backed scanSource for the fixture tests below.
 const axeScan = vi.hoisted(() => vi.fn());
 vi.mock('@a11y-fixer/core', async (importActual) => {
   const actual = await importActual<typeof import('@a11y-fixer/core')>();
-  return { ...actual, AxeDetector: class { scan = axeScan; } };
+  return {
+    ...actual,
+    scanSource: async (rootDir: string, opts: { url?: string; html?: boolean } = {}) =>
+      opts.url ? axeScan({ url: opts.url }) : actual.scanSource(rootDir, opts),
+  };
 });
 
 import { checkCommand } from './check.js';

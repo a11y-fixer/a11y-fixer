@@ -1,12 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import path from 'node:path';
 import type { A11yViolation } from '@a11y-fixer/core';
 
-// The --url path uses AxeDetector (a real browser); mock it so the CLI logic
-// can be tested offline. EslintRunner (static path) stays real via importActual.
-const axeScan = vi.hoisted(() => vi.fn());
+const cwdResolved = path.resolve('.');
+
+// The --url path delegates to core's scanSource (which drives a real browser);
+// mock it so the CLI's dispatch + output can be tested offline. The rest of the
+// core barrel stays real via importActual.
+const scanSourceMock = vi.hoisted(() => vi.fn());
 vi.mock('@a11y-fixer/core', async (importActual) => {
   const actual = await importActual<typeof import('@a11y-fixer/core')>();
-  return { ...actual, AxeDetector: class { scan = axeScan; } };
+  return { ...actual, scanSource: scanSourceMock };
 });
 
 import { scanCommand } from './scan.js';
@@ -37,24 +41,25 @@ function axeViolation(wcagId: string): A11yViolation {
 }
 
 describe('scan command --url (axe path)', () => {
-  beforeEach(() => { axeScan.mockReset(); });
+  beforeEach(() => { scanSourceMock.mockReset(); });
   afterEach(() => { vi.clearAllMocks(); });
 
-  it('scans the URL with AxeDetector and reports violations with help links', async () => {
-    axeScan.mockResolvedValue([axeViolation('1.4.3')]);
+  it('scans the URL via scanSource and reports violations with help links', async () => {
+    scanSourceMock.mockResolvedValue([axeViolation('1.4.3')]);
 
     const out = await captureOutput(() =>
       scanCommand().parseAsync(['.', '--url', 'http://localhost:3000'], { from: 'user' }),
     );
 
-    expect(axeScan).toHaveBeenCalledWith({ url: 'http://localhost:3000' });
+    expect(scanSourceMock).toHaveBeenCalledWith(cwdResolved, expect.objectContaining({ url: 'http://localhost:3000' }));
     expect(out).toContain('with axe-core');
     expect(out).toMatch(/WCAG 1\.4\.3/);
+    // No source location on the node → the help URL is shown as a fallback.
     expect(out).toContain('https://dequeuniversity.com/rules/axe/color-contrast');
   });
 
   it('reports no violations when the URL scan is clean', async () => {
-    axeScan.mockResolvedValue([]);
+    scanSourceMock.mockResolvedValue([]);
 
     const out = await captureOutput(() =>
       scanCommand().parseAsync(['.', '--url', 'http://localhost:3000'], { from: 'user' }),
@@ -63,12 +68,14 @@ describe('scan command --url (axe path)', () => {
     expect(out).toContain('No accessibility violations found.');
   });
 
-  it('uses the static path (not AxeDetector) when --static is passed with --url', async () => {
-    const dir = process.cwd();
+  it('forces the static path (url undefined) when --static is passed with --url', async () => {
+    scanSourceMock.mockResolvedValue([]);
+
     await captureOutput(() =>
-      scanCommand().parseAsync([dir, '--static', '--url', 'http://localhost:3000'], { from: 'user' }),
+      scanCommand().parseAsync(['.', '--static', '--url', 'http://localhost:3000'], { from: 'user' }),
     );
-    // --static forces the EslintRunner branch, so the URL detector is untouched.
-    expect(axeScan).not.toHaveBeenCalled();
+
+    // --static suppresses the URL, so scanSource is invoked without one.
+    expect(scanSourceMock).toHaveBeenCalledWith(cwdResolved, expect.objectContaining({ url: undefined }));
   });
 });
