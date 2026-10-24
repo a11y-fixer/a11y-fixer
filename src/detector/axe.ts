@@ -5,6 +5,7 @@ const AXE_WCAG_MAP: Record<string, string> = {
   'button-name': '4.1.2',
   'label': '1.3.1',
   'html-has-lang': '3.1.1',
+  'html-lang-valid': '3.1.1',
   'heading-order': '2.4.6',
   'meta-viewport': '1.4.4',
   'color-contrast': '1.4.3',
