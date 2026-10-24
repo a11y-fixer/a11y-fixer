@@ -6,6 +6,7 @@ import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
 import { MetaViewportFixer } from './rule-based/meta-viewport.js';
+import { ColorContrastFixer } from './rule-based/color-contrast.js';
 import type { AIProvider } from '../ai-provider/index.js';
 import type { A11yViolation } from '../detector/index.js';
 
@@ -54,6 +55,11 @@ describe('buildDefaultRegistry dispatch', () => {
   it('routes axe meta-viewport (WCAG 1.4.4) to MetaViewportFixer', () => {
     const fixer = registry.getFixer(violation('meta-viewport', '1.4.4'));
     expect(fixer).toBeInstanceOf(MetaViewportFixer);
+  });
+
+  it('routes axe color-contrast (WCAG 1.4.3) to ColorContrastFixer', () => {
+    const fixer = registry.getFixer(violation('color-contrast', '1.4.3'));
+    expect(fixer).toBeInstanceOf(ColorContrastFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
