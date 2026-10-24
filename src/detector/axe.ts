@@ -13,6 +13,7 @@ const AXE_WCAG_MAP: Record<string, string> = {
   'video-caption': '1.2.2',
   'tabindex': '2.4.3',
   'meta-refresh': '2.2.1',
+  'scrollable-region-focusable': '2.1.1',
 };
 
 function toWcagId(axeRuleId: string): string {
