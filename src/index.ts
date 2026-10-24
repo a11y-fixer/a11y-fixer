@@ -26,6 +26,7 @@ export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';
 export { HtmlLangFixer } from './fixer/rule-based/html-lang.js';
 export { ColorContrastFixer, parseContrastFailure } from './fixer/rule-based/color-contrast.js';
 export { TabindexFixer, normalizeTabindex } from './fixer/rule-based/tabindex.js';
+export { MetaRefreshFixer, isPureTimedRefresh } from './fixer/rule-based/meta-refresh.js';
 export { AltTextFixer } from './fixer/ai-assisted/alt-text.js';
 export type { ScreenshotProvider } from './fixer/ai-assisted/alt-text.js';
 export { LinkTextFixer } from './fixer/ai-assisted/link-text.js';
