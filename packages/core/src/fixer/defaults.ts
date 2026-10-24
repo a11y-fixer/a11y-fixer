@@ -10,6 +10,7 @@ import { ColorContrastFixer } from './rule-based/color-contrast.js';
 import { TabindexFixer } from './rule-based/tabindex.js';
 import { MetaRefreshFixer } from './rule-based/meta-refresh.js';
 import { ScrollableRegionFocusableFixer } from './rule-based/scrollable-region-focusable.js';
+import { AriaHiddenBodyFixer } from './rule-based/aria-hidden-body.js';
 import { AltTextFixer, type ScreenshotProvider } from './ai-assisted/alt-text.js';
 import { LinkTextFixer } from './ai-assisted/link-text.js';
 import { ButtonNameFixer } from './ai-assisted/button-name.js';
@@ -47,6 +48,7 @@ export function buildDefaultRegistry(
   registry.register(new TabindexFixer(rootDir));
   registry.register(new MetaRefreshFixer(rootDir));
   registry.register(new ScrollableRegionFocusableFixer(rootDir));
+  registry.register(new AriaHiddenBodyFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
