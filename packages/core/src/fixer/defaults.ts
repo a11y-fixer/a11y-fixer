@@ -3,6 +3,7 @@ import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
 import { MetaViewportFixer } from './rule-based/meta-viewport.js';
+import { ColorContrastFixer } from './rule-based/color-contrast.js';
 import { AltTextFixer, type ScreenshotProvider } from './ai-assisted/alt-text.js';
 import { LinkTextFixer } from './ai-assisted/link-text.js';
 import { ButtonNameFixer } from './ai-assisted/button-name.js';
@@ -33,6 +34,7 @@ export function buildDefaultRegistry(
   registry.register(new HtmlLangFixer(rootDir));
   registry.register(new HeadingOrderFixer(rootDir));
   registry.register(new MetaViewportFixer(rootDir));
+  registry.register(new ColorContrastFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
