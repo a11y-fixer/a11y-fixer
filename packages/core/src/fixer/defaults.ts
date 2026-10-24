@@ -2,6 +2,7 @@ import { FixerRegistry } from './registry.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HtmlLangValidFixer } from './rule-based/html-lang-valid.js';
+import { HtmlXmlLangMismatchFixer } from './rule-based/html-xml-lang-mismatch.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
 import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import { MetaViewportLargeFixer } from './rule-based/meta-viewport-large.js';
@@ -38,6 +39,7 @@ export function buildDefaultRegistry(
   registry.register(new FormLabelFixer(aiProvider, rootDir));
   registry.register(new HtmlLangFixer(rootDir));
   registry.register(new HtmlLangValidFixer(rootDir));
+  registry.register(new HtmlXmlLangMismatchFixer(rootDir));
   registry.register(new HeadingOrderFixer(rootDir));
   registry.register(new MetaViewportFixer(rootDir));
   registry.register(new MetaViewportLargeFixer(rootDir));
