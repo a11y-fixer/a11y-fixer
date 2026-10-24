@@ -6,6 +6,7 @@ const AXE_WCAG_MAP: Record<string, string> = {
   'label': '1.3.1',
   'html-has-lang': '3.1.1',
   'heading-order': '2.4.6',
+  'meta-viewport': '1.4.4',
   'color-contrast': '1.4.3',
   'link-name': '2.4.4',
   'video-caption': '1.2.2',

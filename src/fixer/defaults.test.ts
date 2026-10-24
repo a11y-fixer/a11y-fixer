@@ -5,6 +5,7 @@ import { FormLabelFixer } from './ai-assisted/form-label.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
+import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import type { AIProvider } from '../ai-provider/index.js';
 import type { A11yViolation } from '../detector/index.js';
 
@@ -48,6 +49,11 @@ describe('buildDefaultRegistry dispatch', () => {
   it('routes axe heading-order (WCAG 2.4.6) to HeadingOrderFixer, not the human-flag fallback', () => {
     const fixer = registry.getFixer(violation('heading-order', '2.4.6'));
     expect(fixer).toBeInstanceOf(HeadingOrderFixer);
+  });
+
+  it('routes axe meta-viewport (WCAG 1.4.4) to MetaViewportFixer', () => {
+    const fixer = registry.getFixer(violation('meta-viewport', '1.4.4'));
+    expect(fixer).toBeInstanceOf(MetaViewportFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
