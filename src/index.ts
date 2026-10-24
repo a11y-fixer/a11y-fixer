@@ -25,6 +25,7 @@ export { WCAG_TO_ESLINT, ESLINT_TO_WCAG, AUTO_FIXABLE_RULES } from './runners/wc
 export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';
 export { HtmlLangFixer } from './fixer/rule-based/html-lang.js';
 export { ColorContrastFixer, parseContrastFailure } from './fixer/rule-based/color-contrast.js';
+export { TabindexFixer, normalizeTabindex } from './fixer/rule-based/tabindex.js';
 export { AltTextFixer } from './fixer/ai-assisted/alt-text.js';
 export type { ScreenshotProvider } from './fixer/ai-assisted/alt-text.js';
 export { LinkTextFixer } from './fixer/ai-assisted/link-text.js';

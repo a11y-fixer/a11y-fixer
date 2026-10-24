@@ -7,6 +7,7 @@ import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
 import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import { ColorContrastFixer } from './rule-based/color-contrast.js';
+import { TabindexFixer } from './rule-based/tabindex.js';
 import type { AIProvider } from '../ai-provider/index.js';
 import type { A11yViolation } from '../detector/index.js';
 
@@ -60,6 +61,11 @@ describe('buildDefaultRegistry dispatch', () => {
   it('routes axe color-contrast (WCAG 1.4.3) to ColorContrastFixer', () => {
     const fixer = registry.getFixer(violation('color-contrast', '1.4.3'));
     expect(fixer).toBeInstanceOf(ColorContrastFixer);
+  });
+
+  it('routes axe tabindex (WCAG 2.4.3) to TabindexFixer', () => {
+    const fixer = registry.getFixer(violation('tabindex', '2.4.3'));
+    expect(fixer).toBeInstanceOf(TabindexFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {

@@ -10,6 +10,7 @@ const AXE_WCAG_MAP: Record<string, string> = {
   'color-contrast': '1.4.3',
   'link-name': '2.4.4',
   'video-caption': '1.2.2',
+  'tabindex': '2.4.3',
 };
 
 function toWcagId(axeRuleId: string): string {
