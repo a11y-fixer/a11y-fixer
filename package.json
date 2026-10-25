@@ -2,6 +2,7 @@
   "name": "a11y-fixer",
   "private": true,
   "version": "0.0.0",
+  "packageManager": "pnpm@10.33.4",
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",

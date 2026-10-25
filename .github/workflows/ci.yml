@@ -11,9 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No version here: pnpm/action-setup@v4 reads the pnpm version from the
+      # root package.json "packageManager" field, keeping CI and local in sync
+      # (the lockfile's pnpmfileChecksum is pnpm-10-specific, so pinning v9 here
+      # broke `--frozen-lockfile`).
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:
