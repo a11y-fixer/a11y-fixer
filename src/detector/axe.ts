@@ -28,6 +28,8 @@ export const AXE_WCAG_MAP: Record<string, string> = {
   'document-title': '2.4.2',
   'blink': '2.2.2',
   'marquee': '2.2.2',
+  'list': '1.3.1',
+  'listitem': '1.3.1',
 };
 
 export function toWcagId(axeRuleId: string): string {
