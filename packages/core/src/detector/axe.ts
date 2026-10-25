@@ -36,6 +36,13 @@ export function toWcagId(axeRuleId: string): string {
 
 export class AxeDetector implements Detector {
   async scan(options: DetectorOptions): Promise<A11yViolation[]> {
+    // Validate inputs before launching a browser, so bad input fails fast with
+    // a clear message instead of first paying the cost of (or failing at)
+    // starting Chrome.
+    if (!options.html && !options.url) {
+      throw new Error('DetectorOptions must include either url or html');
+    }
+
     const browser = await launchBrowser();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let AxePuppeteer: any;
@@ -53,12 +60,11 @@ export class AxeDetector implements Detector {
     try {
       const page = await browser.newPage();
 
+      // Inputs were validated above: exactly one of html/url is present.
       if (options.html) {
         await page.setContent(options.html, { waitUntil: 'networkidle0' });
-      } else if (options.url) {
-        await page.goto(options.url, { waitUntil: 'networkidle0' });
       } else {
-        throw new Error('DetectorOptions must include either url or html');
+        await page.goto(options.url!, { waitUntil: 'networkidle0' });
       }
 
       const axe = new AxePuppeteer(page);

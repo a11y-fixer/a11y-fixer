@@ -24,6 +24,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # pnpm 10 does not run puppeteer's browser-download postinstall, so install
+      # Chrome explicitly; the AxeDetector integration tests need a real browser
+      # (they skip gracefully when one can't launch, but we want them to run).
+      - run: pnpm --filter @a11y-fixer/core exec puppeteer browsers install chrome
+
       - run: pnpm -r run build
 
       # Coverage thresholds (90%) live in each package's vitest.config.ts, so
