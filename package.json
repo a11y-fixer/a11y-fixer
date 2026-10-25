@@ -5,11 +5,13 @@
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
+    "coverage": "pnpm -r run coverage",
     "lint": "pnpm -r run lint"
   },
   "devDependencies": {
     "typescript": "^5.5.0",
     "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "@types/node": "^20.0.0"
   }
 }
