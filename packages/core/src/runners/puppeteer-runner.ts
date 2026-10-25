@@ -1,7 +1,10 @@
+import { launchBrowser } from '../detector/load-puppeteer.js';
+
 /**
  * Loads a URL in a headless browser and screenshots individual elements so the
- * AI provider can generate alt text from real pixels. Puppeteer is imported
- * lazily (same pattern as AxeDetector) so it stays an optional peer dependency.
+ * AI provider can generate alt text from real pixels. Puppeteer is loaded
+ * lazily via the shared loader (same pattern as AxeDetector) so it stays an
+ * optional peer dependency.
  */
 export class PuppeteerRunner {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,18 +17,7 @@ export class PuppeteerRunner {
   private async ensurePage(): Promise<void> {
     if (this.page) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let puppeteer: any;
-    try {
-      puppeteer = await import('puppeteer');
-    } catch {
-      throw new Error(
-        'PuppeteerRunner requires puppeteer.\n' +
-        'Install it: pnpm add -D puppeteer'
-      );
-    }
-
-    this.browser = await puppeteer.launch({ headless: true });
+    this.browser = await launchBrowser();
     this.page = await this.browser.newPage();
     await this.page.goto(this.url, { waitUntil: 'networkidle0' });
   }
