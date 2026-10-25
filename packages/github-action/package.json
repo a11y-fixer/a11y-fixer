@@ -6,7 +6,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && ncc build src/index.ts -o dist --minify -e puppeteer -e @axe-core/puppeteer",
-    "test": "vitest run"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@a11y-fixer/core": "workspace:*",

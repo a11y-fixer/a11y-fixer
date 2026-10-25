@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import * as actionsCore from '@actions/core';
 
 // Shared spies/state, hoisted so the vi.mock factory below can close over them.
 const h = vi.hoisted(() => ({
@@ -125,5 +126,73 @@ describe('github-action fix mode', () => {
     await run();
 
     expect(h.createPR).not.toHaveBeenCalled();
+  });
+
+  it('does not open a PR when applied fixes touched no files', async () => {
+    h.scan.mockResolvedValue([{}]);
+    // Applied, but with no sourceLocation → dedupeFixFiles yields [].
+    h.applyAll.mockResolvedValue([{ wcagId: '4.1.2', description: 'x', applied: true }]);
+    const info = vi.spyOn(actionsCore, 'info');
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.createPR).not.toHaveBeenCalled();
+    expect(info).toHaveBeenCalledWith('No files were changed — skipping PR.');
+  });
+});
+
+describe('github-action check mode', () => {
+  it('fails the run and lists violations when any are found', async () => {
+    h.scan.mockResolvedValue([{ wcagId: '1.1.1', description: 'Image missing alt' }]);
+    const setFailed = vi.spyOn(actionsCore, 'setFailed');
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).toHaveBeenCalledWith(expect.stringContaining('1 accessibility violation'));
+    expect(setFailed).toHaveBeenCalledWith(expect.stringContaining('WCAG 1.1.1'));
+  });
+
+  it('passes when no violations are found', async () => {
+    h.scan.mockResolvedValue([]);
+    const setFailed = vi.spyOn(actionsCore, 'setFailed');
+    const info = vi.spyOn(actionsCore, 'info');
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).not.toHaveBeenCalled();
+    expect(info).toHaveBeenCalledWith(expect.stringContaining('No accessibility violations'));
+  });
+});
+
+describe('github-action scan mode', () => {
+  it('outputs the violations JSON', async () => {
+    const violations = [{ wcagId: '1.4.3', description: 'contrast' }];
+    h.scan.mockResolvedValue(violations);
+    const setOutput = vi.spyOn(actionsCore, 'setOutput');
+    setInputs({ mode: 'scan', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setOutput).toHaveBeenCalledWith('violations', JSON.stringify(violations));
+  });
+});
+
+describe('github-action error handling', () => {
+  it('calls setFailed with the error message when a scan throws', async () => {
+    h.scan.mockRejectedValue(new Error('scan exploded'));
+    const setFailed = vi.spyOn(actionsCore, 'setFailed');
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).toHaveBeenCalledWith('scan exploded');
   });
 });
