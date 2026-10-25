@@ -1,4 +1,5 @@
 import type { Detector, DetectorOptions, A11yViolation, A11yNode } from './index.js';
+import { launchBrowser } from './load-puppeteer.js';
 
 const AXE_WCAG_MAP: Record<string, string> = {
   'image-alt': '1.1.1',
@@ -22,23 +23,20 @@ function toWcagId(axeRuleId: string): string {
 
 export class AxeDetector implements Detector {
   async scan(options: DetectorOptions): Promise<A11yViolation[]> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let puppeteer: any;
+    const browser = await launchBrowser();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let AxePuppeteer: any;
-
     try {
-      puppeteer = await import('puppeteer');
       const axePuppeteerMod = await import('@axe-core/puppeteer');
       AxePuppeteer = axePuppeteerMod.default;
     } catch {
+      await browser.close();
       throw new Error(
-        'AxeDetector requires puppeteer and @axe-core/puppeteer.\n' +
-        'Install them: pnpm add -D puppeteer @axe-core/puppeteer'
+        'AxeDetector requires @axe-core/puppeteer.\n' +
+        'Install it: pnpm add -D @axe-core/puppeteer'
       );
     }
 
-    const browser = await puppeteer.launch({ headless: true });
     try {
       const page = await browser.newPage();
 

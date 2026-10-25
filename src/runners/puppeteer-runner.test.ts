@@ -16,6 +16,12 @@ vi.mock('puppeteer', () => {
   return { launch, default: { launch } };
 });
 
+// puppeteer-core is the loader's fallback; keep it unavailable so the
+// not-installed path resolves deterministically regardless of hoisting.
+vi.mock('puppeteer-core', () => {
+  throw new Error('Cannot find package puppeteer-core');
+});
+
 function makeBrowser(matches: Record<string, Buffer>) {
   const close = vi.fn().mockResolvedValue(undefined);
   const seen: string[] = [];
