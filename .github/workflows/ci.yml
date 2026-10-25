@@ -11,9 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # No version here: pnpm/action-setup@v4 reads the pnpm version from the
+      # root package.json "packageManager" field, keeping CI and local in sync
+      # (the lockfile's pnpmfileChecksum is pnpm-10-specific, so pinning v9 here
+      # broke `--frozen-lockfile`).
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:
@@ -21,6 +23,11 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      # pnpm 10 does not run puppeteer's browser-download postinstall, so install
+      # Chrome explicitly; the AxeDetector integration tests need a real browser
+      # (they skip gracefully when one can't launch, but we want them to run).
+      - run: pnpm --filter @a11y-fixer/core exec puppeteer browsers install chrome
 
       - run: pnpm -r run build
 

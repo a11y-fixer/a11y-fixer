@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,13 +6,27 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURES = path.resolve(__dirname, '../../../../tests/fixtures');
 
+/**
+ * Whether a real browser can actually launch here. CI installs the puppeteer
+ * package but not a Chrome binary (pnpm skips puppeteer's browser-download
+ * postinstall), so probing the package import is not enough — we must try to
+ * launch and skip the browser-backed assertions when that fails.
+ */
+async function browserAvailable(): Promise<boolean> {
+  try {
+    const { launchBrowser } = await import('./load-puppeteer.js');
+    const browser = await launchBrowser();
+    await browser.close();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 describe('AxeDetector', () => {
   it('finds violations in broken.html', async () => {
-    // Dynamically import to allow optional dep mocking in CI without Chromium
-    const puppeteerAvailable = await import('puppeteer').then(() => true).catch(() => false);
-
-    if (!puppeteerAvailable) {
-      console.warn('Skipping AxeDetector test: puppeteer not installed');
+    if (!(await browserAvailable())) {
+      console.warn('Skipping AxeDetector test: no launchable browser');
       return;
     }
 
@@ -28,8 +42,7 @@ describe('AxeDetector', () => {
   });
 
   it('returns empty array for clean HTML', async () => {
-    const puppeteerAvailable = await import('puppeteer').then(() => true).catch(() => false);
-    if (!puppeteerAvailable) return;
+    if (!(await browserAvailable())) return;
 
     const { AxeDetector } = await import('./axe.js');
     const detector = new AxeDetector();
@@ -49,9 +62,7 @@ describe('AxeDetector', () => {
   });
 
   it('throws when neither url nor html is provided', async () => {
-    const puppeteerAvailable = await import('puppeteer').then(() => true).catch(() => false);
-    if (!puppeteerAvailable) return;
-
+    // No browser needed: scan() validates its inputs before launching one.
     const { AxeDetector } = await import('./axe.js');
     const detector = new AxeDetector();
     await expect(detector.scan({})).rejects.toThrow('DetectorOptions must include');
