@@ -5,8 +5,10 @@ import * as actionsCore from '@actions/core';
 const h = vi.hoisted(() => ({
   createPR: vi.fn(async (..._args: unknown[]) => ({ url: 'https://github.com/o/r/pull/42', branch: 'a11y-fixer/x', number: 42 })),
   scan: vi.fn(),
+  scanOpts: vi.fn(),
   applyAll: vi.fn(),
   prCtor: vi.fn(),
+  puppeteerCtor: vi.fn(),
 }));
 
 vi.mock('@actions/github', () => ({
@@ -37,17 +39,28 @@ vi.mock('@a11y-fixer/core', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(..._args: any[]) {}
   };
+  class PuppeteerRunner {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(...args: any[]) {
+      h.puppeteerCtor(...args);
+    }
+    close() {}
+  }
   return {
     EslintRunner,
     FixerRegistry,
     buildDefaultRegistry: () => new FixerRegistry(),
     PullRequestBuilder,
     AxeDetector: noop,
-    PuppeteerRunner: noop,
+    PuppeteerRunner,
     ReactJSXMapper: noop,
     AnthropicProvider: noop,
-    // The action delegates scanning to core's scanSource; route it to the spy.
-    scanSource: () => h.scan(),
+    // The action delegates scanning to core's scanSource; route it to the spy
+    // and record the options so URL/HTML routing can be asserted.
+    scanSource: (_dir: string, opts: unknown) => {
+      h.scanOpts(opts);
+      return h.scan();
+    },
     // Real behavior: repo-absolute files of applied fixes, de-duplicated.
     dedupeFixFiles: (fixes: Array<{ applied?: boolean; sourceLocation?: { file: string } }>) => {
       const set = new Set<string>();
@@ -141,6 +154,21 @@ describe('github-action fix mode', () => {
     expect(h.createPR).not.toHaveBeenCalled();
     expect(info).toHaveBeenCalledWith('No files were changed — skipping PR.');
   });
+
+  it('warns and ignores url in fix mode (static-only)', async () => {
+    h.scan.mockResolvedValue([]);
+    h.applyAll.mockResolvedValue([]);
+    const warning = vi.spyOn(actionsCore, 'warning');
+    setInputs({ mode: 'fix', dir: '.', url: 'https://example.com', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('URL fix-mode is not supported'));
+    // No browser runner is constructed, and scanning uses the static path.
+    expect(h.puppeteerCtor).not.toHaveBeenCalled();
+    expect(h.scanOpts).toHaveBeenCalledWith({ html: false });
+  });
 });
 
 describe('github-action check mode', () => {
@@ -181,6 +209,16 @@ describe('github-action scan mode', () => {
     await run();
 
     expect(setOutput).toHaveBeenCalledWith('violations', JSON.stringify(violations));
+  });
+
+  it('passes the url through to the scanner in scan mode', async () => {
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'scan', dir: '.', url: 'https://example.com' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.scanOpts).toHaveBeenCalledWith({ url: 'https://example.com', html: false });
   });
 });
 

@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import {
-  PuppeteerRunner,
   buildDefaultRegistry,
   AnthropicProvider,
   PullRequestBuilder,
@@ -88,25 +87,32 @@ export async function run(): Promise<void> {
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
     } else if (mode === 'fix') {
-      const aiProvider = new AnthropicProvider();
-      const puppeteer = url ? new PuppeteerRunner(url) : undefined;
-      try {
-        const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
-
-        const before = await scanSource(rootDir, { url, html });
-        const fixes = await registry.applyAll(before);
-        const applied = fixes.filter(f => f.applied);
-        const after = await scanSource(rootDir, { url, html });
-
-        core.setOutput('fixes-applied', String(applied.length));
-        core.setOutput('violations-before', String(before.length));
-        core.setOutput('violations-after', String(after.length));
-        core.info(`Applied ${applied.length} fix(es). Violations: ${before.length} → ${after.length}.`);
-
-        await maybeOpenPR(fixes, before, after, applied, baseBranch, Boolean(githubToken));
-      } finally {
-        await puppeteer?.close();
+      // URL scanning can't reliably map live DOM nodes back to repo source, so
+      // fixers would no-op and no PR could be built. Fix mode is therefore
+      // static-only (JSX/HTML); `url` is honored for scan/check only.
+      if (url) {
+        core.warning(
+          'URL fix-mode is not supported: a live URL can\'t be mapped back to ' +
+          'source, so no fixes can be applied. Use mode: scan/check with `url`, ' +
+          'or mode: fix with static JSX/HTML. Ignoring `url` for this fix run.',
+        );
       }
+      const aiProvider = new AnthropicProvider();
+      // Static-only (no PuppeteerRunner): the browser screenshot path exists
+      // only for URL scans, which fix mode does not support.
+      const registry = buildDefaultRegistry(aiProvider, rootDir);
+
+      const before = await scanSource(rootDir, { html });
+      const fixes = await registry.applyAll(before);
+      const applied = fixes.filter(f => f.applied);
+      const after = await scanSource(rootDir, { html });
+
+      core.setOutput('fixes-applied', String(applied.length));
+      core.setOutput('violations-before', String(before.length));
+      core.setOutput('violations-after', String(after.length));
+      core.info(`Applied ${applied.length} fix(es). Violations: ${before.length} → ${after.length}.`);
+
+      await maybeOpenPR(fixes, before, after, applied, baseBranch, Boolean(githubToken));
     }
   } catch (error) {
     core.setFailed(error instanceof Error ? error.message : String(error));
