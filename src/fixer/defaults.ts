@@ -14,6 +14,7 @@ import { AriaHiddenBodyFixer } from './rule-based/aria-hidden-body.js';
 import { DocumentTitleFixer } from './rule-based/document-title.js';
 import { BlinkMarqueeFixer } from './rule-based/blink-marquee.js';
 import { AriaHiddenFocusFixer } from './rule-based/aria-hidden-focus.js';
+import { FrameTitleFixer } from './rule-based/frame-title.js';
 import { AltTextFixer, type ScreenshotProvider } from './ai-assisted/alt-text.js';
 import { LinkTextFixer } from './ai-assisted/link-text.js';
 import { ButtonNameFixer } from './ai-assisted/button-name.js';
@@ -55,6 +56,7 @@ export function buildDefaultRegistry(
   registry.register(new DocumentTitleFixer(rootDir));
   registry.register(new BlinkMarqueeFixer(rootDir));
   registry.register(new AriaHiddenFocusFixer(rootDir));
+  registry.register(new FrameTitleFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
