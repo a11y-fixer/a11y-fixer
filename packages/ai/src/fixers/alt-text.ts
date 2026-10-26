@@ -1,8 +1,8 @@
-import type { Fixer, FixResult } from '../index.js';
-import type { A11yViolation, A11yNode } from '../../detector/index.js';
-import type { AIProvider } from '../../ai-provider/index.js';
+import type { Fixer, FixResult } from '@a11y-fixer/core';
+import type { A11yViolation, A11yNode } from '@a11y-fixer/core';
+import type { AIProvider } from '../provider/index.js';
 import { readSourceLine } from './source-line.js';
-import { addAttributeToElement } from './apply-attribute.js';
+import { addAttributeToElement } from '@a11y-fixer/core';
 
 /** Supplies a screenshot buffer for an element, enabling vision-based alt text. */
 export interface ScreenshotProvider {

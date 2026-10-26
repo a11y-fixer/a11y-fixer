@@ -3,8 +3,8 @@ import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { LinkTextFixer } from './link-text.js';
-import type { AIProvider } from '../../ai-provider/index.js';
-import type { A11yViolation } from '../../detector/index.js';
+import type { AIProvider } from '../provider/index.js';
+import type { A11yViolation } from '@a11y-fixer/core';
 
 function makeProvider(overrides: Partial<AIProvider> = {}): AIProvider {
   return {

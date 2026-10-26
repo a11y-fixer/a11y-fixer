@@ -17,11 +17,7 @@ const h = vi.hoisted(() => ({
 vi.mock('@a11y-fixer/core', () => ({
   scanSource: h.scanSource,
   dedupeFixFiles: h.dedupeFixFiles,
-  buildDefaultRegistry: vi.fn(() => ({ applyAll: h.applyAll })),
-  AnthropicProvider: class {},
-  PuppeteerRunner: class {
-    close = vi.fn(async () => {});
-  },
+  buildCoreRegistry: vi.fn(() => ({ applyAll: h.applyAll })),
   PullRequestBuilder: class {
     constructor(opts: unknown) {
       h.builderCtor(opts);

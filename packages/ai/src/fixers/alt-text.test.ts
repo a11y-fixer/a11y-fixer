@@ -4,8 +4,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { AltTextFixer, type ScreenshotProvider } from './alt-text.js';
 import { readSourceLine } from './source-line.js';
-import type { AIProvider } from '../../ai-provider/index.js';
-import type { A11yViolation } from '../../detector/index.js';
+import type { AIProvider } from '../provider/index.js';
+import type { A11yViolation } from '@a11y-fixer/core';
 
 function makeProvider(overrides: Partial<AIProvider> = {}): AIProvider {
   return {
