@@ -23,6 +23,25 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.43)
 
+  packages/ai:
+    dependencies:
+      '@a11y-fixer/core':
+        specifier: workspace:*
+        version: link:../core
+      '@anthropic-ai/sdk':
+        specifier: ^0.32.0
+        version: 0.32.1
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.43
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@20.19.43)
+
   packages/cli:
     dependencies:
       '@a11y-fixer/core':
@@ -44,9 +63,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@anthropic-ai/sdk':
-        specifier: ^0.32.0
-        version: 0.32.1
       '@axe-core/puppeteer':
         specifier: ^4.14.0
         version: 4.14.0(puppeteer@23.11.1(typescript@5.9.3))
@@ -88,6 +104,9 @@ importers:
 
   packages/github-action:
     dependencies:
+      '@a11y-fixer/ai':
+        specifier: workspace:*
+        version: link:../ai
       '@a11y-fixer/core':
         specifier: workspace:*
         version: link:../core

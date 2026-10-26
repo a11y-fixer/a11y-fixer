@@ -1,8 +1,6 @@
 import { Command } from 'commander';
 import {
-  PuppeteerRunner,
-  buildDefaultRegistry,
-  AnthropicProvider,
+  buildCoreRegistry,
   PullRequestBuilder,
   scanSource,
   dedupeFixFiles,
@@ -30,16 +28,13 @@ export function fixCommand(): Command {
       dryRun: boolean;
     }) => {
       const rootDir = path.resolve(dir);
-      const aiProvider = new AnthropicProvider();
 
-      // When scanning a URL, screenshots let the alt-text fixer use vision.
-      const puppeteer = opts.url ? new PuppeteerRunner(opts.url) : undefined;
+      // Deterministic fixers only. AI-assisted fixing lives in the paid
+      // @a11y-fixer/ai package used by the GitHub Action; here the ai-assisted
+      // rules fall through to the "human review needed" path below.
+      const registry = buildCoreRegistry(rootDir);
 
-      // Build registry (shared with the GitHub Action via buildDefaultRegistry).
-      const registry = buildDefaultRegistry(aiProvider, rootDir, puppeteer);
-
-      try {
-        // Scan
+      // Scan
         console.log(`Scanning ${opts.url ?? rootDir}...`);
         const beforeViolations = await scanSource(rootDir, { url: opts.url, html: opts.html });
 
@@ -90,8 +85,5 @@ export function fixCommand(): Command {
           const pr = await prBuilder.createPR(fixes, beforeViolations, afterViolations, changedFiles);
           console.log(`\nPR created: ${pr.url}`);
         }
-      } finally {
-        await puppeteer?.close();
-      }
     });
 }

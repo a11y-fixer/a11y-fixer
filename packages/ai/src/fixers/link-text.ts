@@ -1,6 +1,6 @@
-import type { Fixer, FixResult } from '../index.js';
-import type { A11yViolation } from '../../detector/index.js';
-import type { AIProvider } from '../../ai-provider/index.js';
+import type { Fixer, FixResult } from '@a11y-fixer/core';
+import type { A11yViolation } from '@a11y-fixer/core';
+import type { AIProvider } from '../provider/index.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import { readSourceLine } from './source-line.js';
 

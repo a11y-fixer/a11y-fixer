@@ -15,6 +15,12 @@ vi.mock('@actions/github', () => ({
   context: { repo: { owner: 'o', repo: 'r' } },
 }));
 
+vi.mock('@a11y-fixer/ai', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AnthropicProvider: class { constructor(..._args: any[]) {} },
+  buildFullRegistry: () => ({ register() {}, applyAll: () => h.applyAll() }),
+}));
+
 vi.mock('@a11y-fixer/core', () => {
   class EslintRunner {
     scan() {
@@ -49,12 +55,10 @@ vi.mock('@a11y-fixer/core', () => {
   return {
     EslintRunner,
     FixerRegistry,
-    buildDefaultRegistry: () => new FixerRegistry(),
     PullRequestBuilder,
     AxeDetector: noop,
     PuppeteerRunner,
     ReactJSXMapper: noop,
-    AnthropicProvider: noop,
     // The action delegates scanning to core's scanSource; route it to the spy
     // and record the options so URL/HTML routing can be asserted.
     scanSource: (_dir: string, opts: unknown) => {

@@ -1,13 +1,12 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import {
-  buildDefaultRegistry,
-  AnthropicProvider,
   PullRequestBuilder,
   scanSource,
   dedupeFixFiles,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
+import { buildFullRegistry, AnthropicProvider } from '@a11y-fixer/ai';
 import path from 'node:path';
 
 /**
@@ -100,7 +99,7 @@ export async function run(): Promise<void> {
       const aiProvider = new AnthropicProvider();
       // Static-only (no PuppeteerRunner): the browser screenshot path exists
       // only for URL scans, which fix mode does not support.
-      const registry = buildDefaultRegistry(aiProvider, rootDir);
+      const registry = buildFullRegistry(aiProvider, rootDir);
 
       const before = await scanSource(rootDir, { html });
       const fixes = await registry.applyAll(before);

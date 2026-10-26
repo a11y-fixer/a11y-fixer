@@ -1,7 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { buildDefaultRegistry } from './defaults.js';
-import { ButtonNameFixer } from './ai-assisted/button-name.js';
-import { FormLabelFixer } from './ai-assisted/form-label.js';
+import { describe, it, expect } from 'vitest';
+import { buildCoreRegistry } from './defaults.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
@@ -9,16 +7,7 @@ import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import { ColorContrastFixer } from './rule-based/color-contrast.js';
 import { TabindexFixer } from './rule-based/tabindex.js';
 import { MetaRefreshFixer } from './rule-based/meta-refresh.js';
-import type { AIProvider } from '../ai-provider/index.js';
 import type { A11yViolation } from '../detector/index.js';
-
-const provider: AIProvider = {
-  available: () => true,
-  describeImage: vi.fn(),
-  suggestAltText: vi.fn(),
-  rewriteLinkText: vi.fn(),
-  suggestAccessibleName: vi.fn(),
-};
 
 function violation(id: string, wcagId: string): A11yViolation {
   return {
@@ -31,18 +20,8 @@ function violation(id: string, wcagId: string): A11yViolation {
   };
 }
 
-describe('buildDefaultRegistry dispatch', () => {
-  const registry = buildDefaultRegistry(provider, '/tmp');
-
-  it('routes axe button-name (WCAG 4.1.2) to ButtonNameFixer, not EslintFixer', () => {
-    const fixer = registry.getFixer(violation('button-name', '4.1.2'));
-    expect(fixer).toBeInstanceOf(ButtonNameFixer);
-  });
-
-  it('routes axe label (WCAG 1.3.1) to FormLabelFixer, not EslintFixer', () => {
-    const fixer = registry.getFixer(violation('label', '1.3.1'));
-    expect(fixer).toBeInstanceOf(FormLabelFixer);
-  });
+describe('buildCoreRegistry dispatch', () => {
+  const registry = buildCoreRegistry('/tmp');
 
   it('routes axe html-has-lang (WCAG 3.1.1) to HtmlLangFixer, not EslintFixer', () => {
     const fixer = registry.getFixer(violation('html-has-lang', '3.1.1'));
