@@ -95,4 +95,21 @@ describe('ButtonNameFixer', () => {
     expect(result.bucket).toBe('human-flagged');
     expect(result.description).toContain('rate limited');
   });
+
+  it('falls back to node.html context and flags when the edit cannot apply', async () => {
+    // sourceFile points at a path that does not exist: readSourceLine returns
+    // null (so context falls back to node.html), and addAttributeToElement
+    // cannot read the file, so the fix is flagged rather than applied.
+    const missing = path.join(dir, 'does-not-exist.tsx');
+    const provider = makeProvider();
+    const fixer = new ButtonNameFixer(provider, dir);
+
+    const result = await fixer.fix(violation(missing, 1));
+
+    expect(provider.suggestAccessibleName).toHaveBeenCalled();
+    expect(result.applied).toBe(false);
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('could not apply');
+    expect(result.description).toContain('Close dialog');
+  });
 });

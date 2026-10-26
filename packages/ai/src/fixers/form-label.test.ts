@@ -81,4 +81,53 @@ describe('FormLabelFixer', () => {
     expect(result.bucket).toBe('human-flagged');
     expect(provider.suggestAccessibleName).not.toHaveBeenCalled();
   });
+
+  it('human-flags when the provider is unavailable', async () => {
+    const provider = makeProvider({ available: () => false });
+    const fixer = new FormLabelFixer(provider, dir);
+    const result = await fixer.fix(violation('x.tsx', 1));
+
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('ANTHROPIC_API_KEY not set');
+    expect(provider.suggestAccessibleName).not.toHaveBeenCalled();
+  });
+
+  it('human-flags when the violation has no node data', async () => {
+    const provider = makeProvider();
+    const fixer = new FormLabelFixer(provider, dir);
+    const result = await fixer.fix({ ...violation('x.tsx', 1), nodes: [] });
+
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toBe('No node data');
+    expect(result.before).toBe('');
+  });
+
+  it('human-flags when the AI provider throws', async () => {
+    const file = path.join(dir, 'Form.tsx');
+    await writeFile(file, '<input type="email" />');
+    const provider = makeProvider({
+      suggestAccessibleName: vi.fn().mockRejectedValue(new Error('rate limited')),
+    });
+    const fixer = new FormLabelFixer(provider, dir);
+
+    const result = await fixer.fix(violation(file, 1));
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('AI provider error: rate limited');
+  });
+
+  it('falls back to node.html context and flags when the edit cannot apply', async () => {
+    // Nonexistent sourceFile: readSourceLine returns null (context falls back to
+    // node.html) and addAttributeToElement cannot read the file, so it flags.
+    const missing = path.join(dir, 'does-not-exist.tsx');
+    const provider = makeProvider();
+    const fixer = new FormLabelFixer(provider, dir);
+
+    const result = await fixer.fix(violation(missing, 1));
+
+    expect(provider.suggestAccessibleName).toHaveBeenCalled();
+    expect(result.applied).toBe(false);
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('could not apply');
+    expect(result.description).toContain('Email address');
+  });
 });

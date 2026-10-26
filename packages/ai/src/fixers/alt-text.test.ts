@@ -106,4 +106,62 @@ describe('AltTextFixer', () => {
     expect(provider.suggestAltText).toHaveBeenCalled();
     expect(provider.describeImage).not.toHaveBeenCalled();
   });
+
+  it('human-flags when the provider is unavailable', async () => {
+    const provider = makeProvider({ available: () => false });
+    const fixer = new AltTextFixer(provider, dir);
+    const result = await fixer.fix(violation('x.tsx', 1));
+
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.applied).toBe(false);
+    expect(result.description).toContain('ANTHROPIC_API_KEY not set');
+    expect(provider.suggestAltText).not.toHaveBeenCalled();
+  });
+
+  it('human-flags when the violation has no node data', async () => {
+    const provider = makeProvider();
+    const fixer = new AltTextFixer(provider, dir);
+    const result = await fixer.fix({ ...violation('x.tsx', 1), nodes: [] });
+
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toBe('No node data');
+    expect(result.before).toBe('');
+  });
+
+  it('human-flags when the AI provider throws', async () => {
+    const file = path.join(dir, 'App.tsx');
+    await writeFile(file, '<img src="cat.png" />');
+    const provider = makeProvider({
+      suggestAltText: vi.fn().mockRejectedValue(new Error('rate limited')),
+    });
+    const fixer = new AltTextFixer(provider, dir);
+
+    const result = await fixer.fix(violation(file, 1));
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('AI provider error: rate limited');
+  });
+
+  it('suggests alt text but cannot apply when there is no source location', async () => {
+    const provider = makeProvider();
+    const fixer = new AltTextFixer(provider, dir);
+    // No sourceFile/sourceLine: markup comes from node.html; nothing to write to.
+    const result = await fixer.fix({
+      id: 'alt-text',
+      wcagId: '1.1.1',
+      impact: 'serious',
+      description: 'img missing alt',
+      helpUrl: '',
+      nodes: [{
+        html: '<img src="cat.png" />',
+        target: ['img'],
+        failureSummary: '',
+      }],
+    });
+
+    expect(provider.suggestAltText).toHaveBeenCalled();
+    expect(result.applied).toBe(false);
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('no source location');
+    expect(result.description).toContain('from context');
+  });
 });
