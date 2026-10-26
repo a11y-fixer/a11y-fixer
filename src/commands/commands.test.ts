@@ -102,15 +102,18 @@ describe('fix command', () => {
     expect(await readFile(path.join(dir, 'BrokenComponent.tsx'), 'utf8')).toBe(original);
   });
 
-  it('human-flags the AI-assisted fix when no API key is set and opens no PR', async () => {
+  it('human-flags the AI-assisted rule (free CLI has no AI fixer) and opens no PR', async () => {
     const dir = await makeTmpDir();
     await cp(brokenFixture, path.join(dir, 'BrokenComponent.tsx'));
     const original = await readFile(brokenFixture, 'utf8');
 
     const out = await captureOutput(() => fixCommand().parseAsync([dir], { from: 'user' }));
 
+    // The free CLI ships deterministic fixers only; WCAG 1.1.1 (image alt) has
+    // no deterministic fixer, so it falls through to the human-review path.
+    // AI-assisted fixing is in the paid @a11y-fixer/ai package.
     expect(out).toContain('Applied: 0, Human review needed: 1');
-    expect(out).toContain('ANTHROPIC_API_KEY not set');
+    expect(out).toMatch(/⚠ WCAG 1\.1\.1/);
     // Without --owner/--repo no PR is attempted, and nothing was applied.
     expect(out).not.toContain('Creating PR');
     expect(await readFile(path.join(dir, 'BrokenComponent.tsx'), 'utf8')).toBe(original);
