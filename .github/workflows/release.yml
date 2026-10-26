@@ -1,0 +1,42 @@
+name: Release
+
+# Publishes the free packages (@a11y-fixer/core, @a11y-fixer/cli) to npm when a
+# GitHub Release is published. The paid packages (@a11y-fixer/ai,
+# @a11y-fixer/github-action) are marked "private" and are skipped by `pnpm -r publish`.
+#
+# Prerequisites (one-time):
+#   - An npm automation token with publish rights to the @a11y-fixer scope,
+#     stored as the NPM_TOKEN repository secret.
+#   - The package versions in packages/*/package.json match the release tag.
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm -r run build
+
+      # Publish every non-private workspace package in topological order
+      # (core before cli), converting `workspace:*` deps to real versions.
+      # --access public is required the first time each scoped package is created.
+      - run: pnpm -r publish --access public --no-git-checks --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
