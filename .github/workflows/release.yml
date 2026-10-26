@@ -31,8 +31,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
+
+      # npm Trusted Publishing (OIDC) requires npm >= 11.5.1 and Node >= 22.14.
+      # pnpm delegates the publish to the npm CLI on PATH, so ensure a recent npm.
+      - run: npm install -g npm@latest
 
       - run: pnpm install --frozen-lockfile
 
