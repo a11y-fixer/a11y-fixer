@@ -1,6 +1,6 @@
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
-import { addAttributeToElement } from '../ai-assisted/apply-attribute.js';
+import { addAttributeToElement } from '../shared/apply-attribute.js';
 
 /** Language stamped on `<html>`. A future `--lang` flag threads through here. */
 const DEFAULT_LANG = 'en';

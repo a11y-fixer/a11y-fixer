@@ -17,7 +17,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.32.0",
     "@axe-core/puppeteer": "^4.14.0",
     "@octokit/rest": "^22.0.1",
     "@typescript-eslint/parser": "^8.72.0",
