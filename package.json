@@ -1,6 +1,8 @@
 {
   "name": "@a11y-fixer/core",
   "version": "0.1.0",
+  "description": "Deterministic WCAG accessibility fixers for JSX/HTML source.",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,6 +11,27 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*"
+  ],
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "axe-core",
+    "eslint-plugin-jsx-a11y"
+  ],
+  "homepage": "https://github.com/a11y-fixer/a11y-fixer#readme",
+  "bugs": "https://github.com/a11y-fixer/a11y-fixer/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a11y-fixer/a11y-fixer.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
