@@ -124,4 +124,57 @@ describe('LinkTextFixer', () => {
     expect(result.bucket).toBe('human-flagged');
     expect(result.description).toContain('rate limited');
   });
+
+  it('suggests a rewrite but cannot apply when there is no source location', async () => {
+    const provider = makeProvider();
+    const fixer = new LinkTextFixer(provider, dir);
+    // No sourceFile/sourceLine: markup comes from node.html; nothing to write to.
+    const result = await fixer.fix({
+      id: 'anchor-has-content',
+      wcagId: '2.4.4',
+      impact: 'serious',
+      description: 'link has no descriptive text',
+      helpUrl: '',
+      nodes: [{
+        html: '<a href="/pricing">click here</a>',
+        target: ['a'],
+        failureSummary: '',
+      }],
+    });
+
+    expect(provider.rewriteLinkText).toHaveBeenCalled();
+    expect(result.applied).toBe(false);
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('Suggested: replace "click here"');
+    expect(result.description).toContain('View pricing details');
+  });
+
+  it('reports not-applied when the source line no longer contains the text', async () => {
+    // sourceFile is set but points at a missing file: markup falls back to
+    // node.html (generic, so a rewrite is attempted), but applyLinkTextToSource
+    // cannot read the file and returns null, so the fix is not applied.
+    const missing = path.join(dir, 'does-not-exist.tsx');
+    const provider = makeProvider();
+    const fixer = new LinkTextFixer(provider, dir);
+    const result = await fixer.fix({
+      id: 'anchor-has-content',
+      wcagId: '2.4.4',
+      impact: 'serious',
+      description: 'link has no descriptive text',
+      helpUrl: '',
+      nodes: [{
+        html: '<a href="/pricing">click here</a>',
+        target: ['a'],
+        failureSummary: '',
+        sourceFile: missing,
+        sourceLine: 1,
+        sourceColumn: 1,
+      }],
+    });
+
+    expect(provider.rewriteLinkText).toHaveBeenCalled();
+    expect(result.applied).toBe(false);
+    expect(result.after).toBeUndefined();
+    expect(result.description).toContain('Rewrote link text');
+  });
 });
