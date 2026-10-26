@@ -4,10 +4,15 @@ name: Release
 # GitHub Release is published. The paid packages (@a11y-fixer/ai,
 # @a11y-fixer/github-action) are marked "private" and are skipped by `pnpm -r publish`.
 #
-# Prerequisites (one-time):
-#   - An npm automation token with publish rights to the @a11y-fixer scope,
-#     stored as the NPM_TOKEN repository secret.
+# Auth is tokenless via npm Trusted Publishing (OIDC) — there is no NPM_TOKEN.
+# Prerequisites (one-time, on npmjs.com):
+#   - For BOTH @a11y-fixer/core and @a11y-fixer/cli: package Settings →
+#     Trusted Publisher → GitHub Actions, with
+#       Organization/user: a11y-fixer
+#       Repository:        a11y-fixer
+#       Workflow filename: release.yml
 #   - The package versions in packages/*/package.json match the release tag.
+# pnpm >= 10.17 performs the OIDC token exchange automatically in CI.
 
 on:
   release:
@@ -18,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # npm provenance
+      id-token: write # OIDC: npm Trusted Publishing + provenance
     steps:
       - uses: actions/checkout@v4
 
@@ -28,7 +33,6 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - run: pnpm install --frozen-lockfile
 
@@ -37,6 +41,6 @@ jobs:
       # Publish every non-private workspace package in topological order
       # (core before cli), converting `workspace:*` deps to real versions.
       # --access public is required the first time each scoped package is created.
+      # No token: pnpm exchanges the GitHub OIDC id-token for a short-lived npm
+      # credential via the configured Trusted Publisher.
       - run: pnpm -r publish --access public --no-git-checks --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
