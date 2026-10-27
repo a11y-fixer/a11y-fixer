@@ -48,5 +48,22 @@ jobs:
       # only authenticates the first package, so we invoke per-package instead.
       # pnpm rewrites `workspace:*` to the real version at publish time; no token
       # is used (OIDC via the configured Trusted Publisher).
-      - run: pnpm --filter @a11y-fixer/core publish --access public --no-git-checks --provenance
-      - run: pnpm --filter @a11y-fixer/cli publish --access public --no-git-checks --provenance
+      #
+      # Each step is idempotent: it skips a version that is already on npm, so a
+      # re-run after a partial publish only ships what's missing.
+      - name: Publish @a11y-fixer/core
+        run: |
+          V=$(node -p "require('./packages/core/package.json').version")
+          if npm view "@a11y-fixer/core@$V" version >/dev/null 2>&1; then
+            echo "@a11y-fixer/core@$V already published — skipping."
+          else
+            pnpm --filter @a11y-fixer/core publish --access public --no-git-checks --provenance
+          fi
+      - name: Publish @a11y-fixer/cli
+        run: |
+          V=$(node -p "require('./packages/cli/package.json').version")
+          if npm view "@a11y-fixer/cli@$V" version >/dev/null 2>&1; then
+            echo "@a11y-fixer/cli@$V already published — skipping."
+          else
+            pnpm --filter @a11y-fixer/cli publish --access public --no-git-checks --provenance
+          fi
