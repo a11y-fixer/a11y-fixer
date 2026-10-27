@@ -1,6 +1,6 @@
 {
   "name": "@a11y-fixer/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Deterministic WCAG accessibility fixers for JSX/HTML source.",
   "license": "MIT",
   "type": "module",

@@ -42,9 +42,11 @@ jobs:
 
       - run: pnpm -r run build
 
-      # Publish every non-private workspace package in topological order
-      # (core before cli), converting `workspace:*` deps to real versions.
-      # --access public is required the first time each scoped package is created.
-      # No token: pnpm exchanges the GitHub OIDC id-token for a short-lived npm
-      # credential via the configured Trusted Publisher.
-      - run: pnpm -r publish --access public --no-git-checks --provenance
+      # Publish each package in its own step (core before cli, so cli's
+      # workspace:* dep resolves to a published version). Each package needs its
+      # own OIDC token exchange with the Trusted Publisher — `pnpm -r publish`
+      # only authenticates the first package, so we invoke per-package instead.
+      # pnpm rewrites `workspace:*` to the real version at publish time; no token
+      # is used (OIDC via the configured Trusted Publisher).
+      - run: pnpm --filter @a11y-fixer/core publish --access public --no-git-checks --provenance
+      - run: pnpm --filter @a11y-fixer/cli publish --access public --no-git-checks --provenance
