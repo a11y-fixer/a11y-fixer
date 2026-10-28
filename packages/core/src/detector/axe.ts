@@ -8,6 +8,7 @@ import { launchBrowser } from './load-puppeteer.js';
  */
 export const AXE_WCAG_MAP: Record<string, string> = {
   'image-alt': '1.1.1',
+  'input-image-alt': '1.1.1',
   'button-name': '4.1.2',
   'label': '1.3.1',
   'html-has-lang': '3.1.1',
