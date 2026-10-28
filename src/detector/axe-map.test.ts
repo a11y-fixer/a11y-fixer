@@ -25,6 +25,7 @@ describe('toWcagId', () => {
       'document-title': '2.4.2',
       'blink': '2.2.2',
       'marquee': '2.2.2',
+      'input-image-alt': '1.1.1',
     };
     for (const [rule, wcag] of Object.entries(expected)) {
       expect(toWcagId(rule), rule).toBe(wcag);

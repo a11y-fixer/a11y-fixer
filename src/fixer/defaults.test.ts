@@ -7,6 +7,8 @@ import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import { ColorContrastFixer } from './rule-based/color-contrast.js';
 import { TabindexFixer } from './rule-based/tabindex.js';
 import { MetaRefreshFixer } from './rule-based/meta-refresh.js';
+import { LabelFixer } from './rule-based/label.js';
+import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -51,6 +53,16 @@ describe('buildCoreRegistry dispatch', () => {
   it('routes axe meta-refresh (WCAG 2.2.1) to MetaRefreshFixer', () => {
     const fixer = registry.getFixer(violation('meta-refresh', '2.2.1'));
     expect(fixer).toBeInstanceOf(MetaRefreshFixer);
+  });
+
+  it('routes axe label (WCAG 1.3.1) to LabelFixer, not EslintFixer', () => {
+    const fixer = registry.getFixer(violation('label', '1.3.1'));
+    expect(fixer).toBeInstanceOf(LabelFixer);
+  });
+
+  it('routes axe input-image-alt (WCAG 1.1.1) to InputImageAltFixer', () => {
+    const fixer = registry.getFixer(violation('input-image-alt', '1.1.1'));
+    expect(fixer).toBeInstanceOf(InputImageAltFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {

@@ -1,39 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
-
-/** Reads a double/single-quoted attribute value from a tag's attribute string. */
-function readAttr(attrs: string, name: string): string | null {
-  const re = new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i');
-  const m = attrs.match(re);
-  return m ? m[2] : null;
-}
-
-/** Escapes a string for use inside a double-quoted HTML/JSX attribute. */
-function escapeAttr(value: string): string {
-  return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-}
-
-/**
- * Derives a human-readable frame title from the last meaningful segment of a
- * `src` URL — dropping the query/hash, decoding, stripping a file extension, and
- * turning separators into spaces. Returns `null` when no sensible word remains.
- */
-function titleFromSrc(src: string): string | null {
-  const withoutQuery = src.split(/[?#]/)[0].replace(/\/+$/, '');
-  const segment = withoutQuery.split('/').pop() ?? '';
-  let decoded: string;
-  try {
-    decoded = decodeURIComponent(segment);
-  } catch {
-    decoded = segment;
-  }
-  const words = decoded
-    .replace(/\.[a-z0-9]+$/i, '') // drop extension
-    .replace(/[-_]+/g, ' ')
-    .trim();
-  return words.length > 0 ? words : null;
-}
+import { readAttr, escapeAttr } from '../shared/attrs.js';
+import { titleFromSrc } from '../shared/title-from-src.js';
 
 /**
  * Adds a `title` to the first `<iframe>`/`<frame>` opening tag on a source line,
