@@ -16,6 +16,8 @@ import { BlinkMarqueeFixer } from './rule-based/blink-marquee.js';
 import { AriaHiddenFocusFixer } from './rule-based/aria-hidden-focus.js';
 import { FrameTitleFixer } from './rule-based/frame-title.js';
 import { ListFixer } from './rule-based/list.js';
+import { LabelFixer } from './rule-based/label.js';
+import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6'];
@@ -47,6 +49,8 @@ export function registerCoreFixers(registry: FixerRegistry, rootDir: string): Fi
   registry.register(new AriaHiddenFocusFixer(rootDir));
   registry.register(new FrameTitleFixer(rootDir));
   registry.register(new ListFixer(rootDir));
+  registry.register(new LabelFixer(rootDir));
+  registry.register(new InputImageAltFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
