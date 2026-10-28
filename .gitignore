@@ -5,3 +5,7 @@ dist/
 
 # Coverage reports
 coverage/
+
+# Generated demo output (machine-specific paths)
+docs/demo.txt
+docs/demo.cast

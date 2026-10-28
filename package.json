@@ -7,7 +7,8 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "coverage": "pnpm -r run coverage",
-    "lint": "pnpm -r run lint"
+    "lint": "pnpm -r run lint",
+    "e2e": "vitest run --config vitest.config.e2e.ts"
   },
   "devDependencies": {
     "typescript": "^5.5.0",
