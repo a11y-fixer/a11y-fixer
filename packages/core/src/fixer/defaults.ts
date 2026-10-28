@@ -18,7 +18,7 @@ import { FrameTitleFixer } from './rule-based/frame-title.js';
 import { ListFixer } from './rule-based/list.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
-const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6'];
+const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
 
 /**
  * Registers the deterministic (rule-based) fixers into an existing registry.
