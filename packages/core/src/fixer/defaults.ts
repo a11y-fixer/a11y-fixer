@@ -18,6 +18,7 @@ import { FrameTitleFixer } from './rule-based/frame-title.js';
 import { ListFixer } from './rule-based/list.js';
 import { LabelFixer } from './rule-based/label.js';
 import { InputImageAltFixer } from './rule-based/input-image-alt.js';
+import { ImageAltFixer } from './rule-based/image-alt.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
@@ -51,6 +52,7 @@ export function registerCoreFixers(registry: FixerRegistry, rootDir: string): Fi
   registry.register(new ListFixer(rootDir));
   registry.register(new LabelFixer(rootDir));
   registry.register(new InputImageAltFixer(rootDir));
+  registry.register(new ImageAltFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
