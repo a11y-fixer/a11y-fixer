@@ -9,6 +9,7 @@ import { TabindexFixer } from './rule-based/tabindex.js';
 import { MetaRefreshFixer } from './rule-based/meta-refresh.js';
 import { LabelFixer } from './rule-based/label.js';
 import { InputImageAltFixer } from './rule-based/input-image-alt.js';
+import { ImageAltFixer } from './rule-based/image-alt.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -63,6 +64,11 @@ describe('buildCoreRegistry dispatch', () => {
   it('routes axe input-image-alt (WCAG 1.1.1) to InputImageAltFixer', () => {
     const fixer = registry.getFixer(violation('input-image-alt', '1.1.1'));
     expect(fixer).toBeInstanceOf(InputImageAltFixer);
+  });
+
+  it('routes axe image-alt (WCAG 1.1.1) to ImageAltFixer, not InputImageAltFixer', () => {
+    const fixer = registry.getFixer(violation('image-alt', '1.1.1'));
+    expect(fixer).toBeInstanceOf(ImageAltFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
