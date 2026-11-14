@@ -34,3 +34,8 @@ jobs:
       # Coverage thresholds (90%) live in each package's vitest.config.ts, so
       # this step fails the build on any regression below the gate.
       - run: pnpm -r run coverage
+
+      # The e2e suite drives the built CLI end-to-end. It is not part of the
+      # per-package coverage run, so wire it in explicitly (Chrome is already
+      # installed above) to keep it from rotting silently.
+      - run: pnpm e2e
