@@ -10,9 +10,12 @@
 /** Options passed to `launch`. Honors PUPPETEER_EXECUTABLE_PATH when set so the
  * caller can point puppeteer-core at a pre-installed Chrome; when unset, full
  * puppeteer uses its own bundled Chromium. */
-export function launchOptions(): { headless: true; executablePath?: string } {
+export function launchOptions(): { headless: true; args: string[]; executablePath?: string } {
   const executablePath = process.env['PUPPETEER_EXECUTABLE_PATH'];
-  return executablePath ? { headless: true, executablePath } : { headless: true };
+  // --no-sandbox is required on GitHub's ubuntu-latest (Ubuntu 24.04+), which
+  // disables unprivileged user namespaces, so Chrome's sandbox can't start.
+  const args = ['--no-sandbox', '--disable-setuid-sandbox'];
+  return executablePath ? { headless: true, args, executablePath } : { headless: true, args };
 }
 
 /**

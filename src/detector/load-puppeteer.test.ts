@@ -48,13 +48,20 @@ describe('launchOptions', () => {
   it('omits executablePath when PUPPETEER_EXECUTABLE_PATH is unset', async () => {
     delete process.env['PUPPETEER_EXECUTABLE_PATH'];
     const { launchOptions } = await import('./load-puppeteer.js');
-    expect(launchOptions()).toEqual({ headless: true });
+    expect(launchOptions()).toEqual({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
   });
 
   it('includes executablePath when PUPPETEER_EXECUTABLE_PATH is set', async () => {
     process.env['PUPPETEER_EXECUTABLE_PATH'] = '/usr/bin/chrome';
     const { launchOptions } = await import('./load-puppeteer.js');
-    expect(launchOptions()).toEqual({ headless: true, executablePath: '/usr/bin/chrome' });
+    expect(launchOptions()).toEqual({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: '/usr/bin/chrome',
+    });
   });
 });
 
@@ -92,7 +99,10 @@ describe('launchBrowser', () => {
     install({ puppeteer: 'ok' });
     const { launchBrowser } = await import('./load-puppeteer.js');
     expect(await launchBrowser()).toEqual({ id: 'browser' });
-    expect(captured.opts).toEqual({ headless: true });
+    expect(captured.opts).toEqual({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
   });
 
   it('prefers the default export and forwards executablePath', async () => {
@@ -100,6 +110,10 @@ describe('launchBrowser', () => {
     install({ puppeteer: 'default-only' });
     const { launchBrowser } = await import('./load-puppeteer.js');
     expect(await launchBrowser()).toEqual({ id: 'browser' });
-    expect(captured.opts).toEqual({ headless: true, executablePath: '/opt/chrome' });
+    expect(captured.opts).toEqual({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: '/opt/chrome',
+    });
   });
 });
