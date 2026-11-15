@@ -1,0 +1,11 @@
+{
+  "$schema": "https://github.com/garrytan/gstack/docs/pregate.md#pregate-v1",
+  "dependencies": {
+    "benchmarks/**": [],
+    "package.json": [],
+    "pnpm-workspace.yaml": [],
+    "pnpm-lock.yaml": [],
+    ".github/workflows/**": [],
+    ".gstack/pregate.json": []
+  }
+}

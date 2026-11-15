@@ -1,0 +1,14 @@
+{
+  "name": "@a11y-fixer/bench-fix-clearance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Fix benchmark: scan -> fix -> re-scan over the ACT failed-case corpus, measuring the rate at which the AI fixers actually clear the violation. Deterministic (fake provider) by default; --real uses the Anthropic provider for fix-similarity scoring.",
+  "scripts": {
+    "bench": "node run.mjs"
+  },
+  "dependencies": {
+    "@a11y-fixer/ai": "workspace:*",
+    "@a11y-fixer/core": "^0.1.3"
+  }
+}
