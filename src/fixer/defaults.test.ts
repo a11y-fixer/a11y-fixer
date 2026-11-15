@@ -75,4 +75,22 @@ describe('buildCoreRegistry dispatch', () => {
     const fixer = registry.getFixer(violation('jsx-a11y/heading-has-content', '2.4.6'));
     expect(fixer).toBeInstanceOf(EslintFixer);
   });
+
+  // The default static-JSX path emits these four ESLint rule ids. alt-text is
+  // deterministically fixable; the three a11y-custom rules are detection-only
+  // (no deterministic label/link text) and must fall through to human-flag.
+  describe('default static-JSX violation types', () => {
+    it('routes ESLint jsx-a11y/alt-text (WCAG 1.1.1) to ImageAltFixer', () => {
+      const fixer = registry.getFixer(violation('jsx-a11y/alt-text', '1.1.1'));
+      expect(fixer).toBeInstanceOf(ImageAltFixer);
+    });
+
+    it.each([
+      ['a11y-custom/button-must-have-label', '4.1.2'],
+      ['a11y-custom/input-must-have-label', '1.3.1'],
+      ['a11y-custom/no-generic-link-text', '2.4.4'],
+    ])('leaves %s (WCAG %s) unclaimed so it human-flags', (id, wcagId) => {
+      expect(registry.getFixer(violation(id, wcagId))).toBeUndefined();
+    });
+  });
 });

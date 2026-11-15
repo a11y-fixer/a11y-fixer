@@ -90,10 +90,24 @@ describe('ImageAltFixer', () => {
   beforeEach(async () => { dir = await mkdtemp(path.join(tmpdir(), 'image-alt-')); });
   afterEach(async () => { await rm(dir, { recursive: true, force: true }); });
 
-  it('canFix matches the axe id, not another id', () => {
+  it('canFix matches the axe and ESLint ids, not another id', () => {
     const fixer = new ImageAltFixer(dir);
     expect(fixer.canFix(violation('x.html', 1))).toBe(true);
+    expect(fixer.canFix(violation('x.tsx', 1, 'jsx-a11y/alt-text'))).toBe(true);
     expect(fixer.canFix(violation('x.html', 1, 'input-image-alt'))).toBe(false);
+  });
+
+  it('fixes a JSX <img> reported by the ESLint path', async () => {
+    const file = path.join(dir, 'Logo.tsx');
+    await writeFile(file, 'export const Logo = () => <img src="/logo.png" />;\n');
+    const fixer = new ImageAltFixer(dir);
+
+    const result = await fixer.fix(violation(file, 1, 'jsx-a11y/alt-text'));
+
+    expect(result.applied).toBe(true);
+    expect(result.bucket).toBe('rule-based');
+    const contents = await readFile(file, 'utf8');
+    expect(contents).toContain('<img src="/logo.png" alt="logo" />');
   });
 
   it('adds alt on the recorded line, leaving other lines untouched', async () => {

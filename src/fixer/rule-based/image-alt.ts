@@ -59,7 +59,10 @@ export class ImageAltFixer implements Fixer {
   constructor(private readonly rootDir: string) {}
 
   canFix(violation: A11yViolation): boolean {
-    return violation.id === 'image-alt';
+    // `image-alt` is the axe rule id (HTML/URL paths); `jsx-a11y/alt-text` is
+    // the ESLint rule id (default static-JSX path). Both are a missing <img>
+    // alt (WCAG 1.1.1) and the same line-rewrite fixes either.
+    return violation.id === 'image-alt' || violation.id === 'jsx-a11y/alt-text';
   }
 
   async fix(violation: A11yViolation): Promise<FixResult> {
