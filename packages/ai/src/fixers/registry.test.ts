@@ -15,6 +15,7 @@ import { SvgImgAltFixer } from './svg-img-alt.js';
 import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
+import { FrameTitleFixer } from './frame-title.js';
 import type { AIProvider } from '../provider/index.js';
 
 const provider: AIProvider = {
@@ -95,6 +96,10 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe aria-toggle-field-name to AriaToggleFieldNameFixer', () => {
     expect(registry.getFixer(violation('aria-toggle-field-name', 'aria-toggle-field-name'))).toBeInstanceOf(AriaToggleFieldNameFixer);
+  });
+
+  it('routes axe frame-title (WCAG 4.1.2) to FrameTitleFixer, not EslintFixer', () => {
+    expect(registry.getFixer(violation('frame-title', '4.1.2'))).toBeInstanceOf(FrameTitleFixer);
   });
 
   it('still routes deterministic axe html-has-lang (WCAG 3.1.1) to HtmlLangFixer', () => {

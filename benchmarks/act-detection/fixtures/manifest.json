@@ -1,7 +1,7 @@
 {
   "source": "https://act-rules.github.io/testcases.json",
   "fetchedAt": "2026-11-15",
-  "count": 92,
+  "count": 102,
   "cases": [
     {
       "actRuleId": "97a4e1",
@@ -274,6 +274,86 @@
       "title": "Inapplicable Example 3",
       "expected": "inapplicable",
       "file": "e086e5/09b08d811784ac228154dd08863441b11222a597.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "00d0ca6f65fac3fda16eefab537af52f2f3ad1bb",
+      "title": "Passed Example 1",
+      "expected": "passed",
+      "file": "cae760/00d0ca6f65fac3fda16eefab537af52f2f3ad1bb.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "2813dd16dbc09fc3c554133cb3bc5ff2e27cd1bf",
+      "title": "Passed Example 2",
+      "expected": "passed",
+      "file": "cae760/2813dd16dbc09fc3c554133cb3bc5ff2e27cd1bf.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "9d6c71a7f9d0e01551fd56c559dd665755881a08",
+      "title": "Passed Example 3",
+      "expected": "passed",
+      "file": "cae760/9d6c71a7f9d0e01551fd56c559dd665755881a08.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "5a15849f8c4be14525f19699608c7de01e95c3ff",
+      "title": "Failed Example 1",
+      "expected": "failed",
+      "file": "cae760/5a15849f8c4be14525f19699608c7de01e95c3ff.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "a84d20cfef3a8a7f840d499427dcd764988af01d",
+      "title": "Failed Example 2",
+      "expected": "failed",
+      "file": "cae760/a84d20cfef3a8a7f840d499427dcd764988af01d.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "b5daca9f2e3baa8dd9426a4945a2f860cf892d91",
+      "title": "Failed Example 3",
+      "expected": "failed",
+      "file": "cae760/b5daca9f2e3baa8dd9426a4945a2f860cf892d91.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "38cee2a5fee5b3d670e0d63d78dda5abaea50e0a",
+      "title": "Failed Example 4",
+      "expected": "failed",
+      "file": "cae760/38cee2a5fee5b3d670e0d63d78dda5abaea50e0a.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "b52cbe5f0131e309dcad4c4dd4116cbebd6a74b3",
+      "title": "Inapplicable Example 1",
+      "expected": "inapplicable",
+      "file": "cae760/b52cbe5f0131e309dcad4c4dd4116cbebd6a74b3.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "09b97d8cfc40060db30a433ba483cfea18ca2832",
+      "title": "Inapplicable Example 2",
+      "expected": "inapplicable",
+      "file": "cae760/09b97d8cfc40060db30a433ba483cfea18ca2832.html"
+    },
+    {
+      "actRuleId": "cae760",
+      "ruleName": "Iframe element has non-empty accessible name",
+      "testcaseId": "394132219ba385a90dda40efe822ab8db0cc9483",
+      "title": "Inapplicable Example 3",
+      "expected": "inapplicable",
+      "file": "cae760/394132219ba385a90dda40efe822ab8db0cc9483.html"
     },
     {
       "actRuleId": "59796f",
