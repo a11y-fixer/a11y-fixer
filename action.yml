@@ -46,6 +46,10 @@ inputs:
   cache-file:
     description: 'Path to a JSON file for caching AI results across runs (optional). Pair with actions/cache to cut Anthropic spend. In-run deduplication is always on; this only adds cross-run persistence.'
     required: false
+  learning:
+    description: 'Fix mode only. When "on" (default), the action records accepted fixes to a committed store (.a11y-fixer/learning.jsonl) and feeds them back as house-style examples so future fixes match your codebase. Data never leaves your repo. Set "off" to disable.'
+    required: false
+    default: 'on'
 
 outputs:
   pr-url:

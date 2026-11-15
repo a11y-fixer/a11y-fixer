@@ -31,6 +31,8 @@ vi.mock('./cookies-scanner.js', () => ({
 vi.mock('@a11y-fixer/ai', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AnthropicProvider: class { constructor(..._args: any[]) {} },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  LearningProvider: class { constructor(..._args: any[]) {} drainGenerations() { return []; } },
   CachingProvider: class {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
