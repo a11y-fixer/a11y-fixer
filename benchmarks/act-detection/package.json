@@ -1,0 +1,14 @@
+{
+  "name": "@a11y-fixer/bench-act-detection",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Detection benchmark: runs the real HTML scanner against the W3C ACT Rules test cases for the rules this product covers, scoring precision/recall against a committed baseline.",
+  "scripts": {
+    "fetch": "node fetch-fixtures.mjs",
+    "bench": "node run.mjs"
+  },
+  "dependencies": {
+    "@a11y-fixer/core": "^0.1.3"
+  }
+}

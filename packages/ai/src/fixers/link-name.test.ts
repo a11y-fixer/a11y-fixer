@@ -66,6 +66,37 @@ describe('LinkNameFixer', () => {
     expect(contents).toContain('<a aria-label="View pricing" href="/pricing">');
   });
 
+  it('human-flags a role="none"/"presentation" link instead of adding a prohibited aria-label', async () => {
+    // aria-label is prohibited under role=none/presentation, so "fixing" here
+    // would trade link-name for aria-prohibited-attr. See the ACT fix-clearance
+    // benchmark (c487ae Failed Example 10).
+    const file = path.join(dir, 'page.html');
+    await writeFile(file, '<a href="https://example.com" role="none"> </a>');
+    const provider = makeProvider();
+    const fixer = new LinkNameFixer(provider, dir);
+
+    const result = await fixer.fix(violation(file, 1));
+
+    expect(result.applied).toBe(false);
+    expect(result.bucket).toBe('human-flagged');
+    expect(result.description).toContain('role=');
+    // Flagged before any API spend, and the source is left untouched.
+    expect(provider.suggestAccessibleName).not.toHaveBeenCalled();
+    expect(await readFile(file, 'utf8')).toBe('<a href="https://example.com" role="none"> </a>');
+  });
+
+  it('still fixes a link whose role is a non-presentational value', async () => {
+    const file = path.join(dir, 'App.tsx');
+    await writeFile(file, '<a href="/pricing" role="button"><Icon /></a>');
+    const provider = makeProvider();
+    const fixer = new LinkNameFixer(provider, dir);
+
+    const result = await fixer.fix(violation(file, 1));
+
+    expect(result.applied).toBe(true);
+    expect(await readFile(file, 'utf8')).toContain('aria-label="View pricing"');
+  });
+
   it('human-flags when there is no source location', async () => {
     const provider = makeProvider();
     const fixer = new LinkNameFixer(provider, dir);

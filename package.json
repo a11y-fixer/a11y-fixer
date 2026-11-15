@@ -7,7 +7,9 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "coverage": "pnpm -r run coverage",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "bench:detect": "pnpm --filter @a11y-fixer/bench-act-detection run bench",
+    "bench:fix": "pnpm --filter @a11y-fixer/bench-fix-clearance run bench"
   },
   "devDependencies": {
     "typescript": "^5.5.0",

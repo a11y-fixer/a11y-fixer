@@ -47,6 +47,20 @@ export class LinkNameFixer implements Fixer {
       ? `Link element: ${source.line}\nSurrounding code:\n${source.context}`
       : `Link element: ${node.html}`;
 
+    // A focusable <a href> carrying role="none"/"presentation" is itself the
+    // defect (axe presentation-role-conflict): the role both suppresses the
+    // accessible name and *prohibits* aria-label, so adding one would only
+    // trade link-name for aria-prohibited-attr. Removing the role (or the href)
+    // is a human decision about the element's intent, so flag rather than fix.
+    const anchorTag = markup.match(/<a\b[^>]*>/i)?.[0] ?? markup;
+    if (/\brole\s*=\s*["'](?:none|presentation)["']/i.test(anchorTag)) {
+      return this.humanFlag(
+        violation,
+        'Link has role="none"/"presentation", which hides its name and prohibits ' +
+          'aria-label; remove the conflicting role (or the href) instead of adding a label',
+      );
+    }
+
     let name: string;
     try {
       name = await this.aiProvider.suggestAccessibleName(markup, context);
