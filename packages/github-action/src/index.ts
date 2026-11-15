@@ -10,6 +10,7 @@ import { buildFullRegistry, AnthropicProvider, CachingProvider } from '@a11y-fix
 import type { CookieParam } from 'puppeteer-core';
 import { scanWithCookies } from './cookies-scanner.js';
 import { verifyLicenseKey } from './license.js';
+import { verifyFixes, snapshotFiles } from './verify-fixes.js';
 import path from 'node:path';
 
 /**
@@ -167,17 +168,46 @@ export async function run(): Promise<void> {
       const registry = buildFullRegistry(aiProvider, rootDir);
 
       const before = await scanSource(rootDir, { html });
+      // Capture pre-fix file contents so any fix we can't verify is reverted
+      // cleanly rather than shipped. Must happen before applyAll mutates disk.
+      const snapshot = await snapshotFiles(before);
       const fixes = await registry.applyAll(before);
       await aiProvider.save();
-      const applied = fixes.filter(f => f.applied);
       const after = await scanSource(rootDir, { html });
 
-      core.setOutput('fixes-applied', String(applied.length));
-      core.setOutput('violations-before', String(before.length));
-      core.setOutput('violations-after', String(after.length));
-      core.info(`Applied ${applied.length} fix(es). Violations: ${before.length} → ${after.length}.`);
+      // Gate the re-scan: confirm each edited file's violations net-decreased and
+      // that no fix introduced a new one. Files that fail are restored to their
+      // pre-fix contents, so a cover-up or regression never reaches the PR.
+      const report = await verifyFixes({
+        before,
+        after,
+        fixes,
+        changedFiles: dedupeFixFiles(fixes),
+        snapshot,
+        rescan: () => scanSource(rootDir, { html }),
+      });
+      const applied = report.verifiedFixes;
 
-      await maybeOpenPR(fixes, before, after, applied, baseBranch, Boolean(githubToken));
+      core.setOutput('fixes-applied', String(applied.length));
+      core.setOutput('fixes-reverted', String(report.revertedFixes.length));
+      core.setOutput('regressions-detected', String(report.regressions.length));
+      core.setOutput('violations-before', String(before.length));
+      core.setOutput('violations-after', String(report.finalAfter.length));
+      core.info(
+        `Applied ${applied.length} verified fix(es); reverted ${report.revertedFiles.length} file(s) ` +
+        `(${report.regressions.length} regression(s)). ` +
+        `Violations: ${before.length} → ${report.finalAfter.length}.`,
+      );
+      for (const f of report.revertedFixes) {
+        core.warning(
+          `Reverted unverified fix (WCAG ${f.wcagId}) in ${f.sourceLocation?.file ?? 'unknown'}: ` +
+          'the re-scan did not confirm it cleared its violation, or it introduced a new one.',
+        );
+      }
+
+      // PR only the verified fixes. A reverted file is back at its pre-fix state,
+      // so dedupeFixFiles inside maybeOpenPR sees no diff for it and drops it.
+      await maybeOpenPR(applied, before, report.finalAfter, applied, baseBranch, Boolean(githubToken));
     }
   } catch (error) {
     core.setFailed(error instanceof Error ? error.message : String(error));
