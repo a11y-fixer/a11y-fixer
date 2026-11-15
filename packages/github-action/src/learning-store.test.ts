@@ -68,6 +68,12 @@ describe('recordProposals', () => {
     expect(second).toHaveLength(0);
   });
 
+  it('stamps firstSeen with a real timestamp by default', () => {
+    const fixes = [aiFix({ file: 'a.tsx', before: '<img src="c.png">', after: '<img src="c.png" alt="Cat">' })];
+    const added = recordProposals([], fixes, [gen('Cat')]);
+    expect(added[0]!.firstSeen).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
   it('does not attribute two fixes to the same generation', () => {
     const fixes = [
       aiFix({ file: 'a.tsx', before: '<img src="1.png">', after: '<img src="1.png" alt="Shared">' }),
@@ -142,6 +148,12 @@ describe('reconcile', () => {
     );
     expect(out[0]!.status).toBe('corrected');
     expect(out[0]!.accepted).toBe('Dismiss');
+  });
+
+  it('stamps resolvedAt with a real timestamp by default', async () => {
+    const rec = proposed({ proposed: 'A happy dog', anchor: 'dog.png' });
+    const out = await reconcile([rec], reader({ 'a.tsx': '<img src="dog.png" alt="A happy dog">' }));
+    expect(out[0]!.resolvedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 
   it('leaves already-resolved records untouched', async () => {
