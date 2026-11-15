@@ -96,6 +96,22 @@ so the cache is reused until the code changes:
     cache-file: .a11y-fixer-cache.json
 ```
 
+## Learning from your reviews
+
+In `mode: fix`, the Action learns your codebase's voice. Every AI fix that
+survives the re-scan gate is recorded to a committed store
+(`.a11y-fixer/learning.jsonl`). On later runs it reconciles each record against
+your repo: a fix you merged as-is is an accepted example, and a fix you **edited
+before merging** is captured as a correction — the richest signal. Those
+accepted values are fed back as few-shot examples, so future alt text, link
+text, and `aria-label`s match the style, tone, and length your team actually
+ships. Correction rate falls the more you use it.
+
+This happens **entirely inside your repo** — the store is committed alongside
+your code and nothing about your corrections is sent anywhere. Commit
+`.a11y-fixer/learning.jsonl` to keep the benefit; it compounds over time. Set
+`learning: off` to disable.
+
 ## Packages
 
 - **`packages/ai`** (`@a11y-fixer/ai`) — Anthropic provider + AI-assisted fixers

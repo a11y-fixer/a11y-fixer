@@ -12,6 +12,11 @@ const h = vi.hoisted(() => ({
   cacheCtor: vi.fn(),
   cacheSave: vi.fn(async () => {}),
   scanWithCookies: vi.fn(),
+  readStore: vi.fn(async (..._a: unknown[]) => [] as unknown[]),
+  reconcile: vi.fn(async (r: unknown[], ..._rest: unknown[]) => r),
+  recordProposals: vi.fn((..._a: unknown[]) => [] as unknown[]),
+  loadExamples: vi.fn((..._a: unknown[]) => ({}) as Record<string, string[]>),
+  writeStore: vi.fn(async (..._a: unknown[]) => {}),
 }));
 
 vi.mock('@actions/github', () => ({
@@ -28,9 +33,21 @@ vi.mock('./cookies-scanner.js', () => ({
   scanWithCookies: (...args: unknown[]) => h.scanWithCookies(...args),
 }));
 
+vi.mock('./learning-store.js', () => ({
+  DEFAULT_STORE_PATH: '.a11y-fixer/learning.jsonl',
+  readStore: (...a: unknown[]) => h.readStore(...a),
+  reconcile: (...a: [unknown[], ...unknown[]]) => h.reconcile(...a),
+  recordProposals: (...a: unknown[]) => h.recordProposals(...a),
+  loadExamples: (...a: unknown[]) => h.loadExamples(...a),
+  writeStore: (...a: unknown[]) => h.writeStore(...a),
+  makeFileReader: () => async () => null,
+}));
+
 vi.mock('@a11y-fixer/ai', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AnthropicProvider: class { constructor(..._args: any[]) {} },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  LearningProvider: class { constructor(..._args: any[]) {} drainGenerations() { return []; } },
   CachingProvider: class {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(...args: any[]) {
@@ -285,6 +302,52 @@ describe('github-action fix mode', () => {
     // No browser runner is constructed, and scanning uses the static path.
     expect(h.puppeteerCtor).not.toHaveBeenCalled();
     expect(h.scanOpts).toHaveBeenCalledWith({ html: false });
+  });
+
+  it('records proposals and persists the learning store after a fix run', async () => {
+    h.scan.mockResolvedValueOnce([{}, {}]).mockResolvedValueOnce([{}]);
+    h.applyAll.mockResolvedValue([APPLIED_FIX]);
+    // A prior record (so reconcile runs), a fresh proposal, and learned examples.
+    h.readStore.mockResolvedValueOnce([{ id: 'old', status: 'proposed' }]);
+    h.recordProposals.mockReturnValueOnce([{ id: 'new', status: 'proposed' }]);
+    h.loadExamples.mockReturnValueOnce({ alt: ['A golden retriever'] });
+    const info = vi.mocked(actionsCore.info);
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.reconcile).toHaveBeenCalledTimes(1);
+    expect(h.writeStore).toHaveBeenCalledTimes(1);
+    expect(info).toHaveBeenCalledWith(expect.stringContaining('Learning: 1 new proposal(s)'));
+  });
+
+  it('persists the store when a reconcile resolved a record even with no new proposals', async () => {
+    h.scan.mockResolvedValueOnce([{}, {}]).mockResolvedValueOnce([{}]);
+    h.applyAll.mockResolvedValue([APPLIED_FIX]);
+    // Reconcile marked a prior record resolved; no new proposals this run.
+    h.readStore.mockResolvedValueOnce([{ id: 'old', status: 'proposed' }]);
+    h.reconcile.mockResolvedValueOnce([{ id: 'old', status: 'merged', resolvedAt: 't1' }]);
+    h.recordProposals.mockReturnValueOnce([]);
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.writeStore).toHaveBeenCalledTimes(1);
+  });
+
+  it('skips the learning store entirely when learning is off', async () => {
+    h.scan.mockResolvedValueOnce([{}, {}]).mockResolvedValueOnce([{}]);
+    h.applyAll.mockResolvedValue([APPLIED_FIX]);
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok', learning: 'off' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.readStore).not.toHaveBeenCalled();
+    expect(h.recordProposals).not.toHaveBeenCalled();
+    expect(h.writeStore).not.toHaveBeenCalled();
   });
 });
 

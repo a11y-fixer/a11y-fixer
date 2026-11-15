@@ -6,11 +6,20 @@ import {
   dedupeFixFiles,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
-import { buildFullRegistry, AnthropicProvider, CachingProvider } from '@a11y-fixer/ai';
+import { buildFullRegistry, AnthropicProvider, CachingProvider, LearningProvider } from '@a11y-fixer/ai';
 import type { CookieParam } from 'puppeteer-core';
 import { scanWithCookies } from './cookies-scanner.js';
 import { verifyLicenseKey } from './license.js';
 import { verifyFixes, snapshotFiles } from './verify-fixes.js';
+import {
+  DEFAULT_STORE_PATH,
+  readStore,
+  writeStore,
+  reconcile,
+  recordProposals,
+  loadExamples,
+  makeFileReader,
+} from './learning-store.js';
 import path from 'node:path';
 
 /**
@@ -55,6 +64,11 @@ async function maybeOpenPR(
 
   core.setOutput('pr-url', pr.url);
   core.info(`PR created: ${pr.url}`);
+}
+
+/** Total number of learned examples across all buckets, for a log line. */
+function examplesCount(examples: Record<string, string[] | undefined>): number {
+  return Object.values(examples).reduce((n, v) => n + (v?.length ?? 0), 0);
 }
 
 export async function run(): Promise<void> {
@@ -107,6 +121,10 @@ export async function run(): Promise<void> {
   }
   // Optional persistent AI cache. Empty = per-run in-memory dedup only.
   const cacheFile = core.getInput('cache-file') || undefined;
+  // The local learning loop (fix mode): records accepted fixes to a committed
+  // store and feeds them back as house-style examples. On by default; opt out
+  // with `learning: off`. Never leaves the repo.
+  const learningEnabled = (core.getInput('learning') || 'on').toLowerCase() !== 'off';
 
   // This is paid, source-available software: a valid license key is required to
   // run it. The free, deterministic engine lives in @a11y-fixer/cli on npm.
@@ -160,9 +178,22 @@ export async function run(): Promise<void> {
           'or mode: fix with static JSX/HTML. Ignoring `url` for this fix run.',
         );
       }
+      // Learning loop: reconcile prior proposals against the repo's current
+      // state (detecting human corrections), then feed accepted values back as
+      // house-style examples. All local — no network.
+      const storeFile = path.resolve(rootDir, DEFAULT_STORE_PATH);
+      let learningRecords = learningEnabled ? await readStore(storeFile) : [];
+      if (learningEnabled && learningRecords.length > 0) {
+        learningRecords = await reconcile(learningRecords, makeFileReader(rootDir));
+      }
+      const examples = learningEnabled ? loadExamples(learningRecords) : {};
+
       // Wrap the provider so identical requests cost at most one API call:
       // in-memory dedup within this run, plus an optional cross-run disk cache.
-      const aiProvider = new CachingProvider(new AnthropicProvider(), { cacheFile });
+      // LearningProvider sits *inside* the cache so injected examples are part of
+      // the cached request and so it can observe every generation.
+      const learningProvider = new LearningProvider(new AnthropicProvider(), examples);
+      const aiProvider = new CachingProvider(learningProvider, { cacheFile });
       // Static-only (no PuppeteerRunner): the browser screenshot path exists
       // only for URL scans, which fix mode does not support.
       const registry = buildFullRegistry(aiProvider, rootDir);
@@ -208,6 +239,31 @@ export async function run(): Promise<void> {
       // PR only the verified fixes. A reverted file is back at its pre-fix state,
       // so dedupeFixFiles inside maybeOpenPR sees no diff for it and drops it.
       await maybeOpenPR(applied, before, report.finalAfter, applied, baseBranch, Boolean(githubToken));
+
+      // Close the loop: record each verified AI fix as a `proposed` learning
+      // record (correlated to the generation that produced its value), then
+      // persist the reconciled + extended store back to the repo. Best-effort —
+      // a store write must never fail an otherwise-successful fix run.
+      if (learningEnabled) {
+        try {
+          const additions = recordProposals(
+            learningRecords,
+            applied,
+            learningProvider.drainGenerations(),
+          );
+          if (additions.length > 0 || learningRecords.some((r) => r.resolvedAt)) {
+            await writeStore(storeFile, [...learningRecords, ...additions]);
+            core.info(
+              `Learning: ${additions.length} new proposal(s) recorded; ` +
+              `${examplesCount(examples)} example(s) in play.`,
+            );
+          }
+        } catch (err) {
+          core.warning(
+            `Learning store could not be updated: ${err instanceof Error ? err.message : String(err)}`,
+          );
+        }
+      }
     }
   } catch (error) {
     core.setFailed(error instanceof Error ? error.message : String(error));
