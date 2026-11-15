@@ -102,21 +102,26 @@ describe('fix command', () => {
     expect(await readFile(path.join(dir, 'BrokenComponent.tsx'), 'utf8')).toBe(original);
   });
 
-  it('human-flags the AI-assisted rule (free CLI has no AI fixer) and opens no PR', async () => {
+  it('applies the deterministic alt-text fix, human-flags the rest, and opens no PR', async () => {
     const dir = await makeTmpDir();
-    await cp(brokenFixture, path.join(dir, 'BrokenComponent.tsx'));
-    const original = await readFile(brokenFixture, 'utf8');
+    const target = path.join(dir, 'BrokenComponent.tsx');
+    await cp(brokenFixture, target);
 
     const out = await captureOutput(() => fixCommand().parseAsync([dir], { from: 'user' }));
 
-    // All four detected violations fall through to the human-review path since
-    // the free CLI ships deterministic fixers only (AI-assisted fixing lives in
-    // the paid @a11y-fixer/ai package).
-    expect(out).toMatch(/Applied: 0, Human review needed: [1-9]/);
-    expect(out).toMatch(/⚠ WCAG 1\.1\.1/);
-    // Without --owner/--repo no PR is attempted, and nothing was applied.
+    // The free CLI ships deterministic fixers only. Of the four detected types,
+    // the missing <img> alt (WCAG 1.1.1) is deterministically fixable; the three
+    // a11y-custom rules (label/link text) are detection-only — you can't invent a
+    // label — so they fall through to the human-review path.
+    expect(out).toMatch(/Applied: 1, Human review needed: 3/);
+    expect(out).toMatch(/✓ WCAG 1\.1\.1/);
+    expect(out).toMatch(/⚠ WCAG 4\.1\.2/);
+    expect(out).toMatch(/⚠ WCAG 1\.3\.1/);
+    expect(out).toMatch(/⚠ WCAG 2\.4\.4/);
+    // Without --owner/--repo no PR is attempted.
     expect(out).not.toContain('Creating PR');
-    expect(await readFile(path.join(dir, 'BrokenComponent.tsx'), 'utf8')).toBe(original);
+    // The alt fix was written to the source file.
+    expect(await readFile(target, 'utf8')).toContain('alt="logo"');
   });
 });
 
