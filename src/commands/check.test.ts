@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { cp, mkdtemp, rm } from 'node:fs/promises';
+import { cp, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -98,6 +99,69 @@ describe('check command', () => {
     const { code, output } = await runCheck([dir]);
     expect(code).toBe(0);
     expect(output).toContain('No accessibility violations found.');
+  });
+
+  describe('--baseline', () => {
+    it('records a baseline with --update-baseline and exits 0', async () => {
+      const dir = await mkdtemp(path.join(tmpdir(), 'a11y-check-'));
+      tmpDirs.push(dir);
+      await cp(fixturesDir, dir, { recursive: true });
+      const baselineFile = path.join(dir, '.a11y-baseline.json');
+
+      const { code, output } = await runCheck([dir, '--baseline', baselineFile, '--update-baseline']);
+      expect(code).toBe(0);
+      expect(output).toMatch(/Wrote baseline with \d+ violation/);
+      expect(existsSync(baselineFile)).toBe(true);
+    });
+
+    it('exits 0 when every violation is covered by the baseline', async () => {
+      const dir = await mkdtemp(path.join(tmpdir(), 'a11y-check-'));
+      tmpDirs.push(dir);
+      await cp(fixturesDir, dir, { recursive: true });
+      const baselineFile = path.join(dir, '.a11y-baseline.json');
+
+      await runCheck([dir, '--baseline', baselineFile, '--update-baseline']);
+      const { code, output } = await runCheck([dir, '--baseline', baselineFile]);
+      expect(code).toBe(0);
+      expect(output).toMatch(/No new accessibility violations/);
+    });
+
+    it('exits 1 and lists only the new violation introduced after baselining', async () => {
+      const dir = await mkdtemp(path.join(tmpdir(), 'a11y-check-'));
+      tmpDirs.push(dir);
+      await cp(fixturesDir, dir, { recursive: true });
+      const baselineFile = path.join(dir, '.a11y-baseline.json');
+
+      await runCheck([dir, '--baseline', baselineFile, '--update-baseline']);
+      await writeFile(path.join(dir, 'New.tsx'), 'export const New = () => <button></button>;\n');
+
+      const { code, output } = await runCheck([dir, '--baseline', baselineFile]);
+      expect(code).toBe(1);
+      expect(output).toMatch(/new accessibility violation/);
+      expect(output).toContain('New.tsx');
+    });
+
+    it('reports resolved baselined violations when the code is cleaned up', async () => {
+      const dir = await mkdtemp(path.join(tmpdir(), 'a11y-check-'));
+      tmpDirs.push(dir);
+      await cp(fixturesDir, dir, { recursive: true });
+      const baselineFile = path.join(dir, '.a11y-baseline.json');
+
+      await runCheck([dir, '--baseline', baselineFile, '--update-baseline']);
+      // Remove the broken component so its baselined violations disappear.
+      await rm(path.join(dir, 'BrokenComponent.tsx'));
+
+      const { code, output } = await runCheck([dir, '--baseline', baselineFile]);
+      expect(code).toBe(0);
+      expect(output).toMatch(/resolved/);
+    });
+
+    it('warns and falls back to failing when the baseline file is missing', async () => {
+      const { code, output } = await runCheck([fixturesDir, '--baseline', path.join(tmpdir(), 'nope-a11y.json')]);
+      expect(code).toBe(1);
+      expect(output).toMatch(/No baseline found/);
+      expect(output).toMatch(/Found \d+ accessibility violation/);
+    });
   });
 
   describe('--url (axe path)', () => {

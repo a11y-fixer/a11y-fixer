@@ -40,7 +40,23 @@ build on regressions.
 a11y-fixer check ./src
 ```
 
-Options: `--html`, `--url <url>`.
+To adopt the gate on a codebase that already has violations, record a **baseline**
+of the current state and then fail only on *new* violations:
+
+```sh
+# record current violations as accepted (writes .a11y-baseline.json)
+a11y-fixer check ./src --baseline --update-baseline
+
+# in CI: fail only when a new violation is introduced
+a11y-fixer check ./src --baseline
+```
+
+The baseline keys each violation by rule + source file (not line number), so it
+survives ordinary edits. Commit `.a11y-baseline.json` and refresh it with
+`--update-baseline` as you pay down existing debt.
+
+Options: `--html`, `--url <url>`, `--baseline [file]` (default
+`.a11y-baseline.json`), `--update-baseline`.
 
 ### `fix` — apply fixes (and optionally open a PR)
 
