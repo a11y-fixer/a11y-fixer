@@ -15,6 +15,7 @@ import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { FrameTitleFixer } from './frame-title.js';
+import { DocumentTitleFixer } from './document-title.js';
 
 /**
  * Builds the full fixer registry used by the paid GitHub Action: the
@@ -43,6 +44,8 @@ import { FrameTitleFixer } from './frame-title.js';
  * `<img>`-only AltTextFixer. SelectNameFixer, InputButtonNameFixer, and the
  * three `aria-*-name` fixers and {@link FrameTitleFixer} (4.1.2) key on unique
  * axe ids with no broad 4.1.2 fixer to collide with, so their order is free.
+ * {@link DocumentTitleFixer} (`document-title`, 2.4.2) is likewise id-keyed with
+ * no broad collider, so its position is free too.
  */
 export function buildFullRegistry(
   aiProvider: AIProvider,
@@ -67,6 +70,7 @@ export function buildFullRegistry(
   registry.register(new AriaInputFieldNameFixer(aiProvider, rootDir));
   registry.register(new AriaToggleFieldNameFixer(aiProvider, rootDir));
   registry.register(new FrameTitleFixer(aiProvider, rootDir));
+  registry.register(new DocumentTitleFixer(aiProvider, rootDir));
 
   registerCoreFixers(registry, rootDir);
 
