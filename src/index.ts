@@ -30,3 +30,14 @@ export { HtmlXmlLangMismatchFixer, primarySubtag } from './fixer/rule-based/html
 
 export { PullRequestBuilder } from './pr/pull-request-builder.js';
 export type { PROptions, PRResult } from './pr/pull-request-builder.js';
+
+export {
+  nodeKey,
+  fingerprintKey,
+  fingerprintViolations,
+  loadBaseline,
+  buildBaseline,
+  saveBaseline,
+  diffAgainstBaseline,
+} from './baseline/index.js';
+export type { Baseline, BaselineDiff } from './baseline/index.js';
