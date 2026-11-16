@@ -8,9 +8,10 @@ involved.
 
 a11y-fixer-pro runs **entirely inside the customer's own CI runner**. It has no
 hosted backend, database, or API that we operate. The only data that leaves the
-customer's trust boundary is sent to **Anthropic**, under the **customer's own
-API key**, and only when AI fixing is enabled. There is **no telemetry,
-analytics, or phone-home** — license verification is fully offline.
+customer's trust boundary is sent to the **customer-selected LLM provider**
+(**Anthropic** by default; optionally **OpenAI** or **Google**), under the
+**customer's own API key**, and only when AI fixing is enabled. There is **no
+telemetry, analytics, or phone-home** — license verification is fully offline.
 
 ## Data-flow diagram
 
@@ -23,12 +24,13 @@ analytics, or phone-home** — license verification is fully offline.
 │        │                                                                     │
 │        ├─ axe-core + puppeteer scan (local, in-runner)                       │
 │        │                                                                     │
-│        ├─ AI fix generation ───────────────────────────┐  (only if          │
-│        │                                                │   anthropic-api-key │
-│        │                                                ▼   is supplied)      │
+│        ├─ AI fix generation ───────────────────────────┐  (only if an        │
+│        │                                                │   LLM key is        │
+│        │                                                ▼   supplied)          │
 │        │                                      ┌──────────────────┐           │
-│        │                                      │  Anthropic API   │  ← vendor  │
-│        │   code context + base64 PNG  ───────▶│ claude-haiku-4-5 │  (egress)  │
+│        │                                      │  LLM provider    │  ← vendor  │
+│        │   code context + base64 PNG  ───────▶│ (Anthropic /     │  (egress)  │
+│        │                                      │  OpenAI / Google)│           │
 │        │                                      └──────────────────┘           │
 │        │                                                │                     │
 │        │                           generated alt/link/aria text              │
@@ -46,7 +48,7 @@ analytics, or phone-home** — license verification is fully offline.
 
 | Data                                   | Destination                     | Notes |
 | -------------------------------------- | ------------------------------- | ----- |
-| Source/HTML context + page screenshots | **Anthropic API** (`claude-haiku-4-5`) | Only when `anthropic-api-key` is set. See `packages/ai/src/provider/anthropic.ts`. Customer's own key. |
+| Source/HTML context + page screenshots | **Customer-selected LLM provider** (Anthropic / OpenAI / Google) | Only when an LLM key is set (`anthropic-api-key` or `ai-api-key`). Routed via the Vercel AI SDK — see `packages/ai/src/provider/ai-sdk.ts`. Customer's own key; sent only to the chosen provider. |
 | Accessibility findings                 | Stays in-runner                 | axe-core + puppeteer scan, local. |
 | AI results (cache)                     | Customer workspace / CI cache   | `sha256(request) → result` JSON. `packages/ai/src/provider/caching.ts`. Optional (`cache-file`). |
 | Accepted fix values (learning)         | Customer's own repo             | `.a11y-fixer/learning.jsonl`, few-shot house-style examples. `packages/github-action/src/learning-store.ts`. On by default; `learning: off` disables. |
@@ -59,7 +61,7 @@ analytics, or phone-home** — license verification is fully offline.
 
 | Vendor   | Role                                              | Customer data involved | Vendor SOC2 to track |
 | -------- | ------------------------------------------------- | ---------------------- | -------------------- |
-| Anthropic| AI generation (alt/link/aria text)                | Source context + screenshots, under customer's key | Yes — obtain Anthropic's report |
+| LLM provider (Anthropic default; OpenAI or Google if selected) | AI generation (alt/link/aria text) | Source context + screenshots, under customer's key | Yes — obtain the selected provider's report |
 | GitHub   | Code hosting, Actions runner, PRs, secrets        | All (customer's own platform) | Yes |
 | Vercel   | Hosts the separate `a11y-fixer.com` site          | N/A to this repo; relevant to the site | Yes (for the site's audit) |
 | npm      | Distribution of `@a11y-fixer/core` / `/cli`       | None (public packages) | N/A |

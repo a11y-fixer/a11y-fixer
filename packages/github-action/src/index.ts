@@ -6,7 +6,7 @@ import {
   dedupeFixFiles,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
-import { buildFullRegistry, AnthropicProvider, CachingProvider, LearningProvider } from '@a11y-fixer/ai';
+import { buildFullRegistry, AISDKProvider, resolveAIConfig, CachingProvider, LearningProvider } from '@a11y-fixer/ai';
 import type { CookieParam } from 'puppeteer-core';
 import { scanWithCookies } from './cookies-scanner.js';
 import { verifyLicenseKey } from './license.js';
@@ -77,6 +77,11 @@ export async function run(): Promise<void> {
   const licenseKey = core.getInput('license-key');
   const githubToken = core.getInput('github-token');
   const anthropicKey = core.getInput('anthropic-api-key');
+  // Generic LLM provider inputs. `anthropic-api-key` remains the Claude-specific
+  // shortcut; these let a caller bring any supported provider's key instead.
+  const aiProvider = core.getInput('ai-provider');
+  const aiModel = core.getInput('ai-model');
+  const aiApiKey = core.getInput('ai-api-key');
   // Defensively register every credential for log masking. GitHub already masks
   // values sourced from `secrets.*`, but this also redacts them if a caller
   // passes a literal, and masks any substring that leaks into a transformed
@@ -84,6 +89,7 @@ export async function run(): Promise<void> {
   if (licenseKey) core.setSecret(licenseKey);
   if (githubToken) core.setSecret(githubToken);
   if (anthropicKey) core.setSecret(anthropicKey);
+  if (aiApiKey) core.setSecret(aiApiKey);
   const url = core.getInput('url');
   // getInput, not getBooleanInput: the latter throws when the input is absent
   // (e.g. older workflow files that predate this option).
@@ -143,6 +149,12 @@ export async function run(): Promise<void> {
   core.info(`License valid (expires ${new Date((license.expires ?? 0) * 1000).toISOString().slice(0, 10)}).`);
 
   if (anthropicKey) process.env['ANTHROPIC_API_KEY'] = anthropicKey;
+  // Bridge the generic AI inputs to the env vars resolveAIConfig() reads. The
+  // Claude-specific `anthropic-api-key` still works unchanged (it maps to the
+  // default anthropic provider's native key above).
+  if (aiProvider) process.env['A11Y_AI_PROVIDER'] = aiProvider;
+  if (aiModel) process.env['A11Y_AI_MODEL'] = aiModel;
+  if (aiApiKey) process.env['A11Y_AI_API_KEY'] = aiApiKey;
   if (githubToken) process.env['GITHUB_TOKEN'] = githubToken;
 
   const rootDir = path.resolve(dir);
@@ -192,7 +204,7 @@ export async function run(): Promise<void> {
       // in-memory dedup within this run, plus an optional cross-run disk cache.
       // LearningProvider sits *inside* the cache so injected examples are part of
       // the cached request and so it can observe every generation.
-      const learningProvider = new LearningProvider(new AnthropicProvider(), examples);
+      const learningProvider = new LearningProvider(new AISDKProvider(resolveAIConfig()), examples);
       const aiProvider = new CachingProvider(learningProvider, { cacheFile });
       // Static-only (no PuppeteerRunner): the browser screenshot path exists
       // only for URL scans, which fix mode does not support.

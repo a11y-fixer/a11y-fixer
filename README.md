@@ -31,6 +31,26 @@ Store your license key as a repository (or org) secret. Without a valid key the
 action fails fast with a clear message. See [`action.yml`](./action.yml) for all
 inputs and outputs.
 
+### Choosing an LLM provider (bring your own key)
+
+AI-assisted fixes default to Claude, but you can bring your own key for any
+supported provider instead of adding an Anthropic key — handy if your org is
+already standardized on OpenAI or Gemini:
+
+```yaml
+- uses: a11y-fixer/a11y-fixer-pro@v1
+  with:
+    mode: fix
+    license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
+    ai-provider: openai            # anthropic (default) | openai | google
+    ai-model: gpt-4o-mini          # optional; a sensible default per provider
+    ai-api-key: ${{ secrets.OPENAI_API_KEY }}
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+`anthropic-api-key` remains a shortcut for `ai-provider: anthropic`. Your key is
+sent only to the provider you choose. Model ids are provider-specific.
+
 ## Security & pinning
 
 **What runs in your CI.** This is a composite Action: it executes our committed
@@ -57,7 +77,8 @@ source on every PR in CI, and re-verified at release time before the `v1` tag is
 moved — so a pinned SHA always corresponds to reviewed source, not a hand-edited
 bundle. License verification is fully offline (Ed25519, see
 [Issuing license keys](#issuing-license-keys-maintainers)): the Action makes no
-license phone-home and sends your secrets nowhere but Anthropic and your own repo.
+license phone-home and sends your secrets nowhere but your chosen LLM provider
+(Anthropic by default) and your own repo.
 
 ### Try it on the demo site
 
@@ -114,7 +135,7 @@ your code and nothing about your corrections is sent anywhere. Commit
 
 ## Packages
 
-- **`packages/ai`** (`@a11y-fixer/ai`) — Anthropic provider + AI-assisted fixers
+- **`packages/ai`** (`@a11y-fixer/ai`) — multi-provider LLM layer (Anthropic/OpenAI/Google via the Vercel AI SDK) + AI-assisted fixers
   (alt text, link text, button name, form label, link name, select name, input
   button name, input image alt) and `buildFullRegistry`, which layers them ahead
   of the deterministic core fixers.
