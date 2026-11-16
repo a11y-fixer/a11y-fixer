@@ -35,5 +35,6 @@ export { AriaCommandNameFixer } from './fixers/aria-command-name.js';
 export { AriaInputFieldNameFixer } from './fixers/aria-input-field-name.js';
 export { AriaToggleFieldNameFixer } from './fixers/aria-toggle-field-name.js';
 export { FrameTitleFixer } from './fixers/frame-title.js';
+export { DocumentTitleFixer } from './fixers/document-title.js';
 
 export { buildFullRegistry } from './fixers/registry.js';
