@@ -1,5 +1,14 @@
 export type { AIProvider } from './provider/index.js';
 export { AnthropicProvider } from './provider/anthropic.js';
+export { AISDKProvider, DEFAULT_MODELS, SUPPORTED_PROVIDERS, isSupportedProvider } from './provider/ai-sdk.js';
+export type {
+  AIConfig,
+  AISDKProviderName,
+  AISDKProviderDeps,
+  GenerateTextFn,
+  ModelFactory,
+} from './provider/ai-sdk.js';
+export { resolveAIConfig } from './provider/config.js';
 export { CachingProvider } from './provider/caching.js';
 export type { CachingProviderOptions } from './provider/caching.js';
 export { LearningProvider } from './provider/learning.js';

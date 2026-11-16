@@ -45,7 +45,8 @@ vi.mock('./learning-store.js', () => ({
 
 vi.mock('@a11y-fixer/ai', () => ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  AnthropicProvider: class { constructor(..._args: any[]) {} },
+  AISDKProvider: class { constructor(..._args: any[]) {} },
+  resolveAIConfig: () => ({ provider: 'anthropic', model: 'claude-haiku-4-5', apiKey: '' }),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   LearningProvider: class { constructor(..._args: any[]) {} drainGenerations() { return []; } },
   CachingProvider: class {

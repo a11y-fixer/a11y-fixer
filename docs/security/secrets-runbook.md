@@ -74,7 +74,8 @@ through the Action at runtime. The Action never persists them.
 
 | Secret              | Purpose                                   | Handling |
 | ------------------- | ----------------------------------------- | -------- |
-| `anthropic-api-key` | Calls to the Anthropic API for AI fixes   | Masked via `core.setSecret()` in `packages/github-action/src/index.ts` |
+| `anthropic-api-key` | Calls to the Anthropic API for AI fixes (Claude shortcut) | Masked via `core.setSecret()` in `packages/github-action/src/index.ts` |
+| `ai-api-key`        | Calls to the selected LLM provider (OpenAI/Google/Anthropic) for AI fixes | Masked via `core.setSecret()` in `packages/github-action/src/index.ts` |
 | `github-token`      | Opening fix PRs (`contents: write` + `pull-requests: write`) | Masked via `core.setSecret()` |
 | `license-key`       | Offline license verification (no network) | Masked via `core.setSecret()` |
 | `cookies`           | Session cookies for authenticated URL scans | Each cookie `value` masked via `core.setSecret()` before scanning (`index.ts`); injected into the page in `packages/github-action/src/cookies-scanner.ts` (`page.setCookie`); not persisted |

@@ -23,7 +23,16 @@ inputs:
     required: false
     default: ${{ github.token }}
   anthropic-api-key:
-    description: 'Anthropic API key for AI-assisted fixes (optional)'
+    description: 'Shortcut for Claude: Anthropic API key for AI-assisted fixes (optional). Equivalent to ai-provider: anthropic with ai-api-key set. Store as a repository secret.'
+    required: false
+  ai-provider:
+    description: 'LLM provider for AI-assisted fixes: anthropic (default) | openai | google. Bring your own key via ai-api-key instead of adding a Claude key.'
+    required: false
+  ai-model:
+    description: 'Model id for the chosen ai-provider (optional). Defaults to a cheap model per provider. Model ids are provider-specific.'
+    required: false
+  ai-api-key:
+    description: 'API key for the chosen ai-provider (optional). Store as a repository secret. Overrides the provider-native key env var.'
     required: false
   url:
     description: 'URL to scan with axe-core (optional). Honored in scan/check mode only — fix mode is static JSX/HTML, since live URLs can not be mapped back to source.'
@@ -99,6 +108,9 @@ runs:
         INPUT_MODE: ${{ inputs.mode }}
         INPUT_GITHUB-TOKEN: ${{ inputs.github-token }}
         INPUT_ANTHROPIC-API-KEY: ${{ inputs.anthropic-api-key }}
+        INPUT_AI-PROVIDER: ${{ inputs.ai-provider }}
+        INPUT_AI-MODEL: ${{ inputs.ai-model }}
+        INPUT_AI-API-KEY: ${{ inputs.ai-api-key }}
         INPUT_URL: ${{ inputs.url }}
         INPUT_COOKIES: ${{ inputs.cookies }}
         INPUT_HTML: ${{ inputs.html }}
