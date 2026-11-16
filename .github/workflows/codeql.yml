@@ -1,0 +1,39 @@
+name: CodeQL
+
+# Static analysis (SAST) for JS/TS. Results upload to the repo Security tab —
+# audit evidence for secure development / vulnerability management.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so advisories against unchanged code still surface.
+    - cron: '27 4 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          languages: javascript-typescript
+          # Exclude the committed ncc bundle: it's generated, and CI already
+          # verifies it matches source on every PR.
+          config: |
+            paths-ignore:
+              - 'packages/github-action/dist'
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          category: /language:javascript-typescript
