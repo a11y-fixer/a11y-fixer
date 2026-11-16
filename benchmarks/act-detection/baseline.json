@@ -60,12 +60,24 @@
       "tn": 10,
       "precision": 1,
       "recall": 1
+    },
+    {
+      "axe": "frame-title",
+      "wcag": "4.1.2",
+      "name": "Iframe has non-empty accessible name",
+      "n": 10,
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "tn": 6,
+      "precision": 1,
+      "recall": 1
     }
   ],
   "total": {
-    "tp": 28,
+    "tp": 32,
     "fp": 0,
     "fn": 3,
-    "tn": 61
+    "tn": 67
   }
 }

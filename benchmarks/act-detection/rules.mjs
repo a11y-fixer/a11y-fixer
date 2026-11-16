@@ -23,6 +23,7 @@ export const COVERED_RULES = [
     wcag: '1.3.1',
     name: 'Form field has non-empty accessible name',
   },
+  { act: 'cae760', axe: ['frame-title'], wcag: '4.1.2', name: 'Iframe has non-empty accessible name' },
 ];
 
 export const ACT_RULE_IDS = COVERED_RULES.map((r) => r.act);

@@ -14,6 +14,7 @@ import { SvgImgAltFixer } from './svg-img-alt.js';
 import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
+import { FrameTitleFixer } from './frame-title.js';
 
 /**
  * Builds the full fixer registry used by the paid GitHub Action: the
@@ -40,8 +41,8 @@ import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
  * the raw id and AltTextFixer would not claim them — but if core ever maps one
  * to 1.1.1, this ordering keeps the element-specific fixer ahead of the
  * `<img>`-only AltTextFixer. SelectNameFixer, InputButtonNameFixer, and the
- * three `aria-*-name` fixers (4.1.2) key on unique axe ids with no broad 4.1.2
- * fixer to collide with, so their order is free.
+ * three `aria-*-name` fixers and {@link FrameTitleFixer} (4.1.2) key on unique
+ * axe ids with no broad 4.1.2 fixer to collide with, so their order is free.
  */
 export function buildFullRegistry(
   aiProvider: AIProvider,
@@ -65,6 +66,7 @@ export function buildFullRegistry(
   registry.register(new AriaCommandNameFixer(aiProvider, rootDir));
   registry.register(new AriaInputFieldNameFixer(aiProvider, rootDir));
   registry.register(new AriaToggleFieldNameFixer(aiProvider, rootDir));
+  registry.register(new FrameTitleFixer(aiProvider, rootDir));
 
   registerCoreFixers(registry, rootDir);
 

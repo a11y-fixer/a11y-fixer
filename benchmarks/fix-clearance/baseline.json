@@ -55,11 +55,22 @@
       "notCleared": 0,
       "introduced": 0,
       "clearRate": 1
+    },
+    {
+      "axe": "frame-title",
+      "wcag": "4.1.2",
+      "failed": 4,
+      "undetected": 0,
+      "detected": 4,
+      "cleared": 4,
+      "notCleared": 0,
+      "introduced": 0,
+      "clearRate": 1
     }
   ],
   "total": {
-    "detected": 28,
-    "cleared": 27,
+    "detected": 32,
+    "cleared": 31,
     "introduced": 0
   }
 }
