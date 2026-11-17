@@ -1,35 +1,24 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
+import { canonicalizeLangTag } from '../shared/lang-tag.js';
 
 /**
- * Canonicalizes a `<html>` `lang` value to a well-formed BCP-47 tag, or returns
- * `null` when it cannot do so deterministically.
+ * Canonicalizes a `<html>` `lang` value to a well-formed BCP-47 tag, returning
+ * `null` when it is already canonical or cannot be canonicalized.
  *
  * axe `html-lang-valid` (WCAG 3.1.1) fails when the `lang` attribute is present
  * but malformed or non-canonical — `en_US`, `EN`, `en-us`. Those are fixable by
- * pure string canonicalization: underscores become hyphens and casing is
- * normalized via the built-in {@link Intl.getCanonicalLocales}, which throws a
- * `RangeError` on structurally invalid input (`english`, `xx_yy_zz`).
+ * pure string canonicalization (see {@link canonicalizeLangTag}).
  *
  * Returns the canonical tag only when it differs from the original (so an
- * already-canonical value is a no-op, `null`). Returns `null` for empty input or
- * anything `Intl` rejects, leaving those for a human — the value may be
- * content-dependent (e.g. a misspelled language name) rather than a casing slip.
+ * already-canonical value is a no-op, `null`), leaving empty/invalid input for a
+ * human — the value may be content-dependent (e.g. a misspelled language name)
+ * rather than a casing slip.
  */
 export function normalizeLangTag(value: string): string | null {
-  const tag = value.trim().replace(/_/g, '-');
-  if (tag.length === 0) return null;
-
-  let canonical: string;
-  try {
-    [canonical] = Intl.getCanonicalLocales(tag);
-  } catch {
-    return null;
-  }
-
-  if (!canonical || canonical === value) return null;
-  return canonical;
+  const canonical = canonicalizeLangTag(value);
+  return canonical && canonical !== value ? canonical : null;
 }
 
 /**

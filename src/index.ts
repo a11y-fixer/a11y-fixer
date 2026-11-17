@@ -11,8 +11,11 @@ export type { Fixer, FixResult, FixerBucket } from './fixer/index.js';
 export { dedupeFixFiles } from './fixer/index.js';
 export { FixerRegistry } from './fixer/registry.js';
 export { registerCoreFixers, buildCoreRegistry } from './fixer/defaults.js';
+export type { CoreFixerOptions } from './fixer/defaults.js';
 
 export { addAttributeToElement } from './fixer/shared/apply-attribute.js';
+export { canonicalizeLangTag } from './fixer/shared/lang-tag.js';
+export { detectLangFromSource } from './fixer/shared/detect-lang.js';
 
 export { EslintRunner } from './runners/eslint-runner.js';
 export { HtmlFileRunner } from './runners/html-runner.js';

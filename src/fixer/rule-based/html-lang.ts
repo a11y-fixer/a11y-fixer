@@ -1,14 +1,20 @@
+import { readFile } from 'node:fs/promises';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
 import { addAttributeToElement } from '../shared/apply-attribute.js';
-
-/** Language stamped on `<html>`. A future `--lang` flag threads through here. */
-const DEFAULT_LANG = 'en';
+import { canonicalizeLangTag } from '../shared/lang-tag.js';
+import { detectLangFromSource } from '../shared/detect-lang.js';
 
 /**
  * Fixes a document whose root `<html>` has no `lang` attribute (axe
- * `html-has-lang`, WCAG 3.1.1) by adding `lang="en"`. This is a deterministic,
- * single-line edit — no AI needed — so it lives in the rule-based bucket.
+ * `html-has-lang`, WCAG 3.1.1) by adding a `lang` attribute. This is a
+ * deterministic, single-line edit — no AI needed — so it lives in the rule-based
+ * bucket.
+ *
+ * The stamped language is resolved, in order: an explicit `--lang` tag (passed to
+ * the constructor, canonicalized); else a language detected from in-source signals
+ * ({@link detectLangFromSource}); else the violation is human-flagged rather than
+ * guessing — asserting the wrong language is worse than the original omission.
  *
  * Only the missing-lang case is handled. An *invalid* lang value (axe
  * `html-lang-valid`) would need attribute replacement rather than insertion and
@@ -19,8 +25,11 @@ const DEFAULT_LANG = 'en';
 export class HtmlLangFixer implements Fixer {
   readonly wcagId = '3.1.1';
   readonly bucket = 'rule-based' as const;
+  private readonly explicitLang: string | null;
 
-  constructor(private readonly rootDir: string) {}
+  constructor(private readonly rootDir: string, lang?: string) {
+    this.explicitLang = lang ? canonicalizeLangTag(lang) : null;
+  }
 
   canFix(violation: A11yViolation): boolean {
     return violation.id === 'html-has-lang';
@@ -35,12 +44,20 @@ export class HtmlLangFixer implements Fixer {
       return this.humanFlag(violation, 'No source location to apply a lang attribute');
     }
 
+    const lang = await this.resolveLang(node.sourceFile);
+    if (lang === null) {
+      return this.humanFlag(
+        violation,
+        'Could not determine page language — pass --lang <tag>',
+      );
+    }
+
     const after = await addAttributeToElement(
       node.sourceFile,
       node.sourceLine,
       /<html(\s|>)/g,
       'lang',
-      DEFAULT_LANG,
+      lang,
     );
 
     if (after === null) {
@@ -51,11 +68,22 @@ export class HtmlLangFixer implements Fixer {
       wcagId: this.wcagId,
       bucket: 'rule-based',
       applied: true,
-      description: `Added lang="${DEFAULT_LANG}" to <html>`,
+      description: `Added lang="${lang}" to <html>`,
       before: node.html,
       after,
       sourceLocation: { file: node.sourceFile, line: node.sourceLine, column: node.sourceColumn ?? 1 },
     };
+  }
+
+  /** Explicit `--lang` wins; otherwise detect from the source file. */
+  private async resolveLang(sourceFile: string): Promise<string | null> {
+    if (this.explicitLang) return this.explicitLang;
+    try {
+      const content = await readFile(sourceFile, 'utf8');
+      return detectLangFromSource(content);
+    } catch {
+      return null;
+    }
   }
 
   private humanFlag(violation: A11yViolation, note: string): FixResult {

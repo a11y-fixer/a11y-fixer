@@ -1,4 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { buildCoreRegistry } from './defaults.js';
 import { EslintFixer } from './rule-based/eslint-fixer.js';
 import { HtmlLangFixer } from './rule-based/html-lang.js';
@@ -92,5 +95,30 @@ describe('buildCoreRegistry dispatch', () => {
     ])('leaves %s (WCAG %s) unclaimed so it human-flags', (id, wcagId) => {
       expect(registry.getFixer(violation(id, wcagId))).toBeUndefined();
     });
+  });
+});
+
+describe('buildCoreRegistry lang option', () => {
+  let dir: string;
+  beforeEach(async () => { dir = await mkdtemp(path.join(tmpdir(), 'defaults-lang-')); });
+  afterEach(async () => { await rm(dir, { recursive: true, force: true }); });
+
+  it('threads the lang option through to HtmlLangFixer', async () => {
+    const file = path.join(dir, 'index.html');
+    await writeFile(file, '<!doctype html>\n<html>\n<head></head>\n</html>');
+    const registry = buildCoreRegistry(dir, { lang: 'fr' });
+
+    const v: A11yViolation = {
+      id: 'html-has-lang',
+      wcagId: '3.1.1',
+      impact: 'serious',
+      description: '',
+      helpUrl: '',
+      nodes: [{ html: '<html>', target: ['html'], failureSummary: '', sourceFile: file, sourceLine: 2, sourceColumn: 1 }],
+    };
+
+    const [result] = await registry.applyAll([v]);
+    expect(result.applied).toBe(true);
+    expect(await readFile(file, 'utf8')).toContain('<html lang="fr">');
   });
 });

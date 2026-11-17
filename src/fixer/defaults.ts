@@ -33,8 +33,18 @@ const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
  * generic EslintFixer — whose canFix only matches jsx-a11y/ ids anyway. Keeping
  * the registration order (AI fixers, then these) preserves that routing.
  */
-export function registerCoreFixers(registry: FixerRegistry, rootDir: string): FixerRegistry {
-  registry.register(new HtmlLangFixer(rootDir));
+/** Options that tune individual core fixers. */
+export interface CoreFixerOptions {
+  /** Explicit BCP-47 language tag stamped on `<html>` when `lang` is missing. */
+  lang?: string;
+}
+
+export function registerCoreFixers(
+  registry: FixerRegistry,
+  rootDir: string,
+  options: CoreFixerOptions = {},
+): FixerRegistry {
+  registry.register(new HtmlLangFixer(rootDir, options.lang));
   registry.register(new HtmlLangValidFixer(rootDir));
   registry.register(new HtmlXmlLangMismatchFixer(rootDir));
   registry.register(new HeadingOrderFixer(rootDir));
@@ -66,6 +76,9 @@ export function registerCoreFixers(registry: FixerRegistry, rootDir: string): Fi
  * open-source CLI. AI-assisted fixing lives in the paid `@a11y-fixer/ai`
  * package, which composes on top of {@link registerCoreFixers}.
  */
-export function buildCoreRegistry(rootDir: string): FixerRegistry {
-  return registerCoreFixers(new FixerRegistry(), rootDir);
+export function buildCoreRegistry(
+  rootDir: string,
+  options: CoreFixerOptions = {},
+): FixerRegistry {
+  return registerCoreFixers(new FixerRegistry(), rootDir, options);
 }
