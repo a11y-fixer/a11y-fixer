@@ -6,6 +6,17 @@
     "pnpm-workspace.yaml": [],
     "pnpm-lock.yaml": [],
     ".github/workflows/**": [],
-    ".gstack/pregate.json": []
+    ".gstack/pregate.json": [],
+    "action.yml": [],
+    "examples/**": [],
+    "packages/github-action/dist/**": [],
+    "packages/ai/src/scan/markdown.ts": ["packages/ai/src/scan/markdown.test.ts"],
+    "packages/ai/src/fixers/markdown-alt-text.ts": ["packages/ai/src/fixers/markdown-alt-text.test.ts"],
+    "packages/ai/src/fixers/markdown-link-text.ts": ["packages/ai/src/fixers/markdown-link-text.test.ts"],
+    "packages/ai/src/fixers/markdown-source.ts": ["packages/ai/src/fixers/markdown-pipeline.e2e.test.ts"],
+    "packages/ai/src/fixers/link-text.ts": ["packages/ai/src/fixers/link-text.test.ts"],
+    "packages/ai/src/fixers/registry.ts": ["packages/ai/src/fixers/registry.test.ts"],
+    "packages/ai/src/index.ts": ["packages/ai/src/fixers/registry.test.ts"],
+    "packages/github-action/src/index.ts": ["packages/github-action/src/index.test.ts"]
   }
 }
