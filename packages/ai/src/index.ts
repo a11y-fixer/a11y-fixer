@@ -45,5 +45,9 @@ export { AriaInputFieldNameFixer } from './fixers/aria-input-field-name.js';
 export { AriaToggleFieldNameFixer } from './fixers/aria-toggle-field-name.js';
 export { FrameTitleFixer } from './fixers/frame-title.js';
 export { DocumentTitleFixer } from './fixers/document-title.js';
+export { MarkdownAltTextFixer } from './fixers/markdown-alt-text.js';
+export { MarkdownLinkTextFixer } from './fixers/markdown-link-text.js';
 
 export { buildFullRegistry } from './fixers/registry.js';
+
+export { scanMarkdown } from './scan/markdown.js';

@@ -48,6 +48,10 @@ inputs:
     description: 'Scan static .html/.htm files with axe-core instead of JSX'
     required: false
     default: 'false'
+  markdown:
+    description: 'Also scan/fix Markdown (.md/.markdown) for empty image alt text and non-descriptive link text. Combines with the JSX or HTML path. Static source only (not honored with url).'
+    required: false
+    default: 'false'
   base-branch:
     description: 'Base branch for the fix-mode PR (default: main)'
     required: false
@@ -114,6 +118,7 @@ runs:
         INPUT_URL: ${{ inputs.url }}
         INPUT_COOKIES: ${{ inputs.cookies }}
         INPUT_HTML: ${{ inputs.html }}
+        INPUT_MARKDOWN: ${{ inputs.markdown }}
         INPUT_BASE-BRANCH: ${{ inputs.base-branch }}
         INPUT_CACHE-FILE: ${{ inputs.cache-file }}
         PUPPETEER_EXECUTABLE_PATH: ${{ steps.chrome.outputs.chrome-path }}

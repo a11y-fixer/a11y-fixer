@@ -4,7 +4,8 @@ import type { AIProvider } from '../provider/index.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import { readSourceLine } from './source-line.js';
 
-const GENERIC_LINK_PATTERNS = /^(click here|here|learn more|read more|more|details|link|go|continue)$/i;
+/** Link text so generic it conveys nothing out of context — safe to rewrite. */
+export const GENERIC_LINK_PATTERNS = /^(click here|here|learn more|read more|more|details|link|go|continue)$/i;
 
 export class LinkTextFixer implements Fixer {
   readonly wcagId = '2.4.4';
