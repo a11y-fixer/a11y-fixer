@@ -16,6 +16,7 @@ import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { AriaTooltipNameFixer } from './aria-tooltip-name.js';
+import { AriaDialogNameFixer } from './aria-dialog-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
@@ -48,9 +49,10 @@ import { DocumentTitleFixer } from './document-title.js';
  * `<img>`-only AltTextFixer. SelectNameFixer, InputButtonNameFixer, and the
  * three `aria-*-name` fixers and {@link FrameTitleFixer} (4.1.2) key on unique
  * axe ids with no broad 4.1.2 fixer to collide with, so their order is free.
- * The widget accessible-name fixers {@link AriaTooltipNameFixer} (4.1.2),
- * {@link AriaMeterNameFixer} and {@link AriaProgressbarNameFixer} (1.1.1) are
- * likewise id-keyed (`aria-tooltip-name`/`aria-meter-name`/`aria-progressbar-name`)
+ * The widget accessible-name fixers {@link AriaTooltipNameFixer} and
+ * {@link AriaDialogNameFixer} (4.1.2), {@link AriaMeterNameFixer} and
+ * {@link AriaProgressbarNameFixer} (1.1.1) are likewise id-keyed
+ * (`aria-tooltip-name`/`aria-dialog-name`/`aria-meter-name`/`aria-progressbar-name`)
  * with no broad collider at their criterion, so their order is free too.
  * {@link DocumentTitleFixer} (`document-title`, 2.4.2) is likewise id-keyed with
  * no broad collider, so its position is free too.
@@ -79,6 +81,7 @@ export function buildFullRegistry(
   registry.register(new AriaInputFieldNameFixer(aiProvider, rootDir));
   registry.register(new AriaToggleFieldNameFixer(aiProvider, rootDir));
   registry.register(new AriaTooltipNameFixer(aiProvider, rootDir));
+  registry.register(new AriaDialogNameFixer(aiProvider, rootDir));
   registry.register(new AriaMeterNameFixer(aiProvider, rootDir));
   registry.register(new AriaProgressbarNameFixer(aiProvider, rootDir));
   registry.register(new FrameTitleFixer(aiProvider, rootDir));

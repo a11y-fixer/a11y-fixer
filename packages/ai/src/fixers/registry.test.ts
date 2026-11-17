@@ -17,6 +17,7 @@ import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { AriaTooltipNameFixer } from './aria-tooltip-name.js';
+import { AriaDialogNameFixer } from './aria-dialog-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
@@ -109,6 +110,10 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe aria-tooltip-name to AriaTooltipNameFixer', () => {
     expect(registry.getFixer(violation('aria-tooltip-name', 'aria-tooltip-name'))).toBeInstanceOf(AriaTooltipNameFixer);
+  });
+
+  it('routes axe aria-dialog-name to AriaDialogNameFixer', () => {
+    expect(registry.getFixer(violation('aria-dialog-name', 'aria-dialog-name'))).toBeInstanceOf(AriaDialogNameFixer);
   });
 
   it('routes axe aria-meter-name to AriaMeterNameFixer', () => {
