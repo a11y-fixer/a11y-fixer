@@ -70,11 +70,8 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: .a11y-fixer-cache.json
-          key: a11y-fixer-ai-markdown-${{ hashFiles('site-markdown/**') }}
-
+      # No AI cache step here: the Markdown fixture is a single small file, so
+      # re-running costs a couple of cents, not worth a cache key.
       - uses: a11y-fixer/a11y-fixer-pro@v1
         with:
           mode: fix
@@ -84,4 +81,3 @@ jobs:
           license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          cache-file: .a11y-fixer-cache.json
