@@ -18,8 +18,10 @@ import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { AriaTooltipNameFixer } from './aria-tooltip-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
+import { AriaDialogNameFixer } from './aria-dialog-name.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { DocumentTitleFixer } from './document-title.js';
+import { EmptyHeadingFixer } from './empty-heading.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 
@@ -50,9 +52,10 @@ import { MarkdownLinkTextFixer } from './markdown-link-text.js';
  * `<img>`-only AltTextFixer. SelectNameFixer, InputButtonNameFixer, and the
  * three `aria-*-name` fixers and {@link FrameTitleFixer} (4.1.2) key on unique
  * axe ids with no broad 4.1.2 fixer to collide with, so their order is free.
- * The widget accessible-name fixers {@link AriaTooltipNameFixer} (4.1.2),
- * {@link AriaMeterNameFixer} and {@link AriaProgressbarNameFixer} (1.1.1) are
- * likewise id-keyed (`aria-tooltip-name`/`aria-meter-name`/`aria-progressbar-name`)
+ * The widget accessible-name fixers {@link AriaTooltipNameFixer} and
+ * {@link AriaDialogNameFixer} (4.1.2), {@link AriaMeterNameFixer} and
+ * {@link AriaProgressbarNameFixer} (1.1.1) are likewise id-keyed
+ * (`aria-tooltip-name`/`aria-dialog-name`/`aria-meter-name`/`aria-progressbar-name`)
  * with no broad collider at their criterion, so their order is free too.
  * {@link DocumentTitleFixer} (`document-title`, 2.4.2) is likewise id-keyed with
  * no broad collider, so its position is free too.
@@ -90,8 +93,16 @@ export function buildFullRegistry(
   registry.register(new AriaTooltipNameFixer(aiProvider, rootDir));
   registry.register(new AriaMeterNameFixer(aiProvider, rootDir));
   registry.register(new AriaProgressbarNameFixer(aiProvider, rootDir));
+  registry.register(new AriaDialogNameFixer(aiProvider, rootDir));
   registry.register(new FrameTitleFixer(aiProvider, rootDir));
   registry.register(new DocumentTitleFixer(aiProvider, rootDir));
+
+  // Empty headings are never auto-fixed (a guessed heading misleads readers);
+  // this fixer only swaps the generic human-flag for rule-specific guidance.
+  // It needs no provider/rootDir and is id-keyed on `empty-heading`, so order
+  // is free — register it before core so it claims the axe id ahead of the
+  // generic "no fixer registered" fallback.
+  registry.register(new EmptyHeadingFixer());
 
   registerCoreFixers(registry, rootDir);
 

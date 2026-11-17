@@ -19,6 +19,8 @@ import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { AriaTooltipNameFixer } from './aria-tooltip-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
+import { AriaDialogNameFixer } from './aria-dialog-name.js';
+import { EmptyHeadingFixer } from './empty-heading.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
@@ -120,6 +122,16 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe aria-progressbar-name to AriaProgressbarNameFixer', () => {
     expect(registry.getFixer(violation('aria-progressbar-name', 'aria-progressbar-name'))).toBeInstanceOf(AriaProgressbarNameFixer);
+  });
+
+  it('routes axe aria-dialog-name to AriaDialogNameFixer', () => {
+    expect(registry.getFixer(violation('aria-dialog-name', 'aria-dialog-name'))).toBeInstanceOf(AriaDialogNameFixer);
+  });
+
+  it('routes axe empty-heading to EmptyHeadingFixer (human-flag only), not EslintFixer', () => {
+    expect(registry.getFixer(violation('empty-heading', 'empty-heading'))).toBeInstanceOf(EmptyHeadingFixer);
+    // The JSX equivalent is not claimed here — it stays with the deterministic core path.
+    expect(registry.getFixer(violation('jsx-a11y/heading-has-content', '2.4.6'))).toBeInstanceOf(EslintFixer);
   });
 
   it('routes axe frame-title (WCAG 4.1.2) to FrameTitleFixer, not EslintFixer', () => {
