@@ -19,7 +19,7 @@
  * ACT corpus actually has fixtures for the rule, and update COVERAGE.md too.
  */
 export const COVERED_RULES = [
-  { act: '23a2a8', axe: ['image-alt'], wcag: '1.1.1', name: 'Image has non-empty accessible name' },
+  { act: '23a2a8', axe: ['image-alt', 'role-img-alt'], wcag: '1.1.1', name: 'Image has non-empty accessible name' },
   { act: '59796f', axe: ['input-image-alt'], wcag: '1.1.1', name: 'Image button has non-empty accessible name' },
   { act: '97a4e1', axe: ['button-name', 'input-button-name'], wcag: '4.1.2', name: 'Button has non-empty accessible name' },
   { act: 'c487ae', axe: ['link-name'], wcag: '2.4.4', name: 'Link has non-empty accessible name' },

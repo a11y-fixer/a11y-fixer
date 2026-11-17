@@ -12,6 +12,7 @@ import { InputImageAltFixer } from './input-image-alt.js';
 import { AreaAltFixer } from './area-alt.js';
 import { ObjectAltFixer } from './object-alt.js';
 import { SvgImgAltFixer } from './svg-img-alt.js';
+import { RoleImgAltFixer } from './role-img-alt.js';
 import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
@@ -90,6 +91,11 @@ describe('buildFullRegistry dispatch', () => {
   it('routes axe svg-img-alt to SvgImgAltFixer, not AltTextFixer', () => {
     expect(registry.getFixer(violation('svg-img-alt', 'svg-img-alt'))).toBeInstanceOf(SvgImgAltFixer);
     expect(registry.getFixer(violation('svg-img-alt', '1.1.1'))).toBeInstanceOf(SvgImgAltFixer);
+  });
+
+  it('routes axe role-img-alt to RoleImgAltFixer, not AltTextFixer', () => {
+    expect(registry.getFixer(violation('role-img-alt', 'role-img-alt'))).toBeInstanceOf(RoleImgAltFixer);
+    expect(registry.getFixer(violation('role-img-alt', '1.1.1'))).toBeInstanceOf(RoleImgAltFixer);
   });
 
   it('routes axe aria-command-name to AriaCommandNameFixer', () => {
