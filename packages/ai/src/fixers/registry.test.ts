@@ -21,6 +21,9 @@ import { AriaDialogNameFixer } from './aria-dialog-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
+import { MarkdownAltTextFixer } from './markdown-alt-text.js';
+import { MarkdownLinkTextFixer } from './markdown-link-text.js';
+import { LinkTextFixer } from './link-text.js';
 import type { AIProvider } from '../provider/index.js';
 
 const provider: AIProvider = {
@@ -134,5 +137,17 @@ describe('buildFullRegistry dispatch', () => {
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
     expect(registry.getFixer(violation('jsx-a11y/heading-has-content', '2.4.6'))).toBeInstanceOf(EslintFixer);
+  });
+
+  it('routes Markdown image-alt (md-image-alt, 1.1.1) to MarkdownAltTextFixer, not AltTextFixer', () => {
+    expect(registry.getFixer(violation('md-image-alt', '1.1.1'))).toBeInstanceOf(MarkdownAltTextFixer);
+    // The HTML <img> fixer still owns plain axe image-alt.
+    expect(registry.getFixer(violation('image-alt', '1.1.1'))).toBeInstanceOf(AltTextFixer);
+  });
+
+  it('routes Markdown link-text (md-link-text, 2.4.4) to MarkdownLinkTextFixer, not LinkTextFixer', () => {
+    expect(registry.getFixer(violation('md-link-text', '2.4.4'))).toBeInstanceOf(MarkdownLinkTextFixer);
+    // JSX empty anchors still route to the HTML link fixer.
+    expect(registry.getFixer(violation('anchor-has-content', '2.4.4'))).toBeInstanceOf(LinkTextFixer);
   });
 });

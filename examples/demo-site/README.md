@@ -7,18 +7,20 @@ This template lives in the a11y-fixer-pro monorepo so it's versioned alongside
 the tool. [`seed.sh`](./seed.sh) publishes it to a standalone GitHub repo where
 the Action actually runs.
 
-## Why there are two sites
+## Why there are three sites
 
-Fix mode runs **one scan path per run** — it can't mix JSX and HTML — and the two
-paths surface different rules. So the demo ships both, wired as two jobs in
+The JSX and HTML paths run **one scan path per run** — they can't mix — and each
+surfaces different rules. The Markdown path adds `.md` support and combines with
+either. So the demo ships all three, wired as three jobs in
 [`.github/workflows/a11y-demo.yml`](./.github/workflows/a11y-demo.yml):
 
 | Job | Dir | Path | Fixers exercised |
 |-----|-----|------|------------------|
 | `html-demo` | `site-html/` | static HTML (axe-core, `html: true`) | **alt-text**, **link-name**, **button-name**, **form-label**, **select-name**, **input-button-name**, **input-image-alt**, **area-alt**, **object-alt**, **svg-img-alt**, **aria-command-name**, **aria-input-field-name**, **aria-toggle-field-name** — 13 auto-applied |
 | `jsx-demo` | `site-jsx/` | JSX (ESLint + jsx-a11y) | **alt-text** (auto), **link-text** (human-flagged) |
+| `markdown-demo` | `site-markdown/` | Markdown (`markdown: true`) | **markdown-alt-text** (auto), **markdown-link-text** (auto) — rewritten into `.md` source |
 
-Together they cover all fourteen AI fixers.
+Together they cover all sixteen AI fixers.
 
 ## The planted violations
 
@@ -46,6 +48,16 @@ Together they cover all fourteen AI fixers.
 |---------|-------------|----------------|
 | `<img>` with no `alt` | alt-text / 1.1.1 | AltTextFixer → adds `alt="…"` |
 | empty `<a>` | anchor-has-content / 2.4.4 | LinkTextFixer → **human-flagged** (it won't invent link text) |
+
+`site-markdown/handbook.md`:
+
+| Construct | Rule / WCAG | Fixer → result |
+|-----------|-------------|----------------|
+| `![](logo.png)` (empty alt) | md-image-alt / 1.1.1 | MarkdownAltTextFixer → `![…](logo.png)` |
+| `[click here](/x)`, `[here](/x)` | md-link-text / 2.4.4 | MarkdownLinkTextFixer → descriptive text |
+| bare-URL link text `[https://…](https://…)` | md-link-text / 2.4.4 | MarkdownLinkTextFixer → descriptive text |
+
+Descriptive links and images that already have alt text are left untouched.
 
 ## Setup
 
@@ -83,7 +95,9 @@ gh workflow run "a11y-fixer demo" --repo <owner>/a11y-fixer-demo
 ```
 
 `html-demo` opens a PR adding the attributes above; `jsx-demo` opens a PR
-with the alt-text fix and the link-text violation flagged for a human.
+with the alt-text fix and the link-text violation flagged for a human;
+`markdown-demo` opens a PR rewriting the empty alt text and generic/bare-URL
+links in `handbook.md`.
 
 **You never need to re-clone or reset `main`.** Fix mode applies fixes to the CI
 checkout and opens a *PR* — it never pushes to `main`, so the broken site stays
