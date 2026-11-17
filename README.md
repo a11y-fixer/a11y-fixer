@@ -84,12 +84,14 @@ license phone-home and sends your secrets nowhere but your chosen LLM provider
 
 [`examples/demo-site/`](./examples/demo-site/) is a deliberately-broken site for
 demoing the Action end-to-end. Its `seed.sh` publishes it to a standalone GitHub
-repo where the workflow opens real fix PRs. Fix mode runs **one scan path per
-run**, so the demo ships two jobs: a static-HTML site (`html: true`) that
+repo where the workflow opens real fix PRs. The two core scan paths run **one
+per run**, so the demo ships three jobs: a static-HTML site (`html: true`) that
 auto-fixes alt-text, link-name, button-name, form-label, select-name,
 input-button-name, input-image-alt, area-alt, object-alt, svg-img-alt,
-aria-command-name, aria-input-field-name and aria-toggle-field-name, and a JSX
-page that auto-fixes alt-text and human-flags link-text. The broken state lives on `main`
+aria-command-name, aria-input-field-name and aria-toggle-field-name; a JSX
+page that auto-fixes alt-text and human-flags link-text; and a Markdown handbook
+(`markdown: true`) that auto-fixes empty image alt text and non-descriptive link
+text directly in the `.md` source. The broken state lives on `main`
 and each run opens a throwaway PR, so the demo is repeatable without re-cloning.
 
 ## Coverage
