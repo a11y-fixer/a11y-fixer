@@ -15,6 +15,9 @@ import { SvgImgAltFixer } from './svg-img-alt.js';
 import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
+import { AriaTooltipNameFixer } from './aria-tooltip-name.js';
+import { AriaMeterNameFixer } from './aria-meter-name.js';
+import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
@@ -99,6 +102,18 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe aria-toggle-field-name to AriaToggleFieldNameFixer', () => {
     expect(registry.getFixer(violation('aria-toggle-field-name', 'aria-toggle-field-name'))).toBeInstanceOf(AriaToggleFieldNameFixer);
+  });
+
+  it('routes axe aria-tooltip-name to AriaTooltipNameFixer', () => {
+    expect(registry.getFixer(violation('aria-tooltip-name', 'aria-tooltip-name'))).toBeInstanceOf(AriaTooltipNameFixer);
+  });
+
+  it('routes axe aria-meter-name to AriaMeterNameFixer', () => {
+    expect(registry.getFixer(violation('aria-meter-name', 'aria-meter-name'))).toBeInstanceOf(AriaMeterNameFixer);
+  });
+
+  it('routes axe aria-progressbar-name to AriaProgressbarNameFixer', () => {
+    expect(registry.getFixer(violation('aria-progressbar-name', 'aria-progressbar-name'))).toBeInstanceOf(AriaProgressbarNameFixer);
   });
 
   it('routes axe frame-title (WCAG 4.1.2) to FrameTitleFixer, not EslintFixer', () => {

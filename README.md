@@ -92,6 +92,12 @@ aria-command-name, aria-input-field-name and aria-toggle-field-name, and a JSX
 page that auto-fixes alt-text and human-flags link-text. The broken state lives on `main`
 and each run opens a throwaway PR, so the demo is repeatable without re-cloning.
 
+## Coverage
+
+What the fixers auto-fix versus what the scanner only detects — the full table,
+the scan-path caveat, and the benchmark numbers — is tracked in
+[`COVERAGE.md`](./COVERAGE.md).
+
 ## AI cost controls
 
 Identical AI requests (the same repeated "click here" link, the same logo image
