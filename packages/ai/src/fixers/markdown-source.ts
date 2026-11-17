@@ -5,11 +5,17 @@ import { readFile, writeFile } from 'node:fs/promises';
  * The provider is trusted (the caller's own key) but its output is influenced by
  * the scanned file's surrounding content, so a stray `]`/`[` or newline could
  * close the `![...]`/`[...]` bracket early or inject extra markdown. Collapse
- * any newline run to a space and backslash-escape square brackets (a `)` inside
- * the label is harmless — only the href's `)` closes the construct).
+ * any newline run to a space, then escape backslashes and square brackets (a `)`
+ * inside the label is harmless — only the href's `)` closes the construct).
+ * Backslashes are escaped first so a pre-existing `\` can't combine with the
+ * bracket escaping to break back out of the label.
  */
 export function sanitizeInlineLabel(text: string): string {
-  return text.replace(/[\r\n]+/g, ' ').replace(/[[\]]/g, (c) => '\\' + c).trim();
+  return text
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/\\/g, '\\\\')
+    .replace(/[[\]]/g, (c) => '\\' + c)
+    .trim();
 }
 
 /**
