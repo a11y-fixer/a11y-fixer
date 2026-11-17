@@ -2,16 +2,16 @@
   "snapshot": "2026-11-15",
   "rules": [
     {
-      "axe": "image-alt",
+      "axe": "image-alt+role-img-alt",
       "wcag": "1.1.1",
       "name": "Image has non-empty accessible name",
       "n": 18,
-      "tp": 4,
+      "tp": 5,
       "fp": 0,
-      "fn": 1,
+      "fn": 0,
       "tn": 13,
       "precision": 1,
-      "recall": 0.8
+      "recall": 1
     },
     {
       "axe": "input-image-alt",
@@ -75,9 +75,9 @@
     }
   ],
   "total": {
-    "tp": 32,
+    "tp": 33,
     "fp": 0,
-    "fn": 3,
+    "fn": 2,
     "tn": 67
   }
 }

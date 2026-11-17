@@ -11,6 +11,7 @@ import { InputImageAltFixer } from './input-image-alt.js';
 import { AreaAltFixer } from './area-alt.js';
 import { ObjectAltFixer } from './object-alt.js';
 import { SvgImgAltFixer } from './svg-img-alt.js';
+import { RoleImgAltFixer } from './role-img-alt.js';
 import { AriaCommandNameFixer } from './aria-command-name.js';
 import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
@@ -39,9 +40,9 @@ import { DocumentTitleFixer } from './document-title.js';
  * not match LinkNameFixer's id, so they still route to LinkTextFixer.
  *
  * For the same reason {@link InputImageAltFixer}, {@link AreaAltFixer},
- * {@link ObjectAltFixer} and {@link SvgImgAltFixer} (each specific: `id ===
- * '<axe-id>'`) are registered before {@link AltTextFixer} (broad: `wcagId ===
- * '1.1.1'`). Core leaves these ids out of AXE_WCAG_MAP today, so their wcagId is
+ * {@link ObjectAltFixer}, {@link SvgImgAltFixer} and {@link RoleImgAltFixer}
+ * (each specific: `id === '<axe-id>'`) are registered before
+ * {@link AltTextFixer} (broad: `wcagId === '1.1.1'`). Core leaves these ids out of AXE_WCAG_MAP today, so their wcagId is
  * the raw id and AltTextFixer would not claim them — but if core ever maps one
  * to 1.1.1, this ordering keeps the element-specific fixer ahead of the
  * `<img>`-only AltTextFixer. SelectNameFixer, InputButtonNameFixer, and the
@@ -66,6 +67,7 @@ export function buildFullRegistry(
   registry.register(new AreaAltFixer(aiProvider, rootDir));
   registry.register(new ObjectAltFixer(aiProvider, rootDir));
   registry.register(new SvgImgAltFixer(aiProvider, rootDir));
+  registry.register(new RoleImgAltFixer(aiProvider, rootDir));
   registry.register(new AltTextFixer(aiProvider, rootDir, screenshots));
   registry.register(new LinkNameFixer(aiProvider, rootDir));
   registry.register(new LinkTextFixer(aiProvider, rootDir));

@@ -1,7 +1,7 @@
 # Coverage: what we fix vs. what we only detect
 
 **Scope in one line:** the fixers target **accessible-name, alt-text and title**
-problems — **16 AI fixers** covering **~16 axe-core rule IDs** across **5 WCAG
+problems — **20 AI fixers** covering **~20 axe-core rule IDs** across **5 WCAG
 success criteria** (1.1.1, 1.3.1, 2.4.2, 2.4.4, 4.1.2), plus the deterministic
 fixers inherited from [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core).
 Everything else axe-core and `jsx-a11y` surface is **detected but not
@@ -28,6 +28,9 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 1.1.1 | `AreaAltFixer` | `area-alt.ts` | `id === 'area-alt'` | HTML |
 | 1.1.1 | `ObjectAltFixer` | `object-alt.ts` | `id === 'object-alt'` | HTML |
 | 1.1.1 | `SvgImgAltFixer` | `svg-img-alt.ts` | `id === 'svg-img-alt'` | HTML |
+| 1.1.1 | `RoleImgAltFixer` | `role-img-alt.ts` | `id === 'role-img-alt'` | HTML |
+| 1.1.1 | `AriaMeterNameFixer` | `aria-meter-name.ts` | `id === 'aria-meter-name'` | HTML |
+| 1.1.1 | `AriaProgressbarNameFixer` | `aria-progressbar-name.ts` | `id === 'aria-progressbar-name'` | HTML |
 | 1.3.1 | `FormLabelFixer` | `form-label.ts` | `id === 'label'` | HTML |
 | 1.3.1 | `SelectNameFixer` | `select-name.ts` | `id === 'select-name'` | HTML |
 | 1.3.1 | `AriaInputFieldNameFixer` | `aria-input-field-name.ts` | `id === 'aria-input-field-name'` | HTML |
@@ -38,6 +41,7 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 4.1.2 | `ButtonNameFixer` | `button-name.ts` | `id === 'button-name'` | HTML |
 | 4.1.2 | `InputButtonNameFixer` | `input-button-name.ts` | `id === 'input-button-name'` | HTML |
 | 4.1.2 | `AriaCommandNameFixer` | `aria-command-name.ts` | `id === 'aria-command-name'` | HTML |
+| 4.1.2 | `AriaTooltipNameFixer` | `aria-tooltip-name.ts` | `id === 'aria-tooltip-name'` | HTML |
 | 4.1.2 | `FrameTitleFixer` | `frame-title.ts` | `id === 'frame-title'` | HTML |
 
 Fixers all live in [`packages/ai/src/fixers/`](./packages/ai/src/fixers/).
@@ -86,7 +90,7 @@ registry carries both id-keyed and broad wcagId-keyed fixers.
 
 Practically:
 
-- **HTML/axe path** auto-fixes the full set above (13 rules auto-applied).
+- **HTML/axe path** auto-fixes the full set above (17 rules auto-applied).
 - **JSX path** effectively only auto-fixes **alt-text**, and human-flags
   link-text.
 
@@ -102,9 +106,11 @@ accessible-name rules, and gate on committed baselines. See
 [`benchmarks/README.md`](./benchmarks/README.md).
 
 - **Detection** (`act-detection/baseline.json`, snapshot 2026-11-15):
-  **tp 32 · fp 0 · fn 3** across the 6 covered ACT rule groups. The 3 false
-  negatives are documented axe scope gaps (e.g. `<div role="img">`
-  CSS-background images), not missing fixers.
+  **tp 33 · fp 0 · fn 2** across the 6 covered ACT rule groups. Adding
+  `RoleImgAltFixer` to the `23a2a8` group cleared the `<div role="img">` CSS
+  background-image false negative (recall there is now 100%); the remaining 2
+  false negatives are documented axe scope gaps (specific `button-name` and
+  `link-name` ACT examples axe computes differently), not missing fixers.
 - **Fix clearance** (`fix-clearance/baseline.json`): of **32** detected
   violations, **31 cleared, 0 introduced**. The one non-clear is correct
   behavior — the `role="none"` link that `LinkNameFixer` human-flags rather than
@@ -113,11 +119,16 @@ accessible-name rules, and gate on committed baselines. See
 ## Sync notes & known gaps
 
 - `COVERED_RULES` in `rules.mjs` tracks **6 ACT accessible-name rule groups**.
-  `DocumentTitleFixer` (2.4.2) ships in the registry but has **no row there**:
+  `RoleImgAltFixer` (1.1.1) does **not** add a 7th group — `role-img-alt` joins
+  the existing `23a2a8` ("Image has non-empty accessible name") group alongside
+  `image-alt`, because the ACT corpus already ships `<div role="img">` fixtures
+  there. That is what cleared the group's remaining false negative.
+- `DocumentTitleFixer` (2.4.2) ships in the registry but has **no row there**:
   the vendored ACT corpus has no `document-title` fixtures, so adding an ACT row
   would break the detection benchmark. It is tracked here instead.
-- `AreaAltFixer`, `ObjectAltFixer`, `SvgImgAltFixer`, and `AriaCommandNameFixer`
-  are in the registry but, like `document-title`, are not individually
-  represented in the ACT corpus; they're covered here.
+- `AreaAltFixer`, `ObjectAltFixer`, `SvgImgAltFixer`, `AriaCommandNameFixer`, and
+  the widget-name fixers `AriaTooltipNameFixer`, `AriaMeterNameFixer` and
+  `AriaProgressbarNameFixer` are in the registry but, like `document-title`, are
+  not individually represented in the ACT corpus; they're covered here.
 - When a fixer is added: update the table above, add its ACT rule to `rules.mjs`
   **if** the corpus has fixtures for it, and refresh both benchmark baselines.
