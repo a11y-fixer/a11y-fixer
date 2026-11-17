@@ -1,7 +1,7 @@
 # Coverage: what we fix vs. what we only detect
 
 **Scope in one line:** the fixers target **accessible-name, alt-text and title**
-problems — **22 AI fixers** covering **~20 axe-core rule IDs** plus **2 Markdown
+problems — **23 AI fixers** covering **~21 axe-core rule IDs** plus **2 Markdown
 rules** across **5 WCAG success criteria** (1.1.1, 1.3.1, 2.4.2, 2.4.4, 4.1.2),
 plus the deterministic fixers inherited from
 [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core).
@@ -45,6 +45,7 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 4.1.2 | `InputButtonNameFixer` | `input-button-name.ts` | `id === 'input-button-name'` | HTML |
 | 4.1.2 | `AriaCommandNameFixer` | `aria-command-name.ts` | `id === 'aria-command-name'` | HTML |
 | 4.1.2 | `AriaTooltipNameFixer` | `aria-tooltip-name.ts` | `id === 'aria-tooltip-name'` | HTML |
+| 4.1.2 | `AriaDialogNameFixer` | `aria-dialog-name.ts` | `id === 'aria-dialog-name'` | HTML |
 | 4.1.2 | `FrameTitleFixer` | `frame-title.ts` | `id === 'frame-title'` | HTML |
 
 Fixers all live in [`packages/ai/src/fixers/`](./packages/ai/src/fixers/).
@@ -99,7 +100,7 @@ is independent and **layers onto** whichever core path you pick (`markdown: true
 
 Practically:
 
-- **HTML/axe path** auto-fixes the full HTML set above (17 rules auto-applied).
+- **HTML/axe path** auto-fixes the full HTML set above (18 rules auto-applied).
 - **JSX path** effectively only auto-fixes **alt-text**, and human-flags
   link-text.
 - **Markdown path** auto-fixes **md-image-alt** and **md-link-text** in `.md`
@@ -138,9 +139,10 @@ accessible-name rules, and gate on committed baselines. See
   the vendored ACT corpus has no `document-title` fixtures, so adding an ACT row
   would break the detection benchmark. It is tracked here instead.
 - `AreaAltFixer`, `ObjectAltFixer`, `SvgImgAltFixer`, `AriaCommandNameFixer`, and
-  the widget-name fixers `AriaTooltipNameFixer`, `AriaMeterNameFixer` and
-  `AriaProgressbarNameFixer` are in the registry but, like `document-title`, are
-  not individually represented in the ACT corpus; they're covered here.
+  the widget-name fixers `AriaTooltipNameFixer`, `AriaDialogNameFixer`,
+  `AriaMeterNameFixer` and `AriaProgressbarNameFixer` are in the registry but,
+  like `document-title`, are not individually represented in the ACT corpus;
+  they're covered here.
 - `MarkdownAltTextFixer` and `MarkdownLinkTextFixer` run on the Markdown path,
   which the ACT corpus (HTML/JSX only) does not exercise. They have their own
   unit, registry, and end-to-end tests under
