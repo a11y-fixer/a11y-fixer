@@ -11,6 +11,12 @@
  * counts as detected if ANY of them fires. `wcag` is the success criterion it
  * maps to (A11yViolation.wcagId). Keep this list in sync with the fixers in
  * packages/ai/src/fixers that key off these rule ids.
+ *
+ * This is only the subset with ACT fixtures, so it is narrower than the full
+ * fixer set: fixers whose rule has no ACT corpus entry (e.g. document-title,
+ * area-alt, object-alt, svg-img-alt, aria-command-name) are NOT listed here and
+ * are tracked in ../../COVERAGE.md instead. Add a row here only when the vendored
+ * ACT corpus actually has fixtures for the rule, and update COVERAGE.md too.
  */
 export const COVERED_RULES = [
   { act: '23a2a8', axe: ['image-alt'], wcag: '1.1.1', name: 'Image has non-empty accessible name' },
