@@ -123,6 +123,27 @@ describe('fix command', () => {
     // The alt fix was written to the source file.
     expect(await readFile(target, 'utf8')).toContain('alt="logo"');
   });
+
+  it('accepts a valid --lang and scans', async () => {
+    const dir = await makeTmpDir();
+    const out = await captureOutput(() =>
+      fixCommand().parseAsync([dir, '--lang', 'fr'], { from: 'user' }),
+    );
+    // Empty dir → no violations, but the flag parsed and we reached scanning.
+    expect(out).toContain('No violations found.');
+  });
+
+  it('rejects an invalid --lang before scanning and exits non-zero', async () => {
+    const dir = await makeTmpDir();
+    const prevExit = process.exitCode;
+    const out = await captureOutput(() =>
+      fixCommand().parseAsync([dir, '--lang', 'xx_yy_zz'], { from: 'user' }),
+    );
+    expect(out).toContain('Invalid --lang');
+    expect(out).not.toContain('Scanning');
+    expect(process.exitCode).toBe(1);
+    process.exitCode = prevExit; // don't leak a failing exit code to the suite
+  });
 });
 
 // `check` calls process.exit(), so its exit-code contract is validated against

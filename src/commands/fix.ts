@@ -4,6 +4,7 @@ import {
   PullRequestBuilder,
   scanSource,
   dedupeFixFiles,
+  canonicalizeLangTag,
 } from '@a11y-fixer/core';
 import path from 'node:path';
 
@@ -17,6 +18,7 @@ export function fixCommand(): Command {
     .option('--repo <repo>', 'GitHub repo name (required for PR)')
     .option('--base <branch>', 'Base branch for PR', 'main')
     .option('--repo-root <path>', 'Git repo root for PR paths (defaults to cwd)')
+    .option('--lang <tag>', 'BCP-47 language tag to stamp on <html> when lang is missing (else auto-detected)')
     .option('--dry-run', 'Print fixes without applying or creating PR', false)
     .action(async (dir: string, opts: {
       url?: string;
@@ -25,14 +27,22 @@ export function fixCommand(): Command {
       repo?: string;
       base: string;
       repoRoot?: string;
+      lang?: string;
       dryRun: boolean;
     }) => {
       const rootDir = path.resolve(dir);
 
+      // Fail fast on a malformed --lang before scanning anything.
+      if (opts.lang !== undefined && canonicalizeLangTag(opts.lang) === null) {
+        console.error(`Invalid --lang value "${opts.lang}": not a valid BCP-47 language tag.`);
+        process.exitCode = 1;
+        return;
+      }
+
       // Deterministic fixers only. AI-assisted fixing lives in the paid
       // @a11y-fixer/ai package used by the GitHub Action; here the ai-assisted
       // rules fall through to the "human review needed" path below.
-      const registry = buildCoreRegistry(rootDir);
+      const registry = buildCoreRegistry(rootDir, { lang: opts.lang });
 
       // Scan
         console.log(`Scanning ${opts.url ?? rootDir}...`);
