@@ -62,3 +62,26 @@ jobs:
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           cache-file: .a11y-fixer-cache.json
+
+  # Markdown path. Surfaces empty image alt (1.1.1) and non-descriptive link
+  # text (2.4.4) in .md files, both auto-rewritten back into the Markdown source.
+  markdown-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .a11y-fixer-cache.json
+          key: a11y-fixer-ai-markdown-${{ hashFiles('site-markdown/**') }}
+
+      - uses: a11y-fixer/a11y-fixer-pro@v1
+        with:
+          mode: fix
+          dir: site-markdown
+          markdown: 'true'
+          base-branch: main
+          license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache-file: .a11y-fixer-cache.json

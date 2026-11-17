@@ -24,7 +24,7 @@ WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
 
 # Copy the template (site content + workflow), excluding this script itself.
-cp -R "$SRC_DIR/site-html" "$SRC_DIR/site-jsx" "$SRC_DIR/.github" "$WORK_DIR/"
+cp -R "$SRC_DIR/site-html" "$SRC_DIR/site-jsx" "$SRC_DIR/site-markdown" "$SRC_DIR/.github" "$WORK_DIR/"
 cp "$SRC_DIR/README.md" "$WORK_DIR/"
 
 cd "$WORK_DIR"

@@ -16,6 +16,8 @@ import { AriaInputFieldNameFixer } from './aria-input-field-name.js';
 import { AriaToggleFieldNameFixer } from './aria-toggle-field-name.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { DocumentTitleFixer } from './document-title.js';
+import { MarkdownAltTextFixer } from './markdown-alt-text.js';
+import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 
 /**
  * Builds the full fixer registry used by the paid GitHub Action: the
@@ -53,6 +55,13 @@ export function buildFullRegistry(
   screenshots?: ScreenshotProvider,
 ): FixerRegistry {
   const registry = new FixerRegistry();
+
+  // Markdown fixers key on the `md-*` ids the repo-local markdown scanner emits
+  // and share WCAG 1.1.1 / 2.4.4 with the broad HTML AltTextFixer/LinkTextFixer.
+  // Register them first so canFix dispatch routes `.md` violations to the
+  // Markdown-syntax fixers before the HTML-markup fixers can claim them.
+  registry.register(new MarkdownAltTextFixer(aiProvider, rootDir));
+  registry.register(new MarkdownLinkTextFixer(aiProvider, rootDir));
 
   // 1.1.1 id-keyed fixers must precede the broad wcagId-keyed AltTextFixer.
   registry.register(new InputImageAltFixer(aiProvider, rootDir));

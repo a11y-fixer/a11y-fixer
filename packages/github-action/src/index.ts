@@ -6,7 +6,7 @@ import {
   dedupeFixFiles,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
-import { buildFullRegistry, AISDKProvider, resolveAIConfig, CachingProvider, LearningProvider } from '@a11y-fixer/ai';
+import { buildFullRegistry, AISDKProvider, resolveAIConfig, CachingProvider, LearningProvider, scanMarkdown } from '@a11y-fixer/ai';
 import type { CookieParam } from 'puppeteer-core';
 import { scanWithCookies } from './cookies-scanner.js';
 import { verifyLicenseKey } from './license.js';
@@ -21,6 +21,23 @@ import {
   makeFileReader,
 } from './learning-store.js';
 import path from 'node:path';
+
+/**
+ * Runs core's scanner (`scanSource`: JSX/TSX, static HTML, or a live URL) and,
+ * when `markdown` is set, concatenates the repo-local Markdown scanner's
+ * violations. `@a11y-fixer/core` never sees `.md`, so Markdown support is added
+ * here as a merge rather than a change to core. Markdown is static source, so it
+ * participates in every mode including the fix-mode re-scan.
+ */
+async function scanAll(
+  rootDir: string,
+  opts: { url?: string; html?: boolean; markdown?: boolean },
+): Promise<A11yViolation[]> {
+  const base = await scanSource(rootDir, { url: opts.url, html: opts.html });
+  if (!opts.markdown) return base;
+  const md = await scanMarkdown(rootDir);
+  return [...base, ...md];
+}
 
 /**
  * Opens a PR with the applied fixes when running in a GitHub context with a
@@ -94,6 +111,9 @@ export async function run(): Promise<void> {
   // getInput, not getBooleanInput: the latter throws when the input is absent
   // (e.g. older workflow files that predate this option).
   const html = core.getInput('html').toLowerCase() === 'true';
+  // Static Markdown path: scan/fix `.md` image-alt and link-text issues. Like
+  // `html`, getInput (not getBooleanInput) so an absent input doesn't throw.
+  const markdown = core.getInput('markdown').toLowerCase() === 'true';
   const baseBranch = core.getInput('base-branch') || 'main';
 
   const cookiesRaw = core.getInput('cookies');
@@ -163,7 +183,7 @@ export async function run(): Promise<void> {
     if (mode === 'check') {
       const violations = url && cookies
         ? await scanWithCookies(rootDir, { url, cookies })
-        : await scanSource(rootDir, { url, html });
+        : await scanAll(rootDir, { url, html, markdown });
 
       if (violations.length > 0) {
         const summary = violations
@@ -176,7 +196,7 @@ export async function run(): Promise<void> {
     } else if (mode === 'scan') {
       const violations = url && cookies
         ? await scanWithCookies(rootDir, { url, cookies })
-        : await scanSource(rootDir, { url, html });
+        : await scanAll(rootDir, { url, html, markdown });
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
     } else if (mode === 'fix') {
@@ -210,13 +230,13 @@ export async function run(): Promise<void> {
       // only for URL scans, which fix mode does not support.
       const registry = buildFullRegistry(aiProvider, rootDir);
 
-      const before = await scanSource(rootDir, { html });
+      const before = await scanAll(rootDir, { html, markdown });
       // Capture pre-fix file contents so any fix we can't verify is reverted
       // cleanly rather than shipped. Must happen before applyAll mutates disk.
       const snapshot = await snapshotFiles(before);
       const fixes = await registry.applyAll(before);
       await aiProvider.save();
-      const after = await scanSource(rootDir, { html });
+      const after = await scanAll(rootDir, { html, markdown });
 
       // Gate the re-scan: confirm each edited file's violations net-decreased and
       // that no fix introduced a new one. Files that fail are restored to their
@@ -227,7 +247,7 @@ export async function run(): Promise<void> {
         fixes,
         changedFiles: dedupeFixFiles(fixes),
         snapshot,
-        rescan: () => scanSource(rootDir, { html }),
+        rescan: () => scanAll(rootDir, { html, markdown }),
       });
       const applied = report.verifiedFixes;
 
