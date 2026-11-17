@@ -1,7 +1,7 @@
 import type { Fixer, FixResult, A11yViolation } from '@a11y-fixer/core';
 import type { AIProvider } from '../provider/index.js';
 import { readSourceLine } from './source-line.js';
-import { locateAtColumn, writeReplacement } from './markdown-source.js';
+import { locateAtColumn, writeReplacement, sanitizeInlineLabel } from './markdown-source.js';
 
 /** Anchored at the located column: an empty-alt Markdown image `![](src)`. */
 const EMPTY_ALT_IMAGE = /^!\[\s*\]\(([^)]+)\)/;
@@ -49,7 +49,7 @@ export class MarkdownAltTextFixer implements Fixer {
 
     let altText: string;
     try {
-      altText = await this.aiProvider.suggestAltText(context);
+      altText = sanitizeInlineLabel(await this.aiProvider.suggestAltText(context));
     } catch (err) {
       return this.humanFlag(violation, `AI provider error: ${err instanceof Error ? err.message : String(err)}`);
     }

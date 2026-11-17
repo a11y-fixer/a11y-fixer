@@ -2,7 +2,7 @@ import type { Fixer, FixResult, A11yViolation } from '@a11y-fixer/core';
 import type { AIProvider } from '../provider/index.js';
 import { readSourceLine } from './source-line.js';
 import { GENERIC_LINK_PATTERNS } from './link-text.js';
-import { locateAtColumn, writeReplacement } from './markdown-source.js';
+import { locateAtColumn, writeReplacement, sanitizeInlineLabel } from './markdown-source.js';
 
 /** Anchored at the located column: a Markdown inline link `[text](href)`. */
 const INLINE_LINK = /^\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/;
@@ -58,7 +58,7 @@ export class MarkdownLinkTextFixer implements Fixer {
 
     let newText: string;
     try {
-      newText = await this.aiProvider.rewriteLinkText(currentText, context);
+      newText = sanitizeInlineLabel(await this.aiProvider.rewriteLinkText(currentText, context));
     } catch (err) {
       return this.humanFlag(violation, `AI provider error: ${err instanceof Error ? err.message : String(err)}`);
     }

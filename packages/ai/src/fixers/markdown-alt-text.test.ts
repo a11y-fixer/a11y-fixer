@@ -72,6 +72,17 @@ describe('MarkdownAltTextFixer', () => {
     expect(await readFile(file, 'utf8')).toBe('![](a.png) ![Second](b.png)');
   });
 
+  it('escapes brackets and collapses newlines in AI alt text before splicing', async () => {
+    const file = path.join(dir, 'doc.md');
+    await writeFile(file, '![](logo.png)');
+    // A stray `]`/`[` would close the alt early; a newline would inject a line.
+    const provider = makeProvider({ suggestAltText: vi.fn().mockResolvedValue('Chart [Q3]\nrevenue') });
+    const fixer = new MarkdownAltTextFixer(provider, dir);
+
+    await fixer.fix(violation(file, 1, 1));
+    expect(await readFile(file, 'utf8')).toBe('![Chart \\[Q3\\] revenue](logo.png)');
+  });
+
   it('human-flags when the construct is gone from the recorded location', async () => {
     const file = path.join(dir, 'doc.md');
     await writeFile(file, 'No image here');

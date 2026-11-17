@@ -17,6 +17,7 @@ const h = vi.hoisted(() => ({
   recordProposals: vi.fn((..._a: unknown[]) => [] as unknown[]),
   loadExamples: vi.fn((..._a: unknown[]) => ({}) as Record<string, string[]>),
   writeStore: vi.fn(async (..._a: unknown[]) => {}),
+  scanMarkdown: vi.fn(async (..._a: unknown[]) => [] as unknown[]),
 }));
 
 vi.mock('@actions/github', () => ({
@@ -62,6 +63,9 @@ vi.mock('@a11y-fixer/ai', () => ({
     }
   },
   buildFullRegistry: () => ({ register() {}, applyAll: () => h.applyAll() }),
+  // The action's `scanAll` wrapper concatenates these onto core's scanSource
+  // output only when the `markdown` input is set.
+  scanMarkdown: (...a: unknown[]) => h.scanMarkdown(...a),
 }));
 
 vi.mock('@a11y-fixer/core', () => {
@@ -400,6 +404,31 @@ describe('github-action scan mode', () => {
     await run();
 
     expect(h.scanOpts).toHaveBeenCalledWith({ url: 'https://example.com', html: false });
+  });
+
+  it('merges scanMarkdown violations onto the base scan when markdown is enabled', async () => {
+    const base = [{ wcagId: '1.4.3', description: 'contrast', id: 'color-contrast' }];
+    const md = [{ wcagId: '1.1.1', description: 'Markdown image has no alt text', id: 'md-image-alt' }];
+    h.scan.mockResolvedValue(base);
+    h.scanMarkdown.mockResolvedValue(md);
+    const setOutput = vi.mocked(actionsCore.setOutput);
+    setInputs({ mode: 'scan', dir: '.', markdown: 'true' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.scanMarkdown).toHaveBeenCalledTimes(1);
+    expect(setOutput).toHaveBeenCalledWith('violations', JSON.stringify([...base, ...md]));
+  });
+
+  it('does not invoke the Markdown scanner when markdown is unset', async () => {
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'scan', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.scanMarkdown).not.toHaveBeenCalled();
   });
 });
 

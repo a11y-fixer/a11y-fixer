@@ -23,17 +23,21 @@ import {
 import path from 'node:path';
 
 /**
- * Runs core's scanner (`scanSource`: JSX/TSX, static HTML, or a live URL) and,
- * when `markdown` is set, concatenates the repo-local Markdown scanner's
- * violations. `@a11y-fixer/core` never sees `.md`, so Markdown support is added
+ * Runs the base scanner and, when `markdown` is set, concatenates the repo-local
+ * Markdown scanner's violations. The base is `scanWithCookies` for an
+ * authenticated URL scan, else core's `scanSource` (JSX/TSX, static HTML, or a
+ * live URL). `@a11y-fixer/core` never sees `.md`, so Markdown support is added
  * here as a merge rather than a change to core. Markdown is static source, so it
- * participates in every mode including the fix-mode re-scan.
+ * participates in every mode (including the fix-mode re-scan) and regardless of
+ * the base scanner — in particular a cookie-based URL scan still merges it.
  */
 async function scanAll(
   rootDir: string,
-  opts: { url?: string; html?: boolean; markdown?: boolean },
+  opts: { url?: string; html?: boolean; markdown?: boolean; cookies?: CookieParam[] },
 ): Promise<A11yViolation[]> {
-  const base = await scanSource(rootDir, { url: opts.url, html: opts.html });
+  const base = opts.url && opts.cookies
+    ? await scanWithCookies(rootDir, { url: opts.url, cookies: opts.cookies })
+    : await scanSource(rootDir, { url: opts.url, html: opts.html });
   if (!opts.markdown) return base;
   const md = await scanMarkdown(rootDir);
   return [...base, ...md];
@@ -181,9 +185,7 @@ export async function run(): Promise<void> {
 
   try {
     if (mode === 'check') {
-      const violations = url && cookies
-        ? await scanWithCookies(rootDir, { url, cookies })
-        : await scanAll(rootDir, { url, html, markdown });
+      const violations = await scanAll(rootDir, { url, html, markdown, cookies });
 
       if (violations.length > 0) {
         const summary = violations
@@ -194,9 +196,7 @@ export async function run(): Promise<void> {
         core.info('No accessibility violations found. ✓');
       }
     } else if (mode === 'scan') {
-      const violations = url && cookies
-        ? await scanWithCookies(rootDir, { url, cookies })
-        : await scanAll(rootDir, { url, html, markdown });
+      const violations = await scanAll(rootDir, { url, html, markdown, cookies });
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
     } else if (mode === 'fix') {

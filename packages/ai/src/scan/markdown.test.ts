@@ -57,6 +57,21 @@ describe('scanLine', () => {
     expect(new Set(cols).size).toBe(2);
   });
 
+  it('emits a line’s constructs rightmost-first so sequential fixes keep columns valid', () => {
+    // image at col 1, link at col 16; descending-column emission means the link
+    // (higher column) comes first, so fixing it never shifts the image's column.
+    const v = scanLine('f.md', 1, '![](a.png) and [here](/x)');
+    const cols = v.map(x => x.nodes[0]?.sourceColumn ?? 0);
+    expect(cols).toEqual([...cols].sort((a, b) => b - a));
+    expect(cols[0]).toBeGreaterThan(cols[1] ?? 0);
+  });
+
+  it('detects two directly adjacent links (no separator)', () => {
+    const v = scanLine('f.md', 1, '[here](/x)[more](/y)');
+    expect(v).toHaveLength(2);
+    expect(v.every(x => x.id === 'md-link-text')).toBe(true);
+  });
+
   it('ignores reference-style images/links (v1 scope)', () => {
     expect(scanLine('f.md', 1, '![][logo] and [here][ref]')).toHaveLength(0);
   });

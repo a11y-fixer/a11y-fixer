@@ -62,4 +62,20 @@ describe('Markdown fixer pipeline (real scanner, fake provider)', () => {
     const after = await scanMarkdown(dir);
     expect(after).toHaveLength(0);
   });
+
+  it('fixes BOTH constructs when two share one line (sequential-splice column shift)', async () => {
+    // Regression: the first splice lengthens the line; without rightmost-first
+    // emission the second construct's recorded column goes stale and it ships
+    // unfixed. An image + link, and two images, both on single lines.
+    await writeFile(file, 'Logo ![](a.png) see [click here](/x)\nTwo ![](c.png) ![](d.png)\n', 'utf8');
+    const before = await scanMarkdown(dir);
+    expect(before).toHaveLength(4);
+
+    const fixes = await buildFullRegistry(fakeProvider, dir).applyAll(before as A11yViolation[]);
+    expect(fixes.every(f => f.applied && f.bucket === 'ai-assisted')).toBe(true);
+
+    const content = await readFile(file, 'utf8');
+    expect(content).toBe('Logo ![A diagram](a.png) see [the pricing page](/x)\nTwo ![A diagram](c.png) ![A diagram](d.png)\n');
+    expect(await scanMarkdown(dir)).toHaveLength(0);
+  });
 });

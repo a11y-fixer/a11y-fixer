@@ -27,8 +27,12 @@ const SKIP_DIRS = new Set(['node_modules', '.git', '.a11y-fixer']);
 
 /** Empty (or whitespace-only) alt image: `![](src)`. Global, column-aware. */
 const EMPTY_ALT_IMAGE = /!\[\s*\]\(([^)]+)\)/g;
-/** Any inline link `[text](href)`, excluding images (`![...]`). Global. */
-const INLINE_LINK = /(^|[^!])\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+/**
+ * Any inline link `[text](href)`, excluding images via a `(?<!!)` lookbehind so
+ * the char before `[` is not consumed — that keeps two directly adjacent links
+ * (`[a](x)[b](y)`) both matchable and the column equal to `match.index`.
+ */
+const INLINE_LINK = /(?<!!)\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 
 export async function scanMarkdown(rootDir: string): Promise<A11yViolation[]> {
   const files = await collectMarkdownFiles(rootDir);
@@ -64,14 +68,20 @@ export function scanLine(file: string, lineNo: number, line: string): A11yViolat
 
   INLINE_LINK.lastIndex = 0;
   for (let m = INLINE_LINK.exec(line); m; m = INLINE_LINK.exec(line)) {
-    const lead = m[1] ?? '';
-    const text = (m[2] ?? '').trim();
-    const href = (m[3] ?? '').trim();
+    const text = (m[1] ?? '').trim();
+    const href = (m[2] ?? '').trim();
     if (!isNonDescriptive(text, href)) continue;
-    // The match may include a leading non-`!` char (lead); the link starts after it.
-    const column = m.index + lead.length + 1; // points at the `[` of `[text]`
-    out.push(violation('md-link-text', '2.4.4', 'Markdown link has non-descriptive text', file, lineNo, column, `[${m[2]}](${m[3]})`));
+    const column = m.index + 1; // 1-indexed, points at the `[` of `[text]`
+    out.push(violation('md-link-text', '2.4.4', 'Markdown link has non-descriptive text', file, lineNo, column, `[${m[1]}](${m[2]})`));
   }
+
+  // Emit a line's constructs rightmost-first. The fixers edit sequentially,
+  // each re-reading the file and slicing at the violation's original column; a
+  // left-to-right order would let an earlier (lower-column) splice shift a later
+  // construct, so its stale column would miss and the fix would be dropped.
+  // Descending column means every edit lands to the right of the ones still
+  // pending, keeping their columns valid.
+  out.sort((a, b) => (b.nodes[0]?.sourceColumn ?? 0) - (a.nodes[0]?.sourceColumn ?? 0));
 
   return out;
 }

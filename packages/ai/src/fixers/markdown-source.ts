@@ -1,6 +1,18 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
 /**
+ * Makes AI-generated text safe to splice into a Markdown image/link label.
+ * The provider is trusted (the caller's own key) but its output is influenced by
+ * the scanned file's surrounding content, so a stray `]`/`[` or newline could
+ * close the `![...]`/`[...]` bracket early or inject extra markdown. Collapse
+ * any newline run to a space and backslash-escape square brackets (a `)` inside
+ * the label is harmless — only the href's `)` closes the construct).
+ */
+export function sanitizeInlineLabel(text: string): string {
+  return text.replace(/[\r\n]+/g, ' ').replace(/[[\]]/g, (c) => '\\' + c).trim();
+}
+
+/**
  * A located Markdown construct on a specific source line, ready to be replaced.
  * Markdown fixers locate the exact occurrence by **column** (not a naive
  * line-wide `replace`) so a line with two images/links is edited unambiguously.
