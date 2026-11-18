@@ -80,8 +80,13 @@ function parseSignature(html: string): NodeSignature | null {
     attrs.set(m[1].toLowerCase(), m[2] ?? m[3] ?? '');
   }
 
-  const textMatch = html.match(/>([^<]*)</);
-  const text = textMatch ? normalizeText(textMatch[1]) : '';
+  // Text between the first '>' and the next '<', found by index rather than a
+  // regex: `/>([^<]*)</` run unanchored is O(n^2) on '>'-heavy input (each '>'
+  // is a fresh start position that rescans to the end), a polynomial-ReDoS risk
+  // on attacker-sized markup. indexOf is linear and equivalent here.
+  const gt = html.indexOf('>');
+  const lt = gt === -1 ? -1 : html.indexOf('<', gt + 1);
+  const text = gt !== -1 && lt !== -1 ? normalizeText(html.slice(gt + 1, lt)) : '';
 
   return { tag, attrs, text };
 }

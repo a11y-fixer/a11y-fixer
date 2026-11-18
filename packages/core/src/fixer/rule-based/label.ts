@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
 import { readAttr, escapeAttr } from '../shared/attrs.js';
+import { stripTags } from '../shared/strip-tags.js';
 
 /** Turns label text into an id-safe slug, or `null` when nothing usable remains. */
 function slugify(text: string): string | null {
@@ -59,11 +60,7 @@ export function associateAdjacentLabel(content: string, line: number): string | 
   const labelOpenTag = content.slice(labelOpenIdx, labelOpenEnd + 1);
   if (readAttr(labelOpenTag, 'for') !== null) return null; // already associated
 
-  const labelText = content
-    .slice(labelOpenEnd + 1, labelCloseStart)
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  const labelText = stripTags(content.slice(labelOpenEnd + 1, labelCloseStart));
   if (labelText.length === 0) return null;
 
   const ctrlEnd = content.indexOf('>', ctrlStart);

@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
+import { stripTags } from '../shared/strip-tags.js';
 
 /** Escapes a string for use as HTML text content inside `<title>`. */
 function escapeText(value: string): string {
@@ -15,7 +16,7 @@ function escapeText(value: string): string {
 function firstH1Text(content: string): string | null {
   const m = content.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
   if (!m) return null;
-  const text = m[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const text = stripTags(m[1]);
   return text.length > 0 ? text : null;
 }
 
