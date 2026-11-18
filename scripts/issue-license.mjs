@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Mint an a11y-fixer-pro license key.
+// Mint an a11y-fixer license key.
 //
 // Usage:
 //   node scripts/issue-license.mjs --sub "customer@example.com" --days 365 \
-//     --key /path/to/a11y-fixer-pro-LICENSE-SIGNING-KEY.pem
+//     --key /path/to/a11y-fixer-LICENSE-SIGNING-KEY.pem
 //
 // Each issued key is also appended to a local ledger (default .licenses/ledger.jsonl)
 // so you can answer "how many people have a license?". List it with:

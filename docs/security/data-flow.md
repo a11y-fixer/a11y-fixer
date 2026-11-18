@@ -6,7 +6,7 @@ involved.
 
 ## Trust-boundary summary
 
-a11y-fixer-pro runs **entirely inside the customer's own CI runner**. It has no
+a11y-fixer runs **entirely inside the customer's own CI runner**. It has no
 hosted backend, database, or API that we operate. The only data that leaves the
 customer's trust boundary is sent to the **customer-selected LLM provider**
 (**Anthropic** by default; optionally **OpenAI** or **Google**), under the

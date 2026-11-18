@@ -2,7 +2,7 @@ name: Release tags
 
 # GitHub Actions are consumed by git tag, not npm. On each published release
 # (e.g. v1.2.3) this moves the floating major tag (v1) to the release commit so
-# consumers can pin `a11y-fixer/a11y-fixer-pro@v1` and get the latest v1.x.
+# consumers can pin `a11y-fixer/a11y-fixer@v1` and get the latest v1.x.
 #
 # It also rebuilds the ncc bundle and fails if the committed dist is stale, so a
 # release can never ship a bundle that doesn't match source.

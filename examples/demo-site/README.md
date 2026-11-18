@@ -1,9 +1,9 @@
 # a11y-fixer demo site
 
-A deliberately-broken "fake site" for demoing a11y-fixer-pro. Point the Action at
+A deliberately-broken "fake site" for demoing a11y-fixer. Point the Action at
 it and it scans, fixes WCAG violations, and opens a PR.
 
-This template lives in the a11y-fixer-pro monorepo so it's versioned alongside
+This template lives in the a11y-fixer monorepo so it's versioned alongside
 the tool. [`seed.sh`](./seed.sh) publishes it to a standalone GitHub repo where
 the Action actually runs.
 
