@@ -1,4 +1,4 @@
-# a11y-fixer-pro
+# a11y-fixer
 
 Paid, **source-available** tooling for [a11y-fixer](https://github.com/a11y-fixer/a11y-fixer):
 the **AI-assisted** accessibility fixes and the **GitHub Action** that ships them.
@@ -12,14 +12,15 @@ license key.
 ## License & pricing
 
 The source here is available to read under the **Business Source License 1.1**
-(see [`LICENSE`](./LICENSE)). **Production use requires a valid license key** —
-buy one at <https://a11y-fixer.com>. Each version converts to Apache-2.0 on its
-Change Date. Evaluation, testing, and development use are free.
+(see [`LICENSE`](./LICENSE)). **Production use on a private repo requires a valid
+license key** — buy one at <https://a11y-fixer.com>; public repos run free. Each
+version converts to Apache-2.0 on its Change Date. Evaluation, testing, and
+development use are free.
 
 ## Using the Action
 
 ```yaml
-- uses: a11y-fixer/a11y-fixer-pro@v1
+- uses: a11y-fixer/a11y-fixer@v1
   with:
     mode: fix
     license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
@@ -27,9 +28,27 @@ Change Date. Evaluation, testing, and development use are free.
     github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Store your license key as a repository (or org) secret. Without a valid key the
-action fails fast with a clear message. See [`action.yml`](./action.yml) for all
-inputs and outputs.
+Store your license key as a repository (or org) secret. On a private repo,
+without a valid key the action fails fast with a clear message; public repos run
+free without one. See [`action.yml`](./action.yml) for all inputs and outputs.
+
+### Required permissions
+
+The Action reports results the way you already read them — a Check Run with
+inline annotations and one sticky PR comment — and in `fix` mode opens a PR.
+Grant the workflow (or the job) these permissions:
+
+```yaml
+permissions:
+  contents: write        # fix mode: push the fix branch
+  pull-requests: write   # open the PR and post the sticky comment
+  checks: write          # publish the Check Run + inline annotations
+```
+
+Reporting is best-effort: a missing permission only logs a warning, it never
+fails an otherwise-successful run (and it needs **no** GitHub Advanced Security).
+For `check`/`scan` only (no PR), `contents: read` plus `checks: write` is enough.
+Public repositories run free — no license key required.
 
 ### Choosing an LLM provider (bring your own key)
 
@@ -38,7 +57,7 @@ supported provider instead of adding an Anthropic key — handy if your org is
 already standardized on OpenAI or Gemini:
 
 ```yaml
-- uses: a11y-fixer/a11y-fixer-pro@v1
+- uses: a11y-fixer/a11y-fixer@v1
   with:
     mode: fix
     license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
@@ -57,6 +76,7 @@ sent only to the provider you choose. Model ids are provider-specific.
 `packages/github-action/dist/index.js` in *your* runner with the secrets you pass
 it — your `anthropic-api-key`, and in `fix` mode a `github-token` with
 `contents: write` and `pull-requests: write` so it can push a branch and open a PR.
+Reporting (the Check Run + inline annotations) also needs `checks: write`.
 Setup also fetches [`browser-actions/setup-chrome`](https://github.com/browser-actions/setup-chrome)
 and installs runtime deps via `scripts/install-action-runtime-deps.sh`. This is the
 standard GitHub Action trust model — the same trust you extend to any `uses:` step.
@@ -66,7 +86,7 @@ force-move to each new release, so it is convenient but mutable. For reproducibl
 tamper-evident runs, pin to a full commit SHA instead:
 
 ```yaml
-- uses: a11y-fixer/a11y-fixer-pro@<full-commit-sha>  # immutable; replaces @v1
+- uses: a11y-fixer/a11y-fixer@<full-commit-sha>  # immutable; replaces @v1
 ```
 
 [Dependabot](https://docs.github.com/code-security/dependabot)'s `github-actions`
@@ -116,7 +136,7 @@ so the cache is reused until the code changes:
     path: .a11y-fixer-cache.json
     key: a11y-fixer-ai-${{ hashFiles('src/**') }}
 
-- uses: a11y-fixer/a11y-fixer-pro@v1
+- uses: a11y-fixer/a11y-fixer@v1
   with:
     mode: fix
     license-key: ${{ secrets.A11Y_FIXER_LICENSE_KEY }}
@@ -170,5 +190,5 @@ in `src/license.ts`. The private signing key is **never** committed. Mint a key:
 
 ```sh
 node scripts/issue-license.mjs --sub "customer@example.com" --days 365 \
-  --key /path/to/a11y-fixer-pro-LICENSE-SIGNING-KEY.pem
+  --key /path/to/a11y-fixer-LICENSE-SIGNING-KEY.pem
 ```

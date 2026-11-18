@@ -18,10 +18,36 @@ const h = vi.hoisted(() => ({
   loadExamples: vi.fn((..._a: unknown[]) => ({}) as Record<string, string[]>),
   writeStore: vi.fn(async (..._a: unknown[]) => {}),
   scanMarkdown: vi.fn(async (..._a: unknown[]) => [] as unknown[]),
+  // Mutable GitHub context: tests set `ctx.payload` to flip repo visibility or
+  // supply a PR. Reset in beforeEach.
+  ctx: { repo: { owner: 'o', repo: 'r' }, sha: 'deadbeef', payload: {} as Record<string, unknown> },
+  octokitThrows: false,
+  checksCreate: vi.fn(async (..._a: unknown[]) => ({ data: { id: 1 } })),
+  checksUpdate: vi.fn(async (..._a: unknown[]) => ({})),
+  listComments: vi.fn(async (..._a: unknown[]) => ({ data: [] as unknown[] })),
+  createComment: vi.fn(async (..._a: unknown[]) => ({})),
+  updateComment: vi.fn(async (..._a: unknown[]) => ({})),
 }));
 
 vi.mock('@actions/github', () => ({
-  context: { repo: { owner: 'o', repo: 'r' } },
+  get context() {
+    return h.ctx;
+  },
+  getOctokit: () => {
+    // Simulate a getOctokit that throws (bad token), to prove reporting never
+    // escapes its best-effort guard. Reset in beforeEach.
+    if (h.octokitThrows) throw new Error('bad token');
+    return {
+    rest: {
+      checks: { create: (...a: unknown[]) => h.checksCreate(...a), update: (...a: unknown[]) => h.checksUpdate(...a) },
+      issues: {
+        listComments: (...a: unknown[]) => h.listComments(...a),
+        createComment: (...a: unknown[]) => h.createComment(...a),
+        updateComment: (...a: unknown[]) => h.updateComment(...a),
+      },
+    },
+    };
+  },
 }));
 
 // vitest >=3 forbids vi.spyOn on live ESM namespace exports (they are
@@ -151,6 +177,10 @@ beforeEach(() => {
     if (k.startsWith('INPUT_')) delete process.env[k];
   }
   process.env['INPUT_LICENSE-KEY'] = VALID_LICENSE;
+  // Default: private repo, no PR context. Reporting tests override this.
+  h.ctx.payload = {};
+  h.ctx.sha = 'deadbeef';
+  h.octokitThrows = false;
 });
 
 afterEach(() => {
@@ -566,5 +596,221 @@ describe('github-action license gating', () => {
     expect(setFailed).toHaveBeenCalledWith(expect.stringContaining('license key'));
     expect(h.applyAll).not.toHaveBeenCalled();
     expect(h.createPR).not.toHaveBeenCalled();
+  });
+});
+
+describe('github-action public-repo free tier', () => {
+  it('runs without a license on a public repo', async () => {
+    delete process.env['INPUT_LICENSE-KEY'];
+    h.ctx.payload = { repository: { private: false } };
+    h.scan.mockResolvedValue([]);
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    const info = vi.mocked(actionsCore.info);
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).not.toHaveBeenCalled();
+    expect(h.scan).toHaveBeenCalled();
+    expect(info).toHaveBeenCalledWith(expect.stringContaining('free public-repo tier'));
+  });
+
+  it('still fails without a license on a private repo', async () => {
+    delete process.env['INPUT_LICENSE-KEY'];
+    h.ctx.payload = { repository: { private: true } };
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).toHaveBeenCalledWith(expect.stringContaining('valid license key'));
+    expect(h.scan).not.toHaveBeenCalled();
+  });
+});
+
+describe('github-action GitHub-native reporting', () => {
+  it('posts a Check Run and creates a sticky PR comment in check mode', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 7 } };
+    h.scan.mockResolvedValue([
+      { id: 'image-alt', wcagId: '1.1.1', impact: 'serious', description: 'alt', helpUrl: 'h', nodes: [] },
+    ]);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.checksCreate).toHaveBeenCalledTimes(1);
+    expect(h.listComments).toHaveBeenCalledTimes(1);
+    expect(h.createComment).toHaveBeenCalledTimes(1);
+    expect(h.updateComment).not.toHaveBeenCalled();
+  });
+
+  it('updates the existing sticky comment instead of creating a second', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 7 } };
+    h.listComments.mockResolvedValueOnce({
+      data: [{ id: 99, body: 'old\n<!-- a11y-fixer-report -->' }],
+    });
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.updateComment).toHaveBeenCalledTimes(1);
+    expect(h.createComment).not.toHaveBeenCalled();
+  });
+
+  it('warns (does not fail) when the Check Run API errors', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.checksCreate.mockRejectedValueOnce(new Error('no checks permission'));
+    h.scan.mockResolvedValue([]);
+    const warning = vi.mocked(actionsCore.warning);
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('check run'));
+    expect(setFailed).not.toHaveBeenCalled();
+  });
+
+  it('falls back to inline workflow-command annotations when the Check Run is denied', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.checksCreate.mockRejectedValueOnce(new Error('Resource not accessible by integration'));
+    h.scan.mockResolvedValue([
+      {
+        id: 'image-alt',
+        wcagId: '1.1.1',
+        impact: 'serious',
+        description: 'Image missing alt',
+        helpUrl: 'https://help/image-alt',
+        nodes: [{ html: '<img>', target: ['img'], failureSummary: 'fix it', sourceFile: 'src/App.tsx', sourceLine: 12 }],
+      },
+    ]);
+    const error = vi.mocked(actionsCore.error);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    // One error-level annotation pinned to the source location (plus the
+    // setFailed summary error, which carries no file — assert on the pinned one).
+    expect(error).toHaveBeenCalledWith(
+      expect.stringContaining('Image missing alt'),
+      expect.objectContaining({ file: 'src/App.tsx', startLine: 12, title: expect.stringContaining('image-alt') }),
+    );
+  });
+
+  it('fallback routes moderate to warning and minor to notice annotations', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.checksCreate.mockRejectedValueOnce(new Error('denied'));
+    h.scan.mockResolvedValue([
+      { id: 'r1', wcagId: '1.4.3', impact: 'moderate', description: 'contrast', helpUrl: 'h', nodes: [{ html: '', target: [], failureSummary: '', sourceFile: 'a.tsx', sourceLine: 1 }] },
+      { id: 'r2', wcagId: '2.4.4', impact: 'minor', description: 'linknote', helpUrl: 'h', nodes: [{ html: '', target: [], failureSummary: '', sourceFile: 'b.tsx', sourceLine: 2 }] },
+    ]);
+    const warning = vi.mocked(actionsCore.warning);
+    const notice = vi.mocked(actionsCore.notice);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('contrast'), expect.objectContaining({ file: 'a.tsx' }));
+    expect(notice).toHaveBeenCalledWith(expect.stringContaining('linknote'), expect.objectContaining({ file: 'b.tsx' }));
+  });
+
+  it('pins the Check Run to the PR head sha, not the merge-commit context sha', async () => {
+    h.ctx.sha = 'mergecommitsha';
+    h.ctx.payload = {
+      repository: { private: false },
+      pull_request: { number: 7, head: { sha: 'realheadsha' } },
+    };
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.checksCreate).toHaveBeenCalledTimes(1);
+    expect((h.checksCreate.mock.calls[0][0] as { head_sha?: string }).head_sha).toBe('realheadsha');
+  });
+
+  it('never fails the run when the GitHub client cannot be built', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.scan.mockResolvedValue([]);
+    // Make getOctokit itself throw — the old code called it outside the try/catch.
+    h.octokitThrows = true;
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    const warning = vi.mocked(actionsCore.warning);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(setFailed).not.toHaveBeenCalled();
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('could not initialize the GitHub client'));
+  });
+
+  it('fix mode posts a neutral Check Run so it never hard-blocks a merge', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 5, head: { sha: 'h' } } };
+    h.scan.mockResolvedValue([
+      { id: 'x', wcagId: '1.1.1', impact: 'serious', description: 'd', helpUrl: 'u', nodes: [] },
+    ]);
+    h.applyAll.mockResolvedValue([APPLIED_FIX]);
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    const neutral = h.checksCreate.mock.calls.find(
+      c => (c[0] as { conclusion?: string }).conclusion === 'neutral',
+    );
+    expect(neutral).toBeTruthy();
+  });
+
+  it('skips reporting entirely when no github-token is provided', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'check', dir: '.' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.checksCreate).not.toHaveBeenCalled();
+    expect(h.listComments).not.toHaveBeenCalled();
+  });
+
+  it('warns (does not fail) when the sticky comment API errors', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 7 } };
+    h.createComment.mockRejectedValueOnce(new Error('no pull-requests permission'));
+    h.scan.mockResolvedValue([]);
+    const warning = vi.mocked(actionsCore.warning);
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('PR comment'));
+    expect(setFailed).not.toHaveBeenCalled();
+  });
+
+  it('leaves a before -> after sticky comment on the triggering PR in fix mode', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 7 } };
+    h.scan.mockResolvedValueOnce([{}, {}]).mockResolvedValueOnce([{}]); // before: 2, after: 1
+    h.applyAll.mockResolvedValue([APPLIED_FIX]);
+    setInputs({ mode: 'fix', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.checksCreate).toHaveBeenCalledTimes(1);
+    expect(h.createComment).toHaveBeenCalledTimes(1);
+    expect(h.createComment).toHaveBeenCalledWith(
+      expect.objectContaining({ issue_number: 7, body: expect.stringContaining('→') }),
+    );
   });
 });
