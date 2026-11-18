@@ -63,6 +63,10 @@ jobs:
           echo "Moved $MAJOR -> $VERSION ($GITHUB_SHA)"
 
   publish-npm:
+    # Gate on retag: it rebuilds and fails if the committed bundle is stale, so an
+    # irreversible npm publish never ships from a release whose tree doesn't match
+    # its source. (CI already gated the merged commit; this re-verifies at release.)
+    needs: retag
     runs-on: ubuntu-latest
     permissions:
       contents: read
