@@ -11,14 +11,41 @@
     "examples/**": [],
     "scripts/**": [],
     "packages/github-action/dist/**": [],
-    "packages/ai/src/scan/markdown.ts": ["packages/ai/src/scan/markdown.test.ts"],
-    "packages/ai/src/fixers/markdown-alt-text.ts": ["packages/ai/src/fixers/markdown-alt-text.test.ts"],
-    "packages/ai/src/fixers/markdown-link-text.ts": ["packages/ai/src/fixers/markdown-link-text.test.ts"],
-    "packages/ai/src/fixers/markdown-source.ts": ["packages/ai/src/fixers/markdown-pipeline.e2e.test.ts"],
-    "packages/ai/src/fixers/link-text.ts": ["packages/ai/src/fixers/link-text.test.ts"],
-    "packages/ai/src/fixers/registry.ts": ["packages/ai/src/fixers/registry.test.ts"],
-    "packages/ai/src/index.ts": ["packages/ai/src/fixers/registry.test.ts"],
-    "packages/github-action/src/index.ts": ["packages/github-action/src/index.test.ts"],
-    "packages/github-action/src/report.ts": ["packages/github-action/src/report.test.ts"]
+    "packages/core/src/**": [
+      "packages/core/src/baseline/baseline.test.ts"
+    ],
+    "packages/cli/src/**": [
+      "packages/cli/src/commands/commands.test.ts"
+    ],
+    "packages/ai/src/scan/markdown.ts": [
+      "packages/ai/src/scan/markdown.test.ts"
+    ],
+    "packages/ai/src/fixers/markdown-alt-text.ts": [
+      "packages/ai/src/fixers/markdown-alt-text.test.ts"
+    ],
+    "packages/ai/src/fixers/markdown-link-text.ts": [
+      "packages/ai/src/fixers/markdown-link-text.test.ts"
+    ],
+    "packages/ai/src/fixers/markdown-source.ts": [
+      "packages/ai/src/fixers/markdown-pipeline.e2e.test.ts"
+    ],
+    "packages/ai/src/fixers/link-text.ts": [
+      "packages/ai/src/fixers/link-text.test.ts"
+    ],
+    "packages/ai/src/fixers/registry.ts": [
+      "packages/ai/src/fixers/registry.test.ts"
+    ],
+    "packages/ai/src/index.ts": [
+      "packages/ai/src/fixers/registry.test.ts"
+    ],
+    "packages/github-action/src/index.ts": [
+      "packages/github-action/src/index.test.ts"
+    ],
+    "packages/github-action/src/report.ts": [
+      "packages/github-action/src/report.test.ts"
+    ],
+    "packages/**/package.json": [],
+    "packages/**/tsconfig.json": [],
+    "packages/**/vitest.config.ts": []
   }
 }
