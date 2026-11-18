@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@a11y-fixer/ai": "workspace:*",
-    "@a11y-fixer/core": "^0.1.3"
+    "@a11y-fixer/core": "workspace:*"
   }
 }

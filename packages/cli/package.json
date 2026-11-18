@@ -1,0 +1,47 @@
+{
+  "name": "@a11y-fixer/cli",
+  "version": "0.1.4",
+  "description": "CLI for deterministic WCAG accessibility fixes (scan, fix, check).",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "a11y-fixer": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*"
+  ],
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "wcag",
+    "cli"
+  ],
+  "homepage": "https://github.com/a11y-fixer/a11y-fixer#readme",
+  "bugs": "https://github.com/a11y-fixer/a11y-fixer/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a11y-fixer/a11y-fixer.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --loader ts-node/esm src/index.ts",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@a11y-fixer/core": "workspace:*",
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "vitest": "^5.1.0"
+  }
+}
