@@ -9,6 +9,6 @@
     "bench": "node run.mjs"
   },
   "dependencies": {
-    "@a11y-fixer/core": "^0.1.3"
+    "@a11y-fixer/core": "workspace:*"
   }
 }

@@ -1,11 +1,23 @@
-name: Release tags
+name: Release
 
-# GitHub Actions are consumed by git tag, not npm. On each published release
-# (e.g. v1.2.3) this moves the floating major tag (v1) to the release commit so
-# consumers can pin `a11y-fixer/a11y-fixer@v1` and get the latest v1.x.
+# On each published release this does two independent things:
 #
-# It also rebuilds the ncc bundle and fails if the committed dist is stale, so a
-# release can never ship a bundle that doesn't match source.
+# 1. retag — moves the floating major tag (v1) to the release commit so Action
+#    consumers can pin `a11y-fixer/a11y-fixer@v1` and get the latest v1.x, and
+#    fails if the committed ncc bundle is stale (a release can never ship a
+#    bundle that doesn't match source).
+#
+# 2. publish-npm — publishes the free packages (@a11y-fixer/core,
+#    @a11y-fixer/cli) to npm. The paid packages (@a11y-fixer/ai,
+#    @a11y-fixer/github-action) are "private" and skipped. Auth is tokenless via
+#    npm Trusted Publishing (OIDC) — there is no NPM_TOKEN.
+#    Prerequisites (one-time, on npmjs.com) for BOTH core and cli:
+#      package Settings → Trusted Publisher → GitHub Actions, with
+#        Organization/user: a11y-fixer
+#        Repository:        a11y-fixer
+#        Workflow filename: release.yml
+#    The versions in packages/{core,cli}/package.json must match the intended
+#    release; each step is idempotent and skips a version already on npm.
 
 on:
   release:
@@ -49,3 +61,50 @@ jobs:
           git tag -f "$MAJOR" "$GITHUB_SHA"
           git push origin "$MAJOR" --force
           echo "Moved $MAJOR -> $VERSION ($GITHUB_SHA)"
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # OIDC: npm Trusted Publishing + provenance
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      # OIDC Trusted Publishing requires npm >= 11.5.1 and Node >= 22.14.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # pnpm delegates publish to the npm CLI on PATH, so ensure a recent npm.
+      - run: npm install -g npm@latest
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm -r run build
+
+      # Publish each package in its own step (core before cli, so cli's
+      # workspace:* dep resolves to a published version). Each package needs its
+      # own OIDC token exchange with the Trusted Publisher — `pnpm -r publish`
+      # only authenticates the first package, so we invoke per-package instead.
+      # pnpm rewrites `workspace:*` to the real version at publish time. Each step
+      # is idempotent: it skips a version already on npm, so a re-run after a
+      # partial publish only ships what's missing.
+      - name: Publish @a11y-fixer/core
+        run: |
+          V=$(node -p "require('./packages/core/package.json').version")
+          if npm view "@a11y-fixer/core@$V" version >/dev/null 2>&1; then
+            echo "@a11y-fixer/core@$V already published — skipping."
+          else
+            pnpm --filter @a11y-fixer/core publish --access public --no-git-checks --provenance
+          fi
+      - name: Publish @a11y-fixer/cli
+        run: |
+          V=$(node -p "require('./packages/cli/package.json').version")
+          if npm view "@a11y-fixer/cli@$V" version >/dev/null 2>&1; then
+            echo "@a11y-fixer/cli@$V already published — skipping."
+          else
+            pnpm --filter @a11y-fixer/cli publish --access public --no-git-checks --provenance
+          fi

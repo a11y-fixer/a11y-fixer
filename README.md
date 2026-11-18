@@ -3,11 +3,14 @@
 Paid, **source-available** tooling for [a11y-fixer](https://github.com/a11y-fixer/a11y-fixer):
 the **AI-assisted** accessibility fixes and the **GitHub Action** that ships them.
 
-The free, deterministic engine and CLI are open source and published to npm as
+This is a **monorepo**. The free, deterministic engine and CLI live in
+[`packages/core`](./packages/core) and [`packages/cli`](./packages/cli), are
+**MIT-licensed**, and are published to npm as
 [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core) and
-[`@a11y-fixer/cli`](https://www.npmjs.com/package/@a11y-fixer/cli). This repo
-builds on `@a11y-fixer/core` (from npm) and adds AI-assisted fixes behind a
-license key.
+[`@a11y-fixer/cli`](https://www.npmjs.com/package/@a11y-fixer/cli). The
+AI-assisted fixers and the GitHub Action build on top of them (via
+`workspace:*`), add value behind a license key, and are **source-available under
+the BSL** — see [License & pricing](#license--pricing).
 
 ## License & pricing
 
@@ -163,6 +166,11 @@ your code and nothing about your corrections is sent anywhere. Commit
 
 ## Packages
 
+- **`packages/core`** (`@a11y-fixer/core`, **MIT**, published) — the free,
+  deterministic engine: axe (HTML) + ESLint/jsx-a11y (JSX) scanners, the
+  WCAG map, deterministic fixers, and the `PullRequestBuilder`.
+- **`packages/cli`** (`@a11y-fixer/cli`, **MIT**, published) — the free CLI
+  (`a11y-fixer scan|fix|check`) over `core`.
 - **`packages/ai`** (`@a11y-fixer/ai`) — multi-provider LLM layer (Anthropic/OpenAI/Google via the Vercel AI SDK) + AI-assisted fixers
   (alt text, link text, button name, form label, link name, select name, input
   button name, input image alt) and `buildFullRegistry`, which layers them ahead

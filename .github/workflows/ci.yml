@@ -24,6 +24,13 @@ jobs:
 
       - run: pnpm -r run build
 
+      # @a11y-fixer/core's axe detector test drives a real headless Chrome
+      # (src/detector/axe.test.ts). puppeteer's Chrome download is skipped at
+      # install time (not in onlyBuiltDependencies), so fetch it explicitly
+      # before coverage runs. Resolve install.mjs through the pnpm store.
+      - name: Install Chrome for puppeteer
+        run: node "$(find node_modules/.pnpm -maxdepth 4 -path '*puppeteer/install.mjs' | head -1)"
+
       # Coverage thresholds live in each package's vitest.config.ts, so this
       # step fails the build on any regression below the gate.
       - run: pnpm -r run coverage
