@@ -1,4 +1,4 @@
-name: 'a11y-fixer-pro'
+name: 'a11y-fixer'
 description: 'AI-assisted accessibility fixes for your React/JSX source — finds and fixes WCAG violations, opens a PR'
 author: 'a11y-fixer'
 
@@ -8,8 +8,8 @@ branding:
 
 inputs:
   license-key:
-    description: 'a11y-fixer-pro license key (required). Store it as a repository secret. Buy at https://a11y-fixer.com'
-    required: true
+    description: 'a11y-fixer license key — required for private repos; public repos run free without one. Store it as a repository secret. Buy at https://a11y-fixer.com'
+    required: false
   dir:
     description: 'Directory to scan (default: .)'
     required: false

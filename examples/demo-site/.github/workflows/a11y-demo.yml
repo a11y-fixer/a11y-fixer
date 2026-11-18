@@ -14,6 +14,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  checks: write
 
 jobs:
   # Static-HTML path (axe-core). Surfaces image-alt (1.1.1), link-name (2.4.4),
@@ -30,7 +31,7 @@ jobs:
           path: .a11y-fixer-cache.json
           key: a11y-fixer-ai-html-${{ hashFiles('site-html/**') }}
 
-      - uses: a11y-fixer/a11y-fixer-pro@v1
+      - uses: a11y-fixer/a11y-fixer@v1
         with:
           mode: fix
           dir: site-html
@@ -53,7 +54,7 @@ jobs:
           path: .a11y-fixer-cache.json
           key: a11y-fixer-ai-jsx-${{ hashFiles('site-jsx/**') }}
 
-      - uses: a11y-fixer/a11y-fixer-pro@v1
+      - uses: a11y-fixer/a11y-fixer@v1
         with:
           mode: fix
           dir: site-jsx
@@ -72,7 +73,7 @@ jobs:
 
       # No AI cache step here: the Markdown fixture is a single small file, so
       # re-running costs a couple of cents, not worth a cache key.
-      - uses: a11y-fixer/a11y-fixer-pro@v1
+      - uses: a11y-fixer/a11y-fixer@v1
         with:
           mode: fix
           dir: site-markdown

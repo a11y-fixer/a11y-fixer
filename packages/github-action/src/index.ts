@@ -20,7 +20,99 @@ import {
   loadExamples,
   makeFileReader,
 } from './learning-store.js';
+import {
+  postCheckRun,
+  upsertStickyComment,
+  summaryMarkdown,
+  toAnnotations,
+  type OctokitLike,
+} from './report.js';
 import path from 'node:path';
+
+/** PR number from the event payload, when this run is on a pull request. */
+function pullRequestNumber(): number | undefined {
+  const payload = github.context.payload as { pull_request?: { number?: number } };
+  return payload.pull_request?.number;
+}
+
+/** True only when the event payload explicitly marks the repo as public. */
+function repoIsPublic(): boolean {
+  const payload = github.context.payload as { repository?: { private?: boolean } };
+  return payload.repository?.private === false;
+}
+
+/**
+ * The commit the Check Run should attach to. On a pull_request event
+ * `context.sha` is the synthetic refs/pull/N/merge commit, and annotations
+ * pinned there don't render on the PR's Files Changed view — so prefer the PR
+ * head sha when the event carries one. Falls back to `context.sha` for push and
+ * other events.
+ */
+function reportHeadSha(): string {
+  const payload = github.context.payload as { pull_request?: { head?: { sha?: string } } };
+  return payload.pull_request?.head?.sha ?? github.context.sha;
+}
+
+/**
+ * Surface violations on the PR the way a developer already reads them: a Check
+ * Run with inline annotations, plus one sticky comment carrying the summary.
+ * Best-effort — a missing permission or API error only warns, it never fails an
+ * otherwise-successful run (and needs no GitHub Advanced Security).
+ */
+async function reportToGitHub(
+  violations: A11yViolation[],
+  githubToken: string,
+  comment: string,
+  opts: { neutral?: boolean } = {},
+): Promise<void> {
+  if (!githubToken) return;
+  // Everything here is best-effort: even constructing octokit or reading the repo
+  // context must never throw out of this function, or it would fail a run whose
+  // scan/fix/PR already succeeded. Guard the whole body, not just the API calls.
+  let octokit: OctokitLike;
+  let owner: string;
+  let repo: string;
+  try {
+    octokit = github.getOctokit(githubToken) as unknown as OctokitLike;
+    ({ owner, repo } = github.context.repo);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    core.warning(`Skipping a11y-fixer reporting (could not initialize the GitHub client): ${msg}`);
+    return;
+  }
+
+  try {
+    await postCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, violations, { neutral: opts.neutral });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    core.warning(`Could not create the a11y-fixer check run (grant \`checks: write\`?): ${msg}`);
+    // Degraded fallback: without `checks: write`, still surface each violation
+    // inline on the diff via workflow-command annotations. GitHub renders at most
+    // ~10 of these per run, but it beats a silent, annotation-free run. Respect
+    // each annotation's level (failure → error, warning, notice).
+    for (const a of toAnnotations(violations)) {
+      const props = {
+        title: a.title,
+        file: a.path,
+        startLine: a.start_line,
+        endLine: a.end_line,
+      };
+      if (a.annotation_level === 'failure') core.error(a.message, props);
+      else if (a.annotation_level === 'warning') core.warning(a.message, props);
+      else core.notice(a.message, props);
+    }
+  }
+
+  const prNumber = pullRequestNumber();
+  if (prNumber !== undefined) {
+    try {
+      await upsertStickyComment(octokit, { owner, repo, issueNumber: prNumber }, comment);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      core.warning(`Could not post the a11y-fixer PR comment (grant \`pull-requests: write\`?): ${msg}`);
+    }
+  }
+}
 
 /**
  * Runs the base scanner and, when `markdown` is set, concatenates the repo-local
@@ -156,21 +248,30 @@ export async function run(): Promise<void> {
   // with `learning: off`. Never leaves the repo.
   const learningEnabled = (core.getInput('learning') || 'on').toLowerCase() !== 'off';
 
-  // This is paid, source-available software: a valid license key is required to
-  // run it. The free, deterministic engine lives in @a11y-fixer/cli on npm.
+  // This is paid, source-available software. Two ways to run it:
+  //   1. a valid license key (private/company repos — the paying buyer), or
+  //   2. the free public-repo tier: any public GitHub repo runs it at no cost,
+  //      which drives OSS adoption and mirrors GitHub giving public repos the
+  //      full Security-tab experience for free anyway.
+  // The free, deterministic engine also lives in @a11y-fixer/cli on npm.
   const license = verifyLicenseKey(licenseKey);
-  if (!license.valid) {
+  const publicRepo = repoIsPublic();
+  if (!license.valid && !publicRepo) {
     core.setFailed(
-      `a11y-fixer-pro requires a valid license key: ${license.reason}. ` +
+      `a11y-fixer requires a valid license key: ${license.reason}. ` +
       'Buy one at https://a11y-fixer.com and pass it via the `license-key` input ' +
-      '(store it as a repository secret). The free deterministic CLI is available ' +
-      'as `@a11y-fixer/cli` on npm.',
+      '(store it as a repository secret), or run it for free on any public repo. ' +
+      'The free deterministic CLI is available as `@a11y-fixer/cli` on npm.',
     );
     return;
   }
-  // Don't echo license.subject (a customer id/email) into CI logs — only the
-  // non-identifying expiry date.
-  core.info(`License valid (expires ${new Date((license.expires ?? 0) * 1000).toISOString().slice(0, 10)}).`);
+  if (license.valid) {
+    // Don't echo license.subject (a customer id/email) into CI logs — only the
+    // non-identifying expiry date.
+    core.info(`License valid (expires ${new Date((license.expires ?? 0) * 1000).toISOString().slice(0, 10)}).`);
+  } else {
+    core.info('Public repository — running under the free public-repo tier.');
+  }
 
   if (anthropicKey) process.env['ANTHROPIC_API_KEY'] = anthropicKey;
   // Bridge the generic AI inputs to the env vars resolveAIConfig() reads. The
@@ -186,6 +287,10 @@ export async function run(): Promise<void> {
   try {
     if (mode === 'check') {
       const violations = await scanAll(rootDir, { url, html, markdown, cookies });
+
+      // Surface results on the PR (Check Run + inline annotations + sticky
+      // comment) before deciding the job outcome. Best-effort, never fails here.
+      await reportToGitHub(violations, githubToken, summaryMarkdown(violations));
 
       if (violations.length > 0) {
         const summary = violations
@@ -271,6 +376,11 @@ export async function run(): Promise<void> {
       // PR only the verified fixes. A reverted file is back at its pre-fix state,
       // so dedupeFixFiles inside maybeOpenPR sees no diff for it and drops it.
       await maybeOpenPR(applied, before, report.finalAfter, applied, baseBranch, Boolean(githubToken));
+      // Leave a sticky before → after comment (and a Check Run on what remains)
+      // on the triggering PR, if any. Fix mode reports informationally: the Check
+      // Run is `neutral`, not `failure`, so it never hard-blocks a merge the way a
+      // required `check`-mode gate would. Best-effort; never fails the run.
+      await reportToGitHub(report.finalAfter, githubToken, summaryMarkdown(before, report.finalAfter), { neutral: true });
 
       // Close the loop: record each verified AI fix as a `proposed` learning
       // record (correlated to the generation that produced its value), then

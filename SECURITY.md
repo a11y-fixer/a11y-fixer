@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-a11y-fixer-pro is distributed as a GitHub Action consumed by git tag. Security
+a11y-fixer is distributed as a GitHub Action consumed by git tag. Security
 fixes land on `main` and are published by moving the floating `v1` tag (and
 cutting a GitHub Release). Only the latest `v1` release is supported; users are
 encouraged to pin to a full commit SHA for tamper-evidence (see the README).

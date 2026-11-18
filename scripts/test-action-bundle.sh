@@ -17,7 +17,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SIGNING_KEY_PATH="${LICENSE_SIGNING_KEY_PATH:-$HOME/a11y-fixer-pro-LICENSE-SIGNING-KEY.pem}"
+SIGNING_KEY_PATH="${LICENSE_SIGNING_KEY_PATH:-$HOME/a11y-fixer-LICENSE-SIGNING-KEY.pem}"
 
 if [[ -n "${LICENSE_SIGNING_KEY:-}" ]]; then
   : # issue-license.mjs reads LICENSE_SIGNING_KEY from the environment
@@ -87,3 +87,38 @@ fi
 grep -q "WCAG 1.1.1" <<<"$OUT" || { echo "::error::expected a WCAG 1.1.1 (img alt) violation in the output"; exit 1; }
 
 echo "✓ committed bundle scans correctly with runtime deps installed"
+
+# --- GitHub-native reporting path (report.ts) is bundled and reachable ---------
+# Guards the class of bug where report.ts (Check Run + annotations + sticky
+# comment) fails to bundle or throws on load. We give the bundle a github-token
+# and a public-repo event context so reportToGitHub() runs. Offline, the octokit
+# call fails and the code warns + falls back to inline annotations — exactly the
+# best-effort path. The proof is that we reach that warning rather than a
+# "Cannot find module ./report.js": report.ts executed inside the real bundle.
+cat > "$TMP/event.json" <<'EOF'
+{ "repository": { "private": false } }
+EOF
+# No license key here: a public-repo event payload runs the free tier, which also
+# exercises repoIsPublic() reading the event payload inside the bundle.
+echo "=== running committed bundle: check mode + reporting (public tier, offline best-effort) ==="
+set +e
+ROUT="$(env INPUT_DIR="$TMP/src" INPUT_MODE=check \
+  "INPUT_GITHUB-TOKEN=placeholder-not-a-real-token" \
+  GITHUB_REPOSITORY="a11y-fixer/bundle-test" GITHUB_SHA="0000000000000000000000000000000000000000" \
+  GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$TMP/event.json" \
+  node "$AD/dist/index.js" 2>&1)"
+set -e
+echo "$ROUT"
+
+if grep -q "Cannot find module" <<<"$ROUT"; then
+  echo "::error::reporting path missing a bundled module (report.ts not bundled?) — check the ncc build"
+  exit 1
+fi
+# The free public-repo tier line proves repoIsPublic() read the event payload,
+# and the check-run warning proves postCheckRun() in report.ts ran end to end.
+grep -q "free public-repo tier" <<<"$ROUT" \
+  || { echo "::error::expected the public-repo tier log — repoIsPublic() did not read the event payload in the bundle"; exit 1; }
+grep -q "a11y-fixer check run" <<<"$ROUT" \
+  || { echo "::error::expected the Check Run reporting path (report.ts) to run in the bundle"; exit 1; }
+
+echo "✓ committed bundle runs the GitHub-native reporting path (report.ts)"
