@@ -84,9 +84,9 @@ Out-of-scope **categories** (not auto-fixed) include:
 - Timing, motion, autoplay
 - Duplicate IDs, bypass blocks, and the rest of the axe/jsx-a11y catalog
 
-The exact detect-universe is **not enumerated in this repo** — it lives in the
-external `@a11y-fixer/core` package (and ultimately axe-core / `jsx-a11y`), and
-it shifts with their versions. We deliberately track the *fixable* set
+The exact detect-universe is **not enumerated by hand** — it comes from
+`@a11y-fixer/core` (now vendored in [`packages/core`](./packages/core)) and
+ultimately from axe-core / `jsx-a11y`, and it shifts with their versions. We deliberately track the *fixable* set
 precisely and the *unfixable* set by category rather than rule-by-rule.
 
 ## The scan-path caveat (real-world coverage)
