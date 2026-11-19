@@ -20,6 +20,8 @@
     "packages/licensing/src/**": [
       "packages/licensing/src/sign.test.ts"
     ],
+    "packages/app/db/**": [],
+    "packages/app/github-app-manifest.json": [],
     "packages/app/src/**": [
       "packages/app/src/github/app-jwt.test.ts",
       "packages/app/src/github/installation-token.test.ts",
