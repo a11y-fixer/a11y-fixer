@@ -30,6 +30,25 @@ export interface RepoRecord {
   selected: boolean;
 }
 
+export interface ScanRecord {
+  /** The Action's Check Run id (primary key). */
+  checkRunId: number;
+  /** Repo the scan ran against. */
+  repoId: number;
+  /** Owning installation. */
+  installationId: number;
+  /** Commit the Check Run ran on. */
+  headSha: string;
+  /** PR number if the run was for a pull request, else null. */
+  prNumber: number | null;
+  /** Check Run conclusion (`success`, `failure`, `neutral`, …), or null. */
+  conclusion: string | null;
+  /** Number of accessibility violations (from the Check Run annotation count). */
+  violationCount: number;
+  /** ISO-8601 completion time. */
+  createdAt: string;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -43,4 +62,11 @@ export interface Store {
 
   upsertRepos(installationId: number, repos: RepoRecord[]): Promise<void>;
   removeRepos(installationId: number, repoIds: number[]): Promise<void>;
+
+  /** Record (or replace by check_run id) a completed scan. */
+  upsertScan(record: ScanRecord): Promise<void>;
+
+  /** Dashboard reads: repos and scans for one installation. */
+  listRepos(installationId: number): Promise<RepoRecord[]>;
+  listScansByInstallation(installationId: number): Promise<ScanRecord[]>;
 }
