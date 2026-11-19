@@ -15,45 +15,22 @@
 // The emitted token is `<payload>.<signature>` (base64url), verified at runtime
 // by packages/github-action/src/license.ts against the embedded public key.
 //
-// The signing algorithm lives in `signLicense()` below and is exported so tests
-// can exercise the real minting path (see license-signing.test.ts) rather than a
-// re-implementation that could silently drift from this file.
-
-import { createPrivateKey, sign as cryptoSign } from 'node:crypto';
+// The signing algorithm now lives in @a11y-fixer/licensing (packages/licensing)
+// so every issuer — this CLI, the GitHub App backend, and the trial-key site —
+// shares one implementation that cannot drift. We import it by RELATIVE path
+// (not the package name) on purpose: scripts/test-action-bundle.sh runs this
+// file in an isolated checkout with no `pnpm install`, so there is no
+// node_modules to resolve `@a11y-fixer/licensing` through. The relative path
+// resolves straight off disk, and the module is dependency- and build-free.
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { argv as processArgv } from 'node:process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { signLicense } from '../packages/licensing/src/sign.mjs';
 
-/**
- * The one true minting algorithm. Produces the compact `<payloadB64>.<sigB64>`
- * token that packages/github-action/src/license.ts verifies. Any other issuer
- * (e.g. the trial-key website) must match this byte-for-byte.
- *
- * @param {{ sub: string, days: number, pem: string, now?: Date }} opts
- * @returns {{ token: string, payload: { v: 1, sub: string, exp: number }, iat: number, exp: number }}
- */
-export function signLicense({ sub, days, pem, now = new Date() }) {
-  if (!sub || typeof sub !== 'string') {
-    throw new Error('signLicense: `sub` (customer id/email) is required.');
-  }
-  if (!Number.isFinite(days) || days <= 0) {
-    throw new Error('signLicense: `days` must be a positive number.');
-  }
-  if (!pem) {
-    throw new Error('signLicense: `pem` signing key is required.');
-  }
-
-  const iat = Math.floor(now.getTime() / 1000);
-  const exp = iat + Math.round(days * 86400);
-  const payload = { v: 1, sub, exp };
-  const payloadB64 = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
-
-  const privateKey = createPrivateKey(pem);
-  const sig = cryptoSign(null, Buffer.from(payloadB64, 'ascii'), privateKey).toString('base64url');
-
-  return { token: `${payloadB64}.${sig}`, payload, iat, exp };
-}
+// Re-exported so existing importers (packages/github-action's cross-tests) keep
+// working through this path while the real implementation lives in the package.
+export { signLicense };
 
 function arg(name, fallback) {
   const i = processArgv.indexOf(`--${name}`);
