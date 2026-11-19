@@ -28,7 +28,9 @@
       "packages/app/src/webhooks/verify.test.ts",
       "packages/app/src/webhooks/process.test.ts",
       "packages/app/src/webhooks/handlers/installation.test.ts",
-      "packages/app/src/webhooks/handlers/installation-repositories.test.ts"
+      "packages/app/src/webhooks/handlers/installation-repositories.test.ts",
+      "packages/app/src/webhooks/handlers/check-run.test.ts",
+      "packages/app/src/dashboard/aggregate.test.ts"
     ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"
