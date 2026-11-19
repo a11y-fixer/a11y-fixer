@@ -46,12 +46,21 @@ permissions:
   contents: write        # fix mode: push the fix branch
   pull-requests: write   # open the PR and post the sticky comment
   checks: write          # publish the Check Run + inline annotations
+  security-events: write # public repos: upload SARIF to the Security tab
 ```
 
 Reporting is best-effort: a missing permission only logs a warning, it never
 fails an otherwise-successful run (and it needs **no** GitHub Advanced Security).
 For `check`/`scan` only (no PR), `contents: read` plus `checks: write` is enough.
 Public repositories run free — no license key required.
+
+On **public repositories** the Action also uploads violations as SARIF to the
+**Security tab** (code scanning), so they appear as alerts alongside CodeQL and
+Dependabot — grant `security-events: write` for this. It's automatic, needs no
+configuration, and clears alerts again once the violations are fixed. Private
+repositories skip SARIF entirely: GitHub only ingests it there with paid Code
+Security, so the Action never attempts it (the Check Run, annotations, and
+sticky comment still work everywhere).
 
 ### Choosing an LLM provider (bring your own key)
 

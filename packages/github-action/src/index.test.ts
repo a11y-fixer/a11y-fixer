@@ -20,13 +20,14 @@ const h = vi.hoisted(() => ({
   scanMarkdown: vi.fn(async (..._a: unknown[]) => [] as unknown[]),
   // Mutable GitHub context: tests set `ctx.payload` to flip repo visibility or
   // supply a PR. Reset in beforeEach.
-  ctx: { repo: { owner: 'o', repo: 'r' }, sha: 'deadbeef', payload: {} as Record<string, unknown> },
+  ctx: { repo: { owner: 'o', repo: 'r' }, sha: 'deadbeef', ref: 'refs/heads/main', payload: {} as Record<string, unknown> },
   octokitThrows: false,
   checksCreate: vi.fn(async (..._a: unknown[]) => ({ data: { id: 1 } })),
   checksUpdate: vi.fn(async (..._a: unknown[]) => ({})),
   listComments: vi.fn(async (..._a: unknown[]) => ({ data: [] as unknown[] })),
   createComment: vi.fn(async (..._a: unknown[]) => ({})),
   updateComment: vi.fn(async (..._a: unknown[]) => ({})),
+  uploadSarif: vi.fn(async (..._a: unknown[]) => ({ data: { id: 'sarif-1' } })),
 }));
 
 vi.mock('@actions/github', () => ({
@@ -45,6 +46,7 @@ vi.mock('@actions/github', () => ({
         createComment: (...a: unknown[]) => h.createComment(...a),
         updateComment: (...a: unknown[]) => h.updateComment(...a),
       },
+      codeScanning: { uploadSarif: (...a: unknown[]) => h.uploadSarif(...a) },
     },
     };
   },
@@ -180,6 +182,7 @@ beforeEach(() => {
   // Default: private repo, no PR context. Reporting tests override this.
   h.ctx.payload = {};
   h.ctx.sha = 'deadbeef';
+  h.ctx.ref = 'refs/heads/main';
   h.octokitThrows = false;
 });
 
@@ -812,5 +815,54 @@ describe('github-action GitHub-native reporting', () => {
     expect(h.createComment).toHaveBeenCalledWith(
       expect.objectContaining({ issue_number: 7, body: expect.stringContaining('→') }),
     );
+  });
+
+  it('uploads SARIF to the Security tab on a public repo in check mode', async () => {
+    h.ctx.payload = { repository: { private: false }, pull_request: { number: 7, head: { sha: 'headsha' } } };
+    h.ctx.ref = 'refs/pull/7/merge';
+    h.ctx.sha = 'mergesha';
+    h.scan.mockResolvedValue([
+      { id: 'image-alt', wcagId: '1.1.1', impact: 'serious', description: 'alt', helpUrl: 'h', nodes: [] },
+    ]);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.uploadSarif).toHaveBeenCalledTimes(1);
+    // SARIF pins to context.ref + context.sha (a consistent pair), NOT the PR
+    // head sha the Check Run uses.
+    expect(h.uploadSarif.mock.calls[0][0]).toMatchObject({
+      owner: 'o',
+      repo: 'r',
+      ref: 'refs/pull/7/merge',
+      commit_sha: 'mergesha',
+    });
+  });
+
+  it('does NOT upload SARIF on a private repo (needs paid Code Security)', async () => {
+    h.ctx.payload = { repository: { private: true } };
+    h.scan.mockResolvedValue([]);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok', 'license-key': VALID_LICENSE });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(h.uploadSarif).not.toHaveBeenCalled();
+  });
+
+  it('warns (does not fail) when the SARIF upload errors', async () => {
+    h.ctx.payload = { repository: { private: false } };
+    h.uploadSarif.mockRejectedValueOnce(new Error('403 security-events'));
+    h.scan.mockResolvedValue([]);
+    const warning = vi.mocked(actionsCore.warning);
+    const setFailed = vi.mocked(actionsCore.setFailed);
+    setInputs({ mode: 'check', dir: '.', 'github-token': 'tok' });
+
+    const { run } = await import('./index.js');
+    await run();
+
+    expect(warning).toHaveBeenCalledWith(expect.stringContaining('SARIF'));
+    expect(setFailed).not.toHaveBeenCalled();
   });
 });
