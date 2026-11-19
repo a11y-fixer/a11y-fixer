@@ -20,6 +20,14 @@
     "packages/licensing/src/**": [
       "packages/licensing/src/sign.test.ts"
     ],
+    "packages/app/src/**": [
+      "packages/app/src/github/app-jwt.test.ts",
+      "packages/app/src/github/installation-token.test.ts",
+      "packages/app/src/webhooks/verify.test.ts",
+      "packages/app/src/webhooks/process.test.ts",
+      "packages/app/src/webhooks/handlers/installation.test.ts",
+      "packages/app/src/webhooks/handlers/installation-repositories.test.ts"
+    ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"
     ],
