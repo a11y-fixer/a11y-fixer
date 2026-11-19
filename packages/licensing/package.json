@@ -1,0 +1,37 @@
+{
+  "name": "@a11y-fixer/licensing",
+  "version": "0.1.0",
+  "description": "The single source of truth for a11y-fixer license minting (Ed25519).",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.mjs",
+  "types": "./src/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "import": "./src/index.mjs"
+    },
+    "./sign": {
+      "types": "./src/sign.d.mts",
+      "import": "./src/sign.mjs"
+    }
+  },
+  "files": [
+    "src/*.mjs",
+    "src/*.d.mts",
+    "!src/*.test.*"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^5.1.0"
+  }
+}
