@@ -1,0 +1,20 @@
+{
+  "name": "@a11y-fixer/app",
+  "version": "0.1.0",
+  "description": "a11y-fixer control plane (GitHub App + webhook sink + dashboard). Private SaaS.",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^5.1.0"
+  }
+}

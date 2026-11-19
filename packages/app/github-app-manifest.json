@@ -1,0 +1,28 @@
+{
+  "name": "a11y-fixer",
+  "url": "https://a11y-fixer.com",
+  "hook_attributes": {
+    "url": "https://app.a11y-fixer.com/api/webhooks/github",
+    "active": true
+  },
+  "redirect_url": "https://app.a11y-fixer.com/api/setup/callback",
+  "callback_urls": ["https://app.a11y-fixer.com/api/auth/callback"],
+  "setup_url": "https://app.a11y-fixer.com/dashboard",
+  "public": true,
+  "default_permissions": {
+    "checks": "read",
+    "pull_requests": "read",
+    "contents": "read",
+    "actions": "write",
+    "metadata": "read",
+    "members": "read"
+  },
+  "default_events": [
+    "installation",
+    "installation_repositories",
+    "marketplace_purchase",
+    "check_run",
+    "pull_request",
+    "github_app_authorization"
+  ]
+}
