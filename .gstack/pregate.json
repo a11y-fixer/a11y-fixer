@@ -17,6 +17,9 @@
     "packages/cli/src/**": [
       "packages/cli/src/commands/commands.test.ts"
     ],
+    "packages/licensing/src/**": [
+      "packages/licensing/src/sign.test.ts"
+    ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"
     ],
