@@ -18,6 +18,8 @@ permissions:
   contents: write
   pull-requests: write
   checks: write
+  # Lets check mode upload SARIF to the Security tab (public repos only).
+  security-events: write
 
 jobs:
   # check mode (PR only): no fixes, no AI, no spend — just reporting. Scans the

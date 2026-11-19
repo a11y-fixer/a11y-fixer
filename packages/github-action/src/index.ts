@@ -27,6 +27,7 @@ import {
   toAnnotations,
   type OctokitLike,
 } from './report.js';
+import { uploadSarif, type SarifOctokitLike } from './sarif.js';
 import path from 'node:path';
 
 /** PR number from the event payload, when this run is on a pull request. */
@@ -110,6 +111,29 @@ async function reportToGitHub(
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       core.warning(`Could not post the a11y-fixer PR comment (grant \`pull-requests: write\`?): ${msg}`);
+    }
+  }
+
+  // Phase 2 — SARIF to the Security tab. PUBLIC REPOS ONLY: private repos need
+  // paid GitHub Code Security to ingest SARIF (the upload 403s otherwise), so we
+  // don't even attempt it there — private customers see no change and no scary
+  // warning. We upload even when there are zero violations, because an empty run
+  // is what *clears* alerts the Security tab is still showing for fixed issues.
+  if (repoIsPublic()) {
+    try {
+      // Unlike the Check Run (which pins to the PR *head* sha so annotations
+      // render on Files Changed), the code-scanning API requires `commit_sha` to
+      // be the commit that `ref` points to. `context.ref` + `context.sha` are
+      // always a consistent pair — on a pull_request that's refs/pull/N/merge and
+      // its merge commit; on push it's refs/heads/<branch> and its tip.
+      await uploadSarif(
+        octokit as unknown as SarifOctokitLike,
+        { owner, repo, ref: github.context.ref, commitSha: github.context.sha },
+        violations,
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      core.warning(`Could not upload a11y-fixer SARIF to the Security tab (grant \`security-events: write\`?): ${msg}`);
     }
   }
 }
