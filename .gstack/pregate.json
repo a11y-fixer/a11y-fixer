@@ -44,6 +44,9 @@
     "packages/github-action/src/report.ts": [
       "packages/github-action/src/report.test.ts"
     ],
+    "packages/github-action/src/sarif.ts": [
+      "packages/github-action/src/sarif.test.ts"
+    ],
     "packages/**/package.json": [],
     "packages/**/tsconfig.json": [],
     "packages/**/vitest.config.ts": []
