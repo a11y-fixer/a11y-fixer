@@ -16,4 +16,8 @@ export const env = {
   githubClientId: () => required('GITHUB_APP_CLIENT_ID'),
   githubClientSecret: () => required('GITHUB_APP_CLIENT_SECRET'),
   appBaseUrl: () => required('APP_BASE_URL'),
+  // App-level credentials (M4 scan orchestration): used to mint installation
+  // tokens for dispatching workflows. Already in the Vercel secret list.
+  githubAppId: () => required('GITHUB_APP_ID'),
+  githubAppPrivateKey: () => required('GITHUB_APP_PRIVATE_KEY'),
 };

@@ -37,8 +37,12 @@
       "packages/app/src/dashboard/aggregate.test.ts",
       "packages/app/src/dashboard/view-model.test.ts",
       "packages/app/src/http/webhook-request.test.ts",
+      "packages/app/src/http/same-origin.test.ts",
       "packages/app/src/auth/installations.test.ts",
-      "packages/app/src/db/memory-store.test.ts"
+      "packages/app/src/db/memory-store.test.ts",
+      "packages/app/src/github/dispatch-workflow.test.ts",
+      "packages/app/src/github/list-workflows.test.ts",
+      "packages/app/src/github/scan-orchestrator.test.ts"
     ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"
