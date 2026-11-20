@@ -1,10 +1,11 @@
 -- a11y-fixer control plane schema (Supabase Postgres).
 --
 -- M1 ships the installation lifecycle tables (installations, repos) and the
--- webhook_events idempotency ledger. M2 adds scans/violations (below); users and
--- M3 subscriptions come later. Row-level security per org is enabled with the
--- dashboard auth model; until then only the service-role key (server-side)
--- touches these.
+-- webhook_events idempotency ledger. M2 adds scans/violations and the dashboard
+-- auth model (users, user_installations) with row-level security. The webhook
+-- sink uses the SERVICE-ROLE key, which bypasses RLS, so ingestion is
+-- unaffected; only the dashboard's user-scoped client (anon key + the user's
+-- Supabase Auth JWT) is constrained by the policies below.
 
 -- Idempotency ledger. One row per X-GitHub-Delivery; the UNIQUE constraint makes
 -- a replayed delivery a no-op insert (see SupabaseStore.recordEventOnce).
@@ -74,3 +75,66 @@ create table if not exists violations (
 );
 
 create index if not exists violations_check_run_id_idx on violations (check_run_id);
+
+-- M2 dashboard auth. One row per signed-in dashboard user, keyed by their
+-- Supabase Auth id (auth.users.id = auth.uid()). GitHub identity is captured at
+-- OAuth time for display and installation reconciliation.
+create table if not exists users (
+  id             uuid primary key references auth.users(id) on delete cascade,
+  github_login   text   not null,
+  github_user_id bigint not null unique,
+  created_at     timestamptz not null default now()
+);
+
+-- Which installations a user may view, reconciled at login from GitHub's
+-- `GET /user/installations`. Drives every RLS policy below.
+create table if not exists user_installations (
+  user_id         uuid   not null references users(id) on delete cascade,
+  installation_id bigint not null references installations(installation_id) on delete cascade,
+  added_at        timestamptz not null default now(),
+  primary key (user_id, installation_id)
+);
+
+create index if not exists user_installations_installation_id_idx on user_installations (installation_id);
+
+-- Row-level security. The service-role key bypasses RLS (webhook sink + any
+-- server-side admin reads are unaffected). These policies constrain ONLY the
+-- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
+alter table users enable row level security;
+alter table user_installations enable row level security;
+alter table installations enable row level security;
+alter table repos enable row level security;
+alter table scans enable row level security;
+alter table violations enable row level security;
+
+-- A user sees only their own row and their own installation links.
+create policy users_self_select on users
+  for select using (id = auth.uid());
+
+create policy user_installations_self_select on user_installations
+  for select using (user_id = auth.uid());
+
+-- A user sees an installation (and its repos/scans) only if they are linked to it.
+create policy installations_member_select on installations
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
+  );
+
+create policy repos_member_select on repos
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
+  );
+
+create policy scans_member_select on scans
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
+  );
+
+-- Violations are scoped through their scan's installation.
+create policy violations_member_select on violations
+  for select using (
+    check_run_id in (
+      select check_run_id from scans
+      where installation_id in (select installation_id from user_installations where user_id = auth.uid())
+    )
+  );

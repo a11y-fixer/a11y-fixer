@@ -6,7 +6,7 @@
 // interactive session; until then we depend on a minimal STRUCTURAL type so the
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
-import type { InstallationRecord, RepoRecord, ScanRecord, Store, ViolationRecord } from './store.js';
+import type { InstallationRecord, RepoRecord, ScanRecord, Store, UserRecord, ViolationRecord } from './store.js';
 
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
@@ -157,5 +157,31 @@ export class SupabaseStore implements Store {
         createdAt: r.created_at as string,
       };
     });
+  }
+
+  async upsertUser(record: UserRecord): Promise<void> {
+    const { error } = await this.db.from('users').upsert(
+      {
+        id: record.userId,
+        github_login: record.githubLogin,
+        github_user_id: record.githubUserId,
+      },
+      { onConflict: 'id' },
+    );
+    throwOn(error, 'upsertUser');
+  }
+
+  async linkUserInstallation(userId: string, installationId: number): Promise<void> {
+    const { error } = await this.db.from('user_installations').upsert(
+      { user_id: userId, installation_id: installationId },
+      { onConflict: 'user_id,installation_id' },
+    );
+    throwOn(error, 'linkUserInstallation');
+  }
+
+  async listInstallationsForUser(userId: string): Promise<number[]> {
+    const { data, error } = await this.db.from('user_installations').select('installation_id').eq('user_id', userId);
+    throwOn(error, 'listInstallationsForUser');
+    return (data ?? []).map(row => (row as Record<string, unknown>).installation_id as number);
   }
 }

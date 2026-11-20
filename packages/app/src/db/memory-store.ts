@@ -1,5 +1,5 @@
 // In-memory Store for unit tests and local development. Not for production.
-import type { InstallationRecord, RepoRecord, ScanRecord, Store, ViolationRecord } from './store.js';
+import type { InstallationRecord, RepoRecord, ScanRecord, Store, UserRecord, ViolationRecord } from './store.js';
 
 export class MemoryStore implements Store {
   readonly deliveries = new Set<string>();
@@ -7,6 +7,8 @@ export class MemoryStore implements Store {
   readonly repos = new Map<number, RepoRecord>();
   readonly scans = new Map<number, ScanRecord>();
   readonly violations = new Map<number, ViolationRecord[]>();
+  readonly users = new Map<string, UserRecord>();
+  readonly userInstallations = new Map<string, Set<number>>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -55,5 +57,19 @@ export class MemoryStore implements Store {
 
   async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
     return [...this.scans.values()].filter(scan => scan.installationId === installationId);
+  }
+
+  async upsertUser(record: UserRecord): Promise<void> {
+    this.users.set(record.userId, { ...record });
+  }
+
+  async linkUserInstallation(userId: string, installationId: number): Promise<void> {
+    const set = this.userInstallations.get(userId) ?? new Set<number>();
+    set.add(installationId);
+    this.userInstallations.set(userId, set);
+  }
+
+  async listInstallationsForUser(userId: string): Promise<number[]> {
+    return [...(this.userInstallations.get(userId) ?? [])];
   }
 }

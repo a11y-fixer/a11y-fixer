@@ -70,6 +70,20 @@ export interface ViolationRecord {
   line: number | null;
 }
 
+/**
+ * A dashboard end user, identified by their Supabase Auth id. The GitHub fields
+ * are captured at login so the UI can show who is signed in and reconcile the
+ * user's visible installations from GitHub's `GET /user/installations`.
+ */
+export interface UserRecord {
+  /** Supabase Auth user id (`auth.uid()`), the primary key. */
+  userId: string;
+  /** GitHub login captured at OAuth time. */
+  githubLogin: string;
+  /** GitHub numeric user id. */
+  githubUserId: number;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -96,4 +110,14 @@ export interface Store {
   /** Dashboard reads: repos and scans for one installation. */
   listRepos(installationId: number): Promise<RepoRecord[]>;
   listScansByInstallation(installationId: number): Promise<ScanRecord[]>;
+
+  /** Record (or update) a signed-in dashboard user. */
+  upsertUser(record: UserRecord): Promise<void>;
+  /**
+   * Link a user to an installation they can view (idempotent). Called at login
+   * after reconciling GitHub's `GET /user/installations`.
+   */
+  linkUserInstallation(userId: string, installationId: number): Promise<void>;
+  /** The installation ids a user is allowed to view. */
+  listInstallationsForUser(userId: string): Promise<number[]>;
 }
