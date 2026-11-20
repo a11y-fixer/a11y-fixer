@@ -22,7 +22,7 @@ export default async function DashboardPage() {
         <h1>a11y-fixer</h1>
         <p className="muted">Accessibility coverage across your repositories.</p>
         <p className="panel">
-          <Link href="/auth/login">Sign in with GitHub</Link> to see the organizations where the
+          <a href="/auth/login">Sign in with GitHub</a> to see the organizations where the
           a11y-fixer GitHub App is installed.
         </p>
       </main>

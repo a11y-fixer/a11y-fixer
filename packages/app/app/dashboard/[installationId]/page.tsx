@@ -21,7 +21,7 @@ export default async function InstallationPage({ params }: { params: Promise<{ i
     return (
       <main className="container">
         <p className="panel">
-          <Link href="/auth/login">Sign in with GitHub</Link> to view this organization.
+          <a href="/auth/login">Sign in with GitHub</a> to view this organization.
         </p>
       </main>
     );
