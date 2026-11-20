@@ -1,8 +1,8 @@
 // Route a verified webhook payload to its handler by event name.
 //
-// M1 handles installation lifecycle only. M2 adds `check_run` (dashboard data)
-// and M3 adds `marketplace_purchase` (billing); both slot in here as new cases.
-// Unknown events are acknowledged and ignored so GitHub stops retrying them.
+// M1 handled installation lifecycle. M2 adds `check_run` (scan ingestion for the
+// dashboard); M3 adds `marketplace_purchase` (billing), which slots in here as a
+// new case. Unknown events are acknowledged and ignored so GitHub stops retrying.
 import { handleInstallation } from './handlers/installation.js';
 import { handleInstallationRepositories } from './handlers/installation-repositories.js';
 import { handleCheckRun } from './handlers/check-run.js';

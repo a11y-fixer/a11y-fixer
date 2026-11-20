@@ -171,6 +171,100 @@ function chunk<T>(items: T[], size: number): T[][] {
 }
 
 /**
+ * The machine-readable scan contract embedded in `check_run.output.text`.
+ *
+ * `output.text` rides inside the webhook payload GitHub delivers, unlike inline
+ * annotations (which need a follow-up `annotations_url` call and are lossy —
+ * severity coarsened to 3 levels, capped at 50, absent for URL-only scans). So
+ * the Phase 3 control plane reconstructs scans + per-violation rows straight
+ * from the delivery by parsing this block. `schema` is versioned so the ingester
+ * can reject shapes it doesn't understand.
+ *
+ * Keep this shape in sync with the parser in
+ * `packages/app/src/webhooks/handlers/check-run.ts`.
+ */
+export const SCAN_REPORT_SCHEMA = 'a11y-fixer.scan/1';
+
+/**
+ * Caps that keep `output.text` comfortably under GitHub's 64KB limit even on a
+ * pathological run. Counts are computed over ALL violations before truncation,
+ * so the dashboard's totals stay exact; only the per-row detail list is trimmed
+ * (and `truncated` flags that it was).
+ */
+export const SCAN_REPORT_VIOLATIONS_CAP = 200;
+export const SCAN_REPORT_LOCATIONS_CAP = 20;
+
+export interface ScanReportLocation {
+  path: string;
+  line: number;
+}
+
+export interface ScanReportViolation {
+  id: string;
+  wcagId: string;
+  impact: A11yViolation['impact'];
+  description: string;
+  helpUrl: string;
+  locations: ScanReportLocation[];
+}
+
+export interface ScanReport {
+  schema: typeof SCAN_REPORT_SCHEMA;
+  /** PR head sha the Check Run attaches to. */
+  sha: string;
+  /** PR number when the run is on a pull request, else null. */
+  prNumber: number | null;
+  mode: 'check' | 'fix';
+  conclusion: 'success' | 'failure' | 'neutral';
+  /** Exact counts over the full violation set (never truncated). */
+  counts: { critical: number; serious: number; moderate: number; minor: number; total: number };
+  /** True when the per-row `violations` list was capped below `counts.total`. */
+  truncated: boolean;
+  violations: ScanReportViolation[];
+}
+
+/** Repo-relative source locations for a violation, capped. */
+function reportLocations(v: A11yViolation): ScanReportLocation[] {
+  const out: ScanReportLocation[] = [];
+  for (const node of v.nodes ?? []) {
+    if (!node.sourceFile || !node.sourceLine) continue;
+    out.push({ path: toRepoRelative(node.sourceFile), line: node.sourceLine });
+    if (out.length >= SCAN_REPORT_LOCATIONS_CAP) break;
+  }
+  return out;
+}
+
+/**
+ * Build the structured scan contract for `check_run.output.text`. Counts cover
+ * every violation; the serialized `violations` array is capped for size.
+ */
+export function buildScanReport(
+  violations: A11yViolation[],
+  meta: { sha: string; prNumber: number | null; mode: 'check' | 'fix'; conclusion: ScanReport['conclusion'] },
+): ScanReport {
+  const counts = { critical: 0, serious: 0, moderate: 0, minor: 0, total: violations.length };
+  for (const v of violations) counts[v.impact] += 1;
+  const capped = violations.slice(0, SCAN_REPORT_VIOLATIONS_CAP);
+  return {
+    schema: SCAN_REPORT_SCHEMA,
+    sha: meta.sha,
+    prNumber: meta.prNumber,
+    mode: meta.mode,
+    conclusion: meta.conclusion,
+    counts,
+    truncated: violations.length > capped.length,
+    violations: capped.map(v => ({
+      id: v.id,
+      wcagId: v.wcagId,
+      impact: v.impact,
+      description: v.description,
+      helpUrl: v.helpUrl,
+      locations: reportLocations(v),
+    })),
+  };
+}
+
+/**
  * Create a Check Run with inline annotations, batching to the API's 50-per-request
  * cap. Conclusion is `failure` when any violation remains, else `success`.
  */
@@ -178,19 +272,11 @@ export async function postCheckRun(
   octokit: OctokitLike,
   target: { owner: string; repo: string; sha: string },
   violations: A11yViolation[],
-  opts: { neutral?: boolean } = {},
+  opts: { neutral?: boolean; prNumber?: number | null } = {},
 ): Promise<void> {
   const annotations = toAnnotations(violations);
   const batches = chunk(annotations, ANNOTATION_BATCH);
   const summary = summaryMarkdown(violations);
-  const output = {
-    title:
-      violations.length === 0
-        ? 'No accessibility violations'
-        : `${violations.length} accessibility violation(s)`,
-    summary,
-    annotations: batches[0] ?? [],
-  };
 
   // `neutral` (fix mode): a report of what remains after auto-fixing, not a gate.
   // A `failure` conclusion here would become a red commit status on the PR head
@@ -201,6 +287,25 @@ export async function postCheckRun(
     : violations.length === 0
       ? 'success'
       : 'failure';
+
+  // Embed the structured scan contract so the Phase 3 control plane can ingest
+  // this run from the webhook payload alone (see buildScanReport). `output.text`
+  // is otherwise unused by the PR surfaces, which read `summary`.
+  const report = buildScanReport(violations, {
+    sha: target.sha,
+    prNumber: opts.prNumber ?? null,
+    mode: opts.neutral ? 'fix' : 'check',
+    conclusion,
+  });
+  const output = {
+    title:
+      violations.length === 0
+        ? 'No accessibility violations'
+        : `${violations.length} accessibility violation(s)`,
+    summary,
+    text: JSON.stringify(report),
+    annotations: batches[0] ?? [],
+  };
 
   // The create() call carries the first batch; a failure here means no Check Run
   // exists, so the caller's degraded fallback should take over — let it throw.

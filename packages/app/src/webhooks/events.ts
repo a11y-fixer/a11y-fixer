@@ -47,9 +47,12 @@ export interface WebhookPullRequestRef {
 /**
  * The check_run object the dashboard ingests. The Action posts a Check Run named
  * `a11y-fixer` (see github-action `report.ts`), so we read it straight off the
- * webhook with zero Action changes. `output.annotations_count` is the violation
- * count; the per-annotation detail lives behind `annotations_url` (a later API
- * fetch populates the `violations` table — the webhook alone carries the count).
+ * webhook with no extra API calls.
+ *
+ * `output.annotations_count` is the fallback violation count. The Action also
+ * embeds a structured scan contract in `output.text` (buildScanReport); when
+ * present it carries the exact count plus per-violation detail for the
+ * `violations` table (see the check_run handler's parseScanReport).
  */
 export interface WebhookCheckRun {
   id: number;
@@ -62,6 +65,8 @@ export interface WebhookCheckRun {
     title?: string | null;
     summary?: string | null;
     annotations_count?: number;
+    /** JSON scan contract embedded by the Action (schema `a11y-fixer.scan/1`). */
+    text?: string | null;
   };
   pull_requests?: WebhookPullRequestRef[];
 }

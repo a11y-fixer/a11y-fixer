@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryStore } from '../../db/memory-store.js';
-import { handleCheckRun } from './check-run.js';
+import { handleCheckRun, parseScanReport } from './check-run.js';
+import { routeEvent } from '../router.js';
 import type { CheckRunEvent } from '../events.js';
 
 const repository = { id: 42, full_name: 'acme/web', private: false, default_branch: 'main' };
@@ -24,7 +25,54 @@ function event(overrides: Partial<CheckRunEvent['check_run']> = {}, action = 'co
   };
 }
 
-describe('handleCheckRun', () => {
+/** A valid scan contract exactly as the Action's buildScanReport serializes it. */
+function scanContract(overrides: Record<string, unknown> = {}): string {
+  return JSON.stringify({
+    schema: 'a11y-fixer.scan/1',
+    sha: 'abc123',
+    prNumber: 7,
+    mode: 'check',
+    conclusion: 'failure',
+    counts: { critical: 1, serious: 1, moderate: 0, minor: 0, total: 2 },
+    truncated: false,
+    violations: [
+      { id: 'image-alt', wcagId: '1.1.1', impact: 'critical', description: 'alt', helpUrl: 'h', locations: [{ path: 'src/A.tsx', line: 3 }, { path: 'src/B.tsx', line: 9 }] },
+      { id: 'link-name', wcagId: '2.4.4', impact: 'serious', description: 'name', helpUrl: 'h2', locations: [] },
+    ],
+    ...overrides,
+  });
+}
+
+describe('parseScanReport', () => {
+  it('returns null for absent, non-JSON, or wrong-schema text', () => {
+    expect(parseScanReport(undefined)).toBeNull();
+    expect(parseScanReport('')).toBeNull();
+    expect(parseScanReport('{not json')).toBeNull();
+    expect(parseScanReport(JSON.stringify({ schema: 'other/1' }))).toBeNull();
+    expect(parseScanReport(JSON.stringify(['array']))).toBeNull();
+  });
+
+  it('coerces missing/garbage count fields to zero', () => {
+    const r = parseScanReport(JSON.stringify({ schema: 'a11y-fixer.scan/1' }));
+    expect(r?.counts).toEqual({ critical: 0, serious: 0, moderate: 0, minor: 0, total: 0 });
+    expect(r?.violations).toEqual([]);
+    expect(r?.truncated).toBe(false);
+  });
+
+  it('drops malformed violations and locations', () => {
+    const r = parseScanReport(JSON.stringify({
+      schema: 'a11y-fixer.scan/1',
+      violations: [
+        { id: 'ok', wcagId: 'w', impact: 'minor', description: 'd', helpUrl: 'h', locations: [{ path: 'p', line: 1 }, { path: 'p' }, 'bad'] },
+        { id: 'missing-fields' },
+      ],
+    }));
+    expect(r?.violations).toHaveLength(1);
+    expect(r?.violations[0].locations).toEqual([{ path: 'p', line: 1 }]);
+  });
+});
+
+describe('handleCheckRun — scan row (annotation-count fallback)', () => {
   it('persists a completed a11y-fixer run as a scan', async () => {
     const store = new MemoryStore();
     await handleCheckRun(event(), store);
@@ -38,6 +86,8 @@ describe('handleCheckRun', () => {
       violationCount: 3,
       createdAt: '2026-01-02T03:04:05Z',
     });
+    // No embedded contract → no per-violation detail rows.
+    expect(store.violations.has(9001)).toBe(false);
   });
 
   it('ignores non-completed actions', async () => {
@@ -82,5 +132,33 @@ describe('handleCheckRun', () => {
     const ts = Date.parse(store.scans.get(9001)!.createdAt);
     expect(ts).toBeGreaterThanOrEqual(before);
     expect(ts).toBeLessThanOrEqual(Date.now() + 1000);
+  });
+});
+
+describe('handleCheckRun — embedded scan contract', () => {
+  it('uses the exact contract total and writes per-violation detail rows', async () => {
+    const store = new MemoryStore();
+    // annotations_count (3) is ignored in favor of the contract total (2).
+    await handleCheckRun(event({ output: { annotations_count: 3, text: scanContract() } }), store);
+    expect(store.scans.get(9001)?.violationCount).toBe(2);
+    // 2 locations for image-alt + 1 null-location row for link-name = 3 rows.
+    const rows = store.violations.get(9001);
+    expect(rows).toHaveLength(3);
+    expect(rows).toContainEqual(expect.objectContaining({ ruleId: 'image-alt', path: 'src/A.tsx', line: 3 }));
+    expect(rows).toContainEqual(expect.objectContaining({ ruleId: 'link-name', path: null, line: null }));
+  });
+
+  it('ignores an unparseable contract and keeps the annotation-count fallback', async () => {
+    const store = new MemoryStore();
+    await handleCheckRun(event({ output: { annotations_count: 5, text: 'garbage' } }), store);
+    expect(store.scans.get(9001)?.violationCount).toBe(5);
+    expect(store.violations.has(9001)).toBe(false);
+  });
+
+  it('is reachable through routeEvent', async () => {
+    const store = new MemoryStore();
+    await routeEvent('check_run', event({ output: { text: scanContract() } }), store);
+    expect(store.scans.has(9001)).toBe(true);
+    expect(store.violations.get(9001)).toHaveLength(3);
   });
 });

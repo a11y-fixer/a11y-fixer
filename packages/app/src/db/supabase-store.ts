@@ -6,7 +6,7 @@
 // interactive session; until then we depend on a minimal STRUCTURAL type so the
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
-import type { InstallationRecord, RepoRecord, ScanRecord, Store } from './store.js';
+import type { InstallationRecord, RepoRecord, ScanRecord, Store, ViolationRecord } from './store.js';
 
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
@@ -101,6 +101,28 @@ export class SupabaseStore implements Store {
       { onConflict: 'check_run_id' },
     );
     throwOn(error, 'upsertScan');
+  }
+
+  async replaceViolations(checkRunId: number, violations: ViolationRecord[]): Promise<void> {
+    // Delete-then-insert so a redelivered completion replaces (not duplicates)
+    // this scan's detail rows.
+    const { error: delError } = await this.db.from('violations').delete().eq('check_run_id', checkRunId);
+    throwOn(delError, 'replaceViolations(clear)');
+
+    if (violations.length === 0) return;
+    const { error: insError } = await this.db.from('violations').insert(
+      violations.map(v => ({
+        check_run_id: checkRunId,
+        rule_id: v.ruleId,
+        wcag_id: v.wcagId,
+        impact: v.impact,
+        description: v.description,
+        help_url: v.helpUrl,
+        path: v.path,
+        line: v.line,
+      })),
+    );
+    throwOn(insError, 'replaceViolations(insert)');
   }
 
   async listRepos(installationId: number): Promise<RepoRecord[]> {
