@@ -27,7 +27,17 @@ export async function GET(req: Request): Promise<Response> {
     const viewer = await fetchViewer(token, fetch);
     await store.upsertUser({ userId: data.user.id, ...viewer });
     const installationIds = await fetchUserInstallationIds(token, fetch);
-    for (const id of installationIds) await store.linkUserInstallation(data.user.id, id);
+    for (const id of installationIds) {
+      // An installation GitHub reports may not be in our `installations` table
+      // yet (the `installation` webhook can arrive after this sign-in). Skip it
+      // rather than fail the whole login on the FK violation — the link is
+      // reconciled on the next sign-in once the webhook has landed.
+      try {
+        await store.linkUserInstallation(data.user.id, id);
+      } catch {
+        // not-yet-synced installation; ignore.
+      }
+    }
   }
 
   return NextResponse.redirect(`${env.appBaseUrl()}/dashboard`);
