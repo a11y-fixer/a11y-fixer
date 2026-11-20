@@ -30,6 +30,47 @@ export interface RepoRecord {
   selected: boolean;
 }
 
+/** One ingested a11y-fixer scan (a completed Check Run). Mirrors `scans`. */
+export interface ScanRecord {
+  /** GitHub `check_run.id` — stable per run, the scan's primary key. */
+  scanId: number;
+  /** Owning installation, if the event carried one. */
+  installationId: number | null;
+  /** Repository the scan ran on. */
+  repoId: number;
+  /** `owner/name`, denormalized for dashboard queries. */
+  fullName: string;
+  /** PR head sha the Check Run attached to. */
+  sha: string;
+  /** PR number when the run was on a pull request, else null. */
+  prNumber: number | null;
+  /** `check` (gating) or `fix` (informational). */
+  mode: string;
+  /** Check Run conclusion: success | failure | neutral. */
+  conclusion: string;
+  /** Exact impact counts over the full violation set. */
+  critical: number;
+  serious: number;
+  moderate: number;
+  minor: number;
+  total: number;
+  /** True when the per-row violation list was capped below `total`. */
+  truncated: boolean;
+}
+
+/** One violation row within a scan. Mirrors `violations`. */
+export interface ViolationRecord {
+  /** axe/ESLint rule id. */
+  ruleId: string;
+  wcagId: string;
+  impact: string;
+  description: string;
+  helpUrl: string;
+  /** Repo-relative source path, if the scan located one (URL scans don't). */
+  path: string | null;
+  line: number | null;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -43,4 +84,11 @@ export interface Store {
 
   upsertRepos(installationId: number, repos: RepoRecord[]): Promise<void>;
   removeRepos(installationId: number, repoIds: number[]): Promise<void>;
+
+  /**
+   * Persist one scan and its violation rows together, replacing any prior rows
+   * for the same `scanId` (so a redelivered completion is idempotent at the data
+   * layer, not just via the delivery ledger).
+   */
+  recordScan(scan: ScanRecord, violations: ViolationRecord[]): Promise<void>;
 }

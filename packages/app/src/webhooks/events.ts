@@ -38,3 +38,24 @@ export interface InstallationRepositoriesEvent {
   repositories_added?: WebhookRepository[];
   repositories_removed?: WebhookRepository[];
 }
+
+/** The Check Run fields the control plane reads (the rest of the payload is ignored). */
+export interface WebhookCheckRun {
+  id: number;
+  name: string;
+  head_sha: string;
+  conclusion: string | null;
+  /** `output.text` carries the a11y-fixer scan contract (see check-run handler). */
+  output?: { title?: string | null; summary?: string | null; text?: string | null };
+  /** PRs GitHub associated with the head sha, when any. */
+  pull_requests?: Array<{ number: number }>;
+}
+
+/** `check_run` event: created | completed | rerequested | requested_action */
+export interface CheckRunEvent {
+  action: string;
+  check_run: WebhookCheckRun;
+  repository: WebhookRepository;
+  /** Present on App webhooks; absent on some legacy deliveries. */
+  installation?: { id: number };
+}
