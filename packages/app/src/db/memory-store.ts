@@ -1,10 +1,11 @@
 // In-memory Store for unit tests and local development. Not for production.
-import type { InstallationRecord, RepoRecord, Store } from './store.js';
+import type { InstallationRecord, RepoRecord, ScanRecord, Store } from './store.js';
 
 export class MemoryStore implements Store {
   readonly deliveries = new Set<string>();
   readonly installations = new Map<number, InstallationRecord>();
   readonly repos = new Map<number, RepoRecord>();
+  readonly scans = new Map<number, ScanRecord>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -37,5 +38,17 @@ export class MemoryStore implements Store {
       const repo = this.repos.get(id);
       if (repo && repo.installationId === installationId) this.repos.delete(id);
     }
+  }
+
+  async upsertScan(record: ScanRecord): Promise<void> {
+    this.scans.set(record.checkRunId, { ...record });
+  }
+
+  async listRepos(installationId: number): Promise<RepoRecord[]> {
+    return [...this.repos.values()].filter(repo => repo.installationId === installationId);
+  }
+
+  async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
+    return [...this.scans.values()].filter(scan => scan.installationId === installationId);
   }
 }

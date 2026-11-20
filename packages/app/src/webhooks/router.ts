@@ -5,13 +5,17 @@
 // Unknown events are acknowledged and ignored so GitHub stops retrying them.
 import { handleInstallation } from './handlers/installation.js';
 import { handleInstallationRepositories } from './handlers/installation-repositories.js';
-import type { InstallationEvent, InstallationRepositoriesEvent } from './events.js';
+import { handleCheckRun } from './handlers/check-run.js';
+import type { CheckRunEvent, InstallationEvent, InstallationRepositoriesEvent } from './events.js';
 import type { Store } from '../db/store.js';
 
 export async function routeEvent(eventName: string, payload: unknown, store: Store): Promise<void> {
   switch (eventName) {
     case 'installation':
       await handleInstallation(payload as InstallationEvent, store);
+      return;
+    case 'check_run':
+      await handleCheckRun(payload as CheckRunEvent, store);
       return;
     case 'installation_repositories':
       await handleInstallationRepositories(payload as InstallationRepositoriesEvent, store);

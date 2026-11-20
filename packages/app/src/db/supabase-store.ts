@@ -6,7 +6,7 @@
 // interactive session; until then we depend on a minimal STRUCTURAL type so the
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
-import type { InstallationRecord, RepoRecord, Store } from './store.js';
+import type { InstallationRecord, RepoRecord, ScanRecord, Store } from './store.js';
 
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
@@ -20,6 +20,9 @@ export interface SupabaseLike {
       eq(column: string, value: unknown): Promise<{ error: unknown }>;
     };
     insert(values: unknown): Promise<{ error: unknown }>;
+    select(columns?: string): {
+      eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }>;
+    };
   };
 }
 
@@ -81,5 +84,56 @@ export class SupabaseStore implements Store {
   async removeRepos(_installationId: number, repoIds: number[]): Promise<void> {
     const { error } = await this.db.from('repos').delete().in('repo_id', repoIds);
     throwOn(error, 'removeRepos');
+  }
+
+  async upsertScan(record: ScanRecord): Promise<void> {
+    const { error } = await this.db.from('scans').upsert(
+      {
+        check_run_id: record.checkRunId,
+        repo_id: record.repoId,
+        installation_id: record.installationId,
+        head_sha: record.headSha,
+        pr_number: record.prNumber,
+        conclusion: record.conclusion,
+        violation_count: record.violationCount,
+        created_at: record.createdAt,
+      },
+      { onConflict: 'check_run_id' },
+    );
+    throwOn(error, 'upsertScan');
+  }
+
+  async listRepos(installationId: number): Promise<RepoRecord[]> {
+    const { data, error } = await this.db.from('repos').select().eq('installation_id', installationId);
+    throwOn(error, 'listRepos');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        repoId: r.repo_id as number,
+        installationId: r.installation_id as number,
+        fullName: r.full_name as string,
+        isPrivate: r.private as boolean,
+        defaultBranch: (r.default_branch as string | null) ?? null,
+        selected: r.selected as boolean,
+      };
+    });
+  }
+
+  async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
+    const { data, error } = await this.db.from('scans').select().eq('installation_id', installationId);
+    throwOn(error, 'listScansByInstallation');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        checkRunId: r.check_run_id as number,
+        repoId: r.repo_id as number,
+        installationId: r.installation_id as number,
+        headSha: r.head_sha as string,
+        prNumber: (r.pr_number as number | null) ?? null,
+        conclusion: (r.conclusion as string | null) ?? null,
+        violationCount: r.violation_count as number,
+        createdAt: r.created_at as string,
+      };
+    });
   }
 }

@@ -38,3 +38,38 @@ export interface InstallationRepositoriesEvent {
   repositories_added?: WebhookRepository[];
   repositories_removed?: WebhookRepository[];
 }
+
+/** A pull request reference as it appears nested in a check_run payload. */
+export interface WebhookPullRequestRef {
+  number: number;
+}
+
+/**
+ * The check_run object the dashboard ingests. The Action posts a Check Run named
+ * `a11y-fixer` (see github-action `report.ts`), so we read it straight off the
+ * webhook with zero Action changes. `output.annotations_count` is the violation
+ * count; the per-annotation detail lives behind `annotations_url` (a later API
+ * fetch populates the `violations` table — the webhook alone carries the count).
+ */
+export interface WebhookCheckRun {
+  id: number;
+  name: string;
+  head_sha: string;
+  status: string;
+  conclusion: string | null;
+  completed_at?: string | null;
+  output?: {
+    title?: string | null;
+    summary?: string | null;
+    annotations_count?: number;
+  };
+  pull_requests?: WebhookPullRequestRef[];
+}
+
+/** `check_run` event: created | completed | rerequested | requested_action */
+export interface CheckRunEvent {
+  action: string;
+  check_run: WebhookCheckRun;
+  repository: WebhookRepository;
+  installation?: { id: number };
+}
