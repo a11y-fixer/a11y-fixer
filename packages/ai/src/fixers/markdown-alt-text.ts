@@ -1,16 +1,44 @@
 import type { Fixer, FixResult, A11yViolation } from '@a11y-fixer/core';
+import { locateAtColumn, writeReplacement, sanitizeInlineLabel } from '@a11y-fixer/core';
 import type { AIProvider } from '../provider/index.js';
 import { readSourceLine } from './source-line.js';
-import { locateAtColumn, writeReplacement, sanitizeInlineLabel } from './markdown-source.js';
 
-/** Anchored at the located column: an empty-alt Markdown image `![](src)`. */
-const EMPTY_ALT_IMAGE = /^!\[\s*\]\(([^)]+)\)/;
+/** Candidate Markdown/HTML image syntaxes, each anchored at the located column. */
+interface ImageCandidate {
+  anchored: RegExp;
+  /** The image's `src`/`ref` for AI context. */
+  ref(match: RegExpMatchArray): string;
+  /** Builds the replacement text for the whole matched construct. */
+  build(match: RegExpMatchArray, alt: string): string;
+}
+
+const CANDIDATES: ImageCandidate[] = [
+  // Inline image: ![](src)
+  {
+    anchored: /^!\[\s*\]\(([^)]+)\)/,
+    ref: (m) => m[1] ?? '',
+    build: (m, alt) => `![${alt}](${m[1]})`,
+  },
+  // Reference-style image: ![][ref] or ![][]
+  {
+    anchored: /^!\[\s*\]\[([^\]]*)\]/,
+    ref: (m) => m[1] ?? '',
+    build: (m, alt) => `![${alt}][${m[1]}]`,
+  },
+  // Raw inline HTML image: <img ...>
+  {
+    anchored: /^<img\b[^>]*>/i,
+    ref: (m) => m[0].match(/\bsrc\s*=\s*("([^"]*)"|'([^']*)')/i)?.[1]?.replace(/^['"]|['"]$/g, '') ?? '',
+    build: (m, alt) => insertImgAlt(m[0], alt),
+  },
+];
 
 /**
- * Fixes Markdown images with empty/missing alt text — `![](img.png)` — by
- * generating alt via the AI provider and rewriting the line to `![alt](img.png)`.
- * Keyed on the `md-image-alt` id the Markdown scanner emits, so it's registered
- * before the broad (HTML `<img>`-only) {@link AltTextFixer} which also claims
+ * Fixes Markdown images with empty/missing alt text — inline `![](img.png)`,
+ * reference-style `![][ref]`, and raw inline `<img>` — by generating alt via the
+ * AI provider and rewriting the construct in place. Keyed on the `md-image-alt`
+ * and `md-html-img-alt` ids the Markdown scanner emits, so it's registered
+ * before the broad (HTML `<img>`-only) {@link AltTextFixer}, which also claims
  * WCAG 1.1.1.
  */
 export class MarkdownAltTextFixer implements Fixer {
@@ -23,12 +51,12 @@ export class MarkdownAltTextFixer implements Fixer {
   ) {}
 
   canFix(violation: A11yViolation): boolean {
-    return violation.id === 'md-image-alt';
+    return violation.id === 'md-image-alt' || violation.id === 'md-html-img-alt';
   }
 
   async fix(violation: A11yViolation): Promise<FixResult> {
     if (!this.aiProvider.available()) {
-      return this.humanFlag(violation, 'ANTHROPIC_API_KEY not set — cannot generate alt text');
+      return this.humanFlag(violation, 'No AI provider configured — cannot generate alt text');
     }
 
     const node = violation.nodes[0];
@@ -37,11 +65,19 @@ export class MarkdownAltTextFixer implements Fixer {
     }
     const column = node.sourceColumn ?? 1;
 
-    const located = await locateAtColumn(node.sourceFile, node.sourceLine, column, EMPTY_ALT_IMAGE);
-    if (!located) {
-      return this.humanFlag(violation, 'Empty-alt Markdown image not found at the recorded location');
+    let matched: { candidate: ImageCandidate; located: Awaited<ReturnType<typeof locateAtColumn>> } | null = null;
+    for (const candidate of CANDIDATES) {
+      const located = await locateAtColumn(node.sourceFile, node.sourceLine, column, candidate.anchored);
+      if (located) {
+        matched = { candidate, located };
+        break;
+      }
     }
-    const src = located.match[1] ?? '';
+    if (!matched || !matched.located) {
+      return this.humanFlag(violation, 'Image with missing alt not found at the recorded location');
+    }
+    const { candidate, located } = matched;
+    const src = candidate.ref(located.match);
 
     const window = await readSourceLine(node.sourceFile, node.sourceLine);
     const context = `Markdown image: ${located.match[0]}\nImage src: ${src}` +
@@ -55,7 +91,7 @@ export class MarkdownAltTextFixer implements Fixer {
     }
 
     const before = located.match[0];
-    const replacement = `![${altText}](${src})`;
+    const replacement = candidate.build(located.match, altText);
     const after = await writeReplacement(node.sourceFile, located, replacement);
 
     return {
@@ -79,4 +115,24 @@ export class MarkdownAltTextFixer implements Fixer {
       humanNote: note,
     };
   }
+}
+
+/** Escapes a string for use inside a double-quoted HTML attribute value. */
+function sanitizeHtmlAttr(text: string): string {
+  return text
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .trim();
+}
+
+/** Sets `alt` on a raw `<img>` tag: replaces an existing empty alt, else inserts one. */
+function insertImgAlt(tag: string, alt: string): string {
+  const safe = sanitizeHtmlAttr(alt);
+  if (/\balt\s*=\s*("[^"]*"|'[^']*')/i.test(tag)) {
+    return tag.replace(/\balt\s*=\s*("[^"]*"|'[^']*')/i, `alt="${safe}"`);
+  }
+  return tag.replace(/^<img\b/i, `<img alt="${safe}"`);
 }

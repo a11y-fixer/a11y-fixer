@@ -4,6 +4,8 @@ import { HtmlLangFixer } from './rule-based/html-lang.js';
 import { HtmlLangValidFixer } from './rule-based/html-lang-valid.js';
 import { HtmlXmlLangMismatchFixer } from './rule-based/html-xml-lang-mismatch.js';
 import { HeadingOrderFixer } from './rule-based/heading-order.js';
+import { MarkdownHeadingOrderFixer } from './rule-based/markdown-heading-order.js';
+import { MarkdownTableHeaderFixer } from './rule-based/markdown-table-header.js';
 import { MetaViewportFixer } from './rule-based/meta-viewport.js';
 import { MetaViewportLargeFixer } from './rule-based/meta-viewport-large.js';
 import { ColorContrastFixer } from './rule-based/color-contrast.js';
@@ -48,6 +50,9 @@ export function registerCoreFixers(
   registry.register(new HtmlLangValidFixer(rootDir));
   registry.register(new HtmlXmlLangMismatchFixer(rootDir));
   registry.register(new HeadingOrderFixer(rootDir));
+  // Markdown rule-based fixers — id-keyed (`md-*`), no collision with HTML fixers.
+  registry.register(new MarkdownHeadingOrderFixer(rootDir));
+  registry.register(new MarkdownTableHeaderFixer(rootDir));
   registry.register(new MetaViewportFixer(rootDir));
   registry.register(new MetaViewportLargeFixer(rootDir));
   registry.register(new ColorContrastFixer(rootDir));

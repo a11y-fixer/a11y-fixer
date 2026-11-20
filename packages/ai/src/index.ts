@@ -50,4 +50,4 @@ export { MarkdownLinkTextFixer } from './fixers/markdown-link-text.js';
 
 export { buildFullRegistry } from './fixers/registry.js';
 
-export { scanMarkdown } from './scan/markdown.js';
+export { scanMarkdown } from '@a11y-fixer/core';
