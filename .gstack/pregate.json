@@ -22,6 +22,9 @@
     ],
     "packages/app/db/**": [],
     "packages/app/github-app-manifest.json": [],
+    "packages/app/app/**": [],
+    "packages/app/next.config.ts": [],
+    "packages/app/tsconfig.src.json": [],
     "packages/app/src/**": [
       "packages/app/src/github/app-jwt.test.ts",
       "packages/app/src/github/installation-token.test.ts",
@@ -30,7 +33,11 @@
       "packages/app/src/webhooks/handlers/installation.test.ts",
       "packages/app/src/webhooks/handlers/installation-repositories.test.ts",
       "packages/app/src/webhooks/handlers/check-run.test.ts",
-      "packages/app/src/dashboard/aggregate.test.ts"
+      "packages/app/src/dashboard/aggregate.test.ts",
+      "packages/app/src/dashboard/view-model.test.ts",
+      "packages/app/src/http/webhook-request.test.ts",
+      "packages/app/src/auth/installations.test.ts",
+      "packages/app/src/db/memory-store.test.ts"
     ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"
