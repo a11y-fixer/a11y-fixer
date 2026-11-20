@@ -77,26 +77,39 @@ env only. Never commit, never log, never echo in full.
 ## 3. Vercel project + env
 
 1. Via the Vercel connector (or vercel.com UI), create/link a project from this repo
-   with **Root Directory = `packages/app`**.
-2. Set all 8 env vars for **Production + Preview**:
-   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `GITHUB_APP_ID`,
-   `GITHUB_APP_CLIENT_ID`, `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_PRIVATE_KEY`,
-   `GITHUB_WEBHOOK_SECRET`, `LICENSE_SIGNING_KEY`.
+   with **Root Directory = `packages/app`** and **Build Command = `next build`**
+   (NOT the package's default `build` script, which is the node-only `tsc` CI gate).
+2. Set all env vars for **Production + Preview**:
+   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `APP_BASE_URL`
+   (the deploy origin), `GITHUB_APP_ID`, `GITHUB_APP_CLIENT_ID`,
+   `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET`,
+   `LICENSE_SIGNING_KEY`. In Supabase Auth, enable the **GitHub provider** and point
+   it at `GITHUB_APP_CLIENT_ID/SECRET`; set the provider callback to
+   `<SUPABASE_URL>/auth/v1/callback` and add `${APP_BASE_URL}/auth/callback` as a
+   redirect URL.
 3. Note the deploy domain (custom `app.a11y-fixer.com` or the `*.vercel.app`). If it
    differs from the manifest, reconcile the App's webhook/callback URLs (step 2 note).
 
-> Build stays `tsc --noEmit` until M2 adds the Next.js shell; then it becomes
-> `next build`. No runtime deps are installed until M2.
+> The M2 Next.js shell is now in-repo and `next build` passes locally. The package
+> `build`/`typecheck` scripts stay `tsc --noEmit -p tsconfig.src.json` (node, src-only)
+> so CI stays fast; Vercel runs `next build` (via `tsconfig.json`).
 
 ---
 
-## 4. Hand back to build M2
+## 4. Deploy the built M2 UI
 
-Once steps 1–3 are green, M2 implementation can start (new branch off `main`):
-Next.js App Router shell → `app/api/webhooks/github/route.ts` (calls the existing
-`processWebhook`) → `check_run` handler → `scans`/`violations` schema + aggregation
-→ GitHub OAuth (Supabase Auth) → `/dashboard` org→repo views → deploy preview →
-point the App webhook at it → verify a real `check_run` from the Action lands.
+The M2 code is complete in-repo (Next.js shell, webhook route, Supabase Auth GitHub
+login, `/dashboard` org→repo views, `scans`/`violations` + `users`/`user_installations`
++ RLS schema); `next build` passes locally. The remaining work is deploy + live verify:
+
+1. Apply the full `packages/app/db/schema.sql` to the Supabase project (it now
+   includes `scans`, `violations`, `users`, `user_installations`, and the RLS policies).
+2. Deploy to Vercel (steps 1–3 above). Confirm the build succeeds and the dashboard
+   renders the signed-out state.
+3. Point the GitHub App's webhook URL at `${APP_BASE_URL}/api/webhooks/github` and the
+   callback/redirect URLs at `${APP_BASE_URL}/auth/callback`.
+4. Sign in with GitHub, install the App on a repo, trigger the Action, and verify a
+   real `check_run` lands → a scan row appears → the dashboard shows it.
 
 Pregate reminder: any new test-lane gate for new files must land on `main` **first**
-(detached worktree → `git push origin HEAD:main`), mirroring M0/M1.
+(detached worktree → `git push origin HEAD:main`), mirroring M0/M1/M2.

@@ -3,6 +3,10 @@ node_modules/
 .vite/
 coverage/
 
+# Next.js build output for the control plane (packages/app).
+.next/
+packages/app/next-env.d.ts
+
 # Build outputs for the npm-published packages.
 packages/ai/dist/
 packages/core/dist/
