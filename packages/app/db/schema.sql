@@ -97,6 +97,25 @@ create table if not exists user_installations (
 
 create index if not exists user_installations_installation_id_idx on user_installations (installation_id);
 
+-- M3: GitHub Marketplace subscriptions, ingested from `marketplace_purchase`
+-- webhooks. One row per purchasing account (account_id mirrors
+-- installations.account_id), so a purchase can land before the App is installed.
+-- Cancellation is a soft-delete (cancelled_at set, row kept) for billing history.
+create table if not exists subscriptions (
+  account_id             bigint primary key,
+  account                text    not null,
+  plan_id                bigint  not null,
+  plan_name              text    not null,
+  monthly_price_in_cents integer not null,
+  unit_count             integer not null default 1,
+  on_free_trial          boolean not null default false,
+  free_trial_ends_on     date,
+  next_billing_date      date,
+  cancelled_at           timestamptz,
+  created_at             timestamptz not null default now(),
+  updated_at             timestamptz not null default now()
+);
+
 -- Row-level security. The service-role key bypasses RLS (webhook sink + any
 -- server-side admin reads are unaffected). These policies constrain ONLY the
 -- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
@@ -106,6 +125,7 @@ alter table installations enable row level security;
 alter table repos enable row level security;
 alter table scans enable row level security;
 alter table violations enable row level security;
+alter table subscriptions enable row level security;
 
 -- A user sees only their own row and their own installation links.
 create policy users_self_select on users
@@ -135,6 +155,16 @@ create policy violations_member_select on violations
   for select using (
     check_run_id in (
       select check_run_id from scans
+      where installation_id in (select installation_id from user_installations where user_id = auth.uid())
+    )
+  );
+
+-- A user sees a subscription only if they are linked to an installation whose
+-- account matches the subscription's account.
+create policy subscriptions_member_select on subscriptions
+  for select using (
+    account_id in (
+      select account_id from installations
       where installation_id in (select installation_id from user_installations where user_id = auth.uid())
     )
   );
