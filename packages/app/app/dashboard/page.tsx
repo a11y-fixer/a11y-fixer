@@ -1,7 +1,6 @@
 // Org (installation) list for the signed-in user. Reads the user's visible
 // installation ids, summarizes each, and links through to its repo view. All
 // shaping is done by the unit-tested src/** helpers; this file just renders.
-import Link from 'next/link';
 import { getSignedInUser } from '../lib/auth.js';
 import { serviceRoleStore } from '../lib/supabase.js';
 import { summarizeInstallation } from '../../src/dashboard/aggregate.js';
@@ -44,9 +43,15 @@ export default async function DashboardPage() {
     <main className="container">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <h1>Organizations</h1>
-        <Link href="/auth/sign-out" className="muted">
-          Sign out
-        </Link>
+        <form action="/auth/sign-out" method="post" style={{ margin: 0 }}>
+          <button
+            type="submit"
+            className="muted"
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}
+          >
+            Sign out
+          </button>
+        </form>
       </header>
       {orgs.length === 0 ? (
         <p className="panel muted">No installations yet. Install the a11y-fixer GitHub App on a repository.</p>
@@ -54,9 +59,9 @@ export default async function DashboardPage() {
         <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '0.75rem' }}>
           {orgs.map(org => (
             <li key={org.id} className="panel">
-              <Link href={`/dashboard/${org.id}`} style={{ fontWeight: 600, textDecoration: 'none' }}>
+              <a href={`/dashboard/${org.id}`} style={{ fontWeight: 600, textDecoration: 'none' }}>
                 {org.account}
-              </Link>
+              </a>
               <div className="muted" style={{ marginTop: '0.35rem' }}>
                 {org.view.scannedRepos}/{org.view.totalRepos} repos scanned · {org.view.coverage} coverage ·{' '}
                 {org.view.totalViolations} violations
