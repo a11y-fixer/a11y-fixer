@@ -1,11 +1,13 @@
 import type { Fixer, FixResult } from '@a11y-fixer/core';
 import type { A11yViolation } from '@a11y-fixer/core';
+import { GENERIC_LINK_PATTERNS } from '@a11y-fixer/core';
 import type { AIProvider } from '../provider/index.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import { readSourceLine } from './source-line.js';
 
-/** Link text so generic it conveys nothing out of context — safe to rewrite. */
-export const GENERIC_LINK_PATTERNS = /^(click here|here|learn more|read more|more|details|link|go|continue)$/i;
+// Re-exported for the Markdown link fixer and existing importers; the canonical
+// definition now lives in @a11y-fixer/core alongside the Markdown scanner.
+export { GENERIC_LINK_PATTERNS };
 
 export class LinkTextFixer implements Fixer {
   readonly wcagId = '2.4.4';

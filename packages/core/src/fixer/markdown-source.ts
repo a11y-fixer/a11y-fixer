@@ -1,14 +1,13 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
 /**
- * Makes AI-generated text safe to splice into a Markdown image/link label.
- * The provider is trusted (the caller's own key) but its output is influenced by
- * the scanned file's surrounding content, so a stray `]`/`[` or newline could
- * close the `![...]`/`[...]` bracket early or inject extra markdown. Collapse
- * any newline run to a space, then escape backslashes and square brackets (a `)`
- * inside the label is harmless — only the href's `)` closes the construct).
- * Backslashes are escaped first so a pre-existing `\` can't combine with the
- * bracket escaping to break back out of the label.
+ * Makes text safe to splice into a Markdown image/link label. AI-generated or
+ * inferred text is influenced by the scanned file's content, so a stray `]`/`[`
+ * or newline could close the `![...]`/`[...]` bracket early or inject extra
+ * markdown. Collapse any newline run to a space, then escape backslashes and
+ * square brackets (a `)` inside the label is harmless — only the href's `)`
+ * closes the construct). Backslashes are escaped first so a pre-existing `\`
+ * can't combine with the bracket escaping to break back out of the label.
  */
 export function sanitizeInlineLabel(text: string): string {
   return text
@@ -76,4 +75,34 @@ export async function writeReplacement(
   located.lines[located.lineIndex] = updated;
   await writeFile(file, located.lines.join('\n'), 'utf8');
   return updated;
+}
+
+/**
+ * Rewrites one whole 1-indexed `line` of `file` via `transform`, which receives
+ * the current line text and returns its replacement (or `null` to abort without
+ * writing). Used by the rule-based Markdown fixers (heading demote, table header
+ * fill) that rewrite a single line in place without changing the line count.
+ * Returns the new line, or null if the file is unreadable, the line is missing,
+ * or `transform` aborts.
+ */
+export async function rewriteLine(
+  file: string,
+  line: number,
+  transform: (current: string) => string | null,
+): Promise<string | null> {
+  let content: string;
+  try {
+    content = await readFile(file, 'utf8');
+  } catch {
+    return null;
+  }
+  const lines = content.split('\n');
+  const idx = line - 1;
+  const current = lines[idx];
+  if (current === undefined) return null;
+  const next = transform(current);
+  if (next === null) return null;
+  lines[idx] = next;
+  await writeFile(file, lines.join('\n'), 'utf8');
+  return next;
 }

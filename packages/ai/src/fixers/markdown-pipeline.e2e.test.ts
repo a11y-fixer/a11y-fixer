@@ -3,7 +3,7 @@ import { mkdtemp, rm, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { A11yViolation } from '@a11y-fixer/core';
-import { scanMarkdown } from '../scan/markdown.js';
+import { scanMarkdown } from '@a11y-fixer/core';
 import { buildFullRegistry } from './registry.js';
 import type { AIProvider } from '../provider/index.js';
 

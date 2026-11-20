@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import {
   scanSource,
+  scanMarkdown,
   loadBaseline,
   buildBaseline,
   saveBaseline,
@@ -16,6 +17,7 @@ export function checkCommand(): Command {
     .description('CI gate: exits 1 if new accessibility violations are found (use --baseline to ignore pre-existing ones)')
     .argument('<dir>', 'Directory to check')
     .option('--html', 'Check static .html/.htm files with axe-core (requires puppeteer)', false)
+    .option('--markdown', 'Also check .md/.markdown files (static source; no browser required)', false)
     .option('--url <url>', 'URL to check with axe-core (requires puppeteer)')
     .option('--baseline [file]', `Compare against a baseline file (default: ${DEFAULT_BASELINE_FILE}); fail only on new violations`)
     .option('--update-baseline', 'Write the current violations to the baseline file and exit 0', false)
@@ -24,13 +26,15 @@ export function checkCommand(): Command {
         dir: string,
         opts: {
           html?: boolean;
+          markdown?: boolean;
           url?: string;
           baseline?: string | boolean;
           updateBaseline?: boolean;
         },
       ) => {
         const rootDir = path.resolve(dir);
-        const violations = await scanSource(rootDir, { url: opts.url, html: opts.html });
+        const base = await scanSource(rootDir, { url: opts.url, html: opts.html });
+        const violations = opts.markdown ? [...base, ...await scanMarkdown(rootDir)] : base;
 
         // Resolve the baseline path when either baseline flag is present.
         const baselineRequested = opts.baseline != null || opts.updateBaseline;

@@ -3,9 +3,11 @@ import {
   buildCoreRegistry,
   PullRequestBuilder,
   scanSource,
+  scanMarkdown,
   dedupeFixFiles,
   canonicalizeLangTag,
 } from '@a11y-fixer/core';
+import type { A11yViolation } from '@a11y-fixer/core';
 import path from 'node:path';
 
 export function fixCommand(): Command {
@@ -14,6 +16,7 @@ export function fixCommand(): Command {
     .argument('<dir>', 'Directory to fix')
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
     .option('--html', 'Fix static .html/.htm files with axe-core (requires puppeteer)', false)
+    .option('--markdown', 'Also fix .md/.markdown files (static source; no browser required)', false)
     .option('--owner <owner>', 'GitHub repo owner (required for PR)')
     .option('--repo <repo>', 'GitHub repo name (required for PR)')
     .option('--base <branch>', 'Base branch for PR', 'main')
@@ -23,6 +26,7 @@ export function fixCommand(): Command {
     .action(async (dir: string, opts: {
       url?: string;
       html: boolean;
+      markdown: boolean;
       owner?: string;
       repo?: string;
       base: string;
@@ -31,6 +35,12 @@ export function fixCommand(): Command {
       dryRun: boolean;
     }) => {
       const rootDir = path.resolve(dir);
+
+      // Runs the base scan and merges Markdown violations when --markdown is set.
+      const scan = async (): Promise<A11yViolation[]> => {
+        const base = await scanSource(rootDir, { url: opts.url, html: opts.html });
+        return opts.markdown ? [...base, ...await scanMarkdown(rootDir)] : base;
+      };
 
       // Fail fast on a malformed --lang before scanning anything.
       if (opts.lang !== undefined && canonicalizeLangTag(opts.lang) === null) {
@@ -46,7 +56,7 @@ export function fixCommand(): Command {
 
       // Scan
         console.log(`Scanning ${opts.url ?? rootDir}...`);
-        const beforeViolations = await scanSource(rootDir, { url: opts.url, html: opts.html });
+        const beforeViolations = await scan();
 
         if (beforeViolations.length === 0) {
           console.log('No violations found.');
@@ -77,7 +87,7 @@ export function fixCommand(): Command {
 
         if (opts.owner && opts.repo) {
           // Re-scan so the PR delta table reflects reality.
-          const afterViolations = await scanSource(rootDir, { url: opts.url, html: opts.html });
+          const afterViolations = await scan();
           const changedFiles = dedupeFixFiles(fixes);
 
           if (changedFiles.length === 0) {

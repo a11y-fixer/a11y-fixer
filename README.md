@@ -122,8 +122,9 @@ auto-fixes alt-text, link-name, button-name, form-label, select-name,
 input-button-name, input-image-alt, area-alt, object-alt, svg-img-alt,
 aria-command-name, aria-input-field-name and aria-toggle-field-name; a JSX
 page that auto-fixes alt-text and human-flags link-text; and a Markdown handbook
-(`markdown: true`) that auto-fixes empty image alt text and non-descriptive link
-text directly in the `.md` source. The broken state lives on `main`
+(`markdown: true`) that auto-fixes image alt text (inline, reference, and raw
+`<img>`), non-descriptive link text, heading order, and empty table headers
+directly in the `.md` source. The broken state lives on `main`
 and each run opens a throwaway PR, so the demo is repeatable without re-cloning.
 
 ## Coverage

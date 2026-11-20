@@ -1,9 +1,9 @@
 # Coverage: what we fix vs. what we only detect
 
 **Scope in one line:** the fixers target **accessible-name, alt-text and title**
-problems — **23 AI fixers** covering **~21 axe-core rule IDs** plus **2 Markdown
-rules** across **5 WCAG success criteria** (1.1.1, 1.3.1, 2.4.2, 2.4.4, 4.1.2),
-plus the deterministic fixers inherited from
+problems — **23 AI fixers** covering **~21 axe-core rule IDs** plus **5 Markdown
+rules** across **6 WCAG success criteria** (1.1.1, 1.3.1, 2.4.2, 2.4.4, 2.4.6,
+4.1.2), plus the deterministic fixers inherited from
 [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core).
 Everything else axe-core and `jsx-a11y` surface is **detected but not
 auto-fixed** — see [Detected but not fixable](#detected-but-not-fixable).
@@ -24,7 +24,7 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 
 | WCAG | Fixer | File | Matches | Scan path |
 |---|---|---|---|---|
-| 1.1.1 | `MarkdownAltTextFixer` | `markdown-alt-text.ts` | `id === 'md-image-alt'` | Markdown |
+| 1.1.1 | `MarkdownAltTextFixer` | `markdown-alt-text.ts` | `id === 'md-image-alt'` or `'md-html-img-alt'` (inline, reference, and raw `<img>`) | Markdown |
 | 1.1.1 | `AltTextFixer` | `alt-text.ts` | `wcagId === '1.1.1'` (axe `image-alt` + `jsx-a11y` alt rules) | HTML + JSX |
 | 1.1.1 | `InputImageAltFixer` | `input-image-alt.ts` | `id === 'input-image-alt'` | HTML |
 | 1.1.1 | `AreaAltFixer` | `area-alt.ts` | `id === 'area-alt'` | HTML |
@@ -33,14 +33,16 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 1.1.1 | `RoleImgAltFixer` | `role-img-alt.ts` | `id === 'role-img-alt'` | HTML |
 | 1.1.1 | `AriaMeterNameFixer` | `aria-meter-name.ts` | `id === 'aria-meter-name'` | HTML |
 | 1.1.1 | `AriaProgressbarNameFixer` | `aria-progressbar-name.ts` | `id === 'aria-progressbar-name'` | HTML |
+| 1.3.1 | `MarkdownTableHeaderFixer` | `markdown-table-header.ts` (core, rule-based) | `id === 'md-table-header'` | Markdown |
 | 1.3.1 | `FormLabelFixer` | `form-label.ts` | `id === 'label'` | HTML |
 | 1.3.1 | `SelectNameFixer` | `select-name.ts` | `id === 'select-name'` | HTML |
 | 1.3.1 | `AriaInputFieldNameFixer` | `aria-input-field-name.ts` | `id === 'aria-input-field-name'` | HTML |
 | 1.3.1 | `AriaToggleFieldNameFixer` | `aria-toggle-field-name.ts` | `id === 'aria-toggle-field-name'` | HTML |
 | 2.4.2 | `DocumentTitleFixer` | `document-title.ts` | `id === 'document-title'` | HTML |
-| 2.4.4 | `MarkdownLinkTextFixer` | `markdown-link-text.ts` | `id === 'md-link-text'` | Markdown |
+| 2.4.4 | `MarkdownLinkTextFixer` | `markdown-link-text.ts` | `id === 'md-link-text'` (inline and reference-style) | Markdown |
 | 2.4.4 | `LinkNameFixer` | `link-name.ts` | `id === 'link-name'` | HTML |
 | 2.4.4 | `LinkTextFixer` | `link-text.ts` | `wcagId === '2.4.4'` (`jsx-a11y` `anchor-has-content`; usually **human-flags**) | JSX |
+| 2.4.6 | `MarkdownHeadingOrderFixer` | `markdown-heading-order.ts` (core, rule-based) | `id === 'md-heading-order'` | Markdown |
 | 4.1.2 | `ButtonNameFixer` | `button-name.ts` | `id === 'button-name'` | HTML |
 | 4.1.2 | `InputButtonNameFixer` | `input-button-name.ts` | `id === 'input-button-name'` | HTML |
 | 4.1.2 | `AriaCommandNameFixer` | `aria-command-name.ts` | `id === 'aria-command-name'` | HTML |
@@ -66,10 +68,13 @@ top:
 
 - **HTML path** (`html: true`): **axe-core** (~90+ rules) against rendered HTML.
 - **JSX path** (default): **ESLint + `jsx-a11y`** (~30+ rules).
-- **Markdown path** (`markdown: true`): a repo-local scanner
-  ([`packages/ai/src/scan/markdown.ts`](./packages/ai/src/scan/markdown.ts)) over
-  `.md`/`.markdown` for empty image alt (`md-image-alt`) and non-descriptive link
-  text (`md-link-text`). Not in `@a11y-fixer/core`; combines with either core path.
+- **Markdown path** (`markdown: true`): a remark/mdast scanner
+  ([`packages/core/src/scanner/markdown.ts`](./packages/core/src/scanner/markdown.ts)) over
+  `.md`/`.markdown` for image alt (`md-image-alt` — inline + reference; `md-html-img-alt` — raw `<img>`),
+  non-descriptive link text (`md-link-text` — inline + reference), heading order
+  (`md-heading-order`), and empty table headers (`md-table-header`). Lives in
+  `@a11y-fixer/core` and combines with either core path. Because it parses the AST,
+  links/images inside fenced or inline code are never flagged.
 
 So the tool *detects* far more than it fixes. The fixers cover only the
 accessible-name slice above; everything else is reported but left for a human.
@@ -78,8 +83,8 @@ Out-of-scope **categories** (not auto-fixed) include:
 - Color contrast
 - Keyboard / focus order / focus-visible
 - ARIA validity & structure (roles, required attributes, parent/child)
-- Heading and landmark structure
-- Tables (headers, captions)
+- Heading and landmark structure (except Markdown heading order, now auto-fixed)
+- Tables — captions, and HTML/JSX headers (Markdown empty table headers are auto-fixed)
 - Page language / `lang` attributes
 - Timing, motion, autoplay
 - Duplicate IDs, bypass blocks, and the rest of the axe/jsx-a11y catalog
@@ -103,8 +108,11 @@ Practically:
 - **HTML/axe path** auto-fixes the full HTML set above (18 rules auto-applied).
 - **JSX path** effectively only auto-fixes **alt-text**, and human-flags
   link-text.
-- **Markdown path** auto-fixes **md-image-alt** and **md-link-text** in `.md`
-  source, independent of the core path.
+- **Markdown path** auto-fixes image alt, link text, heading order, and empty
+  table headers in `.md` source, independent of the core path. Heading order and
+  table headers are **rule-based** (no API key needed); alt text and link text
+  are AI-assisted. Heading-order fixes converge over repeated runs (each run
+  removes one skip layer), and each run is verified to never regress.
 
 So the fixable coverage on any given repo is **whichever core path you ran**
 (optionally plus Markdown), not the union. The
@@ -143,9 +151,12 @@ accessible-name rules, and gate on committed baselines. See
   `AriaMeterNameFixer` and `AriaProgressbarNameFixer` are in the registry but,
   like `document-title`, are not individually represented in the ACT corpus;
   they're covered here.
-- `MarkdownAltTextFixer` and `MarkdownLinkTextFixer` run on the Markdown path,
-  which the ACT corpus (HTML/JSX only) does not exercise. They have their own
-  unit, registry, and end-to-end tests under
-  [`packages/ai/src/`](./packages/ai/src/) and are tracked here, not in `rules.mjs`.
+- The Markdown fixers — AI-assisted `MarkdownAltTextFixer` / `MarkdownLinkTextFixer`
+  ([`packages/ai/src/`](./packages/ai/src/)) and the rule-based
+  `MarkdownHeadingOrderFixer` / `MarkdownTableHeaderFixer`
+  ([`packages/core/src/fixer/rule-based/`](./packages/core/src/fixer/rule-based/)) —
+  run on the Markdown path, which the ACT corpus (HTML/JSX only) does not exercise.
+  They have their own unit, registry, and end-to-end tests and are tracked here,
+  not in `rules.mjs`.
 - When a fixer is added: update the table above, add its ACT rule to `rules.mjs`
   **if** the corpus has fixtures for it, and refresh both benchmark baselines.

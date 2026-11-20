@@ -44,7 +44,7 @@ describe('MarkdownLinkTextFixer', () => {
     const fixer = new MarkdownLinkTextFixer(provider, dir);
     const result = await fixer.fix(violation('x.md', 1, 1));
     expect(result.bucket).toBe('human-flagged');
-    expect(result.description).toContain('ANTHROPIC_API_KEY not set');
+    expect(result.description).toContain('No AI provider configured');
     expect(provider.rewriteLinkText).not.toHaveBeenCalled();
   });
 

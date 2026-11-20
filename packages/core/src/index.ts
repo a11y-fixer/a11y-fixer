@@ -30,6 +30,18 @@ export { ColorContrastFixer, parseContrastFailure } from './fixer/rule-based/col
 export { TabindexFixer, normalizeTabindex } from './fixer/rule-based/tabindex.js';
 export { MetaRefreshFixer, isPureTimedRefresh } from './fixer/rule-based/meta-refresh.js';
 export { HtmlXmlLangMismatchFixer, primarySubtag } from './fixer/rule-based/html-xml-lang-mismatch.js';
+export { MarkdownHeadingOrderFixer } from './fixer/rule-based/markdown-heading-order.js';
+export { MarkdownTableHeaderFixer } from './fixer/rule-based/markdown-table-header.js';
+
+export { scanMarkdown, scanContent, collectMarkdownHeadings, GENERIC_LINK_PATTERNS } from './scanner/markdown.js';
+export type { MarkdownHeading } from './scanner/markdown.js';
+export {
+  sanitizeInlineLabel,
+  locateAtColumn,
+  writeReplacement,
+  rewriteLine,
+} from './fixer/markdown-source.js';
+export type { Located } from './fixer/markdown-source.js';
 
 export { PullRequestBuilder } from './pr/pull-request-builder.js';
 export type { PROptions, PRResult } from './pr/pull-request-builder.js';
