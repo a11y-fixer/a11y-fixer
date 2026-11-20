@@ -259,7 +259,7 @@ function getVercelOidcTokenSync() {
 
 /***/ }),
 
-/***/ 23393:
+/***/ 45774:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 
@@ -1767,7 +1767,7 @@ function _function(params) {
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/registries.js
 var registries = __webpack_require__(56045);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@vercel+oidc@3.2.0/node_modules/@vercel/oidc/dist/index.js
-var oidc_dist = __webpack_require__(23393);
+var oidc_dist = __webpack_require__(45774);
 ;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+gateway@4.0.146_zod@4.6.7/node_modules/@ai-sdk/gateway/dist/index.js
 
 
