@@ -1,21 +1,24 @@
-// Handle the `check_run` webhook event — ingest an a11y-fixer scan.
+// `check_run` webhook handler — the dashboard's primary data source.
 //
-// The Action embeds a structured scan contract in `check_run.output.text` (see
-// `packages/github-action/src/report.ts` buildScanReport). We parse it straight
-// from the delivery — no follow-up annotations API call — and persist one scan
-// row plus its per-violation rows.
+// The composite Action posts a Check Run named `a11y-fixer` from customer CI
+// (github-action `report.ts` → postCheckRun). Subscribing to `check_run` lets
+// the control plane record every scan with no phone home: we persist what GitHub
+// sends us about that Check Run, plus the structured scan contract the Action
+// embeds in `output.text`.
 //
-// Robustness matters here: the idempotency ledger records a delivery BEFORE
-// routing, so a throw would lose the event on GitHub's retry. Anything we don't
-// recognize (another app's check run, a missing/garbage contract, a non-completed
-// action) is a quiet no-op ack, never an error.
+// We act on `completed` runs named `a11y-fixer` only; every other action or
+// Check Run name is ignored. When the embedded contract is present it gives the
+// exact violation count and per-violation detail (persisted to `violations`);
+// otherwise we fall back to the Check Run's annotation count and record no
+// detail rows (e.g. an older Action version).
 import type { ScanRecord, Store, ViolationRecord } from '../../db/store.js';
 import type { CheckRunEvent } from '../events.js';
 
+/** The Check Run name the Action posts; must match github-action `report.ts`. */
+export const A11Y_FIXER_CHECK_NAME = 'a11y-fixer';
+
 /** Must match `SCAN_REPORT_SCHEMA` in the Action's report.ts. */
 const SCAN_REPORT_SCHEMA = 'a11y-fixer.scan/1';
-/** Only our own Check Runs carry the contract; ignore every other app's. */
-const CHECK_RUN_NAME = 'a11y-fixer';
 
 interface ScanReportLocation {
   path: string;
@@ -31,10 +34,6 @@ interface ScanReportViolation {
 }
 interface ScanReport {
   schema: string;
-  sha: string;
-  prNumber: number | null;
-  mode: string;
-  conclusion: string;
   counts: { critical: number; serious: number; moderate: number; minor: number; total: number };
   truncated: boolean;
   violations: ScanReportViolation[];
@@ -86,7 +85,8 @@ function num(v: unknown): number {
 
 /**
  * Parse + validate the embedded scan contract. Returns null (never throws) for
- * absent, non-JSON, or wrong/unknown-schema text so the caller can ack-and-skip.
+ * absent, non-JSON, or wrong/unknown-schema text so the caller falls back to the
+ * annotation count.
  */
 export function parseScanReport(text: string | null | undefined): ScanReport | null {
   if (!text) return null;
@@ -100,10 +100,6 @@ export function parseScanReport(text: string | null | undefined): ScanReport | n
   const counts = isObject(raw.counts) ? raw.counts : {};
   return {
     schema: SCAN_REPORT_SCHEMA,
-    sha: typeof raw.sha === 'string' ? raw.sha : '',
-    prNumber: typeof raw.prNumber === 'number' ? raw.prNumber : null,
-    mode: typeof raw.mode === 'string' ? raw.mode : 'check',
-    conclusion: typeof raw.conclusion === 'string' ? raw.conclusion : '',
     counts: {
       critical: num(counts.critical),
       serious: num(counts.serious),
@@ -132,30 +128,35 @@ function toViolationRecords(report: ScanReport): ViolationRecord[] {
   return rows;
 }
 
-export async function handleCheckRun(event: CheckRunEvent, store: Store): Promise<void> {
-  const { action, check_run: run, repository, installation } = event;
-  // Only a completed a11y-fixer run carries a scan to ingest.
-  if (action !== 'completed' || run.name !== CHECK_RUN_NAME) return;
+export async function handleCheckRun(
+  event: CheckRunEvent,
+  store: Store,
+  now: () => Date = () => new Date(),
+): Promise<void> {
+  if (event.action !== 'completed') return;
 
+  const run = event.check_run;
+  if (run.name !== A11Y_FIXER_CHECK_NAME) return;
+
+  const installationId = event.installation?.id;
+  if (installationId === undefined) return;
+
+  // The embedded contract gives the exact total (and per-violation detail); when
+  // it's absent, fall back to the Check Run's annotation count.
   const report = parseScanReport(run.output?.text);
-  if (!report) return; // no contract (e.g. an older Action version) — ack and skip.
+  const violationCount = report ? report.counts.total : run.output?.annotations_count ?? 0;
 
-  const scan: ScanRecord = {
-    scanId: run.id,
-    installationId: installation?.id ?? null,
-    repoId: repository.id,
-    fullName: repository.full_name,
-    sha: report.sha || run.head_sha,
-    prNumber: report.prNumber ?? run.pull_requests?.[0]?.number ?? null,
-    mode: report.mode,
-    conclusion: report.conclusion || run.conclusion || '',
-    critical: report.counts.critical,
-    serious: report.counts.serious,
-    moderate: report.counts.moderate,
-    minor: report.counts.minor,
-    total: report.counts.total,
-    truncated: report.truncated,
+  const record: ScanRecord = {
+    checkRunId: run.id,
+    repoId: event.repository.id,
+    installationId,
+    headSha: run.head_sha,
+    prNumber: run.pull_requests?.[0]?.number ?? null,
+    conclusion: run.conclusion,
+    violationCount,
+    createdAt: run.completed_at ?? now().toISOString(),
   };
 
-  await store.recordScan(scan, toViolationRecords(report));
+  await store.upsertScan(record);
+  if (report) await store.replaceViolations(run.id, toViolationRecords(report));
 }

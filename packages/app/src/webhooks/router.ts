@@ -14,11 +14,11 @@ export async function routeEvent(eventName: string, payload: unknown, store: Sto
     case 'installation':
       await handleInstallation(payload as InstallationEvent, store);
       return;
-    case 'installation_repositories':
-      await handleInstallationRepositories(payload as InstallationRepositoriesEvent, store);
-      return;
     case 'check_run':
       await handleCheckRun(payload as CheckRunEvent, store);
+      return;
+    case 'installation_repositories':
+      await handleInstallationRepositories(payload as InstallationRepositoriesEvent, store);
       return;
     default:
       return;

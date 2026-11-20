@@ -5,7 +5,8 @@ export class MemoryStore implements Store {
   readonly deliveries = new Set<string>();
   readonly installations = new Map<number, InstallationRecord>();
   readonly repos = new Map<number, RepoRecord>();
-  readonly scans = new Map<number, { scan: ScanRecord; violations: ViolationRecord[] }>();
+  readonly scans = new Map<number, ScanRecord>();
+  readonly violations = new Map<number, ViolationRecord[]>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -40,7 +41,19 @@ export class MemoryStore implements Store {
     }
   }
 
-  async recordScan(scan: ScanRecord, violations: ViolationRecord[]): Promise<void> {
-    this.scans.set(scan.scanId, { scan: { ...scan }, violations: violations.map(v => ({ ...v })) });
+  async upsertScan(record: ScanRecord): Promise<void> {
+    this.scans.set(record.checkRunId, { ...record });
+  }
+
+  async replaceViolations(checkRunId: number, violations: ViolationRecord[]): Promise<void> {
+    this.violations.set(checkRunId, violations.map(v => ({ ...v })));
+  }
+
+  async listRepos(installationId: number): Promise<RepoRecord[]> {
+    return [...this.repos.values()].filter(repo => repo.installationId === installationId);
+  }
+
+  async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
+    return [...this.scans.values()].filter(scan => scan.installationId === installationId);
   }
 }

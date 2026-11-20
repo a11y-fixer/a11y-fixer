@@ -20,6 +20,9 @@ export interface SupabaseLike {
       eq(column: string, value: unknown): Promise<{ error: unknown }>;
     };
     insert(values: unknown): Promise<{ error: unknown }>;
+    select(columns?: string): {
+      eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }>;
+    };
   };
 }
 
@@ -83,37 +86,33 @@ export class SupabaseStore implements Store {
     throwOn(error, 'removeRepos');
   }
 
-  async recordScan(scan: ScanRecord, violations: ViolationRecord[]): Promise<void> {
-    // Upsert the scan, then replace its violation rows: delete any prior rows for
-    // this scan_id before inserting, so a redelivered completion is idempotent.
-    const { error: scanError } = await this.db.from('scans').upsert(
+  async upsertScan(record: ScanRecord): Promise<void> {
+    const { error } = await this.db.from('scans').upsert(
       {
-        scan_id: scan.scanId,
-        installation_id: scan.installationId,
-        repo_id: scan.repoId,
-        full_name: scan.fullName,
-        sha: scan.sha,
-        pr_number: scan.prNumber,
-        mode: scan.mode,
-        conclusion: scan.conclusion,
-        critical: scan.critical,
-        serious: scan.serious,
-        moderate: scan.moderate,
-        minor: scan.minor,
-        total: scan.total,
-        truncated: scan.truncated,
+        check_run_id: record.checkRunId,
+        repo_id: record.repoId,
+        installation_id: record.installationId,
+        head_sha: record.headSha,
+        pr_number: record.prNumber,
+        conclusion: record.conclusion,
+        violation_count: record.violationCount,
+        created_at: record.createdAt,
       },
-      { onConflict: 'scan_id' },
+      { onConflict: 'check_run_id' },
     );
-    throwOn(scanError, 'recordScan(scan)');
+    throwOn(error, 'upsertScan');
+  }
 
-    const { error: delError } = await this.db.from('violations').delete().eq('scan_id', scan.scanId);
-    throwOn(delError, 'recordScan(clear violations)');
+  async replaceViolations(checkRunId: number, violations: ViolationRecord[]): Promise<void> {
+    // Delete-then-insert so a redelivered completion replaces (not duplicates)
+    // this scan's detail rows.
+    const { error: delError } = await this.db.from('violations').delete().eq('check_run_id', checkRunId);
+    throwOn(delError, 'replaceViolations(clear)');
 
     if (violations.length === 0) return;
     const { error: insError } = await this.db.from('violations').insert(
       violations.map(v => ({
-        scan_id: scan.scanId,
+        check_run_id: checkRunId,
         rule_id: v.ruleId,
         wcag_id: v.wcagId,
         impact: v.impact,
@@ -123,6 +122,40 @@ export class SupabaseStore implements Store {
         line: v.line,
       })),
     );
-    throwOn(insError, 'recordScan(violations)');
+    throwOn(insError, 'replaceViolations(insert)');
+  }
+
+  async listRepos(installationId: number): Promise<RepoRecord[]> {
+    const { data, error } = await this.db.from('repos').select().eq('installation_id', installationId);
+    throwOn(error, 'listRepos');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        repoId: r.repo_id as number,
+        installationId: r.installation_id as number,
+        fullName: r.full_name as string,
+        isPrivate: r.private as boolean,
+        defaultBranch: (r.default_branch as string | null) ?? null,
+        selected: r.selected as boolean,
+      };
+    });
+  }
+
+  async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
+    const { data, error } = await this.db.from('scans').select().eq('installation_id', installationId);
+    throwOn(error, 'listScansByInstallation');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        checkRunId: r.check_run_id as number,
+        repoId: r.repo_id as number,
+        installationId: r.installation_id as number,
+        headSha: r.head_sha as string,
+        prNumber: (r.pr_number as number | null) ?? null,
+        conclusion: (r.conclusion as string | null) ?? null,
+        violationCount: r.violation_count as number,
+        createdAt: r.created_at as string,
+      };
+    });
   }
 }

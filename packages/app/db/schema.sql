@@ -37,45 +37,40 @@ create table if not exists repos (
 
 create index if not exists repos_installation_id_idx on repos (installation_id);
 
--- One ingested a11y-fixer scan per completed Check Run (scan_id = check_run.id).
--- NB: installation_id/repo_id are plain columns, NOT foreign keys. A `check_run`
--- delivery can race ahead of its installation/repo rows (or arrive under GitHub's
--- "all repositories" selection, where repos aren't enumerated), and because the
--- idempotency ledger records a delivery before routing, a throwing FK insert would
--- lose the scan on retry. Dashboard queries left-join these instead.
+-- M2: the Action's Check Run results, ingested from `check_run` webhooks.
+-- One row per completed `a11y-fixer` Check Run (check_run_id is its GitHub id).
+-- violation_count is the exact total from the Action's embedded scan contract
+-- (output.text) when present, else the Check Run's annotation count. Per-rule
+-- detail rows live in `violations`.
 create table if not exists scans (
-  scan_id         bigint primary key,
-  installation_id bigint,
-  repo_id         bigint not null,
-  full_name       text   not null,
-  sha             text   not null,
+  check_run_id    bigint primary key,
+  repo_id         bigint not null references repos(repo_id) on delete cascade,
+  installation_id bigint not null references installations(installation_id) on delete cascade,
+  head_sha        text   not null,
   pr_number       integer,
-  mode            text   not null,
-  conclusion      text   not null,
-  critical        integer not null default 0,
-  serious         integer not null default 0,
-  moderate        integer not null default 0,
-  minor           integer not null default 0,
-  total           integer not null default 0,
-  truncated       boolean not null default false,
+  conclusion      text,
+  violation_count integer not null default 0,
   created_at      timestamptz not null default now()
 );
 
 create index if not exists scans_repo_id_idx on scans (repo_id);
+create index if not exists scans_installation_id_idx on scans (installation_id);
 
--- Per-violation rows for a scan. Replaced wholesale on a redelivered completion
--- (the handler deletes by scan_id then re-inserts), so the ON DELETE CASCADE here
--- also cleans them up when a scan row is removed.
+-- Per-violation detail for a scan, parsed from the Action's embedded scan
+-- contract. Replaced wholesale on a redelivered completion (the handler deletes
+-- by check_run_id then re-inserts); ON DELETE CASCADE also clears them when the
+-- scan row is removed. Optional: the dashboard works off scans.violation_count
+-- without it, so an older Action that emits no contract records no rows here.
 create table if not exists violations (
-  id          bigint generated always as identity primary key,
-  scan_id     bigint not null references scans(scan_id) on delete cascade,
-  rule_id     text   not null,
-  wcag_id     text   not null,
-  impact      text   not null,
-  description text   not null,
-  help_url    text   not null,
-  path        text,
-  line        integer
+  id           bigint generated always as identity primary key,
+  check_run_id bigint not null references scans(check_run_id) on delete cascade,
+  rule_id      text   not null,
+  wcag_id      text   not null,
+  impact       text   not null,
+  description  text   not null,
+  help_url     text   not null,
+  path         text,
+  line         integer
 );
 
-create index if not exists violations_scan_id_idx on violations (scan_id);
+create index if not exists violations_check_run_id_idx on violations (check_run_id);
