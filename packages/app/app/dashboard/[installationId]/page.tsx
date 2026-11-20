@@ -11,8 +11,15 @@ import { authorizeInstallationView } from '../../../src/auth/installations.js';
 
 export const dynamic = 'force-dynamic';
 
-export default async function InstallationPage({ params }: { params: Promise<{ installationId: string }> }) {
+export default async function InstallationPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ installationId: string }>;
+  searchParams: Promise<{ scan?: string }>;
+}) {
   const { installationId } = await params;
+  const { scan } = await searchParams;
   const id = Number(installationId);
   if (!Number.isInteger(id)) notFound();
 
@@ -39,10 +46,23 @@ export default async function InstallationPage({ params }: { params: Promise<{ i
       <p className="muted">
         <Link href="/dashboard">← Organizations</Link>
       </p>
-      <h1>Repositories</h1>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
+        <h1>Repositories</h1>
+        {!view.isEmpty && (
+          <form method="post" action={`/api/installations/${id}/scan`}>
+            <button type="submit">Scan all selected repos</button>
+          </form>
+        )}
+      </div>
       <p className="muted">
         {view.scannedRepos}/{view.totalRepos} scanned · {view.coverage} coverage · {view.totalViolations} violations
       </p>
+      {scan && (
+        <p className="panel" role="status">
+          Scan requested — dispatched {scan} selected repositories. Results appear here as each
+          workflow completes.
+        </p>
+      )}
       {view.isEmpty ? (
         <p className="panel muted">No repositories in this installation yet.</p>
       ) : (
@@ -55,6 +75,7 @@ export default async function InstallationPage({ params }: { params: Promise<{ i
                 <th>Violations</th>
                 <th>Trend</th>
                 <th>Last scan</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -69,6 +90,12 @@ export default async function InstallationPage({ params }: { params: Promise<{ i
                     {row.trend.symbol} {row.trend.label}
                   </td>
                   <td className="muted">{row.lastScan}</td>
+                  <td>
+                    <form method="post" action={`/api/installations/${id}/scan`}>
+                      <input type="hidden" name="repoId" value={row.repoId} />
+                      <button type="submit">Scan</button>
+                    </form>
+                  </td>
                 </tr>
               ))}
             </tbody>
