@@ -84,6 +84,28 @@ describe('processWebhook', () => {
     expect(store.repos.has(2)).toBe(true);
   });
 
+  it('routes a check_run delivery to its handler and records a scan', async () => {
+    const store = new MemoryStore();
+    const body = {
+      action: 'completed',
+      installation: { id: 100 },
+      repository: { id: 42, full_name: 'acme/web', private: false, default_branch: 'main' },
+      check_run: {
+        id: 9001,
+        name: 'a11y-fixer',
+        head_sha: 'abc123',
+        status: 'completed',
+        conclusion: 'success',
+        completed_at: '2026-01-02T03:04:05Z',
+        output: { annotations_count: 2 },
+        pull_requests: [{ number: 7 }],
+      },
+    };
+    const result = await processWebhook({ ...delivery(body, 'check_run', 'cr1'), store });
+    expect(result).toBe('ok');
+    expect(store.scans.get(9001)?.violationCount).toBe(2);
+  });
+
   it('acknowledges an unknown event without persisting anything', async () => {
     const store = new MemoryStore();
     const result = await processWebhook({ ...delivery({ action: 'x' }, 'star', 'd9'), store });

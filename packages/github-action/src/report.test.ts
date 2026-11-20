@@ -7,6 +7,9 @@ import {
   summaryMarkdown,
   postCheckRun,
   upsertStickyComment,
+  buildScanReport,
+  SCAN_REPORT_SCHEMA,
+  SCAN_REPORT_VIOLATIONS_CAP,
   STICKY_MARKER,
   type OctokitLike,
 } from './report.js';
@@ -142,6 +145,32 @@ describe('summaryMarkdown', () => {
   });
 });
 
+describe('buildScanReport', () => {
+  it('embeds exact counts and per-violation locations', () => {
+    const report = buildScanReport([violation(), violation({ impact: 'minor', id: 'link-name', nodes: [] })], {
+      sha: 'abc', prNumber: 7, mode: 'check', conclusion: 'failure',
+    });
+    expect(report.schema).toBe(SCAN_REPORT_SCHEMA);
+    expect(report).toMatchObject({ sha: 'abc', prNumber: 7, mode: 'check', conclusion: 'failure', truncated: false });
+    expect(report.counts).toEqual({ critical: 0, serious: 1, moderate: 0, minor: 1, total: 2 });
+    expect(report.violations[0]).toMatchObject({ id: 'image-alt', wcagId: '1.1.1', locations: [{ path: 'src/App.tsx', line: 12 }] });
+    expect(report.violations[1].locations).toEqual([]); // URL-only style: no source location
+  });
+
+  it('caps the violation list but keeps counts exact (truncated flag set)', () => {
+    const many = Array.from({ length: SCAN_REPORT_VIOLATIONS_CAP + 5 }, () => violation());
+    const report = buildScanReport(many, { sha: 'abc', prNumber: null, mode: 'fix', conclusion: 'neutral' });
+    expect(report.violations).toHaveLength(SCAN_REPORT_VIOLATIONS_CAP);
+    expect(report.counts.total).toBe(SCAN_REPORT_VIOLATIONS_CAP + 5);
+    expect(report.truncated).toBe(true);
+  });
+
+  it('round-trips through JSON (the wire format the control plane parses)', () => {
+    const report = buildScanReport([violation()], { sha: 'abc', prNumber: 1, mode: 'check', conclusion: 'failure' });
+    expect(JSON.parse(JSON.stringify(report))).toEqual(report);
+  });
+});
+
 /** Minimal octokit double capturing calls, with spies for assertions. */
 function fakeOctokit() {
   const checksCreate = vi.fn(async (..._a: unknown[]) => ({ data: { id: 101 } }));
@@ -165,6 +194,22 @@ describe('postCheckRun', () => {
     expect(f.checksCreate).toHaveBeenCalledTimes(1);
     expect(f.checksCreate.mock.calls[0][0]).toMatchObject({ conclusion: 'success', head_sha: 'abc' });
     expect(f.checksUpdate).not.toHaveBeenCalled();
+  });
+
+  it('embeds the scan contract in output.text for the control plane to ingest', async () => {
+    const f = fakeOctokit();
+    await postCheckRun(f.octokit, { owner: 'o', repo: 'r', sha: 'abc' }, [violation()], { prNumber: 7 });
+    const output = (f.checksCreate.mock.calls[0][0] as { output: { text: string } }).output;
+    const report = JSON.parse(output.text);
+    expect(report).toMatchObject({ schema: SCAN_REPORT_SCHEMA, sha: 'abc', prNumber: 7, mode: 'check', conclusion: 'failure' });
+    expect(report.counts.total).toBe(1);
+  });
+
+  it('marks the embedded contract mode fix when neutral', async () => {
+    const f = fakeOctokit();
+    await postCheckRun(f.octokit, { owner: 'o', repo: 'r', sha: 'abc' }, [violation()], { neutral: true });
+    const output = (f.checksCreate.mock.calls[0][0] as { output: { text: string } }).output;
+    expect(JSON.parse(output.text)).toMatchObject({ mode: 'fix', conclusion: 'neutral', prNumber: null });
   });
 
   it('batches annotations in groups of 50 across create + update', async () => {

@@ -83,7 +83,7 @@ async function reportToGitHub(
   }
 
   try {
-    await postCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, violations, { neutral: opts.neutral });
+    await postCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, violations, { neutral: opts.neutral, prNumber: pullRequestNumber() ?? null });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     core.warning(`Could not create the a11y-fixer check run (grant \`checks: write\`?): ${msg}`);

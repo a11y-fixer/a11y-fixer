@@ -30,6 +30,46 @@ export interface RepoRecord {
   selected: boolean;
 }
 
+export interface ScanRecord {
+  /** The Action's Check Run id (primary key). */
+  checkRunId: number;
+  /** Repo the scan ran against. */
+  repoId: number;
+  /** Owning installation. */
+  installationId: number;
+  /** Commit the Check Run ran on. */
+  headSha: string;
+  /** PR number if the run was for a pull request, else null. */
+  prNumber: number | null;
+  /** Check Run conclusion (`success`, `failure`, `neutral`, …), or null. */
+  conclusion: string | null;
+  /**
+   * Number of accessibility violations. Exact (the scan contract's total) when
+   * the Action embedded one; otherwise the Check Run's annotation count.
+   */
+  violationCount: number;
+  /** ISO-8601 completion time. */
+  createdAt: string;
+}
+
+/**
+ * One per-violation detail row for a scan, parsed from the scan contract the
+ * Action embeds in `check_run.output.text`. Optional enrichment on top of the
+ * scan row: the dashboard's counts work off `ScanRecord.violationCount` without
+ * it, so an older Action that emits no contract simply records no detail rows.
+ */
+export interface ViolationRecord {
+  /** axe/ESLint rule id. */
+  ruleId: string;
+  wcagId: string;
+  impact: string;
+  description: string;
+  helpUrl: string;
+  /** Repo-relative source path, if the scan located one (URL scans don't). */
+  path: string | null;
+  line: number | null;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -43,4 +83,17 @@ export interface Store {
 
   upsertRepos(installationId: number, repos: RepoRecord[]): Promise<void>;
   removeRepos(installationId: number, repoIds: number[]): Promise<void>;
+
+  /** Record (or replace by check_run id) a completed scan. */
+  upsertScan(record: ScanRecord): Promise<void>;
+
+  /**
+   * Replace the per-violation detail rows for a scan (delete-then-insert by
+   * check_run id), so a redelivered completion is idempotent at the data layer.
+   */
+  replaceViolations(checkRunId: number, violations: ViolationRecord[]): Promise<void>;
+
+  /** Dashboard reads: repos and scans for one installation. */
+  listRepos(installationId: number): Promise<RepoRecord[]>;
+  listScansByInstallation(installationId: number): Promise<ScanRecord[]>;
 }
