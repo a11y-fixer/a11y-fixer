@@ -1,12 +1,18 @@
 // Route a verified webhook payload to its handler by event name.
 //
-// M1 handled installation lifecycle. M2 adds `check_run` (scan ingestion for the
-// dashboard); M3 adds `marketplace_purchase` (billing), which slots in here as a
-// new case. Unknown events are acknowledged and ignored so GitHub stops retrying.
+// M1 handled installation lifecycle. M2 added `check_run` (scan ingestion for the
+// dashboard). M3 adds `marketplace_purchase` (billing). Unknown events are
+// acknowledged and ignored so GitHub stops retrying.
 import { handleInstallation } from './handlers/installation.js';
 import { handleInstallationRepositories } from './handlers/installation-repositories.js';
 import { handleCheckRun } from './handlers/check-run.js';
-import type { CheckRunEvent, InstallationEvent, InstallationRepositoriesEvent } from './events.js';
+import { handleMarketplacePurchase } from './handlers/marketplace-purchase.js';
+import type {
+  CheckRunEvent,
+  InstallationEvent,
+  InstallationRepositoriesEvent,
+  MarketplacePurchaseEvent,
+} from './events.js';
 import type { Store } from '../db/store.js';
 
 export async function routeEvent(eventName: string, payload: unknown, store: Store): Promise<void> {
@@ -19,6 +25,9 @@ export async function routeEvent(eventName: string, payload: unknown, store: Sto
       return;
     case 'installation_repositories':
       await handleInstallationRepositories(payload as InstallationRepositoriesEvent, store);
+      return;
+    case 'marketplace_purchase':
+      await handleMarketplacePurchase(payload as MarketplacePurchaseEvent, store);
       return;
     default:
       return;

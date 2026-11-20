@@ -84,6 +84,34 @@ export interface UserRecord {
   githubUserId: number;
 }
 
+/**
+ * A GitHub Marketplace subscription for an account (org or user). Keyed on the
+ * purchasing account id, which mirrors `InstallationRecord.accountId`, so a
+ * subscription joins to installations without one having to exist first. A
+ * cancelled subscription is kept (soft-cancel via `cancelledAt`) for history.
+ */
+export interface SubscriptionRecord {
+  /** Purchasing account's numeric GitHub id (primary key). */
+  accountId: number;
+  /** Purchasing account login (org or user). */
+  account: string;
+  /** Marketplace plan id. */
+  planId: number;
+  /** Marketplace plan name. */
+  planName: string;
+  /** Plan price per month, in cents. */
+  monthlyPriceInCents: number;
+  /** Seats purchased. */
+  unitCount: number;
+  onFreeTrial: boolean;
+  /** ISO-8601 date the free trial ends, else null. */
+  freeTrialEndsOn: string | null;
+  /** ISO-8601 date of next billing, else null. */
+  nextBillingDate: string | null;
+  /** ISO-8601 when the subscription was cancelled, else null (active). */
+  cancelledAt: string | null;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -110,6 +138,11 @@ export interface Store {
   /** Dashboard reads: repos and scans for one installation. */
   listRepos(installationId: number): Promise<RepoRecord[]>;
   listScansByInstallation(installationId: number): Promise<ScanRecord[]>;
+
+  /** Record (or replace by account id) a Marketplace subscription. */
+  upsertSubscription(record: SubscriptionRecord): Promise<void>;
+  /** Soft-cancel a subscription: set its cancelled timestamp, keep the row. */
+  cancelSubscription(accountId: number, cancelledAt: string): Promise<void>;
 
   /** Record (or update) a signed-in dashboard user. */
   upsertUser(record: UserRecord): Promise<void>;

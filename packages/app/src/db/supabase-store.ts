@@ -6,7 +6,15 @@
 // interactive session; until then we depend on a minimal STRUCTURAL type so the
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
-import type { InstallationRecord, RepoRecord, ScanRecord, Store, UserRecord, ViolationRecord } from './store.js';
+import type {
+  InstallationRecord,
+  RepoRecord,
+  ScanRecord,
+  Store,
+  SubscriptionRecord,
+  UserRecord,
+  ViolationRecord,
+} from './store.js';
 
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
@@ -157,6 +165,33 @@ export class SupabaseStore implements Store {
         createdAt: r.created_at as string,
       };
     });
+  }
+
+  async upsertSubscription(record: SubscriptionRecord): Promise<void> {
+    const { error } = await this.db.from('subscriptions').upsert(
+      {
+        account_id: record.accountId,
+        account: record.account,
+        plan_id: record.planId,
+        plan_name: record.planName,
+        monthly_price_in_cents: record.monthlyPriceInCents,
+        unit_count: record.unitCount,
+        on_free_trial: record.onFreeTrial,
+        free_trial_ends_on: record.freeTrialEndsOn,
+        next_billing_date: record.nextBillingDate,
+        cancelled_at: record.cancelledAt,
+      },
+      { onConflict: 'account_id' },
+    );
+    throwOn(error, 'upsertSubscription');
+  }
+
+  async cancelSubscription(accountId: number, cancelledAt: string): Promise<void> {
+    const { error } = await this.db
+      .from('subscriptions')
+      .update({ cancelled_at: cancelledAt })
+      .eq('account_id', accountId);
+    throwOn(error, 'cancelSubscription');
   }
 
   async upsertUser(record: UserRecord): Promise<void> {

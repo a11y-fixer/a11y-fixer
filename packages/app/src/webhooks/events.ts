@@ -78,3 +78,40 @@ export interface CheckRunEvent {
   repository: WebhookRepository;
   installation?: { id: number };
 }
+
+/** The Marketplace plan a purchase is on. */
+export interface MarketplacePlan {
+  id: number;
+  name: string;
+  monthly_price_in_cents: number;
+  /** What a seat is called on this plan (e.g. "Seat"); null on unmetered plans. */
+  unit_name: string | null;
+}
+
+/**
+ * The Marketplace purchase object. Keyed on `account` (the org/user that bought),
+ * which corresponds to `installations.account_id` — a purchase can precede or
+ * exist without an App installation.
+ */
+export interface MarketplacePurchase {
+  account: WebhookAccount;
+  plan: MarketplacePlan;
+  /** Number of seats purchased. */
+  unit_count: number;
+  on_free_trial: boolean;
+  /** ISO-8601 date the free trial ends, or null. */
+  free_trial_ends_on: string | null;
+  /** ISO-8601 date of the next billing, or null. */
+  next_billing_date: string | null;
+  billing_cycle?: string;
+}
+
+/** `marketplace_purchase` event: purchased | changed | cancelled | pending_change | pending_change_cancelled */
+export interface MarketplacePurchaseEvent {
+  action: string;
+  /** ISO-8601 date the action takes effect. */
+  effective_date: string;
+  marketplace_purchase: MarketplacePurchase;
+  /** The prior purchase on `changed`/`cancelled`, if any. */
+  previous_marketplace_purchase?: MarketplacePurchase;
+}

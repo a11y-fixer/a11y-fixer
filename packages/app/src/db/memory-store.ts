@@ -1,5 +1,13 @@
 // In-memory Store for unit tests and local development. Not for production.
-import type { InstallationRecord, RepoRecord, ScanRecord, Store, UserRecord, ViolationRecord } from './store.js';
+import type {
+  InstallationRecord,
+  RepoRecord,
+  ScanRecord,
+  Store,
+  SubscriptionRecord,
+  UserRecord,
+  ViolationRecord,
+} from './store.js';
 
 export class MemoryStore implements Store {
   readonly deliveries = new Set<string>();
@@ -7,6 +15,7 @@ export class MemoryStore implements Store {
   readonly repos = new Map<number, RepoRecord>();
   readonly scans = new Map<number, ScanRecord>();
   readonly violations = new Map<number, ViolationRecord[]>();
+  readonly subscriptions = new Map<number, SubscriptionRecord>();
   readonly users = new Map<string, UserRecord>();
   readonly userInstallations = new Map<string, Set<number>>();
 
@@ -57,6 +66,15 @@ export class MemoryStore implements Store {
 
   async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
     return [...this.scans.values()].filter(scan => scan.installationId === installationId);
+  }
+
+  async upsertSubscription(record: SubscriptionRecord): Promise<void> {
+    this.subscriptions.set(record.accountId, { ...record });
+  }
+
+  async cancelSubscription(accountId: number, cancelledAt: string): Promise<void> {
+    const existing = this.subscriptions.get(accountId);
+    if (existing) existing.cancelledAt = cancelledAt;
   }
 
   async upsertUser(record: UserRecord): Promise<void> {
