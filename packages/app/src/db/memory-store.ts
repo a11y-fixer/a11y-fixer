@@ -1,6 +1,7 @@
 // In-memory Store for unit tests and local development. Not for production.
 import type {
   InstallationRecord,
+  LicenseRecord,
   RepoRecord,
   ScanRecord,
   Store,
@@ -16,6 +17,7 @@ export class MemoryStore implements Store {
   readonly scans = new Map<number, ScanRecord>();
   readonly violations = new Map<number, ViolationRecord[]>();
   readonly subscriptions = new Map<number, SubscriptionRecord>();
+  readonly licenses = new Map<number, LicenseRecord>();
   readonly users = new Map<string, UserRecord>();
   readonly userInstallations = new Map<string, Set<number>>();
 
@@ -39,6 +41,11 @@ export class MemoryStore implements Store {
   async setInstallationSuspended(installationId: number, suspendedAt: string | null): Promise<void> {
     const existing = this.installations.get(installationId);
     if (existing) existing.suspendedAt = suspendedAt;
+  }
+
+  async getInstallation(installationId: number): Promise<InstallationRecord | null> {
+    const existing = this.installations.get(installationId);
+    return existing ? { ...existing } : null;
   }
 
   async upsertRepos(_installationId: number, repos: RepoRecord[]): Promise<void> {
@@ -75,6 +82,15 @@ export class MemoryStore implements Store {
   async cancelSubscription(accountId: number, cancelledAt: string): Promise<void> {
     const existing = this.subscriptions.get(accountId);
     if (existing) existing.cancelledAt = cancelledAt;
+  }
+
+  async getLicense(installationId: number): Promise<LicenseRecord | null> {
+    const existing = this.licenses.get(installationId);
+    return existing ? { ...existing } : null;
+  }
+
+  async upsertLicense(record: LicenseRecord): Promise<void> {
+    this.licenses.set(record.installationId, { ...record });
   }
 
   async upsertUser(record: UserRecord): Promise<void> {

@@ -72,6 +72,53 @@ export function repoRow(summary: RepoSummary): RepoRowView {
   };
 }
 
+/** The repo secret name the Action reads the license key from (README convention). */
+export const LICENSE_SECRET_NAME = 'A11Y_FIXER_LICENSE_KEY';
+
+export interface SetupView {
+  /** The license key to copy into the repo/org secret. */
+  licenseKey: string;
+  /** The secret name to store it under. */
+  secretName: string;
+  /** A ready-to-commit workflow file. */
+  workflowPath: string;
+  workflowYaml: string;
+  /** ISO date (YYYY-MM-DD) the key is valid through. */
+  expiresOn: string;
+}
+
+/**
+ * The "Get started" panel: the installation's license key plus the exact secret
+ * name and workflow file a user drops in to go live. Pure — the page renders it.
+ */
+export function setupView(license: { token: string; expiresAt: string }): SetupView {
+  return {
+    licenseKey: license.token,
+    secretName: LICENSE_SECRET_NAME,
+    workflowPath: '.github/workflows/a11y.yml',
+    workflowYaml: [
+      'name: a11y-fixer',
+      'on:',
+      '  pull_request:',
+      'permissions:',
+      '  contents: write        # fix mode: push the fix branch',
+      '  pull-requests: write   # open the PR and post the sticky comment',
+      '  checks: write          # publish the Check Run + inline annotations',
+      'jobs:',
+      '  a11y:',
+      '    runs-on: ubuntu-latest',
+      '    steps:',
+      '      - uses: actions/checkout@v4',
+      '      - uses: a11y-fixer/a11y-fixer@v1',
+      '        with:',
+      '          mode: fix',
+      `          license-key: \${{ secrets.${LICENSE_SECRET_NAME} }}`,
+      '          github-token: ${{ secrets.GITHUB_TOKEN }}',
+    ].join('\n'),
+    expiresOn: license.expiresAt.slice(0, 10),
+  };
+}
+
 export interface InstallationView {
   coverage: string;
   scannedRepos: number;

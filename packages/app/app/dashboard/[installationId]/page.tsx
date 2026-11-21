@@ -5,9 +5,33 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getSignedInUser } from '../../lib/auth.js';
 import { serviceRoleStore } from '../../lib/supabase.js';
+import { env } from '../../lib/env.js';
 import { summarizeInstallation } from '../../../src/dashboard/aggregate.js';
-import { installationView } from '../../../src/dashboard/view-model.js';
+import { installationView, setupView, type SetupView } from '../../../src/dashboard/view-model.js';
 import { authorizeInstallationView } from '../../../src/auth/installations.js';
+import { getOrCreateInstallationLicense } from '../../../src/licensing/provision.js';
+import type { Store } from '../../../src/db/store.js';
+import { CopyButton } from '../CopyButton.js';
+
+/**
+ * The installation's free-tier license + setup instructions. Resilient: if the
+ * signing key isn't configured yet (or minting fails), returns null so the rest
+ * of the dashboard still renders rather than erroring the whole page.
+ */
+async function loadSetup(store: Store, installationId: number): Promise<SetupView | null> {
+  try {
+    const installation = await store.getInstallation(installationId);
+    if (!installation) return null;
+    const license = await getOrCreateInstallationLicense(store, {
+      installationId,
+      account: installation.account,
+      signingKeyPem: env.licenseSigningKey(),
+    });
+    return setupView(license);
+  } catch {
+    return null;
+  }
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +62,11 @@ export default async function InstallationPage({
   const viewableIds = await store.listInstallationsForUser(user.id);
   if (!authorizeInstallationView(viewableIds, id)) notFound();
 
-  const [repos, scans] = await Promise.all([store.listRepos(id), store.listScansByInstallation(id)]);
+  const [repos, scans, setup] = await Promise.all([
+    store.listRepos(id),
+    store.listScansByInstallation(id),
+    loadSetup(store, id),
+  ]);
   const view = installationView(summarizeInstallation(repos, scans));
 
   return (
@@ -57,6 +85,38 @@ export default async function InstallationPage({
       <p className="muted">
         {view.scannedRepos}/{view.totalRepos} scanned · {view.coverage} coverage · {view.totalViolations} violations
       </p>
+      {setup && (
+        <details className="panel" open={view.scannedRepos === 0}>
+          <summary>
+            <strong>Set up scanning</strong> <span className="muted">— free plan · key valid through {setup.expiresOn}</span>
+          </summary>
+          <ol>
+            <li>
+              Add this repository (or organization) secret named <code>{setup.secretName}</code>:
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', margin: '0.5rem 0' }}>
+                <input
+                  type="text"
+                  readOnly
+                  value={setup.licenseKey}
+                  aria-label="License key"
+                  style={{ flex: 1, fontFamily: 'monospace' }}
+                />
+                <CopyButton value={setup.licenseKey} label="Copy key" />
+              </div>
+              <span className="muted">Public repos run free without a key; private repos need it.</span>
+            </li>
+            <li style={{ marginTop: '0.75rem' }}>
+              Commit this workflow as <code>{setup.workflowPath}</code>:
+              <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '0.5rem 0' }}>
+                <CopyButton value={setup.workflowYaml} label="Copy workflow" />
+              </div>
+              <pre style={{ overflowX: 'auto' }}>
+                <code>{setup.workflowYaml}</code>
+              </pre>
+            </li>
+          </ol>
+        </details>
+      )}
       {scan && (
         <p className="panel" role="status">
           Scan requested — dispatched {scan} selected repositories. Results appear here as each

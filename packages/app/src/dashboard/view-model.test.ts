@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { InstallationSummary, RepoSummary } from './aggregate.js';
-import { conclusionView, installationView, repoRow, trendView } from './view-model.js';
+import { conclusionView, installationView, repoRow, setupView, trendView } from './view-model.js';
 
 function summary(overrides: Partial<RepoSummary> = {}): RepoSummary {
   return {
@@ -74,5 +74,17 @@ describe('installationView', () => {
     expect(view.coverage).toBe('75%');
     expect(view.isEmpty).toBe(false);
     expect(view.rows).toHaveLength(1);
+  });
+});
+
+describe('setupView', () => {
+  it('exposes the key, secret name, workflow file and expiry date', () => {
+    const v = setupView({ token: 'PAYLOAD.SIG', expiresAt: '2027-01-15T12:00:00.000Z' });
+    expect(v.licenseKey).toBe('PAYLOAD.SIG');
+    expect(v.secretName).toBe('A11Y_FIXER_LICENSE_KEY');
+    expect(v.workflowPath).toBe('.github/workflows/a11y.yml');
+    expect(v.workflowYaml).toContain('a11y-fixer/a11y-fixer@v1');
+    expect(v.workflowYaml).toContain('secrets.A11Y_FIXER_LICENSE_KEY');
+    expect(v.expiresOn).toBe('2027-01-15');
   });
 });
