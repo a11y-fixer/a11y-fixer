@@ -5,8 +5,8 @@
     "url": "https://app.a11y-fixer.com/api/webhooks/github",
     "active": true
   },
-  "redirect_url": "https://app.a11y-fixer.com/api/setup/callback",
-  "callback_urls": ["https://app.a11y-fixer.com/api/auth/callback"],
+  "redirect_url": "https://app.a11y-fixer.com/dashboard",
+  "callback_urls": ["https://app.a11y-fixer.com/auth/callback"],
   "setup_url": "https://app.a11y-fixer.com/dashboard",
   "public": true,
   "default_permissions": {
