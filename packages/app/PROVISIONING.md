@@ -50,10 +50,18 @@ metadata:read, members:read` — **no** `security-events`; events `installation,
 installation_repositories, marketplace_purchase, check_run, pull_request,
 github_app_authorization`).
 
-**Note:** the manifest's URLs point at `https://app.a11y-fixer.com/...`. If the
-real deploy host differs (e.g. a `*.vercel.app` preview), edit `hook_attributes.url`,
-`redirect_url`, `callback_urls`, `setup_url` to match the actual deploy domain
-from step 3 **before** registering, or fix them in the App settings afterward.
+**Note:** the manifest's URLs point at `https://app.a11y-fixer.com/...` and now match
+real routes (`hook_attributes.url` → `/api/webhooks/github`, `callback_urls` →
+`/auth/callback`, `redirect_url`/`setup_url` → `/dashboard`). If the real deploy host
+differs (e.g. a `*.vercel.app` preview), edit all four to match the actual deploy
+domain from step 3 **before** registering, or fix them in the App settings afterward.
+
+**OAuth callback caveat:** because sign-in is brokered by the **Supabase** GitHub
+provider (step 1), GitHub actually redirects to `<SUPABASE_URL>/auth/v1/callback`,
+and Supabase then forwards to `${APP_BASE_URL}/auth/callback`. So after you know
+`SUPABASE_URL`, set the App's **Authorization callback URL** (manifest `callback_urls`)
+to `<SUPABASE_URL>/auth/v1/callback`. The checked-in `/auth/callback` value is the
+app-side placeholder; reconcile it here.
 
 Register it (manifest flow is easiest — Claude can generate a tiny auto-submitting
 HTML form that POSTs `manifest` to
