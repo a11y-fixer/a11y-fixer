@@ -8,6 +8,7 @@
 // client returned by `createClient()` satisfies this shape.
 import type {
   InstallationRecord,
+  LicenseRecord,
   RepoRecord,
   ScanRecord,
   Store,
@@ -72,6 +73,22 @@ export class SupabaseStore implements Store {
       .update({ suspended_at: suspendedAt })
       .eq('installation_id', installationId);
     throwOn(error, 'setInstallationSuspended');
+  }
+
+  async getInstallation(installationId: number): Promise<InstallationRecord | null> {
+    const { data, error } = await this.db
+      .from('installations')
+      .select()
+      .eq('installation_id', installationId);
+    throwOn(error, 'getInstallation');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      installationId: row.installation_id as number,
+      account: row.account as string,
+      accountId: row.account_id as number,
+      suspendedAt: (row.suspended_at as string | null) ?? null,
+    };
   }
 
   async upsertRepos(_installationId: number, repos: RepoRecord[]): Promise<void> {
@@ -192,6 +209,37 @@ export class SupabaseStore implements Store {
       .update({ cancelled_at: cancelledAt })
       .eq('account_id', accountId);
     throwOn(error, 'cancelSubscription');
+  }
+
+  async getLicense(installationId: number): Promise<LicenseRecord | null> {
+    const { data, error } = await this.db
+      .from('licenses')
+      .select()
+      .eq('installation_id', installationId);
+    throwOn(error, 'getLicense');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      installationId: row.installation_id as number,
+      sub: row.sub as string,
+      token: row.token as string,
+      issuedAt: row.issued_at as string,
+      expiresAt: row.expires_at as string,
+    };
+  }
+
+  async upsertLicense(record: LicenseRecord): Promise<void> {
+    const { error } = await this.db.from('licenses').upsert(
+      {
+        installation_id: record.installationId,
+        sub: record.sub,
+        token: record.token,
+        issued_at: record.issuedAt,
+        expires_at: record.expiresAt,
+      },
+      { onConflict: 'installation_id' },
+    );
+    throwOn(error, 'upsertLicense');
   }
 
   async upsertUser(record: UserRecord): Promise<void> {

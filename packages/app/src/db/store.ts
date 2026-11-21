@@ -112,6 +112,25 @@ export interface SubscriptionRecord {
   cancelledAt: string | null;
 }
 
+/**
+ * The free-tier license key issued for an installation. One per installation.
+ * The token is the Ed25519 `<payload>.<sig>` the Action verifies offline (see
+ * packages/licensing/src/sign.mjs and the Action's verifyLicenseKey); we persist
+ * it so the dashboard shows a stable key and we re-mint only when it expires.
+ */
+export interface LicenseRecord {
+  /** Installation the key belongs to (primary key). */
+  installationId: number;
+  /** License subject (`sub`) — the account login the key was minted for. */
+  sub: string;
+  /** The signed `<payload>.<sig>` token. */
+  token: string;
+  /** ISO-8601 issuance time. */
+  issuedAt: string;
+  /** ISO-8601 expiry (mirrors the token's `exp`). */
+  expiresAt: string;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -122,6 +141,8 @@ export interface Store {
   upsertInstallation(record: InstallationRecord): Promise<void>;
   removeInstallation(installationId: number): Promise<void>;
   setInstallationSuspended(installationId: number, suspendedAt: string | null): Promise<void>;
+  /** Fetch one installation (for its account login), or null if unknown. */
+  getInstallation(installationId: number): Promise<InstallationRecord | null>;
 
   upsertRepos(installationId: number, repos: RepoRecord[]): Promise<void>;
   removeRepos(installationId: number, repoIds: number[]): Promise<void>;
@@ -143,6 +164,11 @@ export interface Store {
   upsertSubscription(record: SubscriptionRecord): Promise<void>;
   /** Soft-cancel a subscription: set its cancelled timestamp, keep the row. */
   cancelSubscription(accountId: number, cancelledAt: string): Promise<void>;
+
+  /** The installation's free-tier license, or null if one hasn't been issued. */
+  getLicense(installationId: number): Promise<LicenseRecord | null>;
+  /** Store (or replace by installation id) the issued license. */
+  upsertLicense(record: LicenseRecord): Promise<void>;
 
   /** Record (or update) a signed-in dashboard user. */
   upsertUser(record: UserRecord): Promise<void>;

@@ -20,4 +20,8 @@ export const env = {
   // tokens for dispatching workflows. Already in the Vercel secret list.
   githubAppId: () => required('GITHUB_APP_ID'),
   githubAppPrivateKey: () => required('GITHUB_APP_PRIVATE_KEY'),
+  // Ed25519 PKCS#8 PEM used to mint free-tier license keys (M5). MUST be the key
+  // pair of the public key embedded in the Action's license.ts, or issued keys
+  // won't verify. Verify once with scripts/check-signing-key.mjs.
+  licenseSigningKey: () => required('LICENSE_SIGNING_KEY'),
 };

@@ -27,3 +27,23 @@ describe('MemoryStore user access model', () => {
     expect(await store.listInstallationsForUser('u2')).toEqual([2]);
   });
 });
+
+describe('MemoryStore installations and licenses', () => {
+  it('returns an installation record or null', async () => {
+    const store = new MemoryStore();
+    expect(await store.getInstallation(1)).toBeNull();
+    await store.upsertInstallation({ installationId: 1, account: 'acme', accountId: 9, suspendedAt: null });
+    expect(await store.getInstallation(1)).toMatchObject({ installationId: 1, account: 'acme', accountId: 9 });
+  });
+
+  it('stores and reads back a license by installation id', async () => {
+    const store = new MemoryStore();
+    expect(await store.getLicense(1)).toBeNull();
+    const record = { installationId: 1, sub: 'acme', token: 'payload.sig', issuedAt: 'i', expiresAt: 'e' };
+    await store.upsertLicense(record);
+    expect(await store.getLicense(1)).toEqual(record);
+
+    await store.upsertLicense({ ...record, token: 'payload2.sig2' });
+    expect((await store.getLicense(1))?.token).toBe('payload2.sig2');
+  });
+});

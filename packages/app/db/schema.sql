@@ -116,6 +116,19 @@ create table if not exists subscriptions (
   updated_at             timestamptz not null default now()
 );
 
+-- M5: free-tier license keys, one per installation. Minted by the control plane
+-- with the Ed25519 signing key (LICENSE_SIGNING_KEY) and verified offline by the
+-- Action. Persisted so the dashboard shows a stable key; re-minted only when the
+-- stored token has expired. The token is a bearer credential for private-repo
+-- scans, so RLS restricts reads to members of the installation (below).
+create table if not exists licenses (
+  installation_id bigint primary key references installations(installation_id) on delete cascade,
+  sub             text        not null,
+  token           text        not null,
+  issued_at       timestamptz not null default now(),
+  expires_at      timestamptz not null
+);
+
 -- Row-level security. The service-role key bypasses RLS (webhook sink + any
 -- server-side admin reads are unaffected). These policies constrain ONLY the
 -- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
@@ -126,6 +139,7 @@ alter table repos enable row level security;
 alter table scans enable row level security;
 alter table violations enable row level security;
 alter table subscriptions enable row level security;
+alter table licenses enable row level security;
 
 -- A user sees only their own row and their own installation links.
 create policy users_self_select on users
@@ -167,4 +181,12 @@ create policy subscriptions_member_select on subscriptions
       select account_id from installations
       where installation_id in (select installation_id from user_installations where user_id = auth.uid())
     )
+  );
+
+-- A user sees an installation's license only if they are linked to it. (Guarded
+-- with a drop so re-applying this schema to an existing project is idempotent.)
+drop policy if exists licenses_member_select on licenses;
+create policy licenses_member_select on licenses
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
   );
