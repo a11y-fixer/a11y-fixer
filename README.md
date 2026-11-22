@@ -1,7 +1,8 @@
 # a11y-fixer
 
-Paid, **source-available** tooling for [a11y-fixer](https://github.com/a11y-fixer/a11y-fixer):
+**Source-available** tooling for [a11y-fixer](https://github.com/a11y-fixer/a11y-fixer):
 the **AI-assisted** accessibility fixes and the **GitHub Action** that ships them.
+**Free for everyone during early access.**
 
 This is a **monorepo**. The free, deterministic engine and CLI live in
 [`packages/core`](./packages/core) and [`packages/cli`](./packages/cli), are
@@ -15,10 +16,11 @@ the BSL** — see [License & pricing](#license--pricing).
 ## License & pricing
 
 The source here is available to read under the **Business Source License 1.1**
-(see [`LICENSE`](./LICENSE)). **Production use on a private repo requires a valid
-license key** — buy one at <https://a11y-fixer.com>; public repos run free. Each
+(see [`LICENSE`](./LICENSE)). During early access a11y-fixer is **free for every
+repository.** Public repos run free with no key at all; private repos use a
+**free** early-access license key you can get at <https://a11y-fixer.com>. Each
 version converts to Apache-2.0 on its Change Date. Evaluation, testing, and
-development use are free.
+development use are free. We may introduce paid tiers later, with notice.
 
 ## Using the Action
 
@@ -32,8 +34,9 @@ development use are free.
 ```
 
 Store your license key as a repository (or org) secret. On a private repo,
-without a valid key the action fails fast with a clear message; public repos run
-free without one. See [`action.yml`](./action.yml) for all inputs and outputs.
+without a valid key the action fails fast with a clear message — grab a free
+early-access key at <https://a11y-fixer.com>; public repos run free without one.
+See [`action.yml`](./action.yml) for all inputs and outputs.
 
 ### Required permissions
 
