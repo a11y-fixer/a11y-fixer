@@ -1,11 +1,11 @@
-# Phase 3 provisioning runbook (M4 go-live)
+# Phase 3 provisioning runbook (M5 go-live)
 
 This is the hand-off runbook for the **interactive Terminal Claude** session. A
 non-interactive session cannot run OAuth/browser flows; this one can.
 
 **Operator:** Jacob. **Goal:** stand up Supabase + GitHub App + Vercel so the full
-M2–M4 control plane can deploy: webhook ingest, the dashboard, Marketplace billing
-ingestion, and dashboard-triggered scans. The composite Action and its
+M2–M5 control plane can deploy: webhook ingest, the dashboard, Marketplace billing
+ingestion, dashboard-triggered scans, and free-tier license-key delivery. The composite Action and its
 `packages/github-action/src/license.ts` gate stay **untouched** throughout.
 
 ---
@@ -33,8 +33,8 @@ isn't installed — tell Jacob and stop.
 2. Apply the schema. The file is `packages/app/db/schema.sql`. Run it against the
    new project (connector `apply_migration` / SQL exec, or paste in the SQL editor).
    One pass stands up the whole schema: `webhook_events`, `installations`, `repos`,
-   `scans`, `violations`, `users`, `user_installations`, `subscriptions`, and the
-   row-level-security policies. No re-apply needed.
+   `scans`, `violations`, `users`, `user_installations`, `subscriptions`, `licenses`,
+   and the row-level-security policies. No re-apply needed.
 3. Copy three values from **Project Settings → API**:
    - `Project URL`            → **`SUPABASE_URL`**
    - `service_role` secret    → **`SUPABASE_SERVICE_ROLE_KEY`**  (server-only, ⚠️ never client/commit/log)
@@ -77,9 +77,11 @@ GitHub returns, and you then collect:
 | Private key | `GITHUB_APP_PRIVATE_KEY` | **Generate private key** → downloads `.pem`, paste full PEM |
 | Webhook secret | `GITHUB_WEBHOOK_SECRET` | you set it: `openssl rand -hex 32` |
 
-> **Not an app secret:** `LICENSE_SIGNING_KEY` is **not** used by `packages/app` —
-> license signing lives in the trial site / `@a11y-fixer/licensing`. Do not wire it
-> into this Vercel project.
+> **Required as of M5:** `LICENSE_SIGNING_KEY` (PKCS#8 PEM of the Ed25519 signing
+> key) **is** an app secret now — the app mints free-tier license keys with it via
+> `@a11y-fixer/licensing`. Use the **same** key the trial site / CLI use so the keys
+> verify against the public key embedded in the Action. Vercel env only; never commit
+> or log. Before go-live, prove the pair with `node packages/app/scripts/check-signing-key.mjs`.
 
 ⚠️ `GITHUB_APP_PRIVATE_KEY` is the crown jewel. Vercel env only. Never commit, never
 log, never echo in full.
@@ -91,11 +93,12 @@ log, never echo in full.
 1. Via the Vercel connector (or vercel.com UI), create/link a project from this repo
    with **Root Directory = `packages/app`** and **Build Command = `next build`**
    (NOT the package's default `build` script, which is the node-only `tsc` CI gate).
-2. Set all **9** env vars for **Production + Preview** (the authoritative set, from
+2. Set all **10** env vars for **Production + Preview** (the authoritative set, from
    `app/lib/env.ts` + the webhook route):
    `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_ANON_KEY`, `APP_BASE_URL`
    (the deploy origin), `GITHUB_APP_ID`, `GITHUB_APP_CLIENT_ID`,
-   `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET`.
+   `GITHUB_APP_CLIENT_SECRET`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_WEBHOOK_SECRET`,
+   `LICENSE_SIGNING_KEY`.
    In Supabase Auth, enable the **GitHub provider** and point
    it at `GITHUB_APP_CLIENT_ID/SECRET`; set the provider callback to
    `<SUPABASE_URL>/auth/v1/callback` and add `${APP_BASE_URL}/auth/callback` as a
@@ -109,11 +112,12 @@ log, never echo in full.
 
 ---
 
-## 4. Deploy & verify (M2–M4)
+## 4. Deploy & verify (M2–M5)
 
-The whole M2–M4 surface is complete in-repo (Next.js shell, webhook route, Supabase
-Auth GitHub login, `/dashboard` org→repo views, Marketplace billing ingestion, and
-the dashboard "Scan now" mutation route); `pnpm --filter @a11y-fixer/app build:next`
+The whole M2–M5 surface is complete in-repo (Next.js shell, webhook route, Supabase
+Auth GitHub login, `/dashboard` org→repo views, Marketplace billing ingestion, the
+dashboard "Scan now" mutation route, and free-tier license-key provisioning + the
+"Set up scanning" panel); `pnpm --filter @a11y-fixer/app build:next`
 passes locally. The remaining work is deploy + live verify:
 
 1. Apply `packages/app/db/schema.sql` to the Supabase project (step 1 — one pass,
@@ -134,6 +138,11 @@ Then walk the end-to-end checklist, which exercises every milestone:
   `workflow_dispatch` trigger (required by `selectA11yWorkflow`/`dispatchWorkflow`).
   Click **Scan now** in the dashboard → POST to `/api/installations/<id>/scan` →
   a new Action run is dispatched → its `check_run` flows back as above.
+- **License delivery (M5):** confirm `LICENSE_SIGNING_KEY` is set and pairs with the
+  Action's embedded public key (`node packages/app/scripts/check-signing-key.mjs`).
+  Open the installation's dashboard → the "Set up scanning" panel lazily mints + stores
+  a free-tier key (`licenses` row) and reveals it via the copy button. Paste it into the
+  Action and confirm it verifies.
 
 Pregate reminder: any new test-lane gate for new files must land on `main` **first**
 (detached worktree → `git push origin HEAD:main`), mirroring M0/M1/M2.

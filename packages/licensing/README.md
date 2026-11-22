@@ -17,7 +17,8 @@ package owns only the **minting** side; the two agree by cross-test (the Action'
 Every issuer imports `signLicense` from here:
 
 - `scripts/issue-license.mjs` — the manual/offline maintainer CLI.
-- [`packages/app`](../app) — the GitHub App backend, on a Marketplace purchase.
+- [`packages/app`](../app) — the GitHub App backend, which lazily mints a free-tier
+  key for every installation on first dashboard load (and gates paid tiers here later).
 - the external a11y-fixer.com trial-key site.
 
 ## API

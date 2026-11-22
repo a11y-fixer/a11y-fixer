@@ -18,9 +18,11 @@ either. So the demo ships all three, wired as three jobs in
 |-----|-----|------|------------------|
 | `html-demo` | `site-html/` | static HTML (axe-core, `html: true`) | **alt-text**, **link-name**, **button-name**, **form-label**, **select-name**, **input-button-name**, **input-image-alt**, **area-alt**, **object-alt**, **svg-img-alt**, **aria-command-name**, **aria-input-field-name**, **aria-toggle-field-name** — 13 auto-applied |
 | `jsx-demo` | `site-jsx/` | JSX (ESLint + jsx-a11y) | **alt-text** (auto), **link-text** (human-flagged) |
-| `markdown-demo` | `site-markdown/` | Markdown (`markdown: true`) | **markdown-alt-text** (auto), **markdown-link-text** (auto) — rewritten into `.md` source |
+| `markdown-demo` | `site-markdown/` | Markdown (`markdown: true`) | **markdown-alt-text** (auto; inline + raw `<img>`), **markdown-link-text** (auto), **markdown-heading-order** (deterministic), **markdown-table-header** (deterministic) — rewritten into `.md` source |
 
-Together they cover all sixteen AI fixers.
+Between them the `html-demo` and `jsx-demo` jobs exercise the full HTML/JSX AI
+fixer set; `markdown-demo` adds the Markdown path's four fixers (two AI, two
+deterministic).
 
 ## The planted violations
 
@@ -54,8 +56,12 @@ Together they cover all sixteen AI fixers.
 | Construct | Rule / WCAG | Fixer → result |
 |-----------|-------------|----------------|
 | `![](logo.png)` (empty alt) | md-image-alt / 1.1.1 | MarkdownAltTextFixer → `![…](logo.png)` |
+| `![][office-map]` (empty reference-image alt) | md-image-alt / 1.1.1 | MarkdownAltTextFixer → descriptive alt |
+| raw `<img src="seating.png">` (no `alt`) | md-html-img-alt / 1.1.1 | MarkdownAltTextFixer → adds `alt="…"` |
 | `[click here](/x)`, `[here](/x)` | md-link-text / 2.4.4 | MarkdownLinkTextFixer → descriptive text |
 | bare-URL link text `[https://…](https://…)` | md-link-text / 2.4.4 | MarkdownLinkTextFixer → descriptive text |
+| `# …` → `#### Getting started` (skips h2/h3) | md-heading-order / 2.4.6 | MarkdownHeadingOrderFixer (deterministic) → demotes the skipped heading |
+| empty table header `\| \| Location \| \|` | md-table-header / 1.3.1 | MarkdownTableHeaderFixer (deterministic) → fills blank header cells |
 
 Descriptive links and images that already have alt text are left untouched.
 
@@ -97,7 +103,8 @@ gh workflow run "a11y-fixer demo" --repo <owner>/a11y-fixer-demo
 `html-demo` opens a PR adding the attributes above; `jsx-demo` opens a PR
 with the alt-text fix and the link-text violation flagged for a human;
 `markdown-demo` opens a PR rewriting the empty alt text and generic/bare-URL
-links in `handbook.md`.
+links, demoting the skipped heading, and filling the empty table header in
+`handbook.md`.
 
 **You never need to re-clone or reset `main`.** Fix mode applies fixes to the CI
 checkout and opens a *PR* — it never pushes to `main`, so the broken site stays
