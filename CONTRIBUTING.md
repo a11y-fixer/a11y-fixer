@@ -1,16 +1,20 @@
 # Contributing
 
-This is a pnpm monorepo with four packages:
+This is a pnpm monorepo with six packages:
 
 | Package | npm | License | What it is |
 |---|---|---|---|
-| `packages/core` | `@a11y-fixer/core` | MIT | Free deterministic engine: scanners, WCAG map, rule-based fixers, `PullRequestBuilder` |
+| `packages/core` | `@a11y-fixer/core` | MIT | Free deterministic engine: scanners (JSX/HTML/Markdown), WCAG map, rule-based fixers, baselines, `PullRequestBuilder` |
 | `packages/cli` | `@a11y-fixer/cli` | MIT | Free CLI over `core` |
 | `packages/ai` | `@a11y-fixer/ai` | BSL (private) | Multi-provider LLM layer + AI-assisted fixers |
 | `packages/github-action` | `@a11y-fixer/github-action` | BSL (private) | The composite GitHub Action |
+| `packages/licensing` | `@a11y-fixer/licensing` | MIT (private) | The single Ed25519 license-minting source of truth (`signLicense`) |
+| `packages/app` | `@a11y-fixer/app` | UNLICENSED (private) | Hosted GitHub App control plane: Check Run ingest + cross-repo dashboard + Marketplace billing |
 
 `ai` and `github-action` depend on `core` via `workspace:*`. `core` and `cli`
-are the only packages published to npm; `ai` and `github-action` are `private`.
+are the only packages published to npm; `ai`, `github-action`, `licensing`, and
+`app` are `private`. (`benchmarks/*` are workspace packages too, but they are
+test harnesses, not shipped code.)
 
 ## Setup
 

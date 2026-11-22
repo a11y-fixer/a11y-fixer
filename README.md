@@ -181,13 +181,22 @@ your code and nothing about your corrections is sent anywhere. Commit
   WCAG map, deterministic fixers, and the `PullRequestBuilder`.
 - **`packages/cli`** (`@a11y-fixer/cli`, **MIT**, published) — the free CLI
   (`a11y-fixer scan|fix|check`) over `core`.
-- **`packages/ai`** (`@a11y-fixer/ai`) — multi-provider LLM layer (Anthropic/OpenAI/Google via the Vercel AI SDK) + AI-assisted fixers
+- **`packages/ai`** (`@a11y-fixer/ai`, **BSL**, private) — multi-provider LLM layer (Anthropic/OpenAI/Google via the Vercel AI SDK) + AI-assisted fixers
   (alt text, link text, button name, form label, link name, select name, input
-  button name, input image alt) and `buildFullRegistry`, which layers them ahead
-  of the deterministic core fixers.
-- **`packages/github-action`** (`@a11y-fixer/github-action`) — the composite
-  Action. `action.yml` (repo root) runs the bundled
+  button name, input image alt, plus the Markdown alt-text and link-text fixers)
+  and `buildFullRegistry`, which layers them ahead of the deterministic core
+  fixers.
+- **`packages/github-action`** (`@a11y-fixer/github-action`, **BSL**, private) —
+  the composite Action. `action.yml` (repo root) runs the bundled
   `packages/github-action/dist/index.js`; `src/license.ts` enforces the key.
+- **`packages/licensing`** (`@a11y-fixer/licensing`, **MIT**, private) — the
+  single Ed25519 license-minting source of truth (`signLicense`); every issuer
+  goes through it so no re-implementation drifts from what the Action verifies.
+- **`packages/app`** (`@a11y-fixer/app`, private) — the hosted GitHub App control
+  plane: it ingests the Action's Check Runs for a cross-repo **dashboard**,
+  orchestrates multi-repo scans, and sells seats via GitHub Marketplace. It
+  augments, not replaces, the CI Action. See
+  [`packages/app/README.md`](./packages/app/README.md).
 
 ## Development
 

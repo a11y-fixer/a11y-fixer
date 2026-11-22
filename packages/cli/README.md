@@ -1,8 +1,8 @@
 # @a11y-fixer/cli
 
 Command-line tool that finds **and deterministically fixes** accessibility
-(WCAG) violations in your React/JSX and HTML source — then can open an annotated
-pull request with the fixes.
+(WCAG) violations in your React/JSX, HTML, and Markdown source — then can open
+an annotated pull request with the fixes.
 
 Rule-based and fully deterministic: no API keys, no network calls, no AI. (The
 optional AI-assisted fixes for things like image alt text live in a separate
@@ -28,7 +28,8 @@ a11y-fixer <command> <dir> [options]
 a11y-fixer scan ./src
 ```
 
-Options: `--static`, `--html` (scan `.html`/`.htm` with axe-core), `--url <url>`,
+Options: `--static`, `--html` (scan `.html`/`.htm` with axe-core), `--markdown`
+(also scan `.md`/`.markdown` — static, no browser), `--url <url>`,
 `--concurrency <n>`.
 
 ### `check` — CI gate
@@ -55,7 +56,7 @@ The baseline keys each violation by rule + source file (not line number), so it
 survives ordinary edits. Commit `.a11y-baseline.json` and refresh it with
 `--update-baseline` as you pay down existing debt.
 
-Options: `--html`, `--url <url>`, `--baseline [file]` (default
+Options: `--html`, `--markdown`, `--url <url>`, `--baseline [file]` (default
 `.a11y-baseline.json`), `--update-baseline`.
 
 ### `fix` — apply fixes (and optionally open a PR)
@@ -69,7 +70,8 @@ a11y-fixer fix ./src --owner my-org --repo my-repo --base main
 ```
 
 Options: `--dry-run`, `--owner <owner>`, `--repo <repo>`, `--base <branch>`,
-`--repo-root <path>`, `--html`, `--url <url>`.
+`--repo-root <path>`, `--html`, `--markdown`, `--url <url>`, `--lang <tag>`
+(BCP-47 tag to stamp on `<html>` when `lang` is missing; otherwise auto-detected).
 
 Violations with no deterministic fix are reported for human review rather than
 guessed at.
@@ -78,7 +80,11 @@ guessed at.
 
 Deterministic fixers cover rules such as missing `lang`, invalid/ mismatched
 `lang`, color contrast, `tabindex`, meta refresh, heading order, list structure,
-and the auto-fixable `jsx-a11y` ESLint rules. See
+and the auto-fixable `jsx-a11y` ESLint rules. With `--markdown`, it also scans
+`.md`/`.markdown` source and deterministically fixes heading-order skips and
+empty table headers directly in the source. Markdown image alt text and
+non-descriptive link text are *detected* but need the AI-assisted fixers (the
+separate paid product), so the CLI reports them for human review. See
 [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core) for the
 underlying engine.
 
