@@ -8,7 +8,7 @@ branding:
 
 inputs:
   license-key:
-    description: 'a11y-fixer license key — required for private repos; public repos run free without one. Store it as a repository secret. Buy at https://a11y-fixer.com'
+    description: 'a11y-fixer license key — free for every repo during early access. Public repos run free without one; private repos need a (free) key. Store it as a repository secret. Get one at https://a11y-fixer.com'
     required: false
   dir:
     description: 'Directory to scan (default: .)'
