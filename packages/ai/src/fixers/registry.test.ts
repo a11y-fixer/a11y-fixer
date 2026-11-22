@@ -150,4 +150,10 @@ describe('buildFullRegistry dispatch', () => {
     // JSX empty anchors still route to the HTML link fixer.
     expect(registry.getFixer(violation('anchor-has-content', '2.4.4'))).toBeInstanceOf(LinkTextFixer);
   });
+
+  it('routes raw-HTML Markdown image-alt (md-html-img-alt, 1.1.1) to MarkdownAltTextFixer', () => {
+    // The scanner emits a separate id for <img> written inline in Markdown; it
+    // must share the Markdown alt fixer, not the HTML AltTextFixer.
+    expect(registry.getFixer(violation('md-html-img-alt', '1.1.1'))).toBeInstanceOf(MarkdownAltTextFixer);
+  });
 });
