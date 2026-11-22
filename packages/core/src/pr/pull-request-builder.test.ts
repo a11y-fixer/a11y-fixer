@@ -28,6 +28,106 @@ describe('PullRequestBuilder', () => {
     expect(ts).toMatch(/^\d{15}$/);
   });
 
+  describe('body rendering', () => {
+    function makeBuilder() {
+      return new PullRequestBuilder({ owner: 'me', repo: 'proj', token: 't' });
+    }
+
+    it('renders the PR body: delta table, applied-fix table, and manual-review notes', async () => {
+      const repoRoot = await mkdtemp(path.join(tmpdir(), 'a11y-pr-'));
+      try {
+        const target = path.join(repoRoot, 'App.tsx');
+        await writeFile(target, '<a href="/x">Read more</a>');
+
+        const octokit = makeOctokitStub();
+        const builder = new PullRequestBuilder({ owner: 'me', repo: 'proj', token: 't', repoRoot });
+        (builder as unknown as { octokit: typeof octokit }).octokit = octokit;
+
+        const fixes: FixResult[] = [
+          {
+            wcagId: '2.4.4',
+            bucket: 'deterministic',
+            applied: true,
+            description: 'Gave the link discernible text',
+            before: '<a href="/x"></a>',
+            after: '<a href="/x">Read more</a>',
+            sourceLocation: { file: target, line: 3, column: 1 },
+          },
+          {
+            wcagId: '1.4.3',
+            bucket: 'ai-assisted',
+            applied: false,
+            description: 'Low contrast',
+            before: '',
+            after: '',
+            humanNote: 'Pick a darker foreground; this needs a design decision.',
+          },
+        ];
+
+        await builder.createPR(fixes, [{} as never, {} as never, {} as never], [{} as never]);
+
+        const body = octokit.pulls.create.mock.calls[0][0].body as string;
+
+        // Delta table: 3 before, 1 after, improvement of 2.
+        expect(body).toContain('| Before | 3 violations |');
+        expect(body).toContain('| After | 1 violations |');
+        expect(body).toContain('| Delta | -2 |');
+        // Applied-fix table resolves the WCAG name and the source location.
+        expect(body).toContain('### Auto-applied Fixes');
+        expect(body).toContain('| WCAG 2.4.4 | Link Purpose | Gave the link discernible text | `');
+        expect(body).toContain(':3`');
+        // Manual-review section for the flagged, unapplied fix.
+        expect(body).toContain('### Manual Review Required');
+        expect(body).toContain('- **WCAG 1.4.3** (Contrast (Minimum)): Pick a darker foreground');
+      } finally {
+        await rm(repoRoot, { recursive: true, force: true });
+      }
+    });
+
+    it('buildDeltaTable signs the delta: improvement, regression, and no change', () => {
+      const builder = makeBuilder() as unknown as {
+        buildDeltaTable(b: unknown[], a: unknown[]): string;
+      };
+      const rows = (n: number, m: number) => builder.buildDeltaTable(Array(n).fill({}), Array(m).fill({}));
+      expect(rows(5, 2)).toContain('| Delta | -3 |');
+      expect(rows(2, 5)).toContain('| Delta | +3 |');
+      expect(rows(4, 4)).toContain('| Delta | ±0 |');
+    });
+
+    it('buildFixTable reports when no auto-fixes were applied', () => {
+      const builder = makeBuilder() as unknown as { buildFixTable(f: FixResult[]): string };
+      expect(builder.buildFixTable([])).toBe('_No auto-fixes applied._');
+    });
+
+    it('buildFixTable falls back to an em dash when a fix has no source location', () => {
+      const builder = makeBuilder() as unknown as { buildFixTable(f: FixResult[]): string };
+      const table = builder.buildFixTable([
+        { wcagId: '3.1.1', bucket: 'deterministic', applied: true, description: 'Set lang', before: '', after: '' },
+      ]);
+      // Unknown WCAG names fall through to the id; here 3.1.1 is known.
+      expect(table).toContain('| WCAG 3.1.1 | Language of Page | Set lang | — |');
+    });
+
+    it('toRepoPath produces a repo-relative POSIX path, including escapes above the root', () => {
+      const builder = makeBuilder() as unknown as { toRepoPath(root: string, file: string): string };
+      const root = path.join('/tmp', 'repo');
+      expect(builder.toRepoPath(root, path.join(root, 'src', 'App.tsx'))).toBe('src/App.tsx');
+      // A file outside the root resolves to a `../` escape — the caller must not mis-target it.
+      expect(builder.toRepoPath(root, path.join('/tmp', 'other', 'x.ts'))).toBe('../other/x.ts');
+    });
+
+    it('resolveChangedFiles unions explicit files with applied fixes and de-dupes', () => {
+      const builder = makeBuilder() as unknown as {
+        resolveChangedFiles(f: FixResult[], changed?: string[]): string[];
+      };
+      const fixes: FixResult[] = [
+        { wcagId: '1.1.1', bucket: 'deterministic', applied: true, description: '', before: '', after: '', sourceLocation: { file: 'a.tsx', line: 1, column: 1 } },
+        { wcagId: '1.1.1', bucket: 'deterministic', applied: false, description: '', before: '', after: '', sourceLocation: { file: 'skip.tsx', line: 1, column: 1 } },
+      ];
+      expect(builder.resolveChangedFiles(fixes, ['a.tsx', 'b.tsx']).sort()).toEqual(['a.tsx', 'b.tsx']);
+    });
+  });
+
   describe('createPR', () => {
     let repoRoot: string;
 
