@@ -1,6 +1,6 @@
 {
   "name": "@a11y-fixer/cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "CLI for deterministic WCAG accessibility fixes (scan, fix, check).",
   "license": "MIT",
   "type": "module",
@@ -37,6 +37,9 @@
   "dependencies": {
     "@a11y-fixer/core": "workspace:*",
     "commander": "^15.1.0"
+  },
+  "optionalDependencies": {
+    "@a11y-fixer/ai": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.5.0",

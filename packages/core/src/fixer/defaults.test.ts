@@ -13,6 +13,8 @@ import { MetaRefreshFixer } from './rule-based/meta-refresh.js';
 import { LabelFixer } from './rule-based/label.js';
 import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import { ImageAltFixer } from './rule-based/image-alt.js';
+import { MarkdownHeadingOrderFixer } from './rule-based/markdown-heading-order.js';
+import { MarkdownTableHeaderFixer } from './rule-based/markdown-table-header.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -93,6 +95,29 @@ describe('buildCoreRegistry dispatch', () => {
       ['a11y-custom/input-must-have-label', '1.3.1'],
       ['a11y-custom/no-generic-link-text', '2.4.4'],
     ])('leaves %s (WCAG %s) unclaimed so it human-flags', (id, wcagId) => {
+      expect(registry.getFixer(violation(id, wcagId))).toBeUndefined();
+    });
+  });
+
+  // The Markdown scan path emits five md-* ids. Two have deterministic source
+  // fixers in core; the other three need AI (alt/link text) and live only in the
+  // paid @a11y-fixer/ai registry, so core must leave them for human review.
+  describe('Markdown violation types', () => {
+    it('routes md-heading-order (WCAG 2.4.6) to MarkdownHeadingOrderFixer', () => {
+      expect(registry.getFixer(violation('md-heading-order', '2.4.6')))
+        .toBeInstanceOf(MarkdownHeadingOrderFixer);
+    });
+
+    it('routes md-table-header (WCAG 1.3.1) to MarkdownTableHeaderFixer', () => {
+      expect(registry.getFixer(violation('md-table-header', '1.3.1')))
+        .toBeInstanceOf(MarkdownTableHeaderFixer);
+    });
+
+    it.each([
+      ['md-image-alt', '1.1.1'],
+      ['md-html-img-alt', '1.1.1'],
+      ['md-link-text', '2.4.4'],
+    ])('leaves AI-only %s (WCAG %s) unclaimed so it human-flags in core', (id, wcagId) => {
       expect(registry.getFixer(violation(id, wcagId))).toBeUndefined();
     });
   });
