@@ -1,5 +1,5 @@
 name: 'a11y-fixer'
-description: 'AI-assisted accessibility fixes for your React/JSX source — finds and fixes WCAG violations, opens a PR'
+description: 'AI-assisted accessibility fixes for your React/JSX, HTML, and Markdown source — finds and fixes WCAG violations, opens a PR'
 author: 'a11y-fixer'
 
 branding:
@@ -71,6 +71,12 @@ outputs:
   fixes-applied:
     description: 'Number of fixes applied in fix mode'
     value: ${{ steps.run.outputs.fixes-applied }}
+  fixes-reverted:
+    description: 'Number of fixes reverted by the verify-then-revert gate in fix mode'
+    value: ${{ steps.run.outputs.fixes-reverted }}
+  regressions-detected:
+    description: 'Number of regressions the verify gate caught in fix mode'
+    value: ${{ steps.run.outputs.regressions-detected }}
   violations-before:
     description: 'Violation count before fixing'
     value: ${{ steps.run.outputs.violations-before }}
@@ -121,4 +127,5 @@ runs:
         INPUT_MARKDOWN: ${{ inputs.markdown }}
         INPUT_BASE-BRANCH: ${{ inputs.base-branch }}
         INPUT_CACHE-FILE: ${{ inputs.cache-file }}
+        INPUT_LEARNING: ${{ inputs.learning }}
         PUPPETEER_EXECUTABLE_PATH: ${{ steps.chrome.outputs.chrome-path }}
