@@ -27,3 +27,25 @@ export function removeAttribute(line: string, name: string): string | null {
   if (!re.test(line)) return null;
   return line.replace(re, '');
 }
+
+/**
+ * Removes each named attribute from `line` in turn, returning the rewritten line
+ * and the subset of names that were actually present and removed. Used by the
+ * ARIA-attribute-stripping fixers, which get the names to drop from an axe
+ * failure summary. Names are treated literally.
+ */
+export function removeNamedAttrs(
+  line: string,
+  names: readonly string[],
+): { line: string; removed: string[] } {
+  let updated = line;
+  const removed: string[] = [];
+  for (const name of names) {
+    const next = removeAttribute(updated, name);
+    if (next !== null) {
+      updated = next;
+      removed.push(name);
+    }
+  }
+  return { line: updated, removed };
+}

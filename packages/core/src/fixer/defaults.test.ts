@@ -26,6 +26,16 @@ import { PresentationRoleConflictFixer } from './rule-based/presentation-role-co
 import { ScopeAttrValidFixer } from './rule-based/scope-attr-valid.js';
 import { AriaDeprecatedRoleFixer } from './rule-based/aria-deprecated-role.js';
 import { ImageRedundantAltFixer } from './rule-based/image-redundant-alt.js';
+import { AriaAllowedRoleFixer } from './rule-based/aria-allowed-role.js';
+import { AriaRoledescriptionFixer } from './rule-based/aria-roledescription.js';
+import { AriaBrailleLabelEquivalentFixer } from './rule-based/aria-braillelabel-equivalent.js';
+import { AriaBrailleRoledescriptionEquivalentFixer } from './rule-based/aria-brailleroledescription-equivalent.js';
+import { AriaValidAttrFixer } from './rule-based/aria-valid-attr.js';
+import { AriaConditionalAttrFixer } from './rule-based/aria-conditional-attr.js';
+import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
+import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
+import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
+import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -131,6 +141,46 @@ describe('buildCoreRegistry dispatch', () => {
 
   it('routes axe image-redundant-alt (WCAG 1.1.1) to ImageRedundantAltFixer, not ImageAltFixer', () => {
     expect(registry.getFixer(violation('image-redundant-alt', '1.1.1'))).toBeInstanceOf(ImageRedundantAltFixer);
+  });
+
+  it('routes axe aria-allowed-role (WCAG 4.1.2) to AriaAllowedRoleFixer, not AriaRolesFixer', () => {
+    expect(registry.getFixer(violation('aria-allowed-role', '4.1.2'))).toBeInstanceOf(AriaAllowedRoleFixer);
+  });
+
+  it('routes axe aria-roledescription (WCAG 4.1.2) to AriaRoledescriptionFixer', () => {
+    expect(registry.getFixer(violation('aria-roledescription', '4.1.2'))).toBeInstanceOf(AriaRoledescriptionFixer);
+  });
+
+  it('routes axe aria-braillelabel-equivalent (WCAG 4.1.2) to AriaBrailleLabelEquivalentFixer', () => {
+    expect(registry.getFixer(violation('aria-braillelabel-equivalent', '4.1.2'))).toBeInstanceOf(AriaBrailleLabelEquivalentFixer);
+  });
+
+  it('routes axe aria-brailleroledescription-equivalent (WCAG 4.1.2) to AriaBrailleRoledescriptionEquivalentFixer', () => {
+    expect(registry.getFixer(violation('aria-brailleroledescription-equivalent', '4.1.2'))).toBeInstanceOf(AriaBrailleRoledescriptionEquivalentFixer);
+  });
+
+  it('routes axe aria-valid-attr (WCAG 4.1.2) to AriaValidAttrFixer, not AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-valid-attr', '4.1.2'))).toBeInstanceOf(AriaValidAttrFixer);
+  });
+
+  it('routes axe aria-conditional-attr (WCAG 4.1.2) to AriaConditionalAttrFixer, not AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-conditional-attr', '4.1.2'))).toBeInstanceOf(AriaConditionalAttrFixer);
+  });
+
+  it('routes axe aria-valid-attr-value (WCAG 4.1.2) to AriaValidAttrValueFixer', () => {
+    expect(registry.getFixer(violation('aria-valid-attr-value', '4.1.2'))).toBeInstanceOf(AriaValidAttrValueFixer);
+  });
+
+  it('routes axe table-duplicate-name (WCAG 1.3.1) to TableDuplicateNameFixer', () => {
+    expect(registry.getFixer(violation('table-duplicate-name', '1.3.1'))).toBeInstanceOf(TableDuplicateNameFixer);
+  });
+
+  it('routes axe td-headers-attr (WCAG 1.3.1) to TdHeadersAttrFixer', () => {
+    expect(registry.getFixer(violation('td-headers-attr', '1.3.1'))).toBeInstanceOf(TdHeadersAttrFixer);
+  });
+
+  it('routes axe meta-refresh-no-exceptions (WCAG 2.2.4) to MetaRefreshNoExceptionsFixer, not MetaRefreshFixer', () => {
+    expect(registry.getFixer(violation('meta-refresh-no-exceptions', '2.2.4'))).toBeInstanceOf(MetaRefreshNoExceptionsFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {

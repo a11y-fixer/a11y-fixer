@@ -48,6 +48,16 @@ export const AXE_WCAG_MAP: Record<string, string> = {
   'image-redundant-alt': '1.1.1',
   'empty-table-header': '1.3.1',
   'frame-title-unique': '4.1.2',
+  'aria-allowed-role': '4.1.2',
+  'aria-roledescription': '4.1.2',
+  'aria-braillelabel-equivalent': '4.1.2',
+  'aria-brailleroledescription-equivalent': '4.1.2',
+  'aria-valid-attr': '4.1.2',
+  'aria-conditional-attr': '4.1.2',
+  'aria-valid-attr-value': '4.1.2',
+  'table-duplicate-name': '1.3.1',
+  'td-headers-attr': '1.3.1',
+  'meta-refresh-no-exceptions': '2.2.4',
 };
 
 export function toWcagId(axeRuleId: string): string {
