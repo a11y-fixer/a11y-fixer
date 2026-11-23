@@ -58,6 +58,8 @@ export const AXE_WCAG_MAP: Record<string, string> = {
   'table-duplicate-name': '1.3.1',
   'td-headers-attr': '1.3.1',
   'meta-refresh-no-exceptions': '2.2.4',
+  'avoid-inline-spacing': '1.4.12',
+  'accesskeys': '2.1.1',
 };
 
 export function toWcagId(axeRuleId: string): string {

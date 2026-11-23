@@ -42,6 +42,8 @@ import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
 import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
 import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
 import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
+import { AvoidInlineSpacingFixer } from './rule-based/avoid-inline-spacing.js';
+import { AccesskeysFixer } from './rule-based/accesskeys.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
@@ -114,6 +116,10 @@ export function registerCoreFixers(
   registry.register(new TableDuplicateNameFixer(rootDir));
   registry.register(new TdHeadersAttrFixer(rootDir));
   registry.register(new MetaRefreshNoExceptionsFixer(rootDir));
+  // Batch 4 — inline-spacing / accesskey hygiene. Both id-keyed on a unique axe
+  // rule id, so position among the core fixers is free.
+  registry.register(new AvoidInlineSpacingFixer(rootDir));
+  registry.register(new AccesskeysFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));

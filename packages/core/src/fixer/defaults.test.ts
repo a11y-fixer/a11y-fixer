@@ -36,6 +36,8 @@ import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
 import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
 import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
 import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
+import { AvoidInlineSpacingFixer } from './rule-based/avoid-inline-spacing.js';
+import { AccesskeysFixer } from './rule-based/accesskeys.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -181,6 +183,14 @@ describe('buildCoreRegistry dispatch', () => {
 
   it('routes axe meta-refresh-no-exceptions (WCAG 2.2.4) to MetaRefreshNoExceptionsFixer, not MetaRefreshFixer', () => {
     expect(registry.getFixer(violation('meta-refresh-no-exceptions', '2.2.4'))).toBeInstanceOf(MetaRefreshNoExceptionsFixer);
+  });
+
+  it('routes axe avoid-inline-spacing (WCAG 1.4.12) to AvoidInlineSpacingFixer', () => {
+    expect(registry.getFixer(violation('avoid-inline-spacing', '1.4.12'))).toBeInstanceOf(AvoidInlineSpacingFixer);
+  });
+
+  it('routes axe accesskeys (WCAG 2.1.1) to AccesskeysFixer', () => {
+    expect(registry.getFixer(violation('accesskeys', '2.1.1'))).toBeInstanceOf(AccesskeysFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {
