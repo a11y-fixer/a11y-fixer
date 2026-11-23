@@ -89,8 +89,10 @@ the free OSS CLI; the paid Action layers these under the AI tier.
 | 1.4.2 | `AutoplayAudioFixer` | `no-autoplay-audio.ts` | `id === 'no-autoplay-audio'` (removes `autoplay` from `<audio>`/`<video>`) |
 | 1.4.3 | `ColorContrastFixer` | `color-contrast.ts` | `id === 'color-contrast'` (luminance-adjusts inline colors) |
 | 1.4.4 | `MetaViewportFixer` / `MetaViewportLargeFixer` | `meta-viewport*.ts` | `id === 'meta-viewport'` / `'meta-viewport-large'` |
+| 1.4.12 | `AvoidInlineSpacingFixer` | `avoid-inline-spacing.ts` | `id === 'avoid-inline-spacing'` (drops `!important` from inline `letter-spacing`/`word-spacing`/`line-height`) |
 | 2.1.1 | `ScrollableRegionFocusableFixer` | `scrollable-region-focusable.ts` | `id === 'scrollable-region-focusable'` |
 | 2.1.1 | `ServerSideImageMapFixer` | `server-side-image-map.ts` | `id === 'server-side-image-map'` (removes `ismap`) |
+| 2.1.1 | `AccesskeysFixer` | `accesskeys.ts` | `id === 'accesskeys'` (removes a duplicate `accesskey`) |
 | 2.2.1 | `MetaRefreshFixer` | `meta-refresh.ts` | `id === 'meta-refresh'` |
 | 2.2.4 | `MetaRefreshNoExceptionsFixer` | `meta-refresh-no-exceptions.ts` | `id === 'meta-refresh-no-exceptions'` (removes a pure timed refresh) |
 | 2.2.2 | `BlinkMarqueeFixer` | `blink-marquee.ts` | `id === 'blink'` / `'marquee'` |
@@ -149,8 +151,8 @@ disallowed/conflicting ARIA roles, ARIA-hidden/disallowed/invalid/conditional
 attributes, near-miss boolean ARIA values, orphaned braille labels, redundant
 alt, unique iframe titles, and list, definition-list, empty table headers (HTML
 + Markdown), duplicate table names and table-header `scope`/broken `headers`
-structure. The genuinely-unfixable remainder (reported, left for a human) still
-includes:
+structure, inline text-spacing `!important` overrides and duplicate access keys.
+The genuinely-unfixable remainder (reported, left for a human) still includes:
 
 - Captions/transcripts for media (`video-caption`, 1.2.2)
 - Landmark / region structure (one-main, unique landmarks, `region`)
