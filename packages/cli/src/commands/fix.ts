@@ -4,6 +4,7 @@ import {
   PullRequestBuilder,
   scanSource,
   scanMarkdown,
+  scanComponents,
   dedupeFixFiles,
   canonicalizeLangTag,
 } from '@a11y-fixer/core';
@@ -77,7 +78,8 @@ export function fixCommand(): Command {
     .argument('<dir>', 'Directory to fix')
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
     .option('--html', 'Fix static .html/.htm files with axe-core (requires puppeteer)', false)
-    .option('--markdown', 'Also fix .md/.markdown files (static source; no browser required)', false)
+    .option('--markdown', 'Also fix .md/.markdown/.mdx files (static source; no browser required)', false)
+    .option('--components', 'Also fix .vue/.svelte/.astro template markup with axe-core (requires puppeteer)', false)
     .option('--owner <owner>', 'GitHub repo owner (required for PR)')
     .option('--repo <repo>', 'GitHub repo name (required for PR)')
     .option('--base <branch>', 'Base branch for PR', 'main')
@@ -92,6 +94,7 @@ export function fixCommand(): Command {
       url?: string;
       html: boolean;
       markdown: boolean;
+      components: boolean;
       owner?: string;
       repo?: string;
       base: string;
@@ -108,7 +111,11 @@ export function fixCommand(): Command {
       // Runs the base scan and merges Markdown violations when --markdown is set.
       const scan = async (): Promise<A11yViolation[]> => {
         const base = await scanSource(rootDir, { url: opts.url, html: opts.html });
-        return opts.markdown ? [...base, ...await scanMarkdown(rootDir)] : base;
+        return [
+          ...base,
+          ...(opts.markdown ? await scanMarkdown(rootDir) : []),
+          ...(opts.components ? await scanComponents(rootDir) : []),
+        ];
       };
 
       // Fail fast on a malformed --lang before scanning anything.

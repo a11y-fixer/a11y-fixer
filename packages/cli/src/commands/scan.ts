@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { scanSource, scanMarkdown } from '@a11y-fixer/core';
+import { scanSource, scanMarkdown, scanComponents } from '@a11y-fixer/core';
 import path from 'node:path';
 import { printViolations } from './report.js';
 
@@ -9,10 +9,11 @@ export function scanCommand(): Command {
     .argument('<dir>', 'Directory to scan')
     .option('--static', 'Static JSX scan only (no browser required)', false)
     .option('--html', 'Scan static .html/.htm files with axe-core (requires puppeteer)', false)
-    .option('--markdown', 'Also scan .md/.markdown files (static source; no browser required)', false)
+    .option('--markdown', 'Also scan .md/.markdown/.mdx files (static source; no browser required)', false)
+    .option('--components', 'Also scan .vue/.svelte/.astro template markup with axe-core (requires puppeteer)', false)
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
     .option('--concurrency <n>', 'Parallel scan concurrency', '4')
-    .action(async (dir: string, opts: { static: boolean; html: boolean; markdown: boolean; url?: string; concurrency: string }) => {
+    .action(async (dir: string, opts: { static: boolean; html: boolean; markdown: boolean; components: boolean; url?: string; concurrency: string }) => {
       const rootDir = path.resolve(dir);
       // --static forces the offline JSX path even when a --url is given.
       const url = opts.static ? undefined : opts.url;
@@ -27,9 +28,16 @@ export function scanCommand(): Command {
       if (opts.markdown) {
         console.log(`Also scanning ${rootDir} (Markdown)...`);
       }
+      if (opts.components) {
+        console.log(`Also scanning ${rootDir} (Vue/Svelte/Astro)...`);
+      }
 
       const base = await scanSource(rootDir, { url, html: opts.html });
-      const violations = opts.markdown ? [...base, ...await scanMarkdown(rootDir)] : base;
+      const violations = [
+        ...base,
+        ...(opts.markdown ? await scanMarkdown(rootDir) : []),
+        ...(opts.components ? await scanComponents(rootDir) : []),
+      ];
 
       if (violations.length === 0) {
         console.log('No accessibility violations found.');
