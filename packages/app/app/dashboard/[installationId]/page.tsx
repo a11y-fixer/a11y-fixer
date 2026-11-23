@@ -76,11 +76,14 @@ export default async function InstallationPage({
       </p>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
         <h1>Repositories</h1>
-        {!view.isEmpty && (
-          <form method="post" action={`/api/installations/${id}/scan`}>
-            <button type="submit">Scan all selected repos</button>
-          </form>
-        )}
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <Link href={`/dashboard/${id}/audits`}>Conformance audits →</Link>
+          {!view.isEmpty && (
+            <form method="post" action={`/api/installations/${id}/scan`}>
+              <button type="submit">Scan all selected repos</button>
+            </form>
+          )}
+        </div>
       </div>
       <p className="muted">
         {view.scannedRepos}/{view.totalRepos} scanned · {view.coverage} coverage · {view.totalViolations} violations
