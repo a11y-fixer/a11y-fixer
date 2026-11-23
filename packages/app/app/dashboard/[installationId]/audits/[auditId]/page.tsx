@@ -47,6 +47,7 @@ export default async function AuditDetailPage({
   if (!view) notFound();
   const page = auditPageView(view);
   const verdictPost = `/api/installations/${id}/audits/${auditId}/verdict`;
+  const docBase = `/api/installations/${id}/audits/${auditId}/document`;
   // A published audit is a finalized conformance record: it is read-only, so no
   // verdict forms or publish button render (the routes enforce this too).
   const isPublished = audit.status === 'published';
@@ -86,6 +87,29 @@ export default async function AuditDetailPage({
           </form>
         </section>
       )}
+
+      <section className="panel">
+        <h2 style={{ marginTop: 0 }}>Documents</h2>
+        <p className="muted" style={{ marginTop: 0 }}>
+          {isPublished
+            ? 'Published conformance documents for this audit.'
+            : 'Draft previews — exports are watermarked “not for distribution” until the audit is published.'}
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <li>
+            <strong>VPAT / ACR</strong>{' '}
+            <a href={`${docBase}?doc=acr&format=html`} target="_blank" rel="noopener">HTML</a> ·{' '}
+            <a href={`${docBase}?doc=acr&format=pdf`}>PDF</a> ·{' '}
+            <a href={`${docBase}?doc=acr&format=docx`}>DOCX</a>
+          </li>
+          <li>
+            <strong>Accessibility Statement</strong>{' '}
+            <a href={`${docBase}?doc=statement&format=html`} target="_blank" rel="noopener">HTML</a> ·{' '}
+            <a href={`${docBase}?doc=statement&format=pdf`}>PDF</a> ·{' '}
+            <a href={`${docBase}?doc=statement&format=docx`}>DOCX</a>
+          </li>
+        </ul>
+      </section>
 
       <div className="panel" style={{ padding: 0 }}>
         <table>
