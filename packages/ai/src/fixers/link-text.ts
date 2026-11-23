@@ -38,8 +38,12 @@ export class LinkTextFixer implements Fixer {
       : null;
     const markup = source?.line ?? node.html;
 
-    const textMatch = markup.match(/>([^<]+)</);
-    const currentText = textMatch?.[1]?.trim() ?? '';
+    // Extract the text between the first `>` and the next `<` with indexOf rather
+    // than a scanning regex: `/>([^<]+)</` backtracks quadratically (js/polynomial-redos)
+    // on a line that has a `>` but no later `<`, and markup is untrusted file input.
+    const gt = markup.indexOf('>');
+    const lt = gt === -1 ? -1 : markup.indexOf('<', gt + 1);
+    const currentText = gt !== -1 && lt > gt + 1 ? markup.slice(gt + 1, lt).trim() : '';
 
     if (!GENERIC_LINK_PATTERNS.test(currentText)) {
       return this.humanFlag(violation, `Link text "${currentText}" may not be generic — flagging for manual review`);

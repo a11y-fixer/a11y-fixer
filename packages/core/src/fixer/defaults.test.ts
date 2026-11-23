@@ -15,6 +15,29 @@ import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import { ImageAltFixer } from './rule-based/image-alt.js';
 import { MarkdownHeadingOrderFixer } from './rule-based/markdown-heading-order.js';
 import { MarkdownTableHeaderFixer } from './rule-based/markdown-table-header.js';
+import { AriaAllowedAttrFixer } from './rule-based/aria-allowed-attr.js';
+import { LinkInTextBlockFixer } from './rule-based/link-in-text-block.js';
+import { DefinitionListFixer } from './rule-based/definition-list.js';
+import { ValidLangFixer } from './rule-based/valid-lang.js';
+import { AutoplayAudioFixer } from './rule-based/no-autoplay-audio.js';
+import { ServerSideImageMapFixer } from './rule-based/server-side-image-map.js';
+import { AriaRolesFixer } from './rule-based/aria-roles.js';
+import { PresentationRoleConflictFixer } from './rule-based/presentation-role-conflict.js';
+import { ScopeAttrValidFixer } from './rule-based/scope-attr-valid.js';
+import { AriaDeprecatedRoleFixer } from './rule-based/aria-deprecated-role.js';
+import { ImageRedundantAltFixer } from './rule-based/image-redundant-alt.js';
+import { AriaAllowedRoleFixer } from './rule-based/aria-allowed-role.js';
+import { AriaRoledescriptionFixer } from './rule-based/aria-roledescription.js';
+import { AriaBrailleLabelEquivalentFixer } from './rule-based/aria-braillelabel-equivalent.js';
+import { AriaBrailleRoledescriptionEquivalentFixer } from './rule-based/aria-brailleroledescription-equivalent.js';
+import { AriaValidAttrFixer } from './rule-based/aria-valid-attr.js';
+import { AriaConditionalAttrFixer } from './rule-based/aria-conditional-attr.js';
+import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
+import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
+import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
+import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
+import { AvoidInlineSpacingFixer } from './rule-based/avoid-inline-spacing.js';
+import { AccesskeysFixer } from './rule-based/accesskeys.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -74,6 +97,100 @@ describe('buildCoreRegistry dispatch', () => {
   it('routes axe image-alt (WCAG 1.1.1) to ImageAltFixer, not InputImageAltFixer', () => {
     const fixer = registry.getFixer(violation('image-alt', '1.1.1'));
     expect(fixer).toBeInstanceOf(ImageAltFixer);
+  });
+
+  it('routes axe aria-allowed-attr and aria-prohibited-attr (WCAG 4.1.2) to AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-allowed-attr', '4.1.2'))).toBeInstanceOf(AriaAllowedAttrFixer);
+    expect(registry.getFixer(violation('aria-prohibited-attr', '4.1.2'))).toBeInstanceOf(AriaAllowedAttrFixer);
+  });
+
+  it('routes axe link-in-text-block (WCAG 1.4.1) to LinkInTextBlockFixer', () => {
+    expect(registry.getFixer(violation('link-in-text-block', '1.4.1'))).toBeInstanceOf(LinkInTextBlockFixer);
+  });
+
+  it('routes axe definition-list and dlitem (WCAG 1.3.1) to DefinitionListFixer', () => {
+    expect(registry.getFixer(violation('definition-list', '1.3.1'))).toBeInstanceOf(DefinitionListFixer);
+    expect(registry.getFixer(violation('dlitem', '1.3.1'))).toBeInstanceOf(DefinitionListFixer);
+  });
+
+  it('routes axe valid-lang (WCAG 3.1.2) to ValidLangFixer', () => {
+    expect(registry.getFixer(violation('valid-lang', '3.1.2'))).toBeInstanceOf(ValidLangFixer);
+  });
+
+  it('routes axe no-autoplay-audio (WCAG 1.4.2) to AutoplayAudioFixer', () => {
+    expect(registry.getFixer(violation('no-autoplay-audio', '1.4.2'))).toBeInstanceOf(AutoplayAudioFixer);
+  });
+
+  it('routes axe server-side-image-map (WCAG 2.1.1) to ServerSideImageMapFixer', () => {
+    expect(registry.getFixer(violation('server-side-image-map', '2.1.1'))).toBeInstanceOf(ServerSideImageMapFixer);
+  });
+
+  it('routes axe aria-roles (WCAG 4.1.2) to AriaRolesFixer', () => {
+    expect(registry.getFixer(violation('aria-roles', '4.1.2'))).toBeInstanceOf(AriaRolesFixer);
+  });
+
+  it('routes axe presentation-role-conflict (WCAG 4.1.2) to PresentationRoleConflictFixer', () => {
+    expect(registry.getFixer(violation('presentation-role-conflict', '4.1.2'))).toBeInstanceOf(PresentationRoleConflictFixer);
+  });
+
+  it('routes axe scope-attr-valid (WCAG 1.3.1) to ScopeAttrValidFixer, not LabelFixer', () => {
+    expect(registry.getFixer(violation('scope-attr-valid', '1.3.1'))).toBeInstanceOf(ScopeAttrValidFixer);
+  });
+
+  it('routes axe aria-deprecated-role (WCAG 4.1.2) to AriaDeprecatedRoleFixer', () => {
+    expect(registry.getFixer(violation('aria-deprecated-role', '4.1.2'))).toBeInstanceOf(AriaDeprecatedRoleFixer);
+  });
+
+  it('routes axe image-redundant-alt (WCAG 1.1.1) to ImageRedundantAltFixer, not ImageAltFixer', () => {
+    expect(registry.getFixer(violation('image-redundant-alt', '1.1.1'))).toBeInstanceOf(ImageRedundantAltFixer);
+  });
+
+  it('routes axe aria-allowed-role (WCAG 4.1.2) to AriaAllowedRoleFixer, not AriaRolesFixer', () => {
+    expect(registry.getFixer(violation('aria-allowed-role', '4.1.2'))).toBeInstanceOf(AriaAllowedRoleFixer);
+  });
+
+  it('routes axe aria-roledescription (WCAG 4.1.2) to AriaRoledescriptionFixer', () => {
+    expect(registry.getFixer(violation('aria-roledescription', '4.1.2'))).toBeInstanceOf(AriaRoledescriptionFixer);
+  });
+
+  it('routes axe aria-braillelabel-equivalent (WCAG 4.1.2) to AriaBrailleLabelEquivalentFixer', () => {
+    expect(registry.getFixer(violation('aria-braillelabel-equivalent', '4.1.2'))).toBeInstanceOf(AriaBrailleLabelEquivalentFixer);
+  });
+
+  it('routes axe aria-brailleroledescription-equivalent (WCAG 4.1.2) to AriaBrailleRoledescriptionEquivalentFixer', () => {
+    expect(registry.getFixer(violation('aria-brailleroledescription-equivalent', '4.1.2'))).toBeInstanceOf(AriaBrailleRoledescriptionEquivalentFixer);
+  });
+
+  it('routes axe aria-valid-attr (WCAG 4.1.2) to AriaValidAttrFixer, not AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-valid-attr', '4.1.2'))).toBeInstanceOf(AriaValidAttrFixer);
+  });
+
+  it('routes axe aria-conditional-attr (WCAG 4.1.2) to AriaConditionalAttrFixer, not AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-conditional-attr', '4.1.2'))).toBeInstanceOf(AriaConditionalAttrFixer);
+  });
+
+  it('routes axe aria-valid-attr-value (WCAG 4.1.2) to AriaValidAttrValueFixer', () => {
+    expect(registry.getFixer(violation('aria-valid-attr-value', '4.1.2'))).toBeInstanceOf(AriaValidAttrValueFixer);
+  });
+
+  it('routes axe table-duplicate-name (WCAG 1.3.1) to TableDuplicateNameFixer', () => {
+    expect(registry.getFixer(violation('table-duplicate-name', '1.3.1'))).toBeInstanceOf(TableDuplicateNameFixer);
+  });
+
+  it('routes axe td-headers-attr (WCAG 1.3.1) to TdHeadersAttrFixer', () => {
+    expect(registry.getFixer(violation('td-headers-attr', '1.3.1'))).toBeInstanceOf(TdHeadersAttrFixer);
+  });
+
+  it('routes axe meta-refresh-no-exceptions (WCAG 2.2.4) to MetaRefreshNoExceptionsFixer, not MetaRefreshFixer', () => {
+    expect(registry.getFixer(violation('meta-refresh-no-exceptions', '2.2.4'))).toBeInstanceOf(MetaRefreshNoExceptionsFixer);
+  });
+
+  it('routes axe avoid-inline-spacing (WCAG 1.4.12) to AvoidInlineSpacingFixer', () => {
+    expect(registry.getFixer(violation('avoid-inline-spacing', '1.4.12'))).toBeInstanceOf(AvoidInlineSpacingFixer);
+  });
+
+  it('routes axe accesskeys (WCAG 2.1.1) to AccesskeysFixer', () => {
+    expect(registry.getFixer(violation('accesskeys', '2.1.1'))).toBeInstanceOf(AccesskeysFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {

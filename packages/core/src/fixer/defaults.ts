@@ -18,9 +18,32 @@ import { BlinkMarqueeFixer } from './rule-based/blink-marquee.js';
 import { AriaHiddenFocusFixer } from './rule-based/aria-hidden-focus.js';
 import { FrameTitleFixer } from './rule-based/frame-title.js';
 import { ListFixer } from './rule-based/list.js';
+import { DefinitionListFixer } from './rule-based/definition-list.js';
+import { AriaAllowedAttrFixer } from './rule-based/aria-allowed-attr.js';
+import { LinkInTextBlockFixer } from './rule-based/link-in-text-block.js';
 import { LabelFixer } from './rule-based/label.js';
 import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import { ImageAltFixer } from './rule-based/image-alt.js';
+import { ValidLangFixer } from './rule-based/valid-lang.js';
+import { AutoplayAudioFixer } from './rule-based/no-autoplay-audio.js';
+import { ServerSideImageMapFixer } from './rule-based/server-side-image-map.js';
+import { AriaRolesFixer } from './rule-based/aria-roles.js';
+import { PresentationRoleConflictFixer } from './rule-based/presentation-role-conflict.js';
+import { ScopeAttrValidFixer } from './rule-based/scope-attr-valid.js';
+import { AriaDeprecatedRoleFixer } from './rule-based/aria-deprecated-role.js';
+import { ImageRedundantAltFixer } from './rule-based/image-redundant-alt.js';
+import { AriaAllowedRoleFixer } from './rule-based/aria-allowed-role.js';
+import { AriaRoledescriptionFixer } from './rule-based/aria-roledescription.js';
+import { AriaBrailleLabelEquivalentFixer } from './rule-based/aria-braillelabel-equivalent.js';
+import { AriaBrailleRoledescriptionEquivalentFixer } from './rule-based/aria-brailleroledescription-equivalent.js';
+import { AriaValidAttrFixer } from './rule-based/aria-valid-attr.js';
+import { AriaConditionalAttrFixer } from './rule-based/aria-conditional-attr.js';
+import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
+import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
+import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
+import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
+import { AvoidInlineSpacingFixer } from './rule-based/avoid-inline-spacing.js';
+import { AccesskeysFixer } from './rule-based/accesskeys.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
@@ -65,9 +88,38 @@ export function registerCoreFixers(
   registry.register(new AriaHiddenFocusFixer(rootDir));
   registry.register(new FrameTitleFixer(rootDir));
   registry.register(new ListFixer(rootDir));
+  registry.register(new DefinitionListFixer(rootDir));
+  registry.register(new AriaAllowedAttrFixer(rootDir));
+  registry.register(new LinkInTextBlockFixer(rootDir));
   registry.register(new LabelFixer(rootDir));
   registry.register(new InputImageAltFixer(rootDir));
   registry.register(new ImageAltFixer(rootDir));
+  // All id-keyed on a unique axe rule id, so position among the core fixers is
+  // free — none shares a broad wcagId-keyed collider with another core fixer.
+  registry.register(new ValidLangFixer(rootDir));
+  registry.register(new AutoplayAudioFixer(rootDir));
+  registry.register(new ServerSideImageMapFixer(rootDir));
+  registry.register(new AriaRolesFixer(rootDir));
+  registry.register(new PresentationRoleConflictFixer(rootDir));
+  registry.register(new ScopeAttrValidFixer(rootDir));
+  registry.register(new AriaDeprecatedRoleFixer(rootDir));
+  registry.register(new ImageRedundantAltFixer(rootDir));
+  // Batch 3 — ARIA / table / meta hygiene. All id-keyed on a unique axe rule id,
+  // so position among the core fixers is free.
+  registry.register(new AriaAllowedRoleFixer(rootDir));
+  registry.register(new AriaRoledescriptionFixer(rootDir));
+  registry.register(new AriaBrailleLabelEquivalentFixer(rootDir));
+  registry.register(new AriaBrailleRoledescriptionEquivalentFixer(rootDir));
+  registry.register(new AriaValidAttrFixer(rootDir));
+  registry.register(new AriaConditionalAttrFixer(rootDir));
+  registry.register(new AriaValidAttrValueFixer(rootDir));
+  registry.register(new TableDuplicateNameFixer(rootDir));
+  registry.register(new TdHeadersAttrFixer(rootDir));
+  registry.register(new MetaRefreshNoExceptionsFixer(rootDir));
+  // Batch 4 — inline-spacing / accesskey hygiene. Both id-keyed on a unique axe
+  // rule id, so position among the core fixers is free.
+  registry.register(new AvoidInlineSpacingFixer(rootDir));
+  registry.register(new AccesskeysFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));
