@@ -6,8 +6,9 @@ alone, this package generates the human-meaningful text that needs an LLM — al
 text, link text, and accessible-name (`aria-label`) wording — and layers those
 fixers ahead of the deterministic core ones.
 
-> **Private, source-available (BSL).** Not published to npm. This is the paid
-> differentiator; the free deterministic engine ships as `@a11y-fixer/core` /
+> **Private, source-available (BSL).** Not published to npm. This is the
+> differentiator for the future paid tier — free for everyone during early
+> access; the deterministic engine ships as `@a11y-fixer/core` /
 > `@a11y-fixer/cli`. See the root [`LICENSE`](../../LICENSE).
 
 ## Providers (bring your own key)

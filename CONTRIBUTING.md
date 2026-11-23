@@ -39,8 +39,9 @@ Decide by **how the fix content is produced**, not by which rule triggered it:
 - **Needs an LLM to generate content** — the fix requires judgment about
   human-meaningful text (alt text, link text, `aria-label` wording).
   → `packages/ai/src/fixers/`, registered in
-  `packages/ai/src/fixers/registry.ts`. **Paid.** `buildFullRegistry` layers
-  these ahead of the deterministic core fixers.
+  `packages/ai/src/fixers/registry.ts`. **Future paid tier — free for everyone
+  during early access.** `buildFullRegistry` layers these ahead of the
+  deterministic core fixers.
 
 When two fixers' `canFix` could match the same violation, the AI registry wins
 by being layered first — keep that ordering intentional, and prefer a single

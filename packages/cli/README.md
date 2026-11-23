@@ -6,7 +6,7 @@ an annotated pull request with the fixes.
 
 Rule-based and fully deterministic: no API keys, no network calls, no AI. (The
 optional AI-assisted fixes for things like image alt text live in a separate
-paid product.)
+product — a future paid tier, free for everyone during early access.)
 
 ## Install
 
@@ -84,7 +84,8 @@ and the auto-fixable `jsx-a11y` ESLint rules. With `--markdown`, it also scans
 `.md`/`.markdown` source and deterministically fixes heading-order skips and
 empty table headers directly in the source. Markdown image alt text and
 non-descriptive link text are *detected* but need the AI-assisted fixers (the
-separate paid product), so the CLI reports them for human review. See
+separate product — a future paid tier, free during early access), so the CLI
+reports them for human review. See
 [`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core) for the
 underlying engine.
 
