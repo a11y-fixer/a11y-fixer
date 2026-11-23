@@ -1,0 +1,106 @@
+// Tests for the publish route shell: the security wiring above the honesty-gated
+// publishAudit core (CSRF same-origin 403, auth, 404-not-403 enumeration defense,
+// cross-tenant audit-ownership 404) and the gate's redirect branch (?published=1
+// vs ?blocked=N). Mirrors ../verdict/route.test.ts: the pure guards run for real;
+// only env/auth/store/orchestrator boundaries are mocked.
+//
+// Value: protects=the publish route's security wiring and the honesty-gate
+// redirect branch (published vs blocked); fails_when=the same-origin guard,
+// installation authz or auditBelongsTo ownership check is removed or inverted,
+// or the blocked/published redirect is swapped; why_new=the publish route is new
+// on this branch and had no shell test (only publishAudit's core was covered);
+// seam=none; no_claim=does not prove publishAudit's blocker logic (mocked); that
+// is covered by audit-service.test.ts and reconcile.test.ts.
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { AuditRecord } from '../../../../../../../src/db/store.js';
+
+const { getSignedInUser, listInstallationsForUser, getAudit, publishAudit } = vi.hoisted(() => ({
+  getSignedInUser: vi.fn(),
+  listInstallationsForUser: vi.fn(),
+  getAudit: vi.fn(),
+  publishAudit: vi.fn(),
+}));
+
+vi.mock('../../../../../../lib/env.js', () => ({
+  env: { appBaseUrl: () => 'https://app.example.com' },
+}));
+vi.mock('../../../../../../lib/auth.js', () => ({ getSignedInUser }));
+vi.mock('../../../../../../lib/supabase.js', () => ({
+  serviceRoleStore: () => ({ listInstallationsForUser, getAudit }),
+}));
+vi.mock('../../../../../../../src/conformance/audit-service.js', () => ({ publishAudit }));
+
+import { POST } from './route.js';
+
+const params = (installationId: string, auditId: string) => ({
+  params: Promise.resolve({ installationId, auditId }),
+});
+
+function auditRecord(installationId: number): AuditRecord {
+  return {
+    id: 'a1',
+    repoId: 10,
+    installationId,
+    headSha: 'abc',
+    basisCheckRunId: 500,
+    status: 'in_review',
+    createdAt: 't',
+    publishedAt: null,
+  };
+}
+
+function postRequest(origin?: string): Request {
+  const headers: Record<string, string> = {};
+  if (origin !== undefined) headers['origin'] = origin;
+  return new Request('https://app.example.com/api/installations/42/audits/a1/publish', {
+    method: 'POST',
+    headers,
+  });
+}
+
+describe('POST /api/installations/[installationId]/audits/[auditId]/publish', () => {
+  beforeEach(() => {
+    getSignedInUser.mockResolvedValue({ id: 'user-1' });
+    listInstallationsForUser.mockResolvedValue([42]);
+    getAudit.mockResolvedValue(auditRecord(42));
+    publishAudit.mockResolvedValue({ published: true, blockers: [] });
+  });
+  afterEach(() => vi.clearAllMocks());
+
+  it('returns 403 when the request is cross-origin (CSRF guard)', async () => {
+    const res = await POST(postRequest('https://evil.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(403);
+    expect(getSignedInUser).not.toHaveBeenCalled();
+  });
+
+  it('returns 404 (not 403) when the user may not view the installation', async () => {
+    listInstallationsForUser.mockResolvedValue([99]); // 42 not visible
+    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(404);
+    expect(publishAudit).not.toHaveBeenCalled();
+  });
+
+  it('returns 404 when the audit belongs to a different installation (cross-tenant guard)', async () => {
+    getAudit.mockResolvedValue(auditRecord(999));
+    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(404);
+    expect(publishAudit).not.toHaveBeenCalled();
+  });
+
+  it('303-redirects with ?published=1 when the honesty gate passes', async () => {
+    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(303);
+    expect(res.headers.get('location')).toBe(
+      'https://app.example.com/dashboard/42/audits/a1?published=1',
+    );
+  });
+
+  it('303-redirects with ?blocked=N when machine-only Supports claims remain', async () => {
+    publishAudit.mockResolvedValue({ published: false, blockers: ['1.1.1', '1.4.3'] });
+    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(303);
+    expect(res.headers.get('location')).toBe(
+      'https://app.example.com/dashboard/42/audits/a1?blocked=2',
+    );
+  });
+});

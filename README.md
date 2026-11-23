@@ -197,8 +197,9 @@ your code and nothing about your corrections is sent anywhere. Commit
   goes through it so no re-implementation drifts from what the Action verifies.
 - **`packages/app`** (`@a11y-fixer/app`, private) — the hosted GitHub App control
   plane: it ingests the Action's Check Runs for a cross-repo **dashboard**,
-  orchestrates multi-repo scans, and sells seats via GitHub Marketplace. It
-  augments, not replaces, the CI Action. See
+  orchestrates multi-repo scans, drafts **conformance audits** (VPAT/ACR) from a
+  repo's latest scan for human review before publishing, and sells seats via
+  GitHub Marketplace. It augments, not replaces, the CI Action. See
   [`packages/app/README.md`](./packages/app/README.md).
 
 ## Development

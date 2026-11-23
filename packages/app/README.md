@@ -29,12 +29,21 @@ same posture as `@a11y-fixer/licensing`) is the CI-gated heart:
   pipeline once, map the result → HTTP status. Fully unit-tested, no Next runtime.
 - `src/db/store.ts` — the persistence port; `memory-store.ts` (tests) and
   `supabase-store.ts` (production, structural `SupabaseLike`, CI-excluded).
+- `src/conformance/*` — the Conformance (VPAT/ACR) audit workflow. `derive.ts`
+  crosses a scan's violations with the `@a11y-fixer/core` WCAG catalog to
+  produce a machine-verdict **draft**; `reconcile.ts` + `audit-service.ts` layer
+  a human reviewer's verdicts on top and enforce an honesty gate that forbids
+  publishing any criterion as "Supports" on automated evidence alone. This
+  produces the reviewed conformance record; it does not yet render the VPAT or
+  accessibility-statement documents.
 - `src/dashboard/aggregate.ts` + `view-model.ts` — pure summary + render mappers.
 - `src/auth/installations.ts` — pure GitHub identity + installation-visibility
   resolution (seamed `fetch`), unit-tested.
 - `db/schema.sql` — Supabase Postgres schema incl. `scans`/`violations`, the
   `users`/`user_installations` + RLS auth model, `subscriptions` (Marketplace billing),
   and `licenses` (per-installation free-tier key, keyed by `installation_id`).
+  Adds `audits` + `criterion_verdicts` for the conformance-audit workflow
+  (machine + human verdicts per WCAG criterion).
 
 ### Next.js layer (`app/**`) — typechecked by `next build`, not the CI `tsc` gate
 
@@ -42,7 +51,10 @@ Thin shells over the tested core: `app/api/webhooks/github/route.ts` (one call t
 `handleWebhookRequest`), Supabase Auth GitHub login under `app/auth/**`, the
 read-only `/dashboard` org→repo pages, and the per-installation
 `app/dashboard/[installationId]/page.tsx` "Set up scanning" panel that provisions
-(lazily mints) and reveals the installation's license key via `CopyButton.tsx`.
+(lazily mints) and reveals the installation's license key via `CopyButton.tsx`,
+and the conformance-audit pages (`app/dashboard/[installationId]/audits/**` to
+list, start, and review drafts) over the `audits`/`verdict`/`publish` routes
+under `app/api/installations/[installationId]/audits/**`.
 Every Next/React/Supabase import lives here
 so `src/**` stays zero-dep. CI build/typecheck is `tsc --noEmit -p tsconfig.src.json`
 (node, src-only); `next build` (via `tsconfig.json`) runs on Vercel only.

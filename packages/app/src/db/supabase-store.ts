@@ -7,6 +7,9 @@
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
 import type {
+  AuditRecord,
+  AuditStatus,
+  CriterionVerdictRecord,
   InstallationRecord,
   LicenseRecord,
   RepoRecord,
@@ -180,6 +183,112 @@ export class SupabaseStore implements Store {
         conclusion: (r.conclusion as string | null) ?? null,
         violationCount: r.violation_count as number,
         createdAt: r.created_at as string,
+      };
+    });
+  }
+
+  async listViolationsByScan(checkRunId: number): Promise<ViolationRecord[]> {
+    const { data, error } = await this.db.from('violations').select().eq('check_run_id', checkRunId);
+    throwOn(error, 'listViolationsByScan');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        ruleId: r.rule_id as string,
+        wcagId: r.wcag_id as string,
+        impact: r.impact as string,
+        description: r.description as string,
+        helpUrl: r.help_url as string,
+        path: (r.path as string | null) ?? null,
+        line: (r.line as number | null) ?? null,
+      };
+    });
+  }
+
+  async upsertAudit(record: AuditRecord): Promise<void> {
+    const { error } = await this.db.from('audits').upsert(
+      {
+        id: record.id,
+        repo_id: record.repoId,
+        installation_id: record.installationId,
+        head_sha: record.headSha,
+        basis_check_run_id: record.basisCheckRunId,
+        status: record.status,
+        created_at: record.createdAt,
+        published_at: record.publishedAt,
+      },
+      { onConflict: 'id' },
+    );
+    throwOn(error, 'upsertAudit');
+  }
+
+  async getAudit(auditId: string): Promise<AuditRecord | null> {
+    const { data, error } = await this.db.from('audits').select().eq('id', auditId);
+    throwOn(error, 'getAudit');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return this.toAuditRecord(row);
+  }
+
+  async listAuditsByInstallation(installationId: number): Promise<AuditRecord[]> {
+    const { data, error } = await this.db.from('audits').select().eq('installation_id', installationId);
+    throwOn(error, 'listAuditsByInstallation');
+    return (data ?? []).map(row => this.toAuditRecord(row as Record<string, unknown>));
+  }
+
+  private toAuditRecord(r: Record<string, unknown>): AuditRecord {
+    return {
+      id: r.id as string,
+      repoId: r.repo_id as number,
+      installationId: r.installation_id as number,
+      headSha: r.head_sha as string,
+      basisCheckRunId: (r.basis_check_run_id as number | null) ?? null,
+      status: r.status as AuditStatus,
+      createdAt: r.created_at as string,
+      publishedAt: (r.published_at as string | null) ?? null,
+    };
+  }
+
+  async setAuditStatus(auditId: string, status: AuditStatus, publishedAt: string | null): Promise<void> {
+    const { error } = await this.db
+      .from('audits')
+      .update({ status, published_at: publishedAt })
+      .eq('id', auditId);
+    throwOn(error, 'setAuditStatus');
+  }
+
+  async upsertVerdict(record: CriterionVerdictRecord): Promise<void> {
+    const { error } = await this.db.from('criterion_verdicts').upsert(
+      {
+        id: record.id,
+        audit_id: record.auditId,
+        wcag_id: record.wcagId,
+        source: record.source,
+        verdict: record.verdict,
+        remarks: record.remarks,
+        evidence: record.evidence,
+        author_id: record.authorId,
+        updated_at: record.updatedAt,
+      },
+      { onConflict: 'audit_id,wcag_id,source' },
+    );
+    throwOn(error, 'upsertVerdict');
+  }
+
+  async listVerdicts(auditId: string): Promise<CriterionVerdictRecord[]> {
+    const { data, error } = await this.db.from('criterion_verdicts').select().eq('audit_id', auditId);
+    throwOn(error, 'listVerdicts');
+    return (data ?? []).map(row => {
+      const r = row as Record<string, unknown>;
+      return {
+        id: r.id as string,
+        auditId: r.audit_id as string,
+        wcagId: r.wcag_id as string,
+        source: r.source as CriterionVerdictRecord['source'],
+        verdict: r.verdict as CriterionVerdictRecord['verdict'],
+        remarks: r.remarks as string,
+        evidence: r.evidence ?? null,
+        authorId: (r.author_id as string | null) ?? null,
+        updatedAt: r.updated_at as string,
       };
     });
   }

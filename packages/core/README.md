@@ -52,7 +52,15 @@ and empty table headers — and merge the result onto a base scan.
 - **Baselines:** `loadBaseline`, `buildBaseline`, `saveBaseline`,
   `diffAgainstBaseline` (the `check`-gate baseline used by the CLI).
 - **PRs:** `PullRequestBuilder`.
-- Types: `A11yViolation`, `A11yNode`, `Fixer`, `FixResult`, `FixerBucket`, etc.
+- **WCAG catalog:** `SUCCESS_CRITERIA` (the WCAG 2.1 + 2.2 Level A/AA
+  success-criteria catalog, with titles, conformance levels, a standards
+  cross-walk, and automated-coverage flags derived from the detector maps),
+  `getSuccessCriterion`, `isKnownCriterion`, `criteriaWithAutomatedCoverage`,
+  and `SECTION_508_INCORPORATION`. A criterion's `hasAutomatedCoverage` means
+  a11y-fixer has at least one detector that fires for it — not that it is fully
+  machine-verifiable.
+- Types: `A11yViolation`, `A11yNode`, `Fixer`, `FixResult`, `FixerBucket`,
+  `SuccessCriterion`, `ConformanceLevel`, `WcagVersion`, etc.
 
 ## License
 

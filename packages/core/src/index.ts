@@ -24,6 +24,20 @@ export { scanSource } from './runners/scan-source.js';
 export type { ScanSourceOptions } from './runners/scan-source.js';
 export { WCAG_TO_ESLINT, ESLINT_TO_WCAG, AUTO_FIXABLE_RULES } from './runners/wcag-eslint-map.js';
 
+export {
+  SUCCESS_CRITERIA,
+  SECTION_508_INCORPORATION,
+  getSuccessCriterion,
+  isKnownCriterion,
+  criteriaWithAutomatedCoverage,
+} from './wcag/catalog.js';
+export type {
+  SuccessCriterion,
+  SuccessCriterionMeta,
+  ConformanceLevel,
+  WcagVersion,
+} from './wcag/catalog.js';
+
 export { EslintFixer } from './fixer/rule-based/eslint-fixer.js';
 export { HtmlLangFixer } from './fixer/rule-based/html-lang.js';
 export { ColorContrastFixer, parseContrastFailure } from './fixer/rule-based/color-contrast.js';
