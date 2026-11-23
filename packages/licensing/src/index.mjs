@@ -5,4 +5,4 @@
 // package owns the minting side; the two agree by cross-test (see the Action's
 // license-signing.test.ts). Do NOT add a second mint implementation anywhere.
 
-export { signLicense } from './sign.mjs';
+export { signLicense, signPayload, verifyPayload } from './sign.mjs';

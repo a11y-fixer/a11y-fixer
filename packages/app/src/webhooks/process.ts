@@ -6,6 +6,7 @@
 // unit-testable without a running HTTP server.
 import { verifyWebhookSignature } from './verify.js';
 import { routeEvent } from './router.js';
+import type { ConformanceConfig } from './handlers/check-run.js';
 import type { Store } from '../db/store.js';
 
 export type WebhookResult =
@@ -25,6 +26,8 @@ export interface ProcessWebhookOptions {
   /** `X-Hub-Signature-256`. */
   signature: string | null | undefined;
   store: Store;
+  /** When set, check_run ingestion also appends signed conformance claims. */
+  conformance?: ConformanceConfig;
 }
 
 /**
@@ -32,7 +35,7 @@ export interface ProcessWebhookOptions {
  * to a status code. Signature is checked before the body is ever parsed.
  */
 export async function processWebhook(opts: ProcessWebhookOptions): Promise<WebhookResult> {
-  const { secret, rawBody, eventName, deliveryId, signature, store } = opts;
+  const { secret, rawBody, eventName, deliveryId, signature, store, conformance } = opts;
 
   if (!verifyWebhookSignature({ secret, payload: rawBody, signatureHeader: signature })) {
     return 'invalid_signature';
@@ -55,6 +58,6 @@ export async function processWebhook(opts: ProcessWebhookOptions): Promise<Webho
     return 'duplicate';
   }
 
-  await routeEvent(eventName, payload, store);
+  await routeEvent(eventName, payload, store, conformance);
   return 'ok';
 }

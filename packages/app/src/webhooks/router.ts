@@ -5,7 +5,7 @@
 // acknowledged and ignored so GitHub stops retrying.
 import { handleInstallation } from './handlers/installation.js';
 import { handleInstallationRepositories } from './handlers/installation-repositories.js';
-import { handleCheckRun } from './handlers/check-run.js';
+import { handleCheckRun, type ConformanceConfig } from './handlers/check-run.js';
 import { handleMarketplacePurchase } from './handlers/marketplace-purchase.js';
 import type {
   CheckRunEvent,
@@ -15,13 +15,18 @@ import type {
 } from './events.js';
 import type { Store } from '../db/store.js';
 
-export async function routeEvent(eventName: string, payload: unknown, store: Store): Promise<void> {
+export async function routeEvent(
+  eventName: string,
+  payload: unknown,
+  store: Store,
+  conformance?: ConformanceConfig,
+): Promise<void> {
   switch (eventName) {
     case 'installation':
       await handleInstallation(payload as InstallationEvent, store);
       return;
     case 'check_run':
-      await handleCheckRun(payload as CheckRunEvent, store);
+      await handleCheckRun(payload as CheckRunEvent, store, undefined, conformance);
       return;
     case 'installation_repositories':
       await handleInstallationRepositories(payload as InstallationRepositoriesEvent, store);

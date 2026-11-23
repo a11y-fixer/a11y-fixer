@@ -28,4 +28,9 @@ export const env = {
   // telemetry analytics page. Not required(): when unset, no one qualifies and
   // the page 404s for everyone (see src/admin/access.ts).
   adminGithubLogins: () => process.env['ADMIN_GITHUB_LOGINS'] ?? '',
+  // Phase 1 conformance ledger. DEDICATED Ed25519 key, separate from the license
+  // key (decision D1). OPTIONAL: when unset, the webhook sink ingests scans but
+  // appends no signed claims. See src/conformance/keyring.ts for the full set.
+  conformanceSigningKey: (): string | undefined => process.env.CONFORMANCE_SIGNING_KEY,
+  conformanceKeyId: (): string | undefined => process.env.CONFORMANCE_KEY_ID,
 };

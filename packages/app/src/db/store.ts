@@ -265,6 +265,48 @@ export interface ActionRunRecord {
   createdAt?: string | null;
 }
 
+/**
+ * A content-addressed evidence blob backing one or more claims. Deduplicated by
+ * `hash` (sha-256 of the blob), so the same scan output is stored once. See
+ * docs/conformance/claim-model.md.
+ */
+export interface EvidenceBlobRecord {
+  /** sha-256 (hex) of the canonical blob bytes. */
+  hash: string;
+  /** 'scan-output' in Phase 1. */
+  type: string;
+  /** Tool/model version that produced the evidence. */
+  producerVersion: string;
+  /** The evidence payload (the scan contract slice, in Phase 1). */
+  blob: unknown;
+  /** ISO-8601 when first stored. */
+  createdAt: string;
+}
+
+/**
+ * A persisted signed conformance claim. Mirrors the SignedClaim shape from
+ * conformance/claim.ts (kept as a structural type here so the db layer does not
+ * import the conformance module). Append-only: never updated or deleted.
+ */
+export interface SignedClaimRecord {
+  id: string;
+  subjectKind: 'flow' | 'page' | 'component';
+  subjectKey: string;
+  criterion: string;
+  wcagVersion: string;
+  level: 'A' | 'AA';
+  state: 'pass' | 'fail' | 'not-applicable' | 'not-evaluated' | 'human-reviewed';
+  method: 'deterministic' | 'runtime' | 'semantic' | 'human';
+  confidence: number;
+  assertedBy: string;
+  assertedAt: string;
+  prevClaimId: string | null;
+  supersedes: string | null;
+  evidenceHash: string | null;
+  signature: string;
+  keyId: string;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
@@ -352,4 +394,26 @@ export interface Store {
   linkUserInstallation(userId: string, installationId: number): Promise<void>;
   /** The installation ids a user is allowed to view. */
   listInstallationsForUser(userId: string): Promise<number[]>;
+
+  // --- Conformance ledger (Phase 1) ---------------------------------------
+
+  /** Store an evidence blob, idempotent by content hash (a repeat is a no-op). */
+  putEvidence(record: EvidenceBlobRecord): Promise<void>;
+  /** Fetch an evidence blob by hash, or null. Used by ledger verification. */
+  getEvidence(hash: string): Promise<EvidenceBlobRecord | null>;
+
+  /** The latest claim id on a subject's chain, or null if the subject is new. */
+  getSubjectHead(subjectKey: string): Promise<string | null>;
+
+  /**
+   * Append signed claims. Append-only: inserts are idempotent by claim `id`
+   * (a repeat does nothing), and each affected subject's head advances to the
+   * last claim appended for it. Claims for the same subject MUST arrive already
+   * chained (each `prevClaimId` pointing at the one before). Never updates or
+   * deletes an existing claim.
+   */
+  appendClaims(claims: SignedClaimRecord[]): Promise<void>;
+
+  /** All claims on a subject's chain, in append (chain) order. */
+  listClaims(subjectKey: string): Promise<SignedClaimRecord[]>;
 }

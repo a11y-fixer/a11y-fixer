@@ -6,10 +6,12 @@ import type {
   AuditRevisionRecord,
   AuditStatus,
   CriterionVerdictRecord,
+  EvidenceBlobRecord,
   InstallationRecord,
   LicenseRecord,
   RepoRecord,
   ScanRecord,
+  SignedClaimRecord,
   Store,
   SubscriptionRecord,
   UserRecord,
@@ -33,6 +35,11 @@ export class MemoryStore implements Store {
   readonly revisions = new Map<string, AuditRevisionRecord>();
   /** Anonymous Action usage events, in arrival order. */
   readonly actionRuns: ActionRunRecord[] = [];
+  /** Conformance ledger. Claims kept in append order; evidence keyed by hash. */
+  readonly evidence = new Map<string, EvidenceBlobRecord>();
+  readonly claims: SignedClaimRecord[] = [];
+  private readonly claimIds = new Set<string>();
+  readonly subjectHeads = new Map<string, string>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -213,5 +220,32 @@ export class MemoryStore implements Store {
 
   async listInstallationsForUser(userId: string): Promise<number[]> {
     return [...(this.userInstallations.get(userId) ?? [])];
+  }
+
+  async putEvidence(record: EvidenceBlobRecord): Promise<void> {
+    if (this.evidence.has(record.hash)) return; // content-addressed: a repeat is a no-op
+    this.evidence.set(record.hash, { ...record });
+  }
+
+  async getEvidence(hash: string): Promise<EvidenceBlobRecord | null> {
+    const e = this.evidence.get(hash);
+    return e ? { ...e } : null;
+  }
+
+  async getSubjectHead(subjectKey: string): Promise<string | null> {
+    return this.subjectHeads.get(subjectKey) ?? null;
+  }
+
+  async appendClaims(claims: SignedClaimRecord[]): Promise<void> {
+    for (const claim of claims) {
+      if (this.claimIds.has(claim.id)) continue; // idempotent by id; append-only
+      this.claims.push({ ...claim });
+      this.claimIds.add(claim.id);
+      this.subjectHeads.set(claim.subjectKey, claim.id); // advance to the last appended
+    }
+  }
+
+  async listClaims(subjectKey: string): Promise<SignedClaimRecord[]> {
+    return this.claims.filter(c => c.subjectKey === subjectKey).map(c => ({ ...c }));
   }
 }
