@@ -38,6 +38,16 @@ export const AXE_WCAG_MAP: Record<string, string> = {
   'link-in-text-block': '1.4.1',
   'empty-heading': '1.3.1',
   'autocomplete-valid': '1.3.5',
+  'valid-lang': '3.1.2',
+  'no-autoplay-audio': '1.4.2',
+  'server-side-image-map': '2.1.1',
+  'aria-roles': '4.1.2',
+  'presentation-role-conflict': '4.1.2',
+  'scope-attr-valid': '1.3.1',
+  'aria-deprecated-role': '4.1.2',
+  'image-redundant-alt': '1.1.1',
+  'empty-table-header': '1.3.1',
+  'frame-title-unique': '4.1.2',
 };
 
 export function toWcagId(axeRuleId: string): string {

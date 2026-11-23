@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { A11yViolation } from '@a11y-fixer/core';
-import { EslintFixer, HtmlLangFixer } from '@a11y-fixer/core';
+import { EslintFixer, HtmlLangFixer, ImageRedundantAltFixer } from '@a11y-fixer/core';
 import { buildFullRegistry } from './registry.js';
 import { AltTextFixer } from './alt-text.js';
 import { LinkNameFixer } from './link-name.js';
@@ -23,6 +23,8 @@ import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { EmptyHeadingFixer } from './empty-heading.js';
 import { AutocompleteValidFixer } from './autocomplete-valid.js';
+import { EmptyTableHeaderFixer } from './empty-table-header.js';
+import { FrameTitleUniqueFixer } from './frame-title-unique.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 import { LinkTextFixer } from './link-text.js';
@@ -139,6 +141,20 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe autocomplete-valid (WCAG 1.3.5) to AutocompleteValidFixer', () => {
     expect(registry.getFixer(violation('autocomplete-valid', '1.3.5'))).toBeInstanceOf(AutocompleteValidFixer);
+  });
+
+  it('routes axe empty-table-header (WCAG 1.3.1) to EmptyTableHeaderFixer', () => {
+    expect(registry.getFixer(violation('empty-table-header', '1.3.1'))).toBeInstanceOf(EmptyTableHeaderFixer);
+  });
+
+  it('routes axe frame-title-unique (WCAG 4.1.2) to FrameTitleUniqueFixer', () => {
+    expect(registry.getFixer(violation('frame-title-unique', '4.1.2'))).toBeInstanceOf(FrameTitleUniqueFixer);
+  });
+
+  it('routes axe image-redundant-alt (WCAG 1.1.1) to the deterministic ImageRedundantAltFixer, not AltTextFixer', () => {
+    // The redundant-alt fixer is id-keyed and registered before the broad
+    // wcagId==='1.1.1' AltTextFixer so it wins despite sharing the criterion.
+    expect(registry.getFixer(violation('image-redundant-alt', '1.1.1'))).toBeInstanceOf(ImageRedundantAltFixer);
   });
 
   it('still routes deterministic axe html-has-lang (WCAG 3.1.1) to HtmlLangFixer', () => {

@@ -1,11 +1,12 @@
 # Coverage: what we fix vs. what we only detect
 
 **Scope in one line:** two fixer tiers. The paid **AI tier** targets
-**accessible-name, alt-text and title** problems (**25 AI fixers** across WCAG
+**accessible-name, alt-text and title** problems (**27 AI fixers** across WCAG
 1.1.1, 1.3.1, 1.3.5, 2.4.2, 2.4.4, 4.1.2, plus 2 Markdown rules), and the free
 **deterministic core tier** ([`@a11y-fixer/core`](https://www.npmjs.com/package/@a11y-fixer/core))
 repairs a broad set of structural, language, contrast, keyboard, timing, motion,
-ARIA-structure and list/table problems rule-by-rule (no API key needed).
+ARIA-role/structure, media-autoplay and list/table problems rule-by-rule (no API
+key needed).
 Everything else axe-core and `jsx-a11y` surface is **detected but not
 auto-fixed** — see [Detected but not fixable](#detected-but-not-fixable).
 
@@ -45,6 +46,7 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 1.3.1 | `AriaInputFieldNameFixer` | `aria-input-field-name.ts` | `id === 'aria-input-field-name'` | HTML |
 | 1.3.1 | `AriaToggleFieldNameFixer` | `aria-toggle-field-name.ts` | `id === 'aria-toggle-field-name'` | HTML |
 | 1.3.1 | `EmptyHeadingFixer` | `empty-heading.ts` | `id === 'empty-heading'` (AI-generated heading text) | HTML |
+| 1.3.1 | `EmptyTableHeaderFixer` | `empty-table-header.ts` | `id === 'empty-table-header'` (AI-generated `<th>` text) | HTML |
 | 1.3.5 | `AutocompleteValidFixer` | `autocomplete-valid.ts` | `id === 'autocomplete-valid'` (heuristic token correction; `rule-based` bucket) | HTML |
 | 2.4.2 | `DocumentTitleFixer` | `document-title.ts` | `id === 'document-title'` | HTML |
 | 2.4.4 | `MarkdownLinkTextFixer` | `markdown-link-text.ts` | `id === 'md-link-text'` | Markdown |
@@ -56,6 +58,12 @@ rule-specific; `wcagId ===` is a broad catch-all that also absorbs the
 | 4.1.2 | `AriaTooltipNameFixer` | `aria-tooltip-name.ts` | `id === 'aria-tooltip-name'` | HTML |
 | 4.1.2 | `AriaDialogNameFixer` | `aria-dialog-name.ts` | `id === 'aria-dialog-name'` | HTML |
 | 4.1.2 | `FrameTitleFixer` | `frame-title.ts` | `id === 'frame-title'` | HTML |
+| 4.1.2 | `FrameTitleUniqueFixer` | `frame-title-unique.ts` | `id === 'frame-title-unique'` (AI-generated distinct `<iframe>` title) | HTML |
+
+The core-tier `ImageRedundantAltFixer` (`id === 'image-redundant-alt'`, 1.1.1) is
+also registered in the AI block — ahead of the broad `AltTextFixer` — so the full
+Action routes redundant-alt to the deterministic fixer; it is listed in the core
+table below.
 
 `element-tag.ts`, `source-line.ts` and `aria-named-widget.ts` in that directory
 are shared helpers/base classes, not fixers.
@@ -69,14 +77,18 @@ the free OSS CLI; the paid Action layers these under the AI tier.
 |---|---|---|---|
 | 1.1.1 | `ImageAltFixer` | `image-alt.ts` | `id === 'image-alt'` / `jsx-a11y/alt-text` |
 | 1.1.1 | `InputImageAltFixer` | `input-image-alt.ts` | `id === 'input-image-alt'` |
+| 1.1.1 | `ImageRedundantAltFixer` | `image-redundant-alt.ts` | `id === 'image-redundant-alt'` (empties alt that duplicates adjacent text) |
 | 1.3.1 | `LabelFixer` | `label.ts` | `id === 'label'` |
 | 1.3.1 | `ListFixer` | `list.ts` | `id === 'list'` / `'listitem'` |
 | 1.3.1 | `DefinitionListFixer` | `definition-list.ts` | `id === 'definition-list'` / `'dlitem'` |
+| 1.3.1 | `ScopeAttrValidFixer` | `scope-attr-valid.ts` | `id === 'scope-attr-valid'` (corrects invalid `scope` token) |
 | 1.3.1 | `MarkdownTableHeaderFixer` | `markdown-table-header.ts` | `id === 'md-table-header'` |
 | 1.4.1 | `LinkInTextBlockFixer` | `link-in-text-block.ts` | `id === 'link-in-text-block'` (adds `text-decoration: underline`) |
+| 1.4.2 | `AutoplayAudioFixer` | `no-autoplay-audio.ts` | `id === 'no-autoplay-audio'` (removes `autoplay` from `<audio>`/`<video>`) |
 | 1.4.3 | `ColorContrastFixer` | `color-contrast.ts` | `id === 'color-contrast'` (luminance-adjusts inline colors) |
 | 1.4.4 | `MetaViewportFixer` / `MetaViewportLargeFixer` | `meta-viewport*.ts` | `id === 'meta-viewport'` / `'meta-viewport-large'` |
 | 2.1.1 | `ScrollableRegionFocusableFixer` | `scrollable-region-focusable.ts` | `id === 'scrollable-region-focusable'` |
+| 2.1.1 | `ServerSideImageMapFixer` | `server-side-image-map.ts` | `id === 'server-side-image-map'` (removes `ismap`) |
 | 2.2.1 | `MetaRefreshFixer` | `meta-refresh.ts` | `id === 'meta-refresh'` |
 | 2.2.2 | `BlinkMarqueeFixer` | `blink-marquee.ts` | `id === 'blink'` / `'marquee'` |
 | 2.4.2 | `DocumentTitleFixer` | `document-title.ts` | `id === 'document-title'` |
@@ -84,8 +96,12 @@ the free OSS CLI; the paid Action layers these under the AI tier.
 | 2.4.6 | `HeadingOrderFixer` | `heading-order.ts` | `id === 'heading-order'` |
 | 2.4.6 | `MarkdownHeadingOrderFixer` | `markdown-heading-order.ts` | `id === 'md-heading-order'` |
 | 3.1.1 | `HtmlLangFixer` / `HtmlLangValidFixer` / `HtmlXmlLangMismatchFixer` | `html-lang*.ts` | `id === 'html-has-lang'` / `'html-lang-valid'` / `'html-xml-lang-mismatch'` |
+| 3.1.2 | `ValidLangFixer` | `valid-lang.ts` | `id === 'valid-lang'` (canonicalizes element `lang`/`xml:lang`) |
 | 4.1.2 | `AriaHiddenBodyFixer` / `AriaHiddenFocusFixer` | `aria-hidden-*.ts` | `id === 'aria-hidden-body'` / `'aria-hidden-focus'` |
 | 4.1.2 | `AriaAllowedAttrFixer` | `aria-allowed-attr.ts` | `id === 'aria-allowed-attr'` / `'aria-prohibited-attr'` (strips disallowed ARIA attrs) |
+| 4.1.2 | `AriaRolesFixer` | `aria-roles.ts` | `id === 'aria-roles'` (removes an invalid/abstract `role`) |
+| 4.1.2 | `AriaDeprecatedRoleFixer` | `aria-deprecated-role.ts` | `id === 'aria-deprecated-role'` (maps a deprecated role to its replacement) |
+| 4.1.2 | `PresentationRoleConflictFixer` | `presentation-role-conflict.ts` | `id === 'presentation-role-conflict'` (drops a conflicting `role="presentation"`/`"none"`) |
 | 4.1.2 | `FrameTitleFixer` | `frame-title.ts` | `id === 'frame-title'` |
 | various | `EslintFixer` | `eslint-fixer.ts` | any `jsx-a11y/*` rule whose WCAG id ∈ {3.1.1, 4.1.2, 1.3.1, 2.4.6, 2.4.4} |
 
@@ -107,16 +123,22 @@ top:
   for image alt, non-descriptive link text, heading order, and empty table headers.
 
 So the tool *detects* far more than it fixes. The two tiers above now cover
-accessible names, alt/title text, page language, contrast, keyboard/focus,
-viewport, timing, motion, ARIA-hidden/disallowed-attr structure, and list,
-definition-list and Markdown-table structure. The genuinely-unfixable remainder
+accessible names, alt/title text, page and element language, contrast,
+keyboard/focus, viewport, timing, motion, autoplaying media, invalid/deprecated/
+conflicting ARIA roles, ARIA-hidden/disallowed-attr structure, redundant alt,
+unique iframe titles, and list, definition-list, empty table headers (HTML +
+Markdown) and table-header `scope` structure. The genuinely-unfixable remainder
 (reported, left for a human) still includes:
 
 - Captions/transcripts for media (`video-caption`, 1.2.2)
 - Landmark / region structure (one-main, unique landmarks, `region`)
-- HTML/JSX table headers & captions (only Markdown empty table headers are fixed)
+- HTML/JSX table header *associations* & captions (`td-headers-attr`,
+  `th-has-data-cells`, `table-fake-caption` — empty `<th>` text and invalid
+  `scope` are now fixed)
 - Duplicate IDs, bypass blocks (skip links)
-- ARIA value correctness (`aria-valid-attr-value`, required attrs/children, roles)
+- ARIA value correctness (`aria-valid-attr-value`, required attrs/children) — an
+  *invalid* or *deprecated* role is now fixed, but inventing a *correct* missing
+  value is left for a human
 - …and the rest of the axe / `jsx-a11y` catalog with no safe deterministic or
   AI-assisted repair.
 
@@ -164,11 +186,14 @@ accessible-name rules, and gate on committed baselines. See
   Fixers with no ACT fixtures are tracked here instead, not in `rules.mjs`, so
   the detection benchmark stays green:
   - AI tier: `DocumentTitleFixer`, `AreaAltFixer`, `ObjectAltFixer`,
-    `SvgImgAltFixer`, `AriaCommandNameFixer`, the widget-name fixers, and the new
-    `EmptyHeadingFixer` and `AutocompleteValidFixer`.
+    `SvgImgAltFixer`, `AriaCommandNameFixer`, the widget-name fixers,
+    `EmptyHeadingFixer`, `AutocompleteValidFixer`, and the new
+    `EmptyTableHeaderFixer` and `FrameTitleUniqueFixer`.
   - Core tier: the deterministic structural/language/contrast/keyboard/timing/
-    motion fixers, plus the new `AriaAllowedAttrFixer`, `LinkInTextBlockFixer`
-    and `DefinitionListFixer`.
+    motion fixers, `AriaAllowedAttrFixer`, `LinkInTextBlockFixer`,
+    `DefinitionListFixer`, plus the new `ValidLangFixer`, `AutoplayAudioFixer`,
+    `ServerSideImageMapFixer`, `AriaRolesFixer`, `PresentationRoleConflictFixer`,
+    `ScopeAttrValidFixer`, `AriaDeprecatedRoleFixer` and `ImageRedundantAltFixer`.
 - The Markdown fixers run on the Markdown path, which the ACT corpus (HTML/JSX
   only) does not exercise; they have their own unit, registry, and end-to-end
   tests and are tracked here.
