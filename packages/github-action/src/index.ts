@@ -3,6 +3,7 @@ import * as github from '@actions/github';
 import {
   PullRequestBuilder,
   scanSource,
+  scanComponents,
   dedupeFixFiles,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
@@ -139,24 +140,27 @@ async function reportToGitHub(
 }
 
 /**
- * Runs the base scanner and, when `markdown` is set, concatenates the repo-local
- * Markdown scanner's violations. The base is `scanWithCookies` for an
- * authenticated URL scan, else core's `scanSource` (JSX/TSX, static HTML, or a
- * live URL). `@a11y-fixer/core` never sees `.md`, so Markdown support is added
- * here as a merge rather than a change to core. Markdown is static source, so it
- * participates in every mode (including the fix-mode re-scan) and regardless of
- * the base scanner — in particular a cookie-based URL scan still merges it.
+ * Runs the base scanner and concatenates the opt-in scanners' violations: the
+ * repo-local Markdown scanner (`.md`/`.markdown`/`.mdx`) when `markdown` is set,
+ * and the component scanner (`.vue`/`.svelte`/`.astro`) when `components` is set.
+ * The base is `scanWithCookies` for an authenticated URL scan, else core's
+ * `scanSource` (JSX/TSX, static HTML, or a live URL). These source-tree scanners
+ * are added here as a merge rather than a change to the base, so they participate
+ * in every mode (including the fix-mode re-scan) regardless of the base scanner —
+ * in particular a cookie-based URL scan still merges them.
  */
 async function scanAll(
   rootDir: string,
-  opts: { url?: string; html?: boolean; markdown?: boolean; cookies?: CookieParam[] },
+  opts: { url?: string; html?: boolean; markdown?: boolean; components?: boolean; cookies?: CookieParam[] },
 ): Promise<A11yViolation[]> {
   const base = opts.url && opts.cookies
     ? await scanWithCookies(rootDir, { url: opts.url, cookies: opts.cookies })
     : await scanSource(rootDir, { url: opts.url, html: opts.html });
-  if (!opts.markdown) return base;
-  const md = await scanMarkdown(rootDir);
-  return [...base, ...md];
+  return [
+    ...base,
+    ...(opts.markdown ? await scanMarkdown(rootDir) : []),
+    ...(opts.components ? await scanComponents(rootDir) : []),
+  ];
 }
 
 /**
@@ -234,6 +238,9 @@ export async function run(): Promise<void> {
   // Static Markdown path: scan/fix `.md` image-alt and link-text issues. Like
   // `html`, getInput (not getBooleanInput) so an absent input doesn't throw.
   const markdown = core.getInput('markdown').toLowerCase() === 'true';
+  // Component template path: scan/fix .vue/.svelte/.astro markup via axe. Like
+  // `html`, getInput (not getBooleanInput) so an absent input doesn't throw.
+  const components = core.getInput('components').toLowerCase() === 'true';
   const baseBranch = core.getInput('base-branch') || 'main';
 
   const cookiesRaw = core.getInput('cookies');
@@ -310,7 +317,7 @@ export async function run(): Promise<void> {
 
   try {
     if (mode === 'check') {
-      const violations = await scanAll(rootDir, { url, html, markdown, cookies });
+      const violations = await scanAll(rootDir, { url, html, markdown, components, cookies });
 
       // Surface results on the PR (Check Run + inline annotations + sticky
       // comment) before deciding the job outcome. Best-effort, never fails here.
@@ -325,7 +332,7 @@ export async function run(): Promise<void> {
         core.info('No accessibility violations found. ✓');
       }
     } else if (mode === 'scan') {
-      const violations = await scanAll(rootDir, { url, html, markdown, cookies });
+      const violations = await scanAll(rootDir, { url, html, markdown, components, cookies });
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
     } else if (mode === 'fix') {
@@ -359,13 +366,13 @@ export async function run(): Promise<void> {
       // only for URL scans, which fix mode does not support.
       const registry = buildFullRegistry(aiProvider, rootDir);
 
-      const before = await scanAll(rootDir, { html, markdown });
+      const before = await scanAll(rootDir, { html, markdown, components });
       // Capture pre-fix file contents so any fix we can't verify is reverted
       // cleanly rather than shipped. Must happen before applyAll mutates disk.
       const snapshot = await snapshotFiles(before);
       const fixes = await registry.applyAll(before);
       await aiProvider.save();
-      const after = await scanAll(rootDir, { html, markdown });
+      const after = await scanAll(rootDir, { html, markdown, components });
 
       // Gate the re-scan: confirm each edited file's violations net-decreased and
       // that no fix introduced a new one. Files that fail are restored to their
@@ -376,7 +383,7 @@ export async function run(): Promise<void> {
         fixes,
         changedFiles: dedupeFixFiles(fixes),
         snapshot,
-        rescan: () => scanAll(rootDir, { html, markdown }),
+        rescan: () => scanAll(rootDir, { html, markdown, components }),
       });
       const applied = report.verifiedFixes;
 

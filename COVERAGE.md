@@ -125,14 +125,24 @@ rule as "covered"; it just routes that instance to a person.
 ## Detected but not fixable
 
 Detection runs the real scanner, `scanSource()` from `@a11y-fixer/core`, over one
-of two **disjoint** core paths per run, plus an optional Markdown path layered on
-top:
+of two **disjoint** core paths per run, plus two optional source-tree paths
+(Markdown, components) layered on top:
 
 - **HTML path** (`html: true`): **axe-core** (~90+ rules) against rendered HTML.
 - **JSX path** (default): **ESLint + `jsx-a11y`** (~30+ rules).
 - **Markdown path** (`markdown: true`): a remark/mdast scanner
   ([`packages/core/src/scanner/markdown.ts`](./packages/core/src/scanner/markdown.ts))
-  for image alt, non-descriptive link text, heading order, and empty table headers.
+  for image alt, non-descriptive link text, heading order, and empty table
+  headers, over `.md`/`.markdown`/`.mdx`. MDX additionally flags JSX `<img>`
+  without alt (emitted as `md-html-img-alt`).
+- **Component path** (`components: true`): a scanner
+  ([`packages/core/src/scanner/components/`](./packages/core/src/scanner/components/))
+  that isolates the template markup of `.vue`/`.svelte`/`.astro` (blanking
+  `<script>`/`<style>`/frontmatter in place so lines map 1:1) and runs it through
+  the **same axe-core** detector as the HTML path — so it surfaces, and fixes,
+  the same element-level rules. Whole-document rules (`document-title`,
+  `html-has-lang`, `region`, `landmark-one-main`, `page-has-heading-one`, …) are
+  dropped, since a component fragment doesn't own them. Requires puppeteer.
 
 So the tool *detects* far more than it fixes. The two tiers above now cover
 accessible names, alt/title text, page and element language, contrast,
@@ -169,8 +179,9 @@ Fix mode is **static-only**, and the two **core** paths are single-path per run
 — see [`packages/github-action/src/index.ts`](./packages/github-action/src/index.ts).
 The HTML and JSX paths emit different rule IDs for the same WCAG criterion (axe
 `link-name` vs. `jsx-a11y` `anchor-has-content`, both 2.4.4), which is why the
-registry carries both id-keyed and broad wcagId-keyed fixers. The Markdown path
-is independent and **layers onto** whichever core path you pick (`markdown: true`).
+registry carries both id-keyed and broad wcagId-keyed fixers. The Markdown and
+component paths are independent and **layer onto** whichever core path you pick
+(`markdown: true`, `components: true`).
 
 Practically:
 
@@ -178,10 +189,14 @@ Practically:
 - **JSX path** effectively only auto-fixes **alt-text**, and human-flags most of
   the rest (no source-level markup to edit deterministically).
 - **Markdown path** auto-fixes image alt, link text, heading order, and empty
-  table headers in `.md` source, independent of the core path.
+  table headers in `.md`/`.markdown`/`.mdx` source, independent of the core path.
+- **Component path** reuses axe + the HTML fixers against `.vue`/`.svelte`/`.astro`
+  template markup, so it auto-fixes the same element-level set as the HTML path
+  (e.g. `image-alt` → `<img alt>`) directly in the component source. Directive-
+  bound attributes (`:src`, `v-if`, Svelte/Astro expressions) are skipped for v1.
 
 So the fixable coverage on any given repo is **whichever core path you ran**
-(optionally plus Markdown), not the union. The
+(optionally plus Markdown and/or components), not the union. The
 [demo site](./examples/demo-site/) ships separate jobs for exactly this reason.
 
 ## Benchmarked quality

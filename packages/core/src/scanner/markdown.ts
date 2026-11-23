@@ -3,6 +3,7 @@ import path from 'node:path';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
+import remarkMdx from 'remark-mdx';
 import { visit } from 'unist-util-visit';
 import { toString as mdToString } from 'mdast-util-to-string';
 import type { Root, RootContent } from 'mdast';
@@ -28,18 +29,29 @@ import type { A11yViolation } from '../detector/index.js';
  * registry dispatch, `dedupeFixFiles`, `verifyFixes`, and `PullRequestBuilder`
  * consume it unchanged.
  *
- * Scope: Markdown + raw-`<img>` syntax. MDX and rendered-output rules (contrast)
- * are out of scope.
+ * Scope: Markdown + raw-`<img>` syntax. MDX (`.mdx`) is also supported — it's a
+ * Markdown superset, so every native construct (images, links, headings, tables)
+ * is covered as-is; additionally, JSX `<img>` elements with missing alt are
+ * flagged. JSX `<a>` links and rendered-output rules (contrast) remain out of
+ * scope.
  */
 
 /** Link text so generic it conveys nothing out of context — safe to rewrite. */
 export const GENERIC_LINK_PATTERNS =
   /^(click here|here|learn more|read more|more|details|link|go|continue)$/i;
 
-const MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
+const MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', '.git', '.a11y-fixer']);
 
 const parser = unified().use(remarkParse).use(remarkGfm);
+// MDX adds JSX elements, `{expressions}`, and ESM import/export to the grammar;
+// parsing `.mdx` with the plain Markdown parser would choke on that syntax.
+const mdxParser = unified().use(remarkParse).use(remarkGfm).use(remarkMdx);
+
+/** `.mdx` needs the MDX-aware parser; all other extensions use plain Markdown. */
+function parserFor(file: string) {
+  return path.extname(file).toLowerCase() === '.mdx' ? mdxParser : parser;
+}
 
 export async function scanMarkdown(rootDir: string): Promise<A11yViolation[]> {
   const files = await collectMarkdownFiles(rootDir);
@@ -59,7 +71,7 @@ export async function scanMarkdown(rootDir: string): Promise<A11yViolation[]> {
 /** Exported for unit tests: all violations in one file's `content`. */
 export function scanContent(file: string, content: string): A11yViolation[] {
   const lines = content.split('\n');
-  const tree = parser.parse(content) as Root;
+  const tree = parserFor(file).parse(content) as Root;
   const out: A11yViolation[] = [];
 
   visit(tree, (node) => {
@@ -67,6 +79,16 @@ export function scanContent(file: string, content: string): A11yViolation[] {
     if (!pos) return;
     const line = pos.line;
     const column = pos.column;
+
+    // MDX JSX elements (`<img />`, `<Foo>`) aren't mdast core nodes. Flag a JSX
+    // `<img>` whose `alt` attribute is missing or blank; other components pass.
+    const jsx = asMdxImg(node);
+    if (jsx) {
+      if (isBlankAlt(jsx.alt)) {
+        out.push(v('md-html-img-alt', '1.1.1', 'JSX <img> in MDX has no alt text', file, line, column));
+      }
+      return;
+    }
 
     switch (node.type) {
       case 'image': {
@@ -138,6 +160,29 @@ function isNonDescriptiveLink(text: string, href: string): boolean {
 
 function isBlankAlt(alt: string | null | undefined): boolean {
   return alt == null || alt.trim() === '';
+}
+
+/** Minimal shape of an MDX JSX element node (from mdast-util-mdx-jsx). */
+interface MdxJsxElement {
+  type: 'mdxJsxFlowElement' | 'mdxJsxTextElement';
+  name: string | null;
+  attributes: Array<{ type: string; name?: string; value?: unknown }>;
+}
+
+/**
+ * If `node` is an MDX JSX `<img>` element, returns its literal `alt` (missing →
+ * `null`), else `null`. An `alt={expr}` (a non-string attribute value) counts as
+ * present-but-dynamic — we can't evaluate it, so it's treated as non-blank and
+ * not flagged.
+ */
+function asMdxImg(node: { type: string }): { alt: string | null } | null {
+  if (node.type !== 'mdxJsxFlowElement' && node.type !== 'mdxJsxTextElement') return null;
+  const el = node as MdxJsxElement;
+  if (el.name !== 'img') return null;
+  const attr = el.attributes.find((a) => a.type === 'mdxJsxAttribute' && a.name === 'alt');
+  if (!attr) return { alt: null };
+  // String literal → its value; expression (object) or valueless → treat present.
+  return { alt: typeof attr.value === 'string' ? attr.value : 'present' };
 }
 
 /** `<img>` tags in a raw-HTML node that lack a non-empty `alt`. Single-line only. */
