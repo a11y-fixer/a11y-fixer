@@ -21,6 +21,8 @@ import { AriaDialogNameFixer } from './aria-dialog-name.js';
 import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
+import { EmptyHeadingFixer } from './empty-heading.js';
+import { AutocompleteValidFixer } from './autocomplete-valid.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 import { LinkTextFixer } from './link-text.js';
@@ -129,6 +131,14 @@ describe('buildFullRegistry dispatch', () => {
 
   it('routes axe frame-title (WCAG 4.1.2) to FrameTitleFixer, not EslintFixer', () => {
     expect(registry.getFixer(violation('frame-title', '4.1.2'))).toBeInstanceOf(FrameTitleFixer);
+  });
+
+  it('routes axe empty-heading (WCAG 1.3.1) to EmptyHeadingFixer', () => {
+    expect(registry.getFixer(violation('empty-heading', '1.3.1'))).toBeInstanceOf(EmptyHeadingFixer);
+  });
+
+  it('routes axe autocomplete-valid (WCAG 1.3.5) to AutocompleteValidFixer', () => {
+    expect(registry.getFixer(violation('autocomplete-valid', '1.3.5'))).toBeInstanceOf(AutocompleteValidFixer);
   });
 
   it('still routes deterministic axe html-has-lang (WCAG 3.1.1) to HtmlLangFixer', () => {

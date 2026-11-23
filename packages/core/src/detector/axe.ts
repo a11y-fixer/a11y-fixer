@@ -31,6 +31,13 @@ export const AXE_WCAG_MAP: Record<string, string> = {
   'marquee': '2.2.2',
   'list': '1.3.1',
   'listitem': '1.3.1',
+  'definition-list': '1.3.1',
+  'dlitem': '1.3.1',
+  'aria-allowed-attr': '4.1.2',
+  'aria-prohibited-attr': '4.1.2',
+  'link-in-text-block': '1.4.1',
+  'empty-heading': '1.3.1',
+  'autocomplete-valid': '1.3.5',
 };
 
 export function toWcagId(axeRuleId: string): string {
