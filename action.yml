@@ -49,7 +49,11 @@ inputs:
     required: false
     default: 'false'
   markdown:
-    description: 'Also scan/fix Markdown (.md/.markdown): image alt text (inline, reference, and raw <img>), non-descriptive link text (inline and reference), heading order, and empty table headers. Combines with the JSX or HTML path. Static source only (not honored with url).'
+    description: 'Also scan/fix Markdown (.md/.markdown/.mdx): image alt text (inline, reference, and raw <img>), non-descriptive link text (inline and reference), heading order, and empty table headers. MDX additionally flags JSX <img> without alt. Combines with the JSX or HTML path. Static source only (not honored with url).'
+    required: false
+    default: 'false'
+  components:
+    description: 'Also scan/fix component templates (.vue/.svelte/.astro): the template markup is isolated and run through axe-core, giving the same rule coverage (and fixers) as the static-HTML path. Requires puppeteer. Combines with the JSX or HTML path. Static source only (not honored with url).'
     required: false
     default: 'false'
   base-branch:
@@ -125,6 +129,7 @@ runs:
         INPUT_COOKIES: ${{ inputs.cookies }}
         INPUT_HTML: ${{ inputs.html }}
         INPUT_MARKDOWN: ${{ inputs.markdown }}
+        INPUT_COMPONENTS: ${{ inputs.components }}
         INPUT_BASE-BRANCH: ${{ inputs.base-branch }}
         INPUT_CACHE-FILE: ${{ inputs.cache-file }}
         INPUT_LEARNING: ${{ inputs.learning }}

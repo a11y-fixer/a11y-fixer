@@ -91,6 +91,31 @@ describe('scanContent — positions', () => {
   });
 });
 
+describe('scanContent — MDX (.mdx)', () => {
+  const MDX = '/repo/doc.mdx';
+  const mdxIds = (c: string) => scanContent(MDX, c).map(v => v.id);
+
+  it('parses MDX syntax (imports/JSX) without choking, flagging native markdown', () => {
+    const doc = "import Chart from './Chart'\n\n![](logo.png)\n\n<Chart/>";
+    expect(mdxIds(doc)).toEqual(['md-image-alt']);
+  });
+  it('flags a JSX <img> with no alt', () => {
+    expect(mdxIds('<img src="logo.png" />')).toEqual(['md-html-img-alt']);
+  });
+  it('flags a JSX <img> with empty alt', () => {
+    expect(mdxIds('<img src="logo.png" alt="" />')).toEqual(['md-html-img-alt']);
+  });
+  it('does not flag a JSX <img> that has alt text', () => {
+    expect(mdxIds('<img src="logo.png" alt="A logo" />')).toEqual([]);
+  });
+  it('does not flag a JSX <img> whose alt is a dynamic expression', () => {
+    expect(mdxIds('<img src="logo.png" alt={caption} />')).toEqual([]);
+  });
+  it('still covers native markdown links in MDX', () => {
+    expect(mdxIds('Read [here](https://x.com) now')).toEqual(['md-link-text']);
+  });
+});
+
 describe('collectMarkdownHeadings', () => {
   it('returns levels and lines in document order', () => {
     expect(collectMarkdownHeadings('# A\n\n### B')).toEqual([

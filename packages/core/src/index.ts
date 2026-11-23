@@ -60,6 +60,8 @@ export type { LineEdit } from './fixer/shared/line-edit.js';
 
 export { scanMarkdown, scanContent, collectMarkdownHeadings, GENERIC_LINK_PATTERNS } from './scanner/markdown.js';
 export type { MarkdownHeading } from './scanner/markdown.js';
+export { scanComponents, maskNonTemplate } from './scanner/components/index.js';
+export { scanHtmlContent } from './runners/render-locate.js';
 export {
   sanitizeInlineLabel,
   locateAtColumn,

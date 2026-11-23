@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import type { A11yViolation } from '../detector/index.js';
 import { AxeDetector } from '../detector/axe.js';
 import { collectFiles } from '../mapper/walk-files.js';
-import { locateElementInHtml } from '../mapper/html-locate.js';
+import { scanHtmlContent } from './render-locate.js';
 
 /**
  * Scans static `.html`/`.htm` files under `rootDir` with axe-core — no server
@@ -25,18 +25,7 @@ export class HtmlFileRunner {
       const content = await readFile(file, 'utf8').catch(() => null);
       if (content === null) continue;
 
-      const violations = await this.detector.scan({ html: content });
-      for (const v of violations) {
-        for (const node of v.nodes) {
-          const pos = locateElementInHtml(content, node);
-          node.sourceFile = file;
-          if (pos) {
-            node.sourceLine = pos.line;
-            node.sourceColumn = pos.column;
-          }
-        }
-      }
-      all.push(...violations);
+      all.push(...await scanHtmlContent(this.detector, content, file));
     }
 
     return all;
