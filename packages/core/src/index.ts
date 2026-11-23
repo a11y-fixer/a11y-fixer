@@ -35,8 +35,18 @@ export { MarkdownTableHeaderFixer } from './fixer/rule-based/markdown-table-head
 export { AriaAllowedAttrFixer, offendingAriaAttrs } from './fixer/rule-based/aria-allowed-attr.js';
 export { LinkInTextBlockFixer, addUnderlineToLink } from './fixer/rule-based/link-in-text-block.js';
 export { DefinitionListFixer, fixDefinitionList, fixDlItem } from './fixer/rule-based/definition-list.js';
-export { removeAttribute } from './fixer/shared/attrs.js';
+export { ValidLangFixer, canonicalizeLangOnLine } from './fixer/rule-based/valid-lang.js';
+export { AutoplayAudioFixer, removeAutoplay } from './fixer/rule-based/no-autoplay-audio.js';
+export { ServerSideImageMapFixer, removeIsMap } from './fixer/rule-based/server-side-image-map.js';
+export { AriaRolesFixer, removeRole } from './fixer/rule-based/aria-roles.js';
+export { PresentationRoleConflictFixer, removePresentationRole } from './fixer/rule-based/presentation-role-conflict.js';
+export { ScopeAttrValidFixer, normalizeScope, fixScopeOnLine } from './fixer/rule-based/scope-attr-valid.js';
+export { AriaDeprecatedRoleFixer, replacementRole, fixDeprecatedRoleOnLine } from './fixer/rule-based/aria-deprecated-role.js';
+export { ImageRedundantAltFixer, emptyRedundantAlt } from './fixer/rule-based/image-redundant-alt.js';
+export { readAttr, removeAttribute } from './fixer/shared/attrs.js';
 export { setElementText } from './fixer/shared/html-edit.js';
+export { editRecordedLine } from './fixer/shared/line-edit.js';
+export type { LineEdit } from './fixer/shared/line-edit.js';
 
 export { scanMarkdown, scanContent, collectMarkdownHeadings, GENERIC_LINK_PATTERNS } from './scanner/markdown.js';
 export type { MarkdownHeading } from './scanner/markdown.js';

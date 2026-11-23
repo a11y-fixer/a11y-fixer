@@ -24,6 +24,14 @@ import { LinkInTextBlockFixer } from './rule-based/link-in-text-block.js';
 import { LabelFixer } from './rule-based/label.js';
 import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import { ImageAltFixer } from './rule-based/image-alt.js';
+import { ValidLangFixer } from './rule-based/valid-lang.js';
+import { AutoplayAudioFixer } from './rule-based/no-autoplay-audio.js';
+import { ServerSideImageMapFixer } from './rule-based/server-side-image-map.js';
+import { AriaRolesFixer } from './rule-based/aria-roles.js';
+import { PresentationRoleConflictFixer } from './rule-based/presentation-role-conflict.js';
+import { ScopeAttrValidFixer } from './rule-based/scope-attr-valid.js';
+import { AriaDeprecatedRoleFixer } from './rule-based/aria-deprecated-role.js';
+import { ImageRedundantAltFixer } from './rule-based/image-redundant-alt.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
@@ -74,6 +82,16 @@ export function registerCoreFixers(
   registry.register(new LabelFixer(rootDir));
   registry.register(new InputImageAltFixer(rootDir));
   registry.register(new ImageAltFixer(rootDir));
+  // All id-keyed on a unique axe rule id, so position among the core fixers is
+  // free — none shares a broad wcagId-keyed collider with another core fixer.
+  registry.register(new ValidLangFixer(rootDir));
+  registry.register(new AutoplayAudioFixer(rootDir));
+  registry.register(new ServerSideImageMapFixer(rootDir));
+  registry.register(new AriaRolesFixer(rootDir));
+  registry.register(new PresentationRoleConflictFixer(rootDir));
+  registry.register(new ScopeAttrValidFixer(rootDir));
+  registry.register(new AriaDeprecatedRoleFixer(rootDir));
+  registry.register(new ImageRedundantAltFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));

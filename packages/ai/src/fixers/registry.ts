@@ -1,4 +1,4 @@
-import { FixerRegistry, registerCoreFixers } from '@a11y-fixer/core';
+import { FixerRegistry, registerCoreFixers, ImageRedundantAltFixer } from '@a11y-fixer/core';
 import type { AIProvider } from '../provider/index.js';
 import { AltTextFixer, type ScreenshotProvider } from './alt-text.js';
 import { LinkTextFixer } from './link-text.js';
@@ -23,6 +23,8 @@ import { FrameTitleFixer } from './frame-title.js';
 import { DocumentTitleFixer } from './document-title.js';
 import { EmptyHeadingFixer } from './empty-heading.js';
 import { AutocompleteValidFixer } from './autocomplete-valid.js';
+import { EmptyTableHeaderFixer } from './empty-table-header.js';
+import { FrameTitleUniqueFixer } from './frame-title-unique.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 
@@ -81,6 +83,9 @@ export function buildFullRegistry(
   registry.register(new ObjectAltFixer(aiProvider, rootDir));
   registry.register(new SvgImgAltFixer(aiProvider, rootDir));
   registry.register(new RoleImgAltFixer(aiProvider, rootDir));
+  // Deterministic id-keyed fixer (image-redundant-alt → 1.1.1); must precede the
+  // broad wcagId-keyed AltTextFixer or it would swallow the redundant-alt case.
+  registry.register(new ImageRedundantAltFixer(rootDir));
   registry.register(new AltTextFixer(aiProvider, rootDir, screenshots));
   registry.register(new LinkNameFixer(aiProvider, rootDir));
   registry.register(new LinkTextFixer(aiProvider, rootDir));
@@ -102,6 +107,11 @@ export function buildFullRegistry(
   // they belong in the AI block so the committed-dist action bundles them.
   registry.register(new EmptyHeadingFixer(aiProvider, rootDir));
   registry.register(new AutocompleteValidFixer(aiProvider, rootDir));
+  // empty-table-header → 1.3.1 and frame-title-unique → 4.1.2 are id-keyed with
+  // no broad AI collider at their criterion, so position here is free — but they
+  // belong in the AI block so the committed-dist action bundles them.
+  registry.register(new EmptyTableHeaderFixer(aiProvider, rootDir));
+  registry.register(new FrameTitleUniqueFixer(aiProvider, rootDir));
 
   registerCoreFixers(registry, rootDir);
 
