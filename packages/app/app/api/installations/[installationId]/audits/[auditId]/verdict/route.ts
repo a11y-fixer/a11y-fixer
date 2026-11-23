@@ -1,6 +1,7 @@
 // Record a human reviewer's verdict for one success criterion in an audit.
 // POST only, same-origin guarded, viewer-authorized, audit-ownership checked.
 import { NextResponse } from 'next/server';
+import { isKnownCriterion } from '@a11y-fixer/core';
 import { getSignedInUser } from '../../../../../../lib/auth.js';
 import { serviceRoleStore } from '../../../../../../lib/supabase.js';
 import { env } from '../../../../../../lib/env.js';
@@ -41,11 +42,16 @@ export async function POST(
   const audit = await store.getAudit(auditId);
   if (!auditBelongsTo(audit, id)) return new NextResponse('Not found', { status: 404 });
 
+  // A published audit is a finalized conformance record — read-only.
+  if (audit.status === 'published') return new NextResponse('Audit is published', { status: 409 });
+
   const form = await req.formData();
   const wcagId = String(form.get('wcagId') ?? '');
   const verdict = String(form.get('verdict') ?? '');
   const remarks = String(form.get('remarks') ?? '');
-  if (!wcagId || !SELECTABLE_VERDICTS.includes(verdict as VerdictValue)) {
+  // wcagId must name a real catalog criterion, else the row is an orphan reconcile
+  // silently ignores. verdict must be one the reviewer is allowed to pick.
+  if (!isKnownCriterion(wcagId) || !SELECTABLE_VERDICTS.includes(verdict as VerdictValue)) {
     return new NextResponse('Bad request', { status: 400 });
   }
 

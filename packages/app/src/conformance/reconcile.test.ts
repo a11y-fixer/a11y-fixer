@@ -75,6 +75,23 @@ describe('reconcile', () => {
     expect(row.title).toBe('Criterion 1.4.3');
     expect(row.level).toBe('AA');
   });
+
+  it('treats a human verdict with no author as unreviewed and falls back to the machine draft', () => {
+    // author_id is `on delete set null`, so a deleted reviewer leaves an
+    // unattributable human row. It must not count as a confirmed human verdict.
+    const orphanHuman: CriterionVerdictRecord = { ...verdict('1.1.1', 'human', 'supports', 'orphan'), authorId: null };
+    const [row] = reconcile([sc('1.1.1')], [verdict('1.1.1', 'machine', 'partially_supports'), orphanHuman]);
+    expect(row.source).toBe('machine');
+    expect(row.verdict).toBe('partially_supports');
+    expect(row.needsHumanReview).toBe(true);
+  });
+
+  it('keeps the publish gate closed when a machine supports is only "confirmed" by an authorless human row', () => {
+    const orphanHuman: CriterionVerdictRecord = { ...verdict('1.1.1', 'human', 'supports'), authorId: null };
+    const out = reconcile([sc('1.1.1')], [verdict('1.1.1', 'machine', 'supports'), orphanHuman]);
+    expect(canPublish(out)).toBe(false);
+    expect(publishBlockers(out).map(b => b.wcagId)).toEqual(['1.1.1']);
+  });
 });
 
 describe('publish readiness', () => {

@@ -98,7 +98,9 @@ export default async function AuditsPage({
                 <th>Commit</th>
                 <th>Status</th>
                 <th>Created</th>
-                <th></th>
+                <th>
+                  <span className="sr-only">Actions</span>
+                </th>
               </tr>
             </thead>
             <tbody>

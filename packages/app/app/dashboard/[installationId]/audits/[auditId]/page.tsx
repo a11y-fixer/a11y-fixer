@@ -47,6 +47,9 @@ export default async function AuditDetailPage({
   if (!view) notFound();
   const page = auditPageView(view);
   const verdictPost = `/api/installations/${id}/audits/${auditId}/verdict`;
+  // A published audit is a finalized conformance record: it is read-only, so no
+  // verdict forms or publish button render (the routes enforce this too).
+  const isPublished = audit.status === 'published';
 
   return (
     <main className="container">
@@ -63,7 +66,7 @@ export default async function AuditDetailPage({
 
       {published && (
         <p className="panel tone-good" role="status">
-          Audit published. Every conformance claim has a reviewer verdict.
+          Audit published. No Supports claim rests on automated evidence alone.
         </p>
       )}
       {blocked && (
@@ -73,14 +76,16 @@ export default async function AuditDetailPage({
         </p>
       )}
 
-      <section className="panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-        <span className={page.canPublish ? 'tone-good' : 'tone-warn'}>{page.readiness}</span>
-        <form method="post" action={`/api/installations/${id}/audits/${auditId}/publish`}>
-          <button type="submit" disabled={!page.canPublish}>
-            Publish
-          </button>
-        </form>
-      </section>
+      {!isPublished && (
+        <section className="panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+          <span className={page.canPublish ? 'tone-good' : 'tone-warn'}>{page.readiness}</span>
+          <form method="post" action={`/api/installations/${id}/audits/${auditId}/publish`}>
+            <button type="submit" disabled={!page.canPublish}>
+              Publish
+            </button>
+          </form>
+        </section>
+      )}
 
       <div className="panel" style={{ padding: 0 }}>
         <table>
@@ -115,25 +120,29 @@ export default async function AuditDetailPage({
                 </td>
                 <td className="muted">{row.source}</td>
                 <td>
-                  <form
-                    method="post"
-                    action={verdictPost}
-                    style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}
-                  >
-                    <input type="hidden" name="wcagId" value={row.wcagId} />
-                    <select name="verdict" defaultValue={row.source === 'human' ? row.verdict : ''} aria-label={`Verdict for ${row.wcagId}`}>
-                      <option value="" disabled>
-                        Choose…
-                      </option>
-                      {SELECTABLE_VERDICTS.map(v => (
-                        <option key={v} value={v}>
-                          {verdictView(v).label}
+                  {isPublished ? (
+                    <span className="muted">{verdictView(row.verdict).label}</span>
+                  ) : (
+                    <form
+                      method="post"
+                      action={verdictPost}
+                      style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}
+                    >
+                      <input type="hidden" name="wcagId" value={row.wcagId} />
+                      <select name="verdict" defaultValue={row.source === 'human' ? row.verdict : ''} aria-label={`Verdict for ${row.wcagId}`}>
+                        <option value="" disabled>
+                          Choose…
                         </option>
-                      ))}
-                    </select>
-                    <input type="text" name="remarks" placeholder="Remarks (optional)" aria-label={`Remarks for ${row.wcagId}`} />
-                    <button type="submit">Save</button>
-                  </form>
+                        {SELECTABLE_VERDICTS.map(v => (
+                          <option key={v} value={v}>
+                            {verdictView(v).label}
+                          </option>
+                        ))}
+                      </select>
+                      <input type="text" name="remarks" placeholder="Remarks (optional)" aria-label={`Remarks for ${row.wcagId}`} />
+                      <button type="submit">Save</button>
+                    </form>
+                  )}
                 </td>
               </tr>
             ))}

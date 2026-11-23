@@ -53,7 +53,12 @@ export function reconcile(
     const rows = byCriterion.get(sc.id) ?? [];
     const human = pick(rows, 'human');
     const machine = pick(rows, 'machine');
-    const winner = human ?? machine;
+    // A human verdict only counts as reviewed when it has a real author. author_id
+    // is `on delete set null`, so deleting a reviewer would otherwise leave an
+    // unattributable "human" claim that silently passes the publish gate. Treat
+    // such a row as not-yet-reviewed so the gate falls back to the machine draft.
+    const reviewedHuman = human && human.authorId ? human : undefined;
+    const winner = reviewedHuman ?? machine;
     const base = {
       wcagId: sc.id,
       title: sc.title,

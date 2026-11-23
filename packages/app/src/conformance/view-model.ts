@@ -93,8 +93,12 @@ export function auditPageView(view: AuditView): AuditPageView {
   const rows = view.reconciled.map(criterionRow);
   const totalCount = rows.length;
   const reviewedCount = rows.filter(r => !r.needsHumanReview).length;
+  // The publish gate only guarantees that no criterion is claimed Supports on
+  // automated evidence alone — NOT that every criterion was human-reviewed. Say
+  // exactly that, and show the real review progress, so the copy never overstates
+  // what happened (the honesty posture of the feature).
   const readiness = view.canPublish
-    ? 'Ready to publish — every conformance claim has been reviewed.'
+    ? `Ready to publish — no criterion is claimed Supports on automated evidence alone (${reviewedCount}/${totalCount} criteria reviewed by a person).`
     : `Not ready to publish — ${view.blockers.length} criterion(s) claimed Supports still need reviewer confirmation.`;
   return {
     status: statusView(view.audit.status),

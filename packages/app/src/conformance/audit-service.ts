@@ -78,10 +78,20 @@ export interface HumanVerdictParams {
   authorId: string;
 }
 
+/** Thrown when a mutation targets an audit that is already published (read-only). */
+export class AuditPublishedError extends Error {
+  constructor(auditId: string) {
+    super(`audit ${auditId} is published and cannot be modified`);
+    this.name = 'AuditPublishedError';
+  }
+}
+
 /**
  * Record (or replace) a human reviewer's verdict for one criterion. Moves a
  * `draft` audit to `in_review` on the first human verdict; leaves `in_review`
- * and `published` audits' status untouched.
+ * audits' status untouched. A `published` audit is a finalized conformance
+ * record and is immutable: this throws `AuditPublishedError` rather than
+ * silently rewriting a published claim.
  */
 export async function recordHumanVerdict(
   store: Store,
@@ -90,6 +100,7 @@ export async function recordHumanVerdict(
 ): Promise<void> {
   const audit = await store.getAudit(params.auditId);
   if (!audit) throw new Error(`audit ${params.auditId} not found`);
+  if (audit.status === 'published') throw new AuditPublishedError(params.auditId);
 
   await store.upsertVerdict({
     id: deps.newId(),
@@ -153,6 +164,10 @@ export async function publishAudit(
 ): Promise<PublishResult> {
   const audit = await store.getAudit(auditId);
   if (!audit) throw new Error(`audit ${auditId} not found`);
+
+  // Idempotent: a published audit is finalized. Re-publishing must not rewrite
+  // its publishedAt (the recorded publication time of a conformance document).
+  if (audit.status === 'published') return { published: true, blockers: [] };
 
   const verdicts = await store.listVerdicts(auditId);
   const reconciled = reconcile(criteria, verdicts);

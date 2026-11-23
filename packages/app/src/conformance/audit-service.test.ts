@@ -200,4 +200,34 @@ describe('publishAudit', () => {
   it('throws for an unknown audit', async () => {
     await expect(publishAudit(store, CATALOG, 'nope', deterministicDeps())).rejects.toThrow(/not found/);
   });
+
+  it('is idempotent: re-publishing a published audit does not rewrite publishedAt', async () => {
+    await recordHumanVerdict(
+      store,
+      { auditId: audit.id, wcagId: '1.1.1', verdict: 'supports', remarks: 'confirmed', authorId: 'u1' },
+      deterministicDeps(),
+    );
+    await publishAudit(store, CATALOG, audit.id, deterministicDeps());
+    // Re-publish with a clock that would write a different timestamp if it ran.
+    const laterDeps: AuditDeps = { now: () => '2026-09-09T00:00:00Z', newId: () => 'later' };
+    const result = await publishAudit(store, CATALOG, audit.id, laterDeps);
+    expect(result.published).toBe(true);
+    expect((await store.getAudit(audit.id))?.publishedAt).toBe('2026-01-01T00:00:00Z');
+  });
+
+  it('refuses to record a human verdict on a published audit', async () => {
+    await recordHumanVerdict(
+      store,
+      { auditId: audit.id, wcagId: '1.1.1', verdict: 'supports', remarks: 'confirmed', authorId: 'u1' },
+      deterministicDeps(),
+    );
+    await publishAudit(store, CATALOG, audit.id, deterministicDeps());
+    await expect(
+      recordHumanVerdict(
+        store,
+        { auditId: audit.id, wcagId: '1.4.3', verdict: 'supports', remarks: 'sneaky', authorId: 'u1' },
+        deterministicDeps(),
+      ),
+    ).rejects.toThrow(/published/);
+  });
 });
