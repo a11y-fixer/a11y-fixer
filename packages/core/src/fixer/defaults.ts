@@ -32,6 +32,16 @@ import { PresentationRoleConflictFixer } from './rule-based/presentation-role-co
 import { ScopeAttrValidFixer } from './rule-based/scope-attr-valid.js';
 import { AriaDeprecatedRoleFixer } from './rule-based/aria-deprecated-role.js';
 import { ImageRedundantAltFixer } from './rule-based/image-redundant-alt.js';
+import { AriaAllowedRoleFixer } from './rule-based/aria-allowed-role.js';
+import { AriaRoledescriptionFixer } from './rule-based/aria-roledescription.js';
+import { AriaBrailleLabelEquivalentFixer } from './rule-based/aria-braillelabel-equivalent.js';
+import { AriaBrailleRoledescriptionEquivalentFixer } from './rule-based/aria-brailleroledescription-equivalent.js';
+import { AriaValidAttrFixer } from './rule-based/aria-valid-attr.js';
+import { AriaConditionalAttrFixer } from './rule-based/aria-conditional-attr.js';
+import { AriaValidAttrValueFixer } from './rule-based/aria-valid-attr-value.js';
+import { TableDuplicateNameFixer } from './rule-based/table-duplicate-name.js';
+import { TdHeadersAttrFixer } from './rule-based/td-headers-attr.js';
+import { MetaRefreshNoExceptionsFixer } from './rule-based/meta-refresh-no-exceptions.js';
 
 /** WCAG ids whose ESLint rules eslint-plugin-jsx-a11y can auto-fix with --fix. */
 const ESLINT_FIXABLE_WCAG_IDS = ['3.1.1', '4.1.2', '1.3.1', '2.4.6', '2.4.4'];
@@ -92,6 +102,18 @@ export function registerCoreFixers(
   registry.register(new ScopeAttrValidFixer(rootDir));
   registry.register(new AriaDeprecatedRoleFixer(rootDir));
   registry.register(new ImageRedundantAltFixer(rootDir));
+  // Batch 3 — ARIA / table / meta hygiene. All id-keyed on a unique axe rule id,
+  // so position among the core fixers is free.
+  registry.register(new AriaAllowedRoleFixer(rootDir));
+  registry.register(new AriaRoledescriptionFixer(rootDir));
+  registry.register(new AriaBrailleLabelEquivalentFixer(rootDir));
+  registry.register(new AriaBrailleRoledescriptionEquivalentFixer(rootDir));
+  registry.register(new AriaValidAttrFixer(rootDir));
+  registry.register(new AriaConditionalAttrFixer(rootDir));
+  registry.register(new AriaValidAttrValueFixer(rootDir));
+  registry.register(new TableDuplicateNameFixer(rootDir));
+  registry.register(new TdHeadersAttrFixer(rootDir));
+  registry.register(new MetaRefreshNoExceptionsFixer(rootDir));
 
   for (const wcagId of ESLINT_FIXABLE_WCAG_IDS) {
     registry.register(new EslintFixer(wcagId, rootDir));

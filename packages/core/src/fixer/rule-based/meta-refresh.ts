@@ -30,6 +30,25 @@ export function isPureTimedRefresh(content: string): boolean {
 }
 
 /**
+ * Removes a pure time-based `<meta http-equiv="refresh">` from `line`, returning
+ * the rewritten line. Returns `null` when the line carries no such meta, no
+ * `content`, or a `content` with a `url=` redirect (which must not be dropped
+ * silently). Shared by {@link MetaRefreshFixer} and the
+ * `meta-refresh-no-exceptions` fixer, which repair the same markup under two
+ * distinct axe rule ids.
+ */
+export function removeTimedMetaRefresh(line: string): string | null {
+  const metaRe = /<meta\b[^>]*>/i;
+  const metaMatch = line.match(metaRe);
+  if (!metaMatch || !/http-equiv\s*=\s*(["'])refresh\1/i.test(metaMatch[0])) {
+    return null;
+  }
+  const contentMatch = metaMatch[0].match(/content\s*=\s*(["'])([^"']*)\1/i);
+  if (!contentMatch || !isPureTimedRefresh(contentMatch[2])) return null;
+  return line.replace(metaRe, '');
+}
+
+/**
  * Fixes axe `meta-refresh` (WCAG 2.2.1) by removing a time-based
  * `<meta http-equiv="refresh">` from its source line. Deterministic, so it
  * lives in the rule-based bucket alongside {@link MetaViewportFixer}.
