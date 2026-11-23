@@ -7,8 +7,10 @@ plain-`GITHUB_TOKEN` composite Action keeps doing the scanning in customer CI.
 
 ## Status: M5 (webhook ingest + dashboard + Marketplace billing + dashboard-triggered scans + free-tier license delivery — code complete, deploy pending)
 
-The **framework-agnostic, zero-dependency core** (unit-tested with `node:crypto`,
-same posture as `@a11y-fixer/licensing`) is the CI-gated heart:
+The **framework-agnostic core** (unit-tested with `node:crypto`,
+same posture as `@a11y-fixer/licensing`) is the CI-gated heart. It carries no
+Next/React/Supabase imports; its only runtime npm dependencies are the two
+conformance document renderers noted below:
 
 - `src/github/app-jwt.ts` — RS256 App JWT minting.
 - `src/github/installation-token.ts` — exchange the JWT for a ≤1h installation
@@ -34,8 +36,14 @@ same posture as `@a11y-fixer/licensing`) is the CI-gated heart:
   produce a machine-verdict **draft**; `reconcile.ts` + `audit-service.ts` layer
   a human reviewer's verdicts on top and enforce an honesty gate that forbids
   publishing any criterion as "Supports" on automated evidence alone. This
-  produces the reviewed conformance record; it does not yet render the VPAT or
-  accessibility-statement documents.
+  produces the reviewed conformance record, which `src/conformance/documents/*`
+  renders as VPAT/ACR and accessibility-statement documents in HTML, PDF, and
+  DOCX (`vpat.ts`/`statement.ts` build a format-agnostic model that the
+  HTML/PDF/DOCX renderers consume). Documents still require human review before
+  publishing: a draft export carries a visible "not for distribution" watermark
+  so an in-progress draft can never be mistaken for a final conformance claim. A
+  public, unauthenticated shareable statement link is still deferred — documents
+  are served only over the authenticated download route below.
 - `src/dashboard/aggregate.ts` + `view-model.ts` — pure summary + render mappers.
 - `src/auth/installations.ts` — pure GitHub identity + installation-visibility
   resolution (seamed `fetch`), unit-tested.
@@ -53,10 +61,17 @@ read-only `/dashboard` org→repo pages, and the per-installation
 `app/dashboard/[installationId]/page.tsx` "Set up scanning" panel that provisions
 (lazily mints) and reveals the installation's license key via `CopyButton.tsx`,
 and the conformance-audit pages (`app/dashboard/[installationId]/audits/**` to
-list, start, and review drafts) over the `audits`/`verdict`/`publish` routes
+list, start, and review drafts, with download links for each generated
+document) over the `audits`/`verdict`/`publish` routes and the authenticated,
+read-only `document` download route (`?doc=acr|statement&format=html|pdf|docx`)
 under `app/api/installations/[installationId]/audits/**`.
 Every Next/React/Supabase import lives here
-so `src/**` stays zero-dep. CI build/typecheck is `tsc --noEmit -p tsconfig.src.json`
+so `src/**` stays framework-free. The only runtime npm dependencies under `src/**`
+are the conformance document renderers: `src/conformance/documents/docx.ts` (`docx`,
+for the DOCX export) and `pdf.ts` (`puppeteer-core` + `@sparticuz/chromium`, loaded
+lazily at request time and kept out of the client bundle via `serverExternalPackages`);
+the model and the HTML/VPAT/statement builders beside them stay dependency-free.
+CI build/typecheck is `tsc --noEmit -p tsconfig.src.json`
 (node, src-only); `next build` (via `tsconfig.json`) runs on Vercel only.
 
 ## Deferred to provisioning (needs interactive Supabase + Vercel auth)
