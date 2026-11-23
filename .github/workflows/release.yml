@@ -35,10 +35,12 @@ jobs:
 
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
+      # No dependency cache on the release pipeline: a poisoned restored cache
+      # would feed tampered modules into a build that publishes to npm. The
+      # uncached `pnpm install --frozen-lockfile` is the deliberate trade.
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 20
-          cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
@@ -73,14 +75,17 @@ jobs:
       id-token: write # OIDC: npm Trusted Publishing + provenance
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       # OIDC Trusted Publishing requires npm >= 11.5.1 and Node >= 22.14.
+      # No dependency cache: this job publishes to npm, so a poisoned restored
+      # cache must not reach the build. Uncached frozen install is the trade.
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
-          cache: pnpm
 
       # pnpm delegates publish to the npm CLI on PATH, so ensure a recent npm.
       - run: npm install -g npm@latest
