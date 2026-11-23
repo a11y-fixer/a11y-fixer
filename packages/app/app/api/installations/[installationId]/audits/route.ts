@@ -2,7 +2,7 @@
 // POST only, same-origin guarded, viewer-authorized. Derives the machine draft
 // (src/conformance) from the scan's violations crossed with the WCAG catalog.
 import { NextResponse } from 'next/server';
-import { SUCCESS_CRITERIA } from '@a11y-fixer/core';
+import { SUCCESS_CRITERIA } from '@a11y-fixer/core/wcag';
 import { getSignedInUser } from '../../../../lib/auth.js';
 import { serviceRoleStore } from '../../../../lib/supabase.js';
 import { env } from '../../../../lib/env.js';

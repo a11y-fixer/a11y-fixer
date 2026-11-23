@@ -2,7 +2,7 @@
 // criterion is claimed Supports on machine evidence alone (publishAudit returns
 // the blockers). POST only, same-origin guarded, viewer-authorized.
 import { NextResponse } from 'next/server';
-import { SUCCESS_CRITERIA } from '@a11y-fixer/core';
+import { SUCCESS_CRITERIA } from '@a11y-fixer/core/wcag';
 import { getSignedInUser } from '../../../../../../lib/auth.js';
 import { serviceRoleStore } from '../../../../../../lib/supabase.js';
 import { env } from '../../../../../../lib/env.js';

@@ -1,4 +1,4 @@
-import { AXE_WCAG_MAP } from '../detector/axe.js';
+import { AXE_WCAG_MAP } from '../detector/axe-wcag-map.js';
 import { ESLINT_TO_WCAG } from '../runners/wcag-eslint-map.js';
 
 /**

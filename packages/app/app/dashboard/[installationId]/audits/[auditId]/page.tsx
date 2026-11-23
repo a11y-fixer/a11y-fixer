@@ -3,7 +3,7 @@
 // Thin Server Component; reconciliation + labels come from src/conformance/*.
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { SUCCESS_CRITERIA } from '@a11y-fixer/core';
+import { SUCCESS_CRITERIA } from '@a11y-fixer/core/wcag';
 import { getSignedInUser } from '../../../../lib/auth.js';
 import { serviceRoleStore } from '../../../../lib/supabase.js';
 import { authorizeInstallationView } from '../../../../../src/auth/installations.js';

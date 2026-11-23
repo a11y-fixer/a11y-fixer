@@ -1,7 +1,7 @@
 // Record a human reviewer's verdict for one success criterion in an audit.
 // POST only, same-origin guarded, viewer-authorized, audit-ownership checked.
 import { NextResponse } from 'next/server';
-import { isKnownCriterion } from '@a11y-fixer/core';
+import { isKnownCriterion } from '@a11y-fixer/core/wcag';
 import { getSignedInUser } from '../../../../../../lib/auth.js';
 import { serviceRoleStore } from '../../../../../../lib/supabase.js';
 import { env } from '../../../../../../lib/env.js';

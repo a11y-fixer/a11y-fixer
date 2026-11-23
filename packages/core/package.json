@@ -10,6 +10,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./wcag": {
+      "import": "./dist/wcag/catalog.js",
+      "types": "./dist/wcag/catalog.d.ts"
     }
   },
   "files": [
