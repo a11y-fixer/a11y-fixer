@@ -67,6 +67,13 @@ describe('maskNonTemplate', () => {
     expect(masked).not.toContain('<style>a{}');
   });
 
+  it('Svelte: blanks a <script> closed with whitespace before > (</script >)', () => {
+    const svelte = '<script>const img = "<img src=decoy>";</script >\n<img src="logo.png">';
+    const masked = maskRanges(svelte, extractSvelte(svelte));
+    expect(masked).not.toContain('decoy');
+    expect(masked.split('\n')[1]).toContain('<img src="logo.png">');
+  });
+
   it('Astro: blanks the leading --- frontmatter fence only', () => {
     const astro = '---\nconst x = "<img src=decoy>";\n---\n<img src="logo.png">';
     const masked = maskRanges(astro, extractAstro(astro));

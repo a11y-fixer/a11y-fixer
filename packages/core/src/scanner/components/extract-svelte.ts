@@ -6,12 +6,13 @@ import { matchRanges, type Range } from './mask.js';
  * (HTML-shaped markup, possibly interleaved with `{#if}`/`{expr}` which parse as
  * inert text/attribute values) is handed to axe unchanged.
  *
- * The non-greedy `<\/script>` / `<\/style>` match is deliberately simple; a `</`
- * sequence inside a script string is a rare, documented v1 gap.
+ * The close tags allow trailing whitespace (`</script >`) to match the HTML
+ * grammar — otherwise crafted markup could slip script/style bytes past the
+ * blank. A `</` sequence inside a script string is a rare, documented v1 gap.
  */
 export function extractSvelte(content: string): Range[] {
   return [
-    ...matchRanges(content, /<script\b[\s\S]*?<\/script>/gi),
-    ...matchRanges(content, /<style\b[\s\S]*?<\/style>/gi),
+    ...matchRanges(content, /<script\b[\s\S]*?<\/script\s*>/gi),
+    ...matchRanges(content, /<style\b[\s\S]*?<\/style\s*>/gi),
   ];
 }
