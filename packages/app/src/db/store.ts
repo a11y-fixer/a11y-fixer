@@ -70,6 +70,63 @@ export interface ViolationRecord {
   line: number | null;
 }
 
+/** Lifecycle of a conformance audit. */
+export type AuditStatus = 'draft' | 'in_review' | 'published';
+
+/** The VPAT/ACR conformance vocabulary for a single success criterion. */
+export type VerdictValue =
+  | 'supports'
+  | 'partially_supports'
+  | 'does_not_support'
+  | 'not_applicable'
+  | 'not_evaluated';
+
+/** Who produced a verdict: the automated deriver or a human reviewer. */
+export type VerdictSource = 'machine' | 'human';
+
+/**
+ * A conformance audit: a VPAT/ACR evaluation of one repo at a point in time. It
+ * opens as a machine-derived draft (see src/conformance/derive.ts) and is then
+ * reviewed by human testers before being published.
+ */
+export interface AuditRecord {
+  /** Opaque audit id (uuid). */
+  id: string;
+  repoId: number;
+  installationId: number;
+  /** Commit the audit evaluates. */
+  headSha: string;
+  /** The scan the machine draft was derived from, or null. */
+  basisCheckRunId: number | null;
+  status: AuditStatus;
+  /** ISO-8601 creation time. */
+  createdAt: string;
+  /** ISO-8601 time the audit was published, else null. */
+  publishedAt: string | null;
+}
+
+/**
+ * One verdict for one success criterion within an audit. There is at most one
+ * `machine` row and one `human` row per criterion (unique on audit+wcag+source);
+ * reconciliation (Phase 2) decides which wins for a published document.
+ */
+export interface CriterionVerdictRecord {
+  /** Opaque verdict id (uuid). */
+  id: string;
+  auditId: string;
+  /** Dotted WCAG success-criterion number, e.g. '1.4.3'. */
+  wcagId: string;
+  source: VerdictSource;
+  verdict: VerdictValue;
+  remarks: string;
+  /** App-owned JSON evidence (violation refs, impact counts, screenshots, AT). */
+  evidence: unknown;
+  /** Reviewing user's id for human verdicts; null for machine verdicts. */
+  authorId: string | null;
+  /** ISO-8601 last-updated time. */
+  updatedAt: string;
+}
+
 /**
  * A dashboard end user, identified by their Supabase Auth id. The GitHub fields
  * are captured at login so the UI can show who is signed in and reconcile the
@@ -159,6 +216,22 @@ export interface Store {
   /** Dashboard reads: repos and scans for one installation. */
   listRepos(installationId: number): Promise<RepoRecord[]>;
   listScansByInstallation(installationId: number): Promise<ScanRecord[]>;
+  /** The per-violation detail rows recorded for a scan (empty if none). */
+  listViolationsByScan(checkRunId: number): Promise<ViolationRecord[]>;
+
+  /** Create (or replace by id) a conformance audit. */
+  upsertAudit(record: AuditRecord): Promise<void>;
+  /** Fetch one audit by id, or null if unknown. */
+  getAudit(auditId: string): Promise<AuditRecord | null>;
+  /** Audits for one installation (most recent first is the caller's concern). */
+  listAuditsByInstallation(installationId: number): Promise<AuditRecord[]>;
+  /** Move an audit through its lifecycle; sets published_at when publishing. */
+  setAuditStatus(auditId: string, status: AuditStatus, publishedAt: string | null): Promise<void>;
+
+  /** Create or replace a verdict (conflict on audit_id + wcag_id + source). */
+  upsertVerdict(record: CriterionVerdictRecord): Promise<void>;
+  /** All verdicts (machine and human) for an audit. */
+  listVerdicts(auditId: string): Promise<CriterionVerdictRecord[]>;
 
   /** Record (or replace by account id) a Marketplace subscription. */
   upsertSubscription(record: SubscriptionRecord): Promise<void>;

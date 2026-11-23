@@ -1,5 +1,8 @@
 // In-memory Store for unit tests and local development. Not for production.
 import type {
+  AuditRecord,
+  AuditStatus,
+  CriterionVerdictRecord,
   InstallationRecord,
   LicenseRecord,
   RepoRecord,
@@ -20,6 +23,9 @@ export class MemoryStore implements Store {
   readonly licenses = new Map<number, LicenseRecord>();
   readonly users = new Map<string, UserRecord>();
   readonly userInstallations = new Map<string, Set<number>>();
+  readonly audits = new Map<string, AuditRecord>();
+  /** Verdicts keyed by audit id. */
+  readonly verdicts = new Map<string, CriterionVerdictRecord[]>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -73,6 +79,46 @@ export class MemoryStore implements Store {
 
   async listScansByInstallation(installationId: number): Promise<ScanRecord[]> {
     return [...this.scans.values()].filter(scan => scan.installationId === installationId);
+  }
+
+  async listViolationsByScan(checkRunId: number): Promise<ViolationRecord[]> {
+    return (this.violations.get(checkRunId) ?? []).map(v => ({ ...v }));
+  }
+
+  async upsertAudit(record: AuditRecord): Promise<void> {
+    this.audits.set(record.id, { ...record });
+  }
+
+  async getAudit(auditId: string): Promise<AuditRecord | null> {
+    const existing = this.audits.get(auditId);
+    return existing ? { ...existing } : null;
+  }
+
+  async listAuditsByInstallation(installationId: number): Promise<AuditRecord[]> {
+    return [...this.audits.values()]
+      .filter(a => a.installationId === installationId)
+      .map(a => ({ ...a }));
+  }
+
+  async setAuditStatus(auditId: string, status: AuditStatus, publishedAt: string | null): Promise<void> {
+    const existing = this.audits.get(auditId);
+    if (existing) {
+      existing.status = status;
+      existing.publishedAt = publishedAt;
+    }
+  }
+
+  async upsertVerdict(record: CriterionVerdictRecord): Promise<void> {
+    const list = this.verdicts.get(record.auditId) ?? [];
+    // Conflict key is (audit_id, wcag_id, source): replace a matching row.
+    const idx = list.findIndex(v => v.wcagId === record.wcagId && v.source === record.source);
+    if (idx >= 0) list[idx] = { ...record };
+    else list.push({ ...record });
+    this.verdicts.set(record.auditId, list);
+  }
+
+  async listVerdicts(auditId: string): Promise<CriterionVerdictRecord[]> {
+    return (this.verdicts.get(auditId) ?? []).map(v => ({ ...v }));
   }
 
   async upsertSubscription(record: SubscriptionRecord): Promise<void> {

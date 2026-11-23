@@ -129,6 +129,48 @@ create table if not exists licenses (
   expires_at      timestamptz not null
 );
 
+-- Phase 1 (conformance docs): an audit is a VPAT/ACR evaluation of a repo at a
+-- point in time. It opens as a machine-derived draft (from a scan's violations
+-- crossed with the WCAG catalog in @a11y-fixer/core) that human testers then
+-- review. See packages/app/src/conformance/*.
+create table if not exists audits (
+  id                 uuid primary key default gen_random_uuid(),
+  repo_id            bigint not null references repos(repo_id) on delete cascade,
+  installation_id    bigint not null references installations(installation_id) on delete cascade,
+  head_sha           text   not null,
+  -- The scan the draft was derived from. SET NULL (not CASCADE): keep the audit
+  -- as a historical record even if the underlying scan row is later pruned.
+  basis_check_run_id bigint references scans(check_run_id) on delete set null,
+  status             text   not null default 'draft'
+                       check (status in ('draft', 'in_review', 'published')),
+  created_at         timestamptz not null default now(),
+  published_at       timestamptz
+);
+
+create index if not exists audits_installation_id_idx on audits (installation_id);
+create index if not exists audits_repo_id_idx on audits (repo_id);
+
+-- One verdict per (audit, success criterion, source). `source='machine'` rows are
+-- the derived draft; `source='human'` rows are tester evaluations that confirm or
+-- override the machine draft (Phase 2). `verdict` uses the VPAT conformance
+-- vocabulary. `evidence` is JSON owned by the app (violation refs, impact counts,
+-- screenshots, assistive tech) — the DB does not constrain its shape.
+create table if not exists criterion_verdicts (
+  id         uuid primary key default gen_random_uuid(),
+  audit_id   uuid not null references audits(id) on delete cascade,
+  wcag_id    text not null,
+  source     text not null check (source in ('machine', 'human')),
+  verdict    text not null
+               check (verdict in ('supports', 'partially_supports', 'does_not_support', 'not_applicable', 'not_evaluated')),
+  remarks    text not null default '',
+  evidence   jsonb,
+  author_id  uuid references users(id) on delete set null,
+  updated_at timestamptz not null default now(),
+  unique (audit_id, wcag_id, source)
+);
+
+create index if not exists criterion_verdicts_audit_id_idx on criterion_verdicts (audit_id);
+
 -- Row-level security. The service-role key bypasses RLS (webhook sink + any
 -- server-side admin reads are unaffected). These policies constrain ONLY the
 -- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
@@ -140,6 +182,8 @@ alter table scans enable row level security;
 alter table violations enable row level security;
 alter table subscriptions enable row level security;
 alter table licenses enable row level security;
+alter table audits enable row level security;
+alter table criterion_verdicts enable row level security;
 
 -- A user sees only their own row and their own installation links.
 create policy users_self_select on users
@@ -189,4 +233,22 @@ drop policy if exists licenses_member_select on licenses;
 create policy licenses_member_select on licenses
   for select using (
     installation_id in (select installation_id from user_installations where user_id = auth.uid())
+  );
+
+-- A user sees an audit (and its verdicts) only if they are linked to its
+-- installation. Draft writes happen server-side via the service-role key, which
+-- bypasses RLS, so these are select-only like every other dashboard policy.
+drop policy if exists audits_member_select on audits;
+create policy audits_member_select on audits
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
+  );
+
+drop policy if exists criterion_verdicts_member_select on criterion_verdicts;
+create policy criterion_verdicts_member_select on criterion_verdicts
+  for select using (
+    audit_id in (
+      select id from audits
+      where installation_id in (select installation_id from user_installations where user_id = auth.uid())
+    )
   );

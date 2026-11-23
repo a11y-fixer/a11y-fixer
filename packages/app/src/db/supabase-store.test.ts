@@ -242,6 +242,177 @@ describe('SupabaseStore writes: column mapping and onConflict', () => {
       values: { user_id: 'u1', installation_id: 100 },
     });
   });
+
+  it('upsertAudit maps the audit row and keys on id', async () => {
+    await store.upsertAudit({
+      id: 'a1',
+      repoId: 10,
+      installationId: 1,
+      headSha: 'abc',
+      basisCheckRunId: 500,
+      status: 'draft',
+      createdAt: '2026-01-01T00:00:00Z',
+      publishedAt: null,
+    });
+    expect(db.only()).toMatchObject({
+      table: 'audits',
+      op: 'upsert',
+      onConflict: 'id',
+      values: {
+        id: 'a1',
+        repo_id: 10,
+        installation_id: 1,
+        head_sha: 'abc',
+        basis_check_run_id: 500,
+        status: 'draft',
+        created_at: '2026-01-01T00:00:00Z',
+        published_at: null,
+      },
+    });
+  });
+
+  it('setAuditStatus updates status + published_at filtered by id', async () => {
+    await store.setAuditStatus('a1', 'published', '2026-02-02T00:00:00Z');
+    expect(db.only()).toMatchObject({
+      table: 'audits',
+      op: 'update',
+      values: { status: 'published', published_at: '2026-02-02T00:00:00Z' },
+      filterColumn: 'id',
+      filterValue: 'a1',
+    });
+  });
+
+  it('upsertVerdict maps the verdict row and keys on the composite source key', async () => {
+    await store.upsertVerdict({
+      id: 'v1',
+      auditId: 'a1',
+      wcagId: '1.4.3',
+      source: 'machine',
+      verdict: 'partially_supports',
+      remarks: 'found 2',
+      evidence: { automated: true, violationCount: 2 },
+      authorId: null,
+      updatedAt: '2026-01-01T00:00:00Z',
+    });
+    expect(db.only()).toMatchObject({
+      table: 'criterion_verdicts',
+      op: 'upsert',
+      onConflict: 'audit_id,wcag_id,source',
+      values: {
+        id: 'v1',
+        audit_id: 'a1',
+        wcag_id: '1.4.3',
+        source: 'machine',
+        verdict: 'partially_supports',
+        remarks: 'found 2',
+        evidence: { automated: true, violationCount: 2 },
+        author_id: null,
+        updated_at: '2026-01-01T00:00:00Z',
+      },
+    });
+  });
+});
+
+describe('SupabaseStore conformance reads: row mapping', () => {
+  it('listViolationsByScan maps rows and defaults nullable source location', async () => {
+    const db = new FakeSupabase();
+    db.selectData = [
+      {
+        rule_id: 'image-alt',
+        wcag_id: '1.1.1',
+        impact: 'critical',
+        description: 'img needs alt',
+        help_url: 'https://help/image-alt',
+        path: null,
+        line: null,
+      },
+    ];
+    const store = new SupabaseStore(db);
+    expect(await store.listViolationsByScan(500)).toEqual([
+      {
+        ruleId: 'image-alt',
+        wcagId: '1.1.1',
+        impact: 'critical',
+        description: 'img needs alt',
+        helpUrl: 'https://help/image-alt',
+        path: null,
+        line: null,
+      },
+    ]);
+    expect(db.only()).toMatchObject({ table: 'violations', op: 'select', filterColumn: 'check_run_id', filterValue: 500 });
+  });
+
+  it('getAudit maps a row and returns null when absent', async () => {
+    const db = new FakeSupabase();
+    db.selectData = [
+      {
+        id: 'a1',
+        repo_id: 10,
+        installation_id: 1,
+        head_sha: 'abc',
+        basis_check_run_id: null,
+        status: 'in_review',
+        created_at: 't',
+        published_at: null,
+      },
+    ];
+    const store = new SupabaseStore(db);
+    expect(await store.getAudit('a1')).toEqual({
+      id: 'a1',
+      repoId: 10,
+      installationId: 1,
+      headSha: 'abc',
+      basisCheckRunId: null,
+      status: 'in_review',
+      createdAt: 't',
+      publishedAt: null,
+    });
+
+    db.selectData = [];
+    expect(await store.getAudit('a1')).toBeNull();
+  });
+
+  it('listAuditsByInstallation maps every row', async () => {
+    const db = new FakeSupabase();
+    db.selectData = [
+      { id: 'a1', repo_id: 10, installation_id: 1, head_sha: 'abc', basis_check_run_id: 7, status: 'draft', created_at: 't', published_at: null },
+    ];
+    const store = new SupabaseStore(db);
+    const audits = await store.listAuditsByInstallation(1);
+    expect(audits).toHaveLength(1);
+    expect(audits[0]).toMatchObject({ id: 'a1', basisCheckRunId: 7, status: 'draft' });
+  });
+
+  it('listVerdicts maps rows, defaulting evidence and author to null', async () => {
+    const db = new FakeSupabase();
+    db.selectData = [
+      {
+        id: 'v1',
+        audit_id: 'a1',
+        wcag_id: '1.1.1',
+        source: 'human',
+        verdict: 'supports',
+        remarks: 'ok',
+        evidence: null,
+        author_id: 'u9',
+        updated_at: 't',
+      },
+    ];
+    const store = new SupabaseStore(db);
+    expect(await store.listVerdicts('a1')).toEqual([
+      {
+        id: 'v1',
+        auditId: 'a1',
+        wcagId: '1.1.1',
+        source: 'human',
+        verdict: 'supports',
+        remarks: 'ok',
+        evidence: null,
+        authorId: 'u9',
+        updatedAt: 't',
+      },
+    ]);
+  });
 });
 
 describe('SupabaseStore.replaceViolations (delete-then-insert)', () => {

@@ -72,6 +72,9 @@ importers:
 
   packages/app:
     dependencies:
+      '@a11y-fixer/core':
+        specifier: workspace:*
+        version: link:../core
       '@a11y-fixer/licensing':
         specifier: workspace:*
         version: link:../licensing
