@@ -26,9 +26,13 @@ describe('WCAG catalog', () => {
     expect(SUCCESS_CRITERIA.map((s) => s.id)).toEqual(sorted.map((s) => s.id));
   });
 
-  it('only contains Level A and AA criteria', () => {
+  it('contains Level A and AA criteria, plus only AAA criteria a detector can emit', () => {
     for (const sc of SUCCESS_CRITERIA) {
-      expect(['A', 'AA'], sc.id).toContain(sc.level);
+      // AAA is out of scope for AA procurement, except where an axe/eslint rule
+      // maps to it: then it must carry metadata so the finding never drops.
+      const allowed = sc.level === 'AAA' ? sc.hasAutomatedCoverage : true;
+      expect(allowed, `${sc.id} (${sc.level})`).toBe(true);
+      expect(['A', 'AA', 'AAA'], sc.id).toContain(sc.level);
     }
   });
 

@@ -16,7 +16,7 @@ import { ESLINT_TO_WCAG } from '../runners/wcag-eslint-map.js';
  * most criteria; a published conformance claim still requires human review.
  */
 
-export type ConformanceLevel = 'A' | 'AA';
+export type ConformanceLevel = 'A' | 'AA' | 'AAA';
 export type WcagVersion = '2.0' | '2.1' | '2.2';
 
 /** Static, hand-maintained metadata for one success criterion. */
@@ -58,9 +58,11 @@ export const SECTION_508_INCORPORATION = {
   electronicDocs: 'E205.4',
 } as const;
 
-// WCAG 2.1 + 2.2 Level A and AA, in canonical SC order. Level AAA is omitted:
-// VPAT/ACR procurement targets Level AA. 4.1.1 Parsing is included because many
-// VPATs still list it, though it is obsolete (always "Supports") in WCAG 2.2.
+// WCAG 2.1 + 2.2 Level A and AA, in canonical SC order. VPAT/ACR procurement
+// targets Level AA, so AAA is omitted — except for a AAA criterion a a11y-fixer
+// detector rule can emit (e.g. 2.2.4), which must have metadata so its findings
+// never drop silently. 4.1.1 Parsing is included because many VPATs still list
+// it, though it is obsolete (always "Supports") in WCAG 2.2.
 const META: readonly SuccessCriterionMeta[] = [
   // Principle 1 — Perceivable
   { id: '1.1.1', title: 'Non-text Content', level: 'A', wcagVersion: '2.0' },
@@ -89,6 +91,8 @@ const META: readonly SuccessCriterionMeta[] = [
   { id: '2.1.4', title: 'Character Key Shortcuts', level: 'A', wcagVersion: '2.1' },
   { id: '2.2.1', title: 'Timing Adjustable', level: 'A', wcagVersion: '2.0' },
   { id: '2.2.2', title: 'Pause, Stop, Hide', level: 'A', wcagVersion: '2.0' },
+  // AAA, included only because axe `meta-refresh-no-exceptions` maps here.
+  { id: '2.2.4', title: 'Interruptions', level: 'AAA', wcagVersion: '2.0' },
   { id: '2.3.1', title: 'Three Flashes or Below Threshold', level: 'A', wcagVersion: '2.0' },
   { id: '2.4.1', title: 'Bypass Blocks', level: 'A', wcagVersion: '2.0' },
   { id: '2.4.2', title: 'Page Titled', level: 'A', wcagVersion: '2.0' },
