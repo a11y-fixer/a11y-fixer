@@ -15,6 +15,9 @@ import { InputImageAltFixer } from './rule-based/input-image-alt.js';
 import { ImageAltFixer } from './rule-based/image-alt.js';
 import { MarkdownHeadingOrderFixer } from './rule-based/markdown-heading-order.js';
 import { MarkdownTableHeaderFixer } from './rule-based/markdown-table-header.js';
+import { AriaAllowedAttrFixer } from './rule-based/aria-allowed-attr.js';
+import { LinkInTextBlockFixer } from './rule-based/link-in-text-block.js';
+import { DefinitionListFixer } from './rule-based/definition-list.js';
 import type { A11yViolation } from '../detector/index.js';
 
 function violation(id: string, wcagId: string): A11yViolation {
@@ -74,6 +77,20 @@ describe('buildCoreRegistry dispatch', () => {
   it('routes axe image-alt (WCAG 1.1.1) to ImageAltFixer, not InputImageAltFixer', () => {
     const fixer = registry.getFixer(violation('image-alt', '1.1.1'));
     expect(fixer).toBeInstanceOf(ImageAltFixer);
+  });
+
+  it('routes axe aria-allowed-attr and aria-prohibited-attr (WCAG 4.1.2) to AriaAllowedAttrFixer', () => {
+    expect(registry.getFixer(violation('aria-allowed-attr', '4.1.2'))).toBeInstanceOf(AriaAllowedAttrFixer);
+    expect(registry.getFixer(violation('aria-prohibited-attr', '4.1.2'))).toBeInstanceOf(AriaAllowedAttrFixer);
+  });
+
+  it('routes axe link-in-text-block (WCAG 1.4.1) to LinkInTextBlockFixer', () => {
+    expect(registry.getFixer(violation('link-in-text-block', '1.4.1'))).toBeInstanceOf(LinkInTextBlockFixer);
+  });
+
+  it('routes axe definition-list and dlitem (WCAG 1.3.1) to DefinitionListFixer', () => {
+    expect(registry.getFixer(violation('definition-list', '1.3.1'))).toBeInstanceOf(DefinitionListFixer);
+    expect(registry.getFixer(violation('dlitem', '1.3.1'))).toBeInstanceOf(DefinitionListFixer);
   });
 
   it('still routes ESLint-sourced violations to EslintFixer', () => {

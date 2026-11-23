@@ -1,80 +1,22 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { parse } from 'parse5';
-import type { DefaultTreeAdapterMap } from 'parse5';
 import type { Fixer, FixResult } from '../index.js';
 import type { A11yViolation } from '../../detector/index.js';
-
-type Element = DefaultTreeAdapterMap['element'];
-type ChildNode = DefaultTreeAdapterMap['childNode'];
-type ParentNode = DefaultTreeAdapterMap['parentNode'];
+import {
+  type Edit,
+  type Element,
+  childElements,
+  findElement,
+  hasRole,
+  isElement,
+  parseWithLocations,
+  renameEdits,
+  applyEdits,
+} from '../shared/html-edit.js';
 
 /** Elements axe `list` permits as direct children of a `<ul>`/`<ol>`. */
 const LIST_ALLOWED = new Set(['li', 'script', 'template']);
 /** Generic grouping tags we can safely rename, since they carry no own semantics. */
 const RENAMABLE = new Set(['div', 'span', 'p']);
-
-interface Edit {
-  start: number;
-  end: number;
-  text: string;
-}
-
-function isElement(n: ChildNode): n is Element {
-  return 'tagName' in n;
-}
-
-/** Direct child elements (skipping text/comment nodes) of a parent node. */
-function childElements(parent: ParentNode): Element[] {
-  const children = (parent as { childNodes?: ChildNode[] }).childNodes;
-  if (!children) return [];
-  return children.filter(isElement);
-}
-
-function hasRole(el: Element): boolean {
-  return el.attrs.some(a => a.name === 'role');
-}
-
-/** Pre-order DFS over element nodes, stopping once `visit` returns true. */
-function findElement(parent: ParentNode, visit: (el: Element) => boolean): Element | null {
-  for (const child of childElements(parent)) {
-    if (visit(child)) return child;
-    const found = findElement(child, visit);
-    if (found) return found;
-  }
-  return null;
-}
-
-/**
- * Builds the open- and close-tag edits that rename `el` to `<newTag>`, preserving
- * its attributes and inner content. Returns `null` when the element lacks start/end
- * tag source locations (e.g. JSX the HTML parser can't place, or a self-closed tag).
- */
-function renameEdits(el: Element, newTag: string, content: string): Edit[] | null {
-  const loc = el.sourceCodeLocation;
-  const start = loc?.startTag;
-  const end = loc?.endTag;
-  if (!start || !end) return null;
-
-  const open = content.slice(start.startOffset, start.endOffset);
-  const close = content.slice(end.startOffset, end.endOffset);
-  const newOpen = open.replace(/^<[a-zA-Z][\w-]*/, `<${newTag}`);
-  const newClose = close.replace(/^<\/[a-zA-Z][\w-]*/, `</${newTag}`);
-  if (newOpen === open && newClose === close) return null;
-
-  return [
-    { start: start.startOffset, end: start.endOffset, text: newOpen },
-    { start: end.startOffset, end: end.endOffset, text: newClose },
-  ];
-}
-
-/** Applies edits by splicing from the last offset backwards, keeping earlier offsets valid. */
-function applyEdits(content: string, edits: Edit[]): string {
-  let out = content;
-  for (const edit of [...edits].sort((a, b) => b.start - a.start)) {
-    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end);
-  }
-  return out;
-}
 
 /**
  * Fixes axe `list` (WCAG 1.3.1): a `<ul>`/`<ol>` whose opening tag starts on
@@ -86,7 +28,7 @@ function applyEdits(content: string, edits: Edit[]): string {
  * offending child is interactive, role-bearing, or otherwise not a safe rename.
  */
 export function fixList(content: string, line: number): string | null {
-  const doc = parse(content, { sourceCodeLocationInfo: true });
+  const doc = parseWithLocations(content);
   const list = findElement(doc, el =>
     (el.tagName === 'ul' || el.tagName === 'ol') &&
     el.sourceCodeLocation?.startTag?.startLine === line,
@@ -116,14 +58,14 @@ export function fixList(content: string, line: number): string | null {
  * no `<li>` on that line, a role-bearing or non-grouping parent, or mixed siblings.
  */
 export function fixListItem(content: string, line: number): string | null {
-  const doc = parse(content, { sourceCodeLocationInfo: true });
+  const doc = parseWithLocations(content);
   const li = findElement(doc, el =>
     el.tagName === 'li' && el.sourceCodeLocation?.startTag?.startLine === line,
   );
   if (!li) return null;
 
   const parent = li.parentNode;
-  if (!parent || !isElement(parent as ChildNode)) return null;
+  if (!parent || !isElement(parent as never)) return null;
   const parentEl = parent as Element;
   if (parentEl.tagName !== 'div' && parentEl.tagName !== 'span') return null;
   if (hasRole(parentEl)) return null;

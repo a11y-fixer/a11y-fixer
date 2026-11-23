@@ -32,6 +32,11 @@ export { MetaRefreshFixer, isPureTimedRefresh } from './fixer/rule-based/meta-re
 export { HtmlXmlLangMismatchFixer, primarySubtag } from './fixer/rule-based/html-xml-lang-mismatch.js';
 export { MarkdownHeadingOrderFixer } from './fixer/rule-based/markdown-heading-order.js';
 export { MarkdownTableHeaderFixer } from './fixer/rule-based/markdown-table-header.js';
+export { AriaAllowedAttrFixer, offendingAriaAttrs } from './fixer/rule-based/aria-allowed-attr.js';
+export { LinkInTextBlockFixer, addUnderlineToLink } from './fixer/rule-based/link-in-text-block.js';
+export { DefinitionListFixer, fixDefinitionList, fixDlItem } from './fixer/rule-based/definition-list.js';
+export { removeAttribute } from './fixer/shared/attrs.js';
+export { setElementText } from './fixer/shared/html-edit.js';
 
 export { scanMarkdown, scanContent, collectMarkdownHeadings, GENERIC_LINK_PATTERNS } from './scanner/markdown.js';
 export type { MarkdownHeading } from './scanner/markdown.js';

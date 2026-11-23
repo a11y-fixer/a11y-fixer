@@ -21,6 +21,8 @@ import { AriaMeterNameFixer } from './aria-meter-name.js';
 import { AriaProgressbarNameFixer } from './aria-progressbar-name.js';
 import { FrameTitleFixer } from './frame-title.js';
 import { DocumentTitleFixer } from './document-title.js';
+import { EmptyHeadingFixer } from './empty-heading.js';
+import { AutocompleteValidFixer } from './autocomplete-valid.js';
 import { MarkdownAltTextFixer } from './markdown-alt-text.js';
 import { MarkdownLinkTextFixer } from './markdown-link-text.js';
 
@@ -95,6 +97,11 @@ export function buildFullRegistry(
   registry.register(new AriaProgressbarNameFixer(aiProvider, rootDir));
   registry.register(new FrameTitleFixer(aiProvider, rootDir));
   registry.register(new DocumentTitleFixer(aiProvider, rootDir));
+  // Unique id-keyed fixers (empty-heading → 1.3.1, autocomplete-valid → 1.3.5)
+  // with no broad AI collider at their criterion, so position here is free — but
+  // they belong in the AI block so the committed-dist action bundles them.
+  registry.register(new EmptyHeadingFixer(aiProvider, rootDir));
+  registry.register(new AutocompleteValidFixer(aiProvider, rootDir));
 
   registerCoreFixers(registry, rootDir);
 
