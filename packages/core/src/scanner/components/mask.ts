@@ -19,13 +19,3 @@ export function maskRanges(content: string, ranges: Range[]): string {
   }
   return chars.join('');
 }
-
-/** All `[start, end)` ranges matched by a global `re` in `content`. */
-export function matchRanges(content: string, re: RegExp): Range[] {
-  const out: Range[] = [];
-  for (let m = re.exec(content); m; m = re.exec(content)) {
-    out.push([m.index, m.index + m[0].length]);
-    if (m.index === re.lastIndex) re.lastIndex++; // guard against zero-width matches
-  }
-  return out;
-}

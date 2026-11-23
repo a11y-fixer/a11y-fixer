@@ -1,18 +1,35 @@
-import { matchRanges, type Range } from './mask.js';
+import { parseFragment } from 'parse5';
+import type { DefaultTreeAdapterMap } from 'parse5';
+import type { Range } from './mask.js';
+
+type ChildNode = DefaultTreeAdapterMap['childNode'];
 
 /**
  * A Svelte component *is* its template, minus the `<script>` and `<style>`
- * blocks. We return those blocks' ranges so the scanner blanks them — the rest
- * (HTML-shaped markup, possibly interleaved with `{#if}`/`{expr}` which parse as
- * inert text/attribute values) is handed to axe unchanged.
- *
- * The close tags allow trailing whitespace (`</script >`) to match the HTML
- * grammar — otherwise crafted markup could slip script/style bytes past the
- * blank. A `</` sequence inside a script string is a rare, documented v1 gap.
+ * elements. We locate those with parse5 (a real HTML parser, so it applies the
+ * exact end-tag grammar a browser does — no hand-rolled tag-filter regex that
+ * could be evaded by `</script >`, `</script/`, etc.) and return each element's
+ * full source range so the scanner blanks it. Everything else — HTML-shaped
+ * markup interleaved with `{#if}`/`{expr}`, which parse to inert text/attribute
+ * values — is handed to axe unchanged.
  */
 export function extractSvelte(content: string): Range[] {
-  return [
-    ...matchRanges(content, /<script\b[\s\S]*?<\/script\s*>/gi),
-    ...matchRanges(content, /<style\b[\s\S]*?<\/style\s*>/gi),
-  ];
+  const fragment = parseFragment(content, { sourceCodeLocationInfo: true });
+  const out: Range[] = [];
+  collectScriptStyle(fragment.childNodes, out);
+  return out;
+}
+
+function collectScriptStyle(nodes: ChildNode[] | undefined, out: Range[]): void {
+  if (!nodes) return;
+  for (const node of nodes) {
+    if (!('tagName' in node)) continue;
+    const tag = node.tagName.toLowerCase();
+    const loc = node.sourceCodeLocation;
+    if ((tag === 'script' || tag === 'style') && loc) {
+      out.push([loc.startOffset, loc.endOffset]);
+      continue; // don't descend into a blanked block
+    }
+    collectScriptStyle(node.childNodes, out);
+  }
 }
