@@ -15,6 +15,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Wait before adopting a freshly published version, so a compromised release
+    # has a window to be caught/yanked before it lands in a PR here.
+    cooldown:
+      default-days: 5
     groups:
       actions:
         patterns: ['*']
@@ -24,6 +28,8 @@ updates:
     directory: /examples/demo-site
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 5
     groups:
       demo-actions:
         patterns: ['*']
@@ -33,6 +39,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 5
     groups:
       npm:
         patterns: ['*']
