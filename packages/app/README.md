@@ -37,13 +37,19 @@ conformance document renderers noted below:
   a human reviewer's verdicts on top and enforce an honesty gate that forbids
   publishing any criterion as "Supports" on automated evidence alone. This
   produces the reviewed conformance record, which `src/conformance/documents/*`
-  renders as VPAT/ACR and accessibility-statement documents in HTML, PDF, and
-  DOCX (`vpat.ts`/`statement.ts` build a format-agnostic model that the
-  HTML/PDF/DOCX renderers consume). Documents still require human review before
-  publishing: a draft export carries a visible "not for distribution" watermark
-  so an in-progress draft can never be mistaken for a final conformance claim. A
-  public, unauthenticated shareable statement link is still deferred — documents
-  are served only over the authenticated download route below.
+  renders as four document kinds — VPAT/ACR, accessibility statement, remediation
+  roadmap, and conformance letter — in HTML, PDF, and DOCX
+  (`vpat.ts`/`statement.ts`/`roadmap.ts`/`letter.ts` build a format-agnostic
+  model that the HTML/PDF/DOCX renderers consume). Documents still require human
+  review before publishing: a draft export carries a visible "not for
+  distribution" watermark so an in-progress draft can never be mistaken for a
+  final conformance claim. Publishing an audit freezes an immutable **revision**
+  (`audit_revisions`): `audit-document.ts` snapshots the reconciled record +
+  metadata so a published document never drifts if the WCAG catalog or repo
+  metadata later changes in code. Each revision carries an unguessable
+  `public_slug` that backs the public, unauthenticated statement permalink
+  (`/statement/[slug]` below); `version` increments per repo for a visible
+  revision history.
 - `src/dashboard/aggregate.ts` + `view-model.ts` — pure summary + render mappers.
 - `src/auth/installations.ts` — pure GitHub identity + installation-visibility
   resolution (seamed `fetch`), unit-tested.
@@ -51,7 +57,8 @@ conformance document renderers noted below:
   `users`/`user_installations` + RLS auth model, `subscriptions` (Marketplace billing),
   and `licenses` (per-installation free-tier key, keyed by `installation_id`).
   Adds `audits` + `criterion_verdicts` for the conformance-audit workflow
-  (machine + human verdicts per WCAG criterion).
+  (machine + human verdicts per WCAG criterion), and `audit_revisions` for the
+  immutable published snapshots behind the public statement permalink.
 
 ### Next.js layer (`app/**`) — typechecked by `next build`, not the CI `tsc` gate
 
@@ -62,15 +69,21 @@ read-only `/dashboard` org→repo pages, and the per-installation
 (lazily mints) and reveals the installation's license key via `CopyButton.tsx`,
 and the conformance-audit pages (`app/dashboard/[installationId]/audits/**` to
 list, start, and review drafts, with download links for each generated
-document) over the `audits`/`verdict`/`publish` routes and the authenticated,
-read-only `document` download route (`?doc=acr|statement&format=html|pdf|docx`)
-under `app/api/installations/[installationId]/audits/**`.
+document, the public permalink, and the per-repo revision history) over the
+`audits`/`verdict`/`publish` routes and the authenticated, read-only `document`
+download route (`?doc=acr|statement|roadmap|letter&format=html|pdf|docx`)
+under `app/api/installations/[installationId]/audits/**`. Published documents
+are also served over the public, unauthenticated permalink
+`app/statement/[slug]/route.ts` (same doc/format query), gated solely by
+possession of the revision's unguessable `public_slug` — it reads via the
+service-role key and serves the frozen snapshot, so it is outside the
+`/dashboard` auth middleware by design.
 Every Next/React/Supabase import lives here
 so `src/**` stays framework-free. The only runtime npm dependencies under `src/**`
 are the conformance document renderers: `src/conformance/documents/docx.ts` (`docx`,
 for the DOCX export) and `pdf.ts` (`puppeteer-core` + `@sparticuz/chromium`, loaded
 lazily at request time and kept out of the client bundle via `serverExternalPackages`);
-the model and the HTML/VPAT/statement builders beside them stay dependency-free.
+the model and the HTML/VPAT/statement/roadmap/letter builders beside them stay dependency-free.
 CI build/typecheck is `tsc --noEmit -p tsconfig.src.json`
 (node, src-only); `next build` (via `tsconfig.json`) runs on Vercel only.
 

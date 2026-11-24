@@ -14,12 +14,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditRecord } from '../../../../../../../src/db/store.js';
 
-const { getSignedInUser, listInstallationsForUser, getAudit, publishAudit } = vi.hoisted(() => ({
-  getSignedInUser: vi.fn(),
-  listInstallationsForUser: vi.fn(),
-  getAudit: vi.fn(),
-  publishAudit: vi.fn(),
-}));
+const { getSignedInUser, listInstallationsForUser, getAudit, publishAudit, createRevisionForAudit } =
+  vi.hoisted(() => ({
+    getSignedInUser: vi.fn(),
+    listInstallationsForUser: vi.fn(),
+    getAudit: vi.fn(),
+    publishAudit: vi.fn(),
+    createRevisionForAudit: vi.fn(),
+  }));
 
 vi.mock('../../../../../../lib/env.js', () => ({
   env: { appBaseUrl: () => 'https://app.example.com' },
@@ -29,6 +31,9 @@ vi.mock('../../../../../../lib/supabase.js', () => ({
   serviceRoleStore: () => ({ listInstallationsForUser, getAudit }),
 }));
 vi.mock('../../../../../../../src/conformance/audit-service.js', () => ({ publishAudit }));
+vi.mock('../../../../../../../src/conformance/documents/audit-document.js', () => ({
+  createRevisionForAudit,
+}));
 
 import { POST } from './route.js';
 
@@ -64,6 +69,7 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
     listInstallationsForUser.mockResolvedValue([42]);
     getAudit.mockResolvedValue(auditRecord(42));
     publishAudit.mockResolvedValue({ published: true, blockers: [] });
+    createRevisionForAudit.mockResolvedValue(null);
   });
   afterEach(() => vi.clearAllMocks());
 
@@ -101,6 +107,33 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
     expect(res.status).toBe(303);
     expect(res.headers.get('location')).toBe(
       'https://app.example.com/dashboard/42/audits/a1?blocked=2',
+    );
+  });
+
+  it('freezes an immutable revision when the publish succeeds', async () => {
+    await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(createRevisionForAudit).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      'a1',
+      expect.objectContaining({ newSlug: expect.any(Function) }),
+    );
+  });
+
+  it('does NOT create a revision when the honesty gate blocks publish', async () => {
+    publishAudit.mockResolvedValue({ published: false, blockers: ['1.1.1'] });
+    await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(createRevisionForAudit).not.toHaveBeenCalled();
+  });
+
+  it('still 303-redirects published (not 500) when the revision snapshot write fails', async () => {
+    // The publish already committed; a revision-write failure must not surface as a
+    // 500 that misleads the user into thinking publish failed.
+    createRevisionForAudit.mockRejectedValue(new Error('db down'));
+    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
+    expect(res.status).toBe(303);
+    expect(res.headers.get('location')).toBe(
+      'https://app.example.com/dashboard/42/audits/a1?published=1',
     );
   });
 });

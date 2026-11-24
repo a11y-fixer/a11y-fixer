@@ -19,7 +19,7 @@ import type { DocumentFormat, DocumentKind } from '../../../../../../../src/conf
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-const KINDS: readonly DocumentKind[] = ['acr', 'statement'];
+const KINDS: readonly DocumentKind[] = ['acr', 'statement', 'roadmap', 'letter'];
 const FORMATS: readonly DocumentFormat[] = ['html', 'pdf', 'docx'];
 
 export async function GET(
