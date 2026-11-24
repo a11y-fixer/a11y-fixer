@@ -53,7 +53,7 @@ inputs:
     required: false
     default: 'false'
   components:
-    description: 'Also scan/fix component templates (.vue/.svelte/.astro): the template markup is isolated and run through axe-core, giving the same rule coverage (and fixers) as the static-HTML path. Requires puppeteer. Combines with the JSX or HTML path. Static source only (not honored with url).'
+    description: 'Also scan/fix component/template markup (.vue/.svelte/.astro, Handlebars .hbs/.handlebars, Blade .blade.php, and Angular external .component.html + inline template: in .component.ts): the template markup is isolated and run through axe-core, giving the same rule coverage (and fixers) as the static-HTML path. Requires puppeteer. Combines with the JSX or HTML path. Static source only (not honored with url).'
     required: false
     default: 'false'
   base-branch:

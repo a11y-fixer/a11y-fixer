@@ -79,7 +79,7 @@ export function fixCommand(): Command {
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
     .option('--html', 'Fix static .html/.htm files with axe-core (requires puppeteer)', false)
     .option('--markdown', 'Also fix .md/.markdown/.mdx files (static source; no browser required)', false)
-    .option('--components', 'Also fix .vue/.svelte/.astro template markup with axe-core (requires puppeteer)', false)
+    .option('--components', 'Also fix component/template markup (.vue/.svelte/.astro, .hbs, .blade.php, Angular .component.html/.component.ts) with axe-core (requires puppeteer)', false)
     .option('--owner <owner>', 'GitHub repo owner (required for PR)')
     .option('--repo <repo>', 'GitHub repo name (required for PR)')
     .option('--base <branch>', 'Base branch for PR', 'main')
