@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryStore } from './memory-store.js';
+import { RevisionVersionConflictError } from './store.js';
 
 describe('MemoryStore user access model', () => {
   it('upserts a user and links installations idempotently', async () => {
@@ -124,5 +125,54 @@ describe('MemoryStore conformance audits', () => {
     expect(verdicts.find(v => v.source === 'machine')?.remarks).toBe('rescanned: 1 issue');
     expect(verdicts.find(v => v.source === 'human')?.verdict).toBe('supports');
     expect(await store.listVerdicts('missing')).toEqual([]);
+  });
+});
+
+describe('MemoryStore audit revisions', () => {
+  const rev = (id: string, auditId: string, repoId: number, version: number, slug: string) => ({
+    id, auditId, repoId, installationId: 1, version, publicSlug: slug,
+    snapshot: { k: id }, headSha: `sha-${id}`, publishedAt: `2026-0${version}-01T00:00:00Z`,
+  });
+
+  it('inserts, reads by audit and by slug, and lists per repo newest first', async () => {
+    const store = new MemoryStore();
+    await store.insertRevision(rev('r1', 'a1', 10, 1, 'slug-1'));
+    await store.insertRevision(rev('r2', 'a2', 10, 2, 'slug-2'));
+    await store.insertRevision(rev('r3', 'a3', 20, 1, 'slug-3'));
+
+    expect(await store.getRevisionByAudit('a1')).toMatchObject({ id: 'r1', publicSlug: 'slug-1' });
+    expect(await store.getRevisionBySlug('slug-2')).toMatchObject({ id: 'r2', auditId: 'a2' });
+    expect((await store.listRevisionsByRepo(10)).map(r => r.version)).toEqual([2, 1]);
+    expect(await store.listRevisionsByRepo(20)).toHaveLength(1);
+  });
+
+  it('is idempotent on auditId: a second insert never overwrites the frozen snapshot', async () => {
+    const store = new MemoryStore();
+    await store.insertRevision(rev('r1', 'a1', 10, 1, 'slug-1'));
+    // A retry with a different id/slug for the same audit must be a no-op.
+    await store.insertRevision(rev('r1-dup', 'a1', 10, 1, 'slug-dup'));
+    expect(await store.listRevisionsByRepo(10)).toHaveLength(1);
+    expect(await store.getRevisionByAudit('a1')).toMatchObject({ id: 'r1', publicSlug: 'slug-1' });
+    expect(await store.getRevisionBySlug('slug-dup')).toBeNull();
+  });
+
+  it('returns null for unknown audit or slug', async () => {
+    const store = new MemoryStore();
+    expect(await store.getRevisionByAudit('nope')).toBeNull();
+    expect(await store.getRevisionBySlug('nope')).toBeNull();
+    expect(await store.listRevisionsByRepo(999)).toEqual([]);
+  });
+
+  it('throws on a unique(repo_id, version) collision from two different audits', async () => {
+    const store = new MemoryStore();
+    await store.insertRevision(rev('r1', 'a1', 10, 1, 'slug-1'));
+    // A different audit in the same repo minting the same version (the concurrent
+    // publish race) collides, as the real DB constraint would.
+    await expect(store.insertRevision(rev('r2', 'a2', 10, 1, 'slug-2'))).rejects.toBeInstanceOf(
+      RevisionVersionConflictError,
+    );
+    // A different repo at the same version does not collide.
+    await store.insertRevision(rev('r3', 'a3', 20, 1, 'slug-3'));
+    expect(await store.listRevisionsByRepo(20)).toHaveLength(1);
   });
 });

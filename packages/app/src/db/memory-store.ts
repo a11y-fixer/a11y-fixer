@@ -1,6 +1,8 @@
 // In-memory Store for unit tests and local development. Not for production.
+import { RevisionVersionConflictError } from './store.js';
 import type {
   AuditRecord,
+  AuditRevisionRecord,
   AuditStatus,
   CriterionVerdictRecord,
   InstallationRecord,
@@ -26,6 +28,8 @@ export class MemoryStore implements Store {
   readonly audits = new Map<string, AuditRecord>();
   /** Verdicts keyed by audit id. */
   readonly verdicts = new Map<string, CriterionVerdictRecord[]>();
+  /** Published revisions keyed by revision id. */
+  readonly revisions = new Map<string, AuditRevisionRecord>();
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
@@ -119,6 +123,42 @@ export class MemoryStore implements Store {
 
   async listVerdicts(auditId: string): Promise<CriterionVerdictRecord[]> {
     return (this.verdicts.get(auditId) ?? []).map(v => ({ ...v }));
+  }
+
+  async insertRevision(record: AuditRevisionRecord): Promise<void> {
+    // Idempotent on auditId: a published revision is immutable, never overwritten.
+    for (const r of this.revisions.values()) {
+      if (r.auditId === record.auditId) return;
+    }
+    // Model the schema's unique(repo_id, version): two audits in the same repo
+    // minting the same next version collide, as the real Supabase store would.
+    for (const r of this.revisions.values()) {
+      if (r.repoId === record.repoId && r.version === record.version) {
+        throw new RevisionVersionConflictError(record.repoId, record.version);
+      }
+    }
+    this.revisions.set(record.id, { ...record });
+  }
+
+  async getRevisionByAudit(auditId: string): Promise<AuditRevisionRecord | null> {
+    for (const r of this.revisions.values()) {
+      if (r.auditId === auditId) return { ...r };
+    }
+    return null;
+  }
+
+  async getRevisionBySlug(publicSlug: string): Promise<AuditRevisionRecord | null> {
+    for (const r of this.revisions.values()) {
+      if (r.publicSlug === publicSlug) return { ...r };
+    }
+    return null;
+  }
+
+  async listRevisionsByRepo(repoId: number): Promise<AuditRevisionRecord[]> {
+    return [...this.revisions.values()]
+      .filter(r => r.repoId === repoId)
+      .sort((a, b) => b.version - a.version)
+      .map(r => ({ ...r }));
   }
 
   async upsertSubscription(record: SubscriptionRecord): Promise<void> {

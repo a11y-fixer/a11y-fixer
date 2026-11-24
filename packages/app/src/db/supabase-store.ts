@@ -8,6 +8,7 @@
 // client returned by `createClient()` satisfies this shape.
 import type {
   AuditRecord,
+  AuditRevisionRecord,
   AuditStatus,
   CriterionVerdictRecord,
   InstallationRecord,
@@ -19,11 +20,12 @@ import type {
   UserRecord,
   ViolationRecord,
 } from './store.js';
+import { RevisionVersionConflictError } from './store.js';
 
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
   from(table: string): {
-    upsert(values: unknown, options?: { onConflict?: string }): Promise<{ error: unknown }>;
+    upsert(values: unknown, options?: { onConflict?: string; ignoreDuplicates?: boolean }): Promise<{ error: unknown }>;
     delete(): {
       eq(column: string, value: unknown): Promise<{ error: unknown }>;
       in(column: string, values: unknown[]): Promise<{ error: unknown }>;
@@ -33,7 +35,9 @@ export interface SupabaseLike {
     };
     insert(values: unknown): Promise<{ error: unknown }>;
     select(columns?: string): {
-      eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }>;
+      eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }> & {
+        order(column: string, options?: { ascending?: boolean }): Promise<{ data: unknown[] | null; error: unknown }>;
+      };
     };
   };
 }
@@ -291,6 +295,70 @@ export class SupabaseStore implements Store {
         updatedAt: r.updated_at as string,
       };
     });
+  }
+
+  async insertRevision(record: AuditRevisionRecord): Promise<void> {
+    // Idempotent on audit_id (a published revision is immutable): ignore a
+    // conflicting insert rather than overwriting the frozen snapshot.
+    const { error } = await this.db.from('audit_revisions').upsert(
+      {
+        id: record.id,
+        audit_id: record.auditId,
+        repo_id: record.repoId,
+        installation_id: record.installationId,
+        version: record.version,
+        public_slug: record.publicSlug,
+        snapshot: record.snapshot,
+        head_sha: record.headSha,
+        published_at: record.publishedAt,
+      },
+      { onConflict: 'audit_id', ignoreDuplicates: true },
+    );
+    // The audit_id conflict is ignored (idempotent). A remaining unique violation
+    // (Postgres 23505) is the unique(repo_id, version) collision from a concurrent
+    // same-repo publish: surface it as the typed error so the caller recomputes the
+    // version and retries, instead of 500ing a publish that already committed.
+    const code = (error as { code?: string } | null)?.code;
+    if (code === '23505') throw new RevisionVersionConflictError(record.repoId, record.version);
+    throwOn(error, 'insertRevision');
+  }
+
+  private toRevisionRecord(r: Record<string, unknown>): AuditRevisionRecord {
+    return {
+      id: r.id as string,
+      auditId: r.audit_id as string,
+      repoId: r.repo_id as number,
+      installationId: r.installation_id as number,
+      version: r.version as number,
+      publicSlug: r.public_slug as string,
+      snapshot: r.snapshot ?? null,
+      headSha: r.head_sha as string,
+      publishedAt: r.published_at as string,
+    };
+  }
+
+  async getRevisionByAudit(auditId: string): Promise<AuditRevisionRecord | null> {
+    const { data, error } = await this.db.from('audit_revisions').select().eq('audit_id', auditId);
+    throwOn(error, 'getRevisionByAudit');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    return row ? this.toRevisionRecord(row) : null;
+  }
+
+  async getRevisionBySlug(publicSlug: string): Promise<AuditRevisionRecord | null> {
+    const { data, error } = await this.db.from('audit_revisions').select().eq('public_slug', publicSlug);
+    throwOn(error, 'getRevisionBySlug');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    return row ? this.toRevisionRecord(row) : null;
+  }
+
+  async listRevisionsByRepo(repoId: number): Promise<AuditRevisionRecord[]> {
+    const { data, error } = await this.db
+      .from('audit_revisions')
+      .select()
+      .eq('repo_id', repoId)
+      .order('version', { ascending: false });
+    throwOn(error, 'listRevisionsByRepo');
+    return (data ?? []).map(row => this.toRevisionRecord(row as Record<string, unknown>));
   }
 
   async upsertSubscription(record: SubscriptionRecord): Promise<void> {

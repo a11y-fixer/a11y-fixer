@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SupabaseStore, type SupabaseLike } from './supabase-store.js';
+import { RevisionVersionConflictError } from './store.js';
 
 // A recording fake for the slice of supabase-js the store uses. Each call is
 // pushed to `calls` so tests can assert the exact table, operation, payload,
@@ -11,10 +12,13 @@ interface RecordedCall {
   op: 'upsert' | 'insert' | 'update' | 'delete' | 'select';
   values?: unknown;
   onConflict?: string;
+  ignoreDuplicates?: boolean;
   filterColumn?: string;
   filterValue?: unknown;
   filterIn?: unknown[];
   selectColumns?: string;
+  orderColumn?: string;
+  orderAscending?: boolean;
 }
 
 class FakeSupabase implements SupabaseLike {
@@ -27,8 +31,8 @@ class FakeSupabase implements SupabaseLike {
       this.calls.push({ table, ...call });
     };
     return {
-      upsert: async (values: unknown, options?: { onConflict?: string }) => {
-        record({ op: 'upsert', values, onConflict: options?.onConflict });
+      upsert: async (values: unknown, options?: { onConflict?: string; ignoreDuplicates?: boolean }) => {
+        record({ op: 'upsert', values, onConflict: options?.onConflict, ignoreDuplicates: options?.ignoreDuplicates });
         return { error: this.error };
       },
       insert: async (values: unknown) => {
@@ -52,9 +56,19 @@ class FakeSupabase implements SupabaseLike {
         },
       }),
       select: (columns?: string) => ({
-        eq: async (column: string, value: unknown) => {
+        eq: (column: string, value: unknown) => {
           record({ op: 'select', selectColumns: columns, filterColumn: column, filterValue: value });
-          return { data: this.selectData, error: this.error };
+          const result = { data: this.selectData, error: this.error };
+          // The eq() result is awaitable directly and also chainable with
+          // order() (listRevisionsByRepo sorts by version desc in the DB).
+          return Object.assign(Promise.resolve(result), {
+            order: async (orderColumn: string, options?: { ascending?: boolean }) => {
+              const last = this.calls[this.calls.length - 1];
+              last.orderColumn = orderColumn;
+              last.orderAscending = options?.ascending;
+              return result;
+            },
+          });
         },
       }),
     };
@@ -573,5 +587,108 @@ describe('SupabaseStore error propagation (throwOn)', () => {
 
   it('throws from the clear step of replaceViolations before inserting', async () => {
     await expect(store.replaceViolations(500, [])).rejects.toThrow(/supabase replaceViolations\(clear\) failed/);
+  });
+});
+
+// Value: protects=the audit_revisions column mapping, the immutability guard
+// (upsert onConflict:'audit_id' + ignoreDuplicates, so a re-publish never
+// overwrites a frozen snapshot), the snake_case->camelCase read mapping, and
+// the newest-first ordering listRevisionsByRepo relies on; fails_when=a column
+// name, the conflict target, the ignoreDuplicates flag, a mapped field, or the
+// order direction is changed or dropped; why_new=these four store methods are
+// new on this branch and untested (memory-store has its own coverage, but the
+// supabase column/conflict mapping is distinct and honesty-critical); seam=the
+// recording FakeSupabase (no real DB); no_claim=does not prove Postgres actually
+// enforces the unique(audit_id) constraint — that lives in schema.sql/RLS.
+describe('SupabaseStore audit revisions', () => {
+  const record = {
+    id: 'rev-1',
+    auditId: 'audit-1',
+    repoId: 10,
+    installationId: 1,
+    version: 3,
+    publicSlug: 'cap-token',
+    snapshot: { meta: { productName: 'acme/widget' } },
+    headSha: 'abc1234',
+    publishedAt: '2026-03-05T00:00:00Z',
+  };
+
+  it('insertRevision maps columns and is a no-op on conflict (immutable snapshot)', async () => {
+    const db = new FakeSupabase();
+    const store = new SupabaseStore(db);
+    await store.insertRevision(record);
+    expect(db.only()).toMatchObject({
+      table: 'audit_revisions',
+      op: 'upsert',
+      onConflict: 'audit_id',
+      ignoreDuplicates: true,
+      values: {
+        id: 'rev-1',
+        audit_id: 'audit-1',
+        repo_id: 10,
+        installation_id: 1,
+        version: 3,
+        public_slug: 'cap-token',
+        snapshot: { meta: { productName: 'acme/widget' } },
+        head_sha: 'abc1234',
+        published_at: '2026-03-05T00:00:00Z',
+      },
+    });
+  });
+
+  it('insertRevision throws RevisionVersionConflictError on a Postgres 23505 unique violation', async () => {
+    const db = new FakeSupabase();
+    const store = new SupabaseStore(db);
+    // The audit_id conflict is ignored; a remaining 23505 is the
+    // unique(repo_id, version) collision from a concurrent same-repo publish.
+    db.error = { code: '23505', message: 'duplicate key value violates unique constraint' };
+    await expect(store.insertRevision(record)).rejects.toBeInstanceOf(RevisionVersionConflictError);
+  });
+
+  it('getRevisionBySlug maps a snake_case row and returns null when absent', async () => {
+    const db = new FakeSupabase();
+    const store = new SupabaseStore(db);
+    db.selectData = [
+      {
+        id: 'rev-1',
+        audit_id: 'audit-1',
+        repo_id: 10,
+        installation_id: 1,
+        version: 3,
+        public_slug: 'cap-token',
+        snapshot: { k: 1 },
+        head_sha: 'abc1234',
+        published_at: '2026-03-05T00:00:00Z',
+      },
+    ];
+    expect(await store.getRevisionBySlug('cap-token')).toEqual({
+      id: 'rev-1', auditId: 'audit-1', repoId: 10, installationId: 1, version: 3,
+      publicSlug: 'cap-token', snapshot: { k: 1 }, headSha: 'abc1234', publishedAt: '2026-03-05T00:00:00Z',
+    });
+    expect(db.only()).toMatchObject({ table: 'audit_revisions', op: 'select', filterColumn: 'public_slug', filterValue: 'cap-token' });
+
+    db.calls = [];
+    db.selectData = [];
+    expect(await store.getRevisionBySlug('missing')).toBeNull();
+  });
+
+  it('listRevisionsByRepo filters by repo_id and orders by version descending', async () => {
+    const db = new FakeSupabase();
+    const store = new SupabaseStore(db);
+    db.selectData = [
+      { id: 'r2', audit_id: 'a2', repo_id: 10, installation_id: 1, version: 2, public_slug: 's2', snapshot: null, head_sha: 'two', published_at: 't2' },
+      { id: 'r1', audit_id: 'a1', repo_id: 10, installation_id: 1, version: 1, public_slug: 's1', snapshot: null, head_sha: 'one', published_at: 't1' },
+    ];
+    const rows = await store.listRevisionsByRepo(10);
+    expect(rows.map(r => r.version)).toEqual([2, 1]);
+    expect(rows[0]).toMatchObject({ id: 'r2', auditId: 'a2', publicSlug: 's2' });
+    expect(db.only()).toMatchObject({
+      table: 'audit_revisions',
+      op: 'select',
+      filterColumn: 'repo_id',
+      filterValue: 10,
+      orderColumn: 'version',
+      orderAscending: false,
+    });
   });
 });
