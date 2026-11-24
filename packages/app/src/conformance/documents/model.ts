@@ -72,7 +72,59 @@ export interface StatementDocument {
   sections: StatementSection[];
 }
 
-export type ConformanceDocument = AcrDocument | StatementDocument;
+/** One outstanding-work item in a remediation roadmap. */
+export interface RoadmapItem {
+  wcagId: string;
+  title: string;
+  level: string;
+  /** Short status label, e.g. 'Does Not Support', 'Pending review'. */
+  status: string;
+  /** Remediation detail / reviewer remark (may be empty). */
+  remark: string;
+}
+
+/** A labelled group of roadmap items (failures, pending review, not evaluated). */
+export interface RoadmapGroup {
+  /** Stable slug, e.g. 'failures', 'pending-review', 'not-evaluated'. */
+  id: string;
+  heading: string;
+  /** Explanatory note rendered above the group. */
+  note: string;
+  items: RoadmapItem[];
+}
+
+/**
+ * A remediation roadmap: the outstanding accessibility work derived from the same
+ * reconciled record. It lists only real gaps — failures, criteria awaiting human
+ * review, and criteria never evaluated — never dressing any of them up as done.
+ */
+export interface RemediationRoadmapDocument {
+  kind: 'roadmap';
+  meta: DocumentMeta;
+  intro: string;
+  groups: RoadmapGroup[];
+}
+
+/**
+ * A formal conformance letter: a short attestation suitable for procurement. The
+ * conformance claim is computed from the verdicts, never asserted blindly — full
+ * conformance is stated only when every criterion supports and a person reviewed
+ * it, matching the statement and ACR.
+ */
+export interface ConformanceLetterDocument {
+  kind: 'letter';
+  meta: DocumentMeta;
+  /** Attestation body paragraphs, in order. */
+  paragraphs: string[];
+  /** Signature block lines (vendor, date). */
+  signature: string[];
+}
+
+export type ConformanceDocument =
+  | AcrDocument
+  | StatementDocument
+  | RemediationRoadmapDocument
+  | ConformanceLetterDocument;
 
 /** The document kinds a caller may request. */
 export type DocumentKind = ConformanceDocument['kind'];

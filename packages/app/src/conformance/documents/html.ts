@@ -1,7 +1,14 @@
 // HTML renderers for conformance documents. Pure: model in, standalone HTML
 // string out. The same output is served to the browser and fed to puppeteer for
 // the PDF, so the on-screen and printed documents are byte-identical in content.
-import type { AcrDocument, ConformanceDocument, DocumentMeta, StatementDocument } from './model.js';
+import type {
+  AcrDocument,
+  ConformanceDocument,
+  ConformanceLetterDocument,
+  DocumentMeta,
+  RemediationRoadmapDocument,
+  StatementDocument,
+} from './model.js';
 
 /** Escape text for safe interpolation into HTML (no user markup is trusted). */
 function esc(s: string): string {
@@ -34,6 +41,9 @@ const STYLE = `
   ul.limits { margin: 0.5rem 0; padding-left: 1.25rem; }
   ul.limits li { margin: 0.3rem 0; }
   .draft-banner { background: #fff4e5; border: 1px solid #ffb74d; color: #7a4f01; padding: 0.6rem 0.9rem; border-radius: 6px; margin: 0 0 1rem; font-weight: 600; }
+  .letter p { margin: 0.9rem 0; }
+  .signature { margin-top: 2rem; }
+  .signature div { margin: 0.1rem 0; }
   footer { margin-top: 2.5rem; font-size: 0.8rem; color: #777; border-top: 1px solid #e2e2e2; padding-top: 0.75rem; }
   @media print { body { padding: 0; } .doc { max-width: none; } h2 { page-break-after: avoid; } tr { page-break-inside: avoid; } }
 `;
@@ -137,6 +147,51 @@ ${sections}`;
   return page(`Accessibility Statement — ${doc.meta.productName}`, doc.meta, inner);
 }
 
+function renderRoadmap(doc: RemediationRoadmapDocument): string {
+  const groups = doc.groups
+    .map(g => {
+      const rows = g.items
+        .map(
+          i => `<tr>
+  <td><strong>${esc(i.wcagId)}</strong> ${esc(i.title)} <span class="note">(Level ${esc(i.level)})</span></td>
+  <td class="conf">${esc(i.status)}</td>
+  <td>${esc(i.remark)}</td>
+</tr>`,
+        )
+        .join('\n');
+      return `<h2>${esc(g.heading)}</h2>
+<p class="note">${esc(g.note)}</p>
+<table>
+<thead><tr><th>Criteria</th><th>Status</th><th>Remediation / remarks</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>`;
+    })
+    .join('\n');
+
+  const inner = `<h1>Accessibility Remediation Roadmap</h1>
+<p class="note">${esc(doc.meta.productName)} · ${esc(doc.meta.date)}</p>
+<p>${esc(doc.intro)}</p>
+${groups}`;
+  return page(`Remediation Roadmap — ${doc.meta.productName}`, doc.meta, inner);
+}
+
+function renderLetter(doc: ConformanceLetterDocument): string {
+  const paras = doc.paragraphs.map(p => `<p>${esc(p)}</p>`).join('\n');
+  const sig = doc.signature.map(line => `<div>${esc(line)}</div>`).join('\n');
+  const inner = `<h1>Letter of Accessibility Conformance</h1>
+<p class="note">${esc(doc.meta.productName)}</p>
+<div class="letter">
+${paras}
+<div class="signature">
+<div>Sincerely,</div>
+${sig}
+</div>
+</div>`;
+  return page(`Conformance Letter — ${doc.meta.productName}`, doc.meta, inner);
+}
+
 /** Render any conformance document to a standalone HTML string. */
 export function renderDocumentHtml(doc: ConformanceDocument): string {
   switch (doc.kind) {
@@ -144,6 +199,10 @@ export function renderDocumentHtml(doc: ConformanceDocument): string {
       return renderAcr(doc);
     case 'statement':
       return renderStatement(doc);
+    case 'roadmap':
+      return renderRoadmap(doc);
+    case 'letter':
+      return renderLetter(doc);
     default: {
       // Exhaustiveness: a new DocumentKind must get its own renderer, not fall
       // through to the statement branch silently.

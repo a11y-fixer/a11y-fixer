@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import type { AuditRecord, ScanRecord } from '../db/store.js';
-import { latestScanByRepo, auditBelongsTo } from './audit-authz.js';
+import type { AuditRecord, AuditRevisionRecord, ScanRecord } from '../db/store.js';
+import { latestScanByRepo, auditBelongsTo, scopeRevisionsToInstallation } from './audit-authz.js';
 
 function scan(repoId: number, checkRunId: number, createdAt: string): ScanRecord {
   return {
@@ -48,5 +48,44 @@ describe('auditBelongsTo', () => {
     expect(auditBelongsTo(audit, 1)).toBe(true);
     expect(auditBelongsTo(audit, 2)).toBe(false);
     expect(auditBelongsTo(null, 1)).toBe(false);
+  });
+});
+
+describe('scopeRevisionsToInstallation', () => {
+  const rev = (id: string, installationId: number, version: number): AuditRevisionRecord => ({
+    id, auditId: `a-${id}`, repoId: 10, installationId, version,
+    publicSlug: `slug-${id}`, snapshot: {}, headSha: `sha-${id}`, publishedAt: '2026-03-01T00:00:00Z',
+  });
+
+  it('drops revisions from other installations (post-transfer cross-tenant leak)', () => {
+    // repo_id 10 was published under installation 1 (v1,v2) then transferred to 2 (v3).
+    const scoped = scopeRevisionsToInstallation(
+      [rev('r1', 1, 1), rev('r2', 1, 2), rev('r3', 2, 3)],
+      2,
+    );
+    expect(scoped.map(s => s.revision.id)).toEqual(['r3']);
+  });
+
+  it('renumbers densely per installation, hiding the global version count', () => {
+    // The new owner (installation 2) must see Revision 1, not "Revision 3",
+    // which would leak that the prior owner published twice.
+    const scoped = scopeRevisionsToInstallation(
+      [rev('r1', 1, 1), rev('r2', 1, 2), rev('r3', 2, 3)],
+      2,
+    );
+    expect(scoped).toHaveLength(1);
+    expect(scoped[0].displayVersion).toBe(1);
+  });
+
+  it('orders newest first with dense display numbers within the installation', () => {
+    const scoped = scopeRevisionsToInstallation(
+      [rev('r1', 1, 1), rev('r3', 1, 5), rev('r2', 1, 3)],
+      1,
+    );
+    expect(scoped.map(s => [s.revision.version, s.displayVersion])).toEqual([
+      [5, 3],
+      [3, 2],
+      [1, 1],
+    ]);
   });
 });
