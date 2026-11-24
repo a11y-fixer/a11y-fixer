@@ -65,6 +65,15 @@ describe('HtmlFileRunner', () => {
     expect(link.sourceLine).toBe(5);
   });
 
+  it('skips Angular .component.html templates (handled as fragments by scanComponents)', async () => {
+    await writeFile(path.join(dir, 'app.component.html'), BROKEN, 'utf8');
+    const runner = new HtmlFileRunner(dir, stubDetector());
+    const violations = await runner.scan();
+    // Only page.html is scanned; the .component.html file is excluded, so each
+    // stubbed violation node is stamped once (not twice).
+    expect(violations.every((v) => v.nodes.every((n) => n.sourceFile === path.join(dir, 'page.html')))).toBe(true);
+  });
+
   it('returns an empty array when no .html files exist', async () => {
     const empty = await mkdtemp(path.join(tmpdir(), 'html-runner-empty-'));
     try {
