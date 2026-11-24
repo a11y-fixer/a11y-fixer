@@ -198,10 +198,13 @@ your code and nothing about your corrections is sent anywhere. Commit
 - **`packages/app`** (`@a11y-fixer/app`, private) — the hosted GitHub App control
   plane: it ingests the Action's Check Runs for a cross-repo **dashboard**,
   orchestrates multi-repo scans, drafts **conformance audits** (VPAT/ACR) from a
-  repo's latest scan for human review before publishing — and generates the
-  VPAT/ACR and accessibility-statement documents from a reviewed audit (HTML,
-  PDF, and DOCX; drafts are watermarked "not for distribution") — and sells
-  seats via GitHub Marketplace. It augments, not replaces, the CI Action. See
+  repo's latest scan for human review before publishing — and generates four
+  document kinds from a reviewed audit (VPAT/ACR, accessibility statement,
+  remediation roadmap, and conformance letter; HTML, PDF, and DOCX; drafts are
+  watermarked "not for distribution"). Publishing freezes an immutable revision
+  served over a public, unguessable statement permalink, with a per-repo revision
+  history. It sells seats via GitHub Marketplace and augments, not replaces, the
+  CI Action. See
   [`packages/app/README.md`](./packages/app/README.md).
 
 ## Development

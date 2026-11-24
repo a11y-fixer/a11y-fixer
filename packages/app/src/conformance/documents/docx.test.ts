@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { renderDocumentDocx } from './docx.js';
-import type { AcrDocument, StatementDocument, DocumentMeta } from './model.js';
+import type {
+  AcrDocument,
+  ConformanceLetterDocument,
+  DocumentMeta,
+  RemediationRoadmapDocument,
+  StatementDocument,
+} from './model.js';
 
 const META: DocumentMeta = {
   productName: 'acme/widget',
@@ -31,6 +37,28 @@ describe('renderDocumentDocx', () => {
       kind: 'statement',
       meta: META,
       sections: [{ heading: 'Conformance status', paragraphs: ['Partially conformant.'], items: ['1.4.3 contrast'] }],
+    };
+    const buf = await renderDocumentDocx(doc);
+    expect(buf.subarray(0, 2).toString('latin1')).toBe('PK');
+  });
+
+  it('packs a roadmap to a .docx buffer', async () => {
+    const doc: RemediationRoadmapDocument = {
+      kind: 'roadmap',
+      meta: META,
+      intro: 'Outstanding work.',
+      groups: [{ id: 'failures', heading: 'Confirmed failures', note: 'Fix.', items: [{ wcagId: '1.4.3', title: 'Contrast', level: 'AA', status: 'Does Not Support', remark: 'low' }] }],
+    };
+    const buf = await renderDocumentDocx(doc);
+    expect(buf.subarray(0, 2).toString('latin1')).toBe('PK');
+  });
+
+  it('packs a conformance letter to a .docx buffer', async () => {
+    const doc: ConformanceLetterDocument = {
+      kind: 'letter',
+      meta: META,
+      paragraphs: ['To whom it may concern,', 'We attest.'],
+      signature: ['acme', '2026-11-23'],
     };
     const buf = await renderDocumentDocx(doc);
     expect(buf.subarray(0, 2).toString('latin1')).toBe('PK');

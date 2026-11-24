@@ -18,9 +18,9 @@ export interface BuildStatementParams {
 }
 
 /** Conformance phrasing, honest about both failures and unreviewed criteria. */
-function conformanceStatus(
+export function conformanceStatus(
   reconciled: readonly ReconciledCriterion[],
-): { label: string; sentence: string } {
+): { label: string; sentence: string; fullyConformant: boolean } {
   const counts = summarizeReconciled(reconciled);
   const hasFailures = counts.partially_supports > 0 || counts.does_not_support > 0;
   const hasUnreviewed = counts.needsHumanReview > 0 || counts.not_evaluated > 0;
@@ -28,11 +28,13 @@ function conformanceStatus(
     return {
       label: 'Fully conformant',
       sentence: 'The content fully conforms to the target standard: every applicable success criterion is supported and has been reviewed by a person.',
+      fullyConformant: true,
     };
   }
   return {
     label: 'Partially conformant',
     sentence: 'The content partially conforms to the target standard: some parts do not yet fully conform, or have not yet been reviewed by a person. These are listed below.',
+    fullyConformant: false,
   };
 }
 

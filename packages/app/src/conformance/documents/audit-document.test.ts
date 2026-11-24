@@ -1,8 +1,15 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import type { SuccessCriterion } from '@a11y-fixer/core';
 import { MemoryStore } from '../../db/memory-store.js';
-import { createDraftAudit, type AuditDeps } from '../audit-service.js';
-import { buildAuditDocument, documentFilename } from './audit-document.js';
+import { RevisionVersionConflictError } from '../../db/store.js';
+import { createDraftAudit, publishAudit, type AuditDeps } from '../audit-service.js';
+import {
+  buildAuditDocument,
+  buildDocumentFromRevision,
+  createRevisionForAudit,
+  documentFilename,
+  type RevisionDeps,
+} from './audit-document.js';
 
 function sc(id: string, level: SuccessCriterion['level']): SuccessCriterion {
   return {
@@ -63,5 +70,110 @@ describe('buildAuditDocument', () => {
   it('builds a safe, descriptive download filename', async () => {
     const doc = await buildAuditDocument(store, CATALOG, { installationId: 1, auditId, kind: 'acr' });
     expect(documentFilename(doc!, 'pdf')).toBe('acr-acme-widget-abc1234.pdf');
+  });
+
+  it('builds the roadmap and letter kinds too', async () => {
+    const roadmap = await buildAuditDocument(store, CATALOG, { installationId: 1, auditId, kind: 'roadmap' });
+    expect(roadmap!.kind).toBe('roadmap');
+    const letter = await buildAuditDocument(store, CATALOG, { installationId: 1, auditId, kind: 'letter' });
+    expect(letter!.kind).toBe('letter');
+  });
+});
+
+describe('revisions (immutable published snapshots)', () => {
+  let store: MemoryStore;
+  const revDeps: RevisionDeps = {
+    now: () => '2026-03-05T00:00:00Z',
+    newId: (() => { let n = 0; return () => `rev-${++n}`; })(),
+    newSlug: (() => { let n = 0; return () => `slug-${++n}`; })(),
+  };
+
+  async function publishedAudit(repoId: number, headSha: string): Promise<string> {
+    const audit = await createDraftAudit(store, CATALOG, { repoId, installationId: 1, headSha, checkRunId: 500 }, deps);
+    // A human reviewer confirms both criteria so the honesty gate passes.
+    for (const c of CATALOG) {
+      await store.upsertVerdict({
+        id: `v-${repoId}-${c.id}`, auditId: audit.id, wcagId: c.id, source: 'human',
+        verdict: 'supports', remarks: '', evidence: null, authorId: 'user-1', updatedAt: 't',
+      });
+    }
+    await publishAudit(store, CATALOG, audit.id, deps);
+    await createRevisionForAudit(store, CATALOG, audit.id, revDeps);
+    return audit.id;
+  }
+
+  beforeEach(async () => {
+    store = new MemoryStore();
+    await store.upsertInstallation({ installationId: 1, account: 'acme', accountId: 99, suspendedAt: null });
+    await store.upsertRepos(1, [
+      { repoId: 10, installationId: 1, fullName: 'acme/widget', isPrivate: false, defaultBranch: 'main', selected: true },
+    ]);
+  });
+
+  it('freezes a revision on publish with a slug, snapshot, and version 1', async () => {
+    const auditId = await publishedAudit(10, 'abc1234def');
+    const rev = await store.getRevisionByAudit(auditId);
+    expect(rev).not.toBeNull();
+    expect(rev!.version).toBe(1);
+    expect(rev!.publicSlug).toMatch(/^slug-\d+$/);
+    expect(await store.getRevisionBySlug(rev!.publicSlug)).toMatchObject({ auditId });
+  });
+
+  it('is idempotent: a second create returns the existing revision, never a duplicate', async () => {
+    const auditId = await publishedAudit(10, 'abc1234def');
+    const first = await store.getRevisionByAudit(auditId);
+    const again = await createRevisionForAudit(store, CATALOG, auditId, revDeps);
+    expect(again!.publicSlug).toBe(first!.publicSlug);
+    expect(await store.listRevisionsByRepo(10)).toHaveLength(1);
+  });
+
+  it('increments version per repo across published audits, newest first', async () => {
+    await publishedAudit(10, 'sha-one');
+    await publishedAudit(10, 'sha-two');
+    const history = await store.listRevisionsByRepo(10);
+    expect(history.map(r => r.version)).toEqual([2, 1]);
+  });
+
+  it('serves the frozen snapshot for a published audit, immune to later catalog drift', async () => {
+    const auditId = await publishedAudit(10, 'abc1234def');
+    // A later deploy adds a new WCAG criterion to the catalog.
+    const grownCatalog = [...CATALOG, sc('4.1.2', 'A')];
+    const doc = await buildAuditDocument(store, grownCatalog, { installationId: 1, auditId, kind: 'acr' });
+    // The published ACR still reflects only the two criteria frozen at publish.
+    const acr = doc as { tables: { rows: { wcagId: string }[] }[]; meta: { published: boolean } };
+    const allRows = acr.tables.flatMap(t => t.rows.map(r => r.wcagId));
+    expect(allRows).not.toContain('4.1.2');
+    expect(acr.meta.published).toBe(true);
+  });
+
+  it('rebuilds any kind from a revision snapshot', async () => {
+    const auditId = await publishedAudit(10, 'abc1234def');
+    const rev = await store.getRevisionByAudit(auditId);
+    expect(buildDocumentFromRevision(rev!, 'statement').kind).toBe('statement');
+    expect(buildDocumentFromRevision(rev!, 'letter').kind).toBe('letter');
+  });
+
+  it('retries on a version collision and still freezes a revision', async () => {
+    // Set up a published audit WITHOUT its revision yet.
+    const audit = await createDraftAudit(store, CATALOG, { repoId: 30, installationId: 1, headSha: 'sha-x', checkRunId: 500 }, deps);
+    for (const c of CATALOG) {
+      await store.upsertVerdict({ id: `v-${c.id}`, auditId: audit.id, wcagId: c.id, source: 'human', verdict: 'supports', remarks: '', evidence: null, authorId: 'u1', updatedAt: 't' });
+    }
+    await publishAudit(store, CATALOG, audit.id, deps);
+
+    // Make the first insert collide on (repo_id, version), as a concurrent
+    // same-repo publish would; the second attempt must recompute and succeed.
+    let calls = 0;
+    const realInsert = store.insertRevision.bind(store);
+    store.insertRevision = async rec => {
+      calls++;
+      if (calls === 1) throw new RevisionVersionConflictError(rec.repoId, rec.version);
+      return realInsert(rec);
+    };
+
+    const rev = await createRevisionForAudit(store, CATALOG, audit.id, revDeps);
+    expect(rev).not.toBeNull();
+    expect(calls).toBeGreaterThanOrEqual(2);
+    expect(await store.getRevisionByAudit(audit.id)).toMatchObject({ auditId: audit.id });
   });
 });

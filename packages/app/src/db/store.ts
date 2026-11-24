@@ -128,6 +128,46 @@ export interface CriterionVerdictRecord {
 }
 
 /**
+ * An immutable published revision of an audit's conformance documents. Created
+ * when an audit is published: it freezes the document `snapshot` (the reconciled
+ * record + metadata the renderers need) so a published document never changes if
+ * the WCAG catalog or repo metadata later changes in code. The `publicSlug` is an
+ * unguessable capability token for the public, unauthenticated statement link.
+ * `version` increments per repo across the repo's published audits.
+ */
+export interface AuditRevisionRecord {
+  /** Opaque revision id (uuid). */
+  id: string;
+  /** The audit this revision was published from (one revision per audit). */
+  auditId: string;
+  repoId: number;
+  installationId: number;
+  /** Per-repo revision number, 1-based. */
+  version: number;
+  /** Unguessable URL-safe token for the public permalink. */
+  publicSlug: string;
+  /** Frozen document context (meta + reconciled criteria); app-owned JSON shape. */
+  snapshot: unknown;
+  /** Commit the revision's audit evaluated. */
+  headSha: string;
+  /** ISO-8601 publication time. */
+  publishedAt: string;
+}
+
+/**
+ * Thrown by `insertRevision` when a revision collides with an existing one on
+ * `(repo_id, version)` — two audits in the same repo published concurrently can
+ * compute the same next version. Callers recompute the version and retry; it is
+ * distinct from the idempotent `audit_id` conflict, which is a silent no-op.
+ */
+export class RevisionVersionConflictError extends Error {
+  constructor(repoId: number, version: number) {
+    super(`revision version ${version} already exists for repo ${repoId}`);
+    this.name = 'RevisionVersionConflictError';
+  }
+}
+
+/**
  * A dashboard end user, identified by their Supabase Auth id. The GitHub fields
  * are captured at login so the UI can show who is signed in and reconcile the
  * user's visible installations from GitHub's `GET /user/installations`.
@@ -232,6 +272,18 @@ export interface Store {
   upsertVerdict(record: CriterionVerdictRecord): Promise<void>;
   /** All verdicts (machine and human) for an audit. */
   listVerdicts(auditId: string): Promise<CriterionVerdictRecord[]>;
+
+  /**
+   * Persist a published revision. Idempotent on `auditId`: if a revision already
+   * exists for the audit, this is a no-op (a published revision is immutable).
+   */
+  insertRevision(record: AuditRevisionRecord): Promise<void>;
+  /** The published revision for an audit, or null if it has none. */
+  getRevisionByAudit(auditId: string): Promise<AuditRevisionRecord | null>;
+  /** Resolve a public permalink slug to its revision, or null if unknown. */
+  getRevisionBySlug(publicSlug: string): Promise<AuditRevisionRecord | null>;
+  /** A repo's published revisions, most recent (highest version) first. */
+  listRevisionsByRepo(repoId: number): Promise<AuditRevisionRecord[]>;
 
   /** Record (or replace by account id) a Marketplace subscription. */
   upsertSubscription(record: SubscriptionRecord): Promise<void>;

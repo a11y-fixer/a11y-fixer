@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { renderDocumentHtml } from './html.js';
-import type { AcrDocument, DocumentMeta, StatementDocument } from './model.js';
+import type {
+  AcrDocument,
+  ConformanceLetterDocument,
+  DocumentMeta,
+  RemediationRoadmapDocument,
+  StatementDocument,
+} from './model.js';
 
 const META = (published: boolean): DocumentMeta => ({
   productName: 'acme/<widget>',
@@ -52,5 +58,43 @@ describe('renderDocumentHtml (statement)', () => {
     const html = renderDocumentHtml(doc);
     expect(html).toContain('<h2>Known limitations</h2>');
     expect(html).toContain('<li>1.4.3 contrast</li>');
+  });
+});
+
+describe('renderDocumentHtml (roadmap)', () => {
+  it('renders the intro and a table per group, escaping untrusted text', () => {
+    const doc: RemediationRoadmapDocument = {
+      kind: 'roadmap',
+      meta: META(true),
+      intro: 'Work for acme/<widget>',
+      groups: [
+        {
+          id: 'failures',
+          heading: 'Confirmed failures to remediate',
+          note: 'Fix these.',
+          items: [{ wcagId: '1.4.3', title: 'Contrast <x>', level: 'AA', status: 'Does Not Support', remark: 'low' }],
+        },
+      ],
+    };
+    const html = renderDocumentHtml(doc);
+    expect(html).toContain('<h2>Confirmed failures to remediate</h2>');
+    expect(html).toContain('Does Not Support');
+    expect(html).toContain('Contrast &lt;x&gt;');
+    expect(html).toContain('Work for acme/&lt;widget&gt;');
+  });
+});
+
+describe('renderDocumentHtml (letter)', () => {
+  it('renders attestation paragraphs and the signature block', () => {
+    const doc: ConformanceLetterDocument = {
+      kind: 'letter',
+      meta: META(true),
+      paragraphs: ['To whom it may concern,', 'We attest that it conforms.'],
+      signature: ['acme', '2026-11-23'],
+    };
+    const html = renderDocumentHtml(doc);
+    expect(html).toContain('We attest that it conforms.');
+    expect(html).toContain('<div class="signature">');
+    expect(html).toContain('<div>acme</div>');
   });
 });

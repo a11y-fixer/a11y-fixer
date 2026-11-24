@@ -171,6 +171,32 @@ create table if not exists criterion_verdicts (
 
 create index if not exists criterion_verdicts_audit_id_idx on criterion_verdicts (audit_id);
 
+-- Phase 4 (distribution): an immutable published revision of an audit's
+-- conformance documents. Created when an audit is published; `snapshot` freezes
+-- the reconciled record + metadata the renderers need, so a published document
+-- never changes even if the WCAG catalog or repo metadata later changes in code.
+-- `public_slug` is an unguessable capability token for the public, unauthenticated
+-- statement permalink. `version` increments per repo across its published audits.
+create table if not exists audit_revisions (
+  id              uuid primary key default gen_random_uuid(),
+  -- One revision per audit: a published audit is finalized and published once.
+  audit_id        uuid not null unique references audits(id) on delete cascade,
+  repo_id         bigint not null references repos(repo_id) on delete cascade,
+  installation_id bigint not null references installations(installation_id) on delete cascade,
+  version         integer not null,
+  public_slug     text not null unique,
+  snapshot        jsonb not null,
+  head_sha        text not null,
+  published_at    timestamptz not null default now(),
+  -- Per-repo version numbering is dense and unique.
+  unique (repo_id, version)
+);
+
+create index if not exists audit_revisions_repo_id_idx on audit_revisions (repo_id);
+create index if not exists audit_revisions_installation_id_idx on audit_revisions (installation_id);
+-- The public permalink looks a revision up by slug; keep that lookup indexed.
+create unique index if not exists audit_revisions_public_slug_idx on audit_revisions (public_slug);
+
 -- Row-level security. The service-role key bypasses RLS (webhook sink + any
 -- server-side admin reads are unaffected). These policies constrain ONLY the
 -- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
@@ -184,6 +210,7 @@ alter table subscriptions enable row level security;
 alter table licenses enable row level security;
 alter table audits enable row level security;
 alter table criterion_verdicts enable row level security;
+alter table audit_revisions enable row level security;
 
 -- A user sees only their own row and their own installation links.
 create policy users_self_select on users
@@ -251,4 +278,14 @@ create policy criterion_verdicts_member_select on criterion_verdicts
       select id from audits
       where installation_id in (select installation_id from user_installations where user_id = auth.uid())
     )
+  );
+
+-- A user sees an audit's published revisions only if they are linked to its
+-- installation. The PUBLIC permalink does NOT rely on this policy: it reads via
+-- the service-role key (which bypasses RLS) and is gated solely by possession of
+-- the unguessable public_slug. This policy only governs the dashboard history UI.
+drop policy if exists audit_revisions_member_select on audit_revisions;
+create policy audit_revisions_member_select on audit_revisions
+  for select using (
+    installation_id in (select installation_id from user_installations where user_id = auth.uid())
   );
