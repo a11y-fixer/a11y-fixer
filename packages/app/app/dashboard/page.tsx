@@ -3,6 +3,8 @@
 // shaping is done by the unit-tested src/** helpers; this file just renders.
 import { getSignedInUser } from '../lib/auth.js';
 import { serviceRoleStore } from '../lib/supabase.js';
+import { env } from '../lib/env.js';
+import { isAdminLogin, parseAdminLogins } from '../../src/admin/access.js';
 import { summarizeInstallation } from '../../src/dashboard/aggregate.js';
 import { installationView } from '../../src/dashboard/view-model.js';
 
@@ -29,7 +31,11 @@ export default async function DashboardPage() {
   }
 
   const store = serviceRoleStore();
-  const installationIds = await store.listInstallationsForUser(user.id);
+  const [installationIds, userRecord] = await Promise.all([
+    store.listInstallationsForUser(user.id),
+    store.getUser(user.id),
+  ]);
+  const isAdmin = isAdminLogin(userRecord?.githubLogin, parseAdminLogins(env.adminGithubLogins()));
 
   const orgs = await Promise.all(
     installationIds.map(async id => {
@@ -43,7 +49,13 @@ export default async function DashboardPage() {
     <main className="container">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <h1>Organizations</h1>
-        <form action="/auth/sign-out" method="post" style={{ margin: 0 }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'baseline' }}>
+          {isAdmin && (
+            <a href="/dashboard/telemetry" className="muted" style={{ textDecoration: 'none' }}>
+              Telemetry
+            </a>
+          )}
+          <form action="/auth/sign-out" method="post" style={{ margin: 0 }}>
           <button
             type="submit"
             className="muted"
@@ -51,7 +63,8 @@ export default async function DashboardPage() {
           >
             Sign out
           </button>
-        </form>
+          </form>
+        </div>
       </header>
       {orgs.length === 0 ? (
         <p className="panel muted">No installations yet. Install the a11y-fixer GitHub App on a repository.</p>

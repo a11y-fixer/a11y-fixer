@@ -109,6 +109,10 @@ M5 — `app/lib/env.ts` reads it via `required()`. The app mints free-tier licen
 keys with it through `@a11y-fixer/licensing`, the same signer the trial site and
 offline CLI use, so the keys verify against the public key embedded in the Action.
 
+`ADMIN_GITHUB_LOGINS` (optional, comma/space-separated GitHub logins) gates the
+internal `/dashboard/telemetry` analytics page. When unset, the page 404s for
+everyone; list your own login to view opt-in Action usage events.
+
 ## Test
 
 ```bash

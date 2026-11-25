@@ -67,6 +67,10 @@ inputs:
     description: 'Fix mode only. When "on" (default), the action records accepted fixes to a committed store (.a11y-fixer/learning.jsonl) and feeds them back as house-style examples so future fixes match your codebase. Data never leaves your repo. Set "off" to disable.'
     required: false
     default: 'on'
+  telemetry:
+    description: 'Opt-in anonymous usage telemetry. When "on", the action sends a single best-effort ping at the end of a run with NON-identifying signal only — run mode, violation/fix counts, whether a license key was used (not which), and OS/arch/Node version. It never sends your repo name, owner, commit, actor, or license identity. Off by default; failures never affect the run.'
+    required: false
+    default: 'off'
 
 outputs:
   pr-url:
@@ -133,4 +137,5 @@ runs:
         INPUT_BASE-BRANCH: ${{ inputs.base-branch }}
         INPUT_CACHE-FILE: ${{ inputs.cache-file }}
         INPUT_LEARNING: ${{ inputs.learning }}
+        INPUT_TELEMETRY: ${{ inputs.telemetry }}
         PUPPETEER_EXECUTABLE_PATH: ${{ steps.chrome.outputs.chrome-path }}

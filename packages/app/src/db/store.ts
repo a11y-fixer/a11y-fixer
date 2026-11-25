@@ -228,12 +228,58 @@ export interface LicenseRecord {
   expiresAt: string;
 }
 
+/**
+ * One anonymous usage event emitted by the GitHub Action when a caller opts in
+ * (`telemetry: on`). Deliberately carries NO repo/account/actor/commit identity —
+ * only coarse, non-identifying signal so the author can count runs and see broad
+ * usage. See the Action's `sendTelemetry` for the exact fields it sends.
+ */
+export interface ActionRunRecord {
+  /** The Action ref the run used (e.g. `v1` or a tag/sha), or null. */
+  actionVersion: string | null;
+  /** Run mode: `check` | `scan` | `fix`. */
+  mode: string;
+  /** True when the run authenticated with a valid license key. */
+  licensed: boolean;
+  /** True when the run used the free public-repo tier. */
+  publicRepo: boolean;
+  violationsBefore: number;
+  violationsAfter: number;
+  fixesApplied: number;
+  fixesReverted: number;
+  regressions: number;
+  /** Whether the run scanned a live URL / HTML / Markdown / component templates. */
+  usedUrl: boolean;
+  usedHtml: boolean;
+  usedMarkdown: boolean;
+  usedComponents: boolean;
+  /** Runner `process.platform` / `process.arch` / `process.version`. */
+  platform: string;
+  arch: string;
+  nodeVersion: string;
+  /**
+   * ISO-8601 time the row was recorded. The Action never sends this — the
+   * database assigns it on insert — so it is absent on the write path and
+   * populated only when reading rows back for the telemetry view.
+   */
+  createdAt?: string | null;
+}
+
 export interface Store {
   /**
    * Idempotency gate keyed by `X-GitHub-Delivery`. Returns true the first time
    * a delivery id is seen and false on every replay, so handlers run once.
    */
   recordEventOnce(deliveryId: string): Promise<boolean>;
+
+  /** Append one anonymous Action usage event (opt-in telemetry). */
+  recordActionRun(event: ActionRunRecord): Promise<void>;
+
+  /**
+   * The most recent Action usage events, newest first, capped at `limit`. Used
+   * by the author-only telemetry view; anonymous rows have no owner to scope by.
+   */
+  listRecentActionRuns(limit: number): Promise<ActionRunRecord[]>;
 
   upsertInstallation(record: InstallationRecord): Promise<void>;
   removeInstallation(installationId: number): Promise<void>;
@@ -297,6 +343,8 @@ export interface Store {
 
   /** Record (or update) a signed-in dashboard user. */
   upsertUser(record: UserRecord): Promise<void>;
+  /** Fetch a user by their Supabase Auth id (for the GitHub login), or null. */
+  getUser(userId: string): Promise<UserRecord | null>;
   /**
    * Link a user to an installation they can view (idempotent). Called at login
    * after reconciling GitHub's `GET /user/installations`.

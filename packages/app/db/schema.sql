@@ -14,6 +14,36 @@ create table if not exists webhook_events (
   received_at timestamptz not null default now()
 );
 
+-- Anonymous, opt-in Action usage events. One row per run where the caller sets
+-- `telemetry: on`. Carries NO repo/account/actor/commit identity — only coarse
+-- counts and environment so the author can answer "how many / when did someone
+-- run the Action". Written with the service-role key (bypasses RLS); RLS is
+-- enabled with no policy so the anon/dashboard client can never read it.
+create table if not exists action_runs (
+  id                uuid primary key default gen_random_uuid(),
+  created_at        timestamptz not null default now(),
+  action_version    text,
+  mode              text not null,
+  licensed          boolean not null default false,
+  public_repo       boolean not null default false,
+  violations_before integer not null default 0,
+  violations_after  integer not null default 0,
+  fixes_applied     integer not null default 0,
+  fixes_reverted    integer not null default 0,
+  regressions       integer not null default 0,
+  used_url          boolean not null default false,
+  used_html         boolean not null default false,
+  used_markdown     boolean not null default false,
+  used_components   boolean not null default false,
+  platform          text,
+  arch              text,
+  node_version      text
+);
+
+create index if not exists action_runs_created_at_idx on action_runs (created_at);
+
+alter table action_runs enable row level security;
+
 -- One row per GitHub App installation.
 create table if not exists installations (
   installation_id bigint primary key,
