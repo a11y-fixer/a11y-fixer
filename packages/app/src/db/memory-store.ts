@@ -1,6 +1,7 @@
 // In-memory Store for unit tests and local development. Not for production.
 import { RevisionVersionConflictError } from './store.js';
 import type {
+  ActionRunRecord,
   AuditRecord,
   AuditRevisionRecord,
   AuditStatus,
@@ -30,11 +31,17 @@ export class MemoryStore implements Store {
   readonly verdicts = new Map<string, CriterionVerdictRecord[]>();
   /** Published revisions keyed by revision id. */
   readonly revisions = new Map<string, AuditRevisionRecord>();
+  /** Anonymous Action usage events, in arrival order. */
+  readonly actionRuns: ActionRunRecord[] = [];
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
     this.deliveries.add(deliveryId);
     return true;
+  }
+
+  async recordActionRun(event: ActionRunRecord): Promise<void> {
+    this.actionRuns.push({ ...event });
   }
 
   async upsertInstallation(record: InstallationRecord): Promise<void> {

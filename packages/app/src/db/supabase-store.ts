@@ -7,6 +7,7 @@
 // package installs and type-checks with zero extra dependencies. The real
 // client returned by `createClient()` satisfies this shape.
 import type {
+  ActionRunRecord,
   AuditRecord,
   AuditRevisionRecord,
   AuditStatus,
@@ -54,6 +55,28 @@ export class SupabaseStore implements Store {
     // insert errors, which we read as "already seen".
     const { error } = await this.db.from('webhook_events').insert({ delivery_id: deliveryId });
     return !error;
+  }
+
+  async recordActionRun(event: ActionRunRecord): Promise<void> {
+    const { error } = await this.db.from('action_runs').insert({
+      action_version: event.actionVersion,
+      mode: event.mode,
+      licensed: event.licensed,
+      public_repo: event.publicRepo,
+      violations_before: event.violationsBefore,
+      violations_after: event.violationsAfter,
+      fixes_applied: event.fixesApplied,
+      fixes_reverted: event.fixesReverted,
+      regressions: event.regressions,
+      used_url: event.usedUrl,
+      used_html: event.usedHtml,
+      used_markdown: event.usedMarkdown,
+      used_components: event.usedComponents,
+      platform: event.platform,
+      arch: event.arch,
+      node_version: event.nodeVersion,
+    });
+    throwOn(error, 'recordActionRun');
   }
 
   async upsertInstallation(record: InstallationRecord): Promise<void> {
