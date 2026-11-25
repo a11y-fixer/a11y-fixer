@@ -39,6 +39,9 @@ export interface SupabaseLike {
       eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }> & {
         order(column: string, options?: { ascending?: boolean }): Promise<{ data: unknown[] | null; error: unknown }>;
       };
+      order(column: string, options?: { ascending?: boolean }): {
+        limit(count: number): Promise<{ data: unknown[] | null; error: unknown }>;
+      };
     };
   };
 }
@@ -77,6 +80,37 @@ export class SupabaseStore implements Store {
       node_version: event.nodeVersion,
     });
     throwOn(error, 'recordActionRun');
+  }
+
+  async listRecentActionRuns(limit: number): Promise<ActionRunRecord[]> {
+    const { data, error } = await this.db
+      .from('action_runs')
+      .select()
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    throwOn(error, 'listRecentActionRuns');
+    return (data ?? []).map(raw => {
+      const row = raw as Record<string, unknown>;
+      return {
+        actionVersion: (row.action_version as string | null) ?? null,
+        mode: row.mode as string,
+        licensed: Boolean(row.licensed),
+        publicRepo: Boolean(row.public_repo),
+        violationsBefore: (row.violations_before as number) ?? 0,
+        violationsAfter: (row.violations_after as number) ?? 0,
+        fixesApplied: (row.fixes_applied as number) ?? 0,
+        fixesReverted: (row.fixes_reverted as number) ?? 0,
+        regressions: (row.regressions as number) ?? 0,
+        usedUrl: Boolean(row.used_url),
+        usedHtml: Boolean(row.used_html),
+        usedMarkdown: Boolean(row.used_markdown),
+        usedComponents: Boolean(row.used_components),
+        platform: (row.platform as string) ?? 'unknown',
+        arch: (row.arch as string) ?? 'unknown',
+        nodeVersion: (row.node_version as string) ?? 'unknown',
+        createdAt: (row.created_at as string | null) ?? null,
+      };
+    });
   }
 
   async upsertInstallation(record: InstallationRecord): Promise<void> {
@@ -452,6 +486,18 @@ export class SupabaseStore implements Store {
       { onConflict: 'id' },
     );
     throwOn(error, 'upsertUser');
+  }
+
+  async getUser(userId: string): Promise<UserRecord | null> {
+    const { data, error } = await this.db.from('users').select().eq('id', userId);
+    throwOn(error, 'getUser');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      userId: row.id as string,
+      githubLogin: row.github_login as string,
+      githubUserId: row.github_user_id as number,
+    };
   }
 
   async linkUserInstallation(userId: string, installationId: number): Promise<void> {

@@ -69,7 +69,8 @@ describe('handleTelemetryRequest', () => {
     const res = await handleTelemetryRequest(request(JSON.stringify(fullPayload)), store);
     expect(res.status).toBe(202);
     expect(store.actionRuns).toHaveLength(1);
-    expect(store.actionRuns[0]).toEqual(fullPayload);
+    // The store assigns created_at on record; the rest must match the payload.
+    expect(store.actionRuns[0]).toMatchObject(fullPayload);
   });
 
   it('returns 400 and records nothing on non-JSON', async () => {

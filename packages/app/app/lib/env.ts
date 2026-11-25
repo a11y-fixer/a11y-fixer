@@ -24,4 +24,8 @@ export const env = {
   // pair of the public key embedded in the Action's license.ts, or issued keys
   // won't verify. Verify once with scripts/check-signing-key.mjs.
   licenseSigningKey: () => required('LICENSE_SIGNING_KEY'),
+  // Optional, comma/space-separated GitHub logins allowed to view the internal
+  // telemetry analytics page. Not required(): when unset, no one qualifies and
+  // the page 404s for everyone (see src/admin/access.ts).
+  adminGithubLogins: () => process.env['ADMIN_GITHUB_LOGINS'] ?? '',
 };
