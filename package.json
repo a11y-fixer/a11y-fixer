@@ -12,10 +12,10 @@
     "bench:fix": "pnpm --filter @a11y-fixer/bench-fix-clearance run bench"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
-    "vitest": "^5.1.0",
-    "@vitest/coverage-v8": "^5.1.0",
-    "@types/node": "^26.6.6"
+    "@types/node": "^26.6.7",
+    "@vitest/coverage-v8": "^5.1.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.1"
   },
   "pnpm": {
     "overrides": {

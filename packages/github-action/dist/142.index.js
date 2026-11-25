@@ -522,7 +522,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var shared = __webpack_require__(35418);
 var decode = __webpack_require__(6976);
-var parser = __webpack_require__(94675);
+var parser = __webpack_require__(99574);
 var estreeWalker = __webpack_require__(66533);
 var sourceMapJs = __webpack_require__(82852);
 
@@ -8082,7 +8082,7 @@ var require$$0 = __webpack_require__(79896);
 var require$$0$1 = __webpack_require__(61481);
 var estreeWalker = __webpack_require__(66533);
 var MagicString = __webpack_require__(24664);
-var parser$2 = __webpack_require__(94675);
+var parser$2 = __webpack_require__(99574);
 var process$1 = __webpack_require__(932);
 
 function _interopNamespaceDefault(e) {
@@ -86612,7 +86612,7 @@ module.exports = eval("require")("whiskers");
 
 /***/ }),
 
-/***/ 94675:
+/***/ 99574:
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -90230,7 +90230,7 @@ var flow = superClass => class FlowParserMixin extends superClass {
       node.callee = base;
       node.arguments = super.parseCallExpressionArguments();
       base = this.finishNode(node, "CallExpression");
-    } else if (base.type === "Identifier" && base.name === "async" && this.match(47)) {
+    } else if (this.match(47) && this.atPossibleAsyncArrow(base)) {
       const state = this.state.clone();
       const arrow = this.tryParse(abort => this.parseAsyncArrowWithTypeParameters(startLoc) || abort(), state);
       if (!arrow.error && !arrow.aborted) return arrow.node;
@@ -91573,6 +91573,7 @@ class BaseParser {
   constructor() {
     this.sawUnambiguousESM = false;
     this.ambiguousScriptDifferentAst = false;
+    this.classHeritageStart = -1;
     this.noArrowAt = new Set();
   }
   sourceToOffsetPos(sourcePos) {
@@ -92216,10 +92217,20 @@ function readCodePoint(input, pos, lineStart, curLine, throwOnInvalid, errors) {
   let code;
   if (ch === 123) {
     ++pos;
+    const rightCurlyBracePos = input.indexOf("}", pos);
+    if (rightCurlyBracePos === -1) {
+      if (throwOnInvalid) {
+        errors.invalidEscapeSequence(pos, lineStart, curLine);
+      }
+      return {
+        code: null,
+        pos
+      };
+    }
     ({
       code,
       pos
-    } = readHexChar(input, pos, lineStart, curLine, input.indexOf("}", pos) - pos, true, throwOnInvalid, errors));
+    } = readHexChar(input, pos, lineStart, curLine, rightCurlyBracePos - pos, true, throwOnInvalid, errors));
     ++pos;
     if (code !== null && code > 0x10ffff) {
       if (throwOnInvalid) {
@@ -94863,7 +94874,8 @@ class ExpressionParser extends LValParser {
           break;
         }
       }
-      elts.push(this.parseExprListItem(11, false, refExpressionErrors, allowPlaceholder));
+      const elt = this.parseExprListItem(11, false, refExpressionErrors, allowPlaceholder);
+      if (elt !== null) elts.push(elt);
     }
     return elts;
   }
@@ -95028,7 +95040,7 @@ class ExpressionParser extends LValParser {
           return this.parseObjectLike(this.state.type === 6 ? 9 : 8, false, true);
         }
         if (tokenIsIdentifier(type)) {
-          if (this.isContextual(128) && this.lookaheadInLineCharCode() === 123) {
+          if (this.isContextual(128) && this.state.start !== this.classHeritageStart && this.lookaheadInLineCharCode() === 123) {
             return this.parseModuleExpression();
           }
           const canBeArrow = this.state.potentialArrowAt === this.state.start;
@@ -95348,7 +95360,9 @@ class ExpressionParser extends LValParser {
   }
   parseNewOrNewTarget() {
     const node = this.startNode();
+    const isClassHeritageStart = this.state.start === this.classHeritageStart;
     this.next();
+    if (isClassHeritageStart) this.classHeritageStart = this.state.start;
     if (this.match(16)) {
       const meta = this.createIdentifier(this.startNodeAtNode(node), "new");
       this.next();
@@ -95363,7 +95377,7 @@ class ExpressionParser extends LValParser {
   parseNew(node) {
     this.parseNewCallee(node);
     if (this.eat(10)) {
-      const args = this.parseExprList(11);
+      const args = this.parseExprList(11).filter(arg => arg !== null);
       this.toReferencedList(args);
       node.arguments = args;
     } else {
@@ -95495,15 +95509,12 @@ class ExpressionParser extends LValParser {
     const prop = this.startNodeAt(decoratorsStartLoc);
     let isAsync = false;
     let isAccessor = false;
-    let startLoc;
     if (decorators.length) {
       prop.decorators = decorators;
       decorators = [];
     }
     prop.method = false;
-    if (refExpressionErrors) {
-      startLoc = this.state.startLoc;
-    }
+    const startLoc = this.state.startLoc;
     let isGenerator = this.eat(55);
     this.parsePropertyNamePrefixOperator(prop);
     const containsEsc = this.state.containsEsc;
@@ -96915,6 +96926,7 @@ class StatementParser extends ExpressionParser {
         this.raise(Errors.LabelRedeclaration, expr, {
           labelName: maybeName
         });
+        break;
       }
     }
     const kind = tokenIsLoop(this.state.type) ? 1 : this.match(71) ? 2 : null;
@@ -97434,7 +97446,12 @@ class StatementParser extends ExpressionParser {
     }
   }
   parseClassSuper(node) {
-    node.superClass = this.eat(81) ? this.parseExprSubscripts() : null;
+    if (this.eat(81)) {
+      this.classHeritageStart = this.state.start;
+      node.superClass = this.parseExprSubscripts();
+    } else {
+      node.superClass = null;
+    }
   }
   parseExport(node, decorators) {
     const maybeDefaultIdentifier = this.parseMaybeImportPhase(node, true);
@@ -101306,7 +101323,9 @@ var placeholders = superClass => class PlaceholdersParserMixin extends superClas
     node.specifiers = [];
     if (!this.isContextual(99) && !this.match(12)) {
       node.source = this.finishPlaceholder(placeholder, "StringLiteral");
+      this.maybeParseImportAttributes(node);
       this.semicolon();
+      this.sawUnambiguousESM = true;
       return this.finishNode(node, "ImportDeclaration");
     }
     const specifier = this.startNodeAtNode(placeholder);
@@ -101317,9 +101336,7 @@ var placeholders = superClass => class PlaceholdersParserMixin extends superClas
       if (!hasStarImport) this.parseNamedImportSpecifiers(node);
     }
     this.expectContextual(99);
-    node.source = this.parseImportSource();
-    this.semicolon();
-    return this.finishNode(node, "ImportDeclaration");
+    return super.parseImportSourceAndAttributes(node);
   }
   parseImportSource() {
     return this.parsePlaceholder("StringLiteral") || super.parseImportSource();

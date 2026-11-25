@@ -11,17 +11,17 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@a11y-fixer/core": "workspace:*",
     "@a11y-fixer/ai": "workspace:*",
+    "@a11y-fixer/core": "workspace:*",
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
-    "@axe-core/puppeteer": "^4.14.0",
-    "puppeteer-core": "^25.17.0"
+    "@axe-core/puppeteer": "^4.14.1",
+    "puppeteer-core": "^25.18.1"
   },
   "devDependencies": {
+    "@types/node": "^26.6.7",
     "@vercel/ncc": "^0.45.0",
-    "typescript": "^5.5.0",
-    "@types/node": "^26.6.6",
-    "vitest": "^5.1.0"
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.1"
   }
 }
