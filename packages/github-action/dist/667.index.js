@@ -1,8 +1,8 @@
-export const id = 948;
-export const ids = [948];
+export const id = 667;
+export const ids = [667];
 export const modules = {
 
-/***/ 92567:
+/***/ 18667:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 
@@ -13,10 +13,10 @@ __webpack_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: VERSION, anthropic, forwardAnthropicContainerIdFromLastStep
 
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.38/node_modules/@ai-sdk/provider/dist/index.js
-var dist = __webpack_require__(66110);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.81_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js + 2 modules
-var provider_utils_dist = __webpack_require__(73266);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.39/node_modules/@ai-sdk/provider/dist/index.js
+var dist = __webpack_require__(30647);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.83_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js + 2 modules
+var provider_utils_dist = __webpack_require__(28472);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@workflow+serde@4.1.0/node_modules/@workflow/serde/dist/index.js
 var serde_dist = __webpack_require__(23428);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/parse.js + 1 modules
@@ -27,7 +27,7 @@ var core = __webpack_require__(48149);
 var json_schema_processors = __webpack_require__(72514);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/locales/en.js
 var en = __webpack_require__(54611);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.81_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/experimental-decision/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.83_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/experimental-decision/index.js
 
 
 
@@ -1088,7 +1088,7 @@ function standardSchema(standardSchema) {
 		return addAdditionalPropertiesToJsonSchema(standardSchema["~standard"].jsonSchema.input({ target: "draft-07" }));
 	}, { validate: async (value) => {
 		const result = await standardSchema["~standard"].validate(value);
-		return "value" in result ? {
+		return result.issues === void 0 && "value" in result ? {
 			success: true,
 			value: result.value
 		} : {
@@ -1388,11 +1388,11 @@ var DecisionLanguageModel = class DecisionLanguageModel {
 
 
 //# sourceMappingURL=index.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.81_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/experimental-extraction/index.js
-var experimental_extraction = __webpack_require__(97429);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.83_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/experimental-extraction/index.js
+var experimental_extraction = __webpack_require__(21523);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.js + 1 modules
 var schemas = __webpack_require__(3726);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@4.0.105_zod@4.6.7/node_modules/@ai-sdk/anthropic/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+anthropic@4.0.108_zod@4.6.7/node_modules/@ai-sdk/anthropic/dist/index.js
 
 
 
@@ -1573,283 +1573,578 @@ const anthropicProviderOptions = { language: {
 	compaction: { description: "On-demand conversation summary." },
 	contextManagement: { description: "Server-side context management." }
 } };
-const legacyClaude = defineRuntime({});
-const currentClaude = defineRuntime({
-	maxOutputTokens: 128e3,
-	nativeStructuredOutput: true,
-	adaptiveThinking: true
-});
-const currentClaudeWithoutSampling = defineRuntime({
-	...currentClaude,
-	samplingParameters: false,
-	xhighEffort: true
-});
-function defineRuntime(overrides) {
-	return {
-		maxOutputTokens: 4096,
-		nativeStructuredOutput: false,
-		adaptiveThinking: false,
-		samplingParameters: true,
-		xhighEffort: false,
-		thinkingCanBeDisabledAboveHighEffort: true,
-		thinkingCanBeDisabled: true,
-		budgetThinking: true,
-		forcedToolUse: true,
-		betweenToolsThinking: false,
-		knownModel: true,
-		...overrides
-	};
-}
-const runtimeRules = [
-	{
-		matches: (modelId) => modelId.includes("claude-sonnet-5-5"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabledAboveHighEffort: false,
-			thinkingCanBeDisabled: false,
-			budgetThinking: false,
-			forcedToolUse: false,
-			betweenToolsThinking: true
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-opus-5-5"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabledAboveHighEffort: false,
-			thinkingCanBeDisabled: false,
-			budgetThinking: false,
-			forcedToolUse: false
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-haiku-5-5"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabledAboveHighEffort: false,
-			budgetThinking: false
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-opus-5"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabledAboveHighEffort: false
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-fable-5-2") || modelId.includes("claude-fable-5-1"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabled: false,
-			budgetThinking: false,
-			forcedToolUse: false
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-fable-5"),
-		definition: defineRuntime({
-			...currentClaudeWithoutSampling,
-			thinkingCanBeDisabled: false,
-			budgetThinking: false
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-opus-4-8") || modelId.includes("claude-opus-4-7") || modelId.includes("claude-sonnet-5"),
-		definition: currentClaudeWithoutSampling
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-sonnet-4-6") || modelId.includes("claude-opus-4-6"),
-		definition: currentClaude
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-sonnet-4-5") || modelId.includes("claude-opus-4-5") || modelId.includes("claude-haiku-4-5"),
-		definition: defineRuntime({
-			maxOutputTokens: 64e3,
-			nativeStructuredOutput: true
-		})
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-opus-4-1"),
-		definition: defineRuntime({
-			maxOutputTokens: 32e3,
-			nativeStructuredOutput: true
-		})
-	},
-	{
-		matches: (modelId) => /claude-sonnet-4(?:-|@)/.test(modelId),
-		definition: defineRuntime({ maxOutputTokens: 64e3 })
-	},
-	{
-		matches: (modelId) => /claude-opus-4(?:-|@)/.test(modelId),
-		definition: defineRuntime({ maxOutputTokens: 32e3 })
-	},
-	{
-		matches: (modelId) => modelId.includes("claude-3-haiku"),
-		definition: legacyClaude
-	},
-	{
-		matches: (modelId) => /claude-(?:instant(?:-|$)|v?2(?=$|[-.:])|3(?=$|[-.]))/.test(modelId),
-		definition: defineRuntime({ knownModel: false })
-	}
-];
-const anthropicModelCatalog = Object.fromEntries(Object.entries({
+const onlyWithoutThinking = { condition: "Only supported when thinking is disabled." };
+/**
+* Language model matrix: model IDs by capability. To add a model, add a row and
+* fill in every column.
+*/
+const languageModelDefinitions = {
 	"claude-opus-5-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive"],
+			canBeDisabled: false
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: false,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "up-to-high-effort"
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-sonnet-5-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "between-tools"],
+			canBeDisabled: false
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: false,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-sonnet-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-haiku-5-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive"],
+			canBeDisabled: "up-to-high-effort"
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-fable-5-2": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive"],
+			canBeDisabled: false
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: false,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-fable-5-1": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive"],
+			canBeDisabled: false
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: false,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-fable-5": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive"],
+			canBeDisabled: false
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-4-8": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-4-7": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: [
+			"low",
+			"medium",
+			"high",
+			"xhigh",
+			"max"
+		],
+		sampling: onlyWithoutThinking,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: true
 	},
 	"claude-opus-4-6": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: true,
+		taskBudget: "unknown"
 	},
 	"claude-sonnet-4-6": {
+		documented: true,
+		maxOutputTokens: 128e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["adaptive", "budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: true,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-4-5": {
+		documented: true,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: false,
-		effort: true
+		effort: true,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-haiku-4-5": {
+		documented: true,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: false,
-		effort: false
+		effort: false,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-sonnet-4-5": {
+		documented: true,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: true,
 		compaction: false,
-		effort: false
+		effort: false,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-4-1": {
+		documented: true,
+		maxOutputTokens: 32e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: false,
 		compaction: false,
-		effort: false
+		effort: false,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-opus-4-0": {
+		documented: true,
+		maxOutputTokens: 32e3,
+		knownModel: true,
+		nativeStructuredOutput: false,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: false,
 		compaction: false,
-		effort: false
+		effort: false,
+		speed: false,
+		taskBudget: "unknown"
 	},
 	"claude-sonnet-4-0": {
+		documented: true,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: false,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
 		toolSearch: false,
 		compaction: false,
-		effort: false
+		effort: false,
+		speed: false,
+		taskBudget: "unknown"
 	},
-	"claude-3-haiku-20240307": void 0,
-	"claude-haiku-4-5-20251001": void 0,
-	"claude-opus-4-1-20250805": void 0,
-	"claude-opus-4-20250514": void 0,
-	"claude-opus-4-5-20251101": void 0,
-	"claude-sonnet-4-20250514": void 0,
-	"claude-sonnet-4-5-20250929": void 0
-}).filter(([, definition]) => definition != null).map(([modelId, capabilities]) => [modelId, createAnthropicLanguageModelEntry(modelId, capabilities)]));
+	"claude-3-haiku-20240307": {
+		documented: false,
+		maxOutputTokens: 4096,
+		knownModel: true,
+		nativeStructuredOutput: false,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-haiku-4-5-20251001": {
+		documented: false,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-opus-4-1-20250805": {
+		documented: false,
+		maxOutputTokens: 32e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-opus-4-20250514": {
+		documented: false,
+		maxOutputTokens: 32e3,
+		knownModel: true,
+		nativeStructuredOutput: false,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-opus-4-5-20251101": {
+		documented: false,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-sonnet-4-20250514": {
+		documented: false,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: false,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	},
+	"claude-sonnet-4-5-20250929": {
+		documented: false,
+		maxOutputTokens: 64e3,
+		knownModel: true,
+		nativeStructuredOutput: true,
+		thinking: {
+			modes: ["budget"],
+			canBeDisabled: "always"
+		},
+		reasoningEfforts: void 0,
+		sampling: true,
+		forcedToolUse: true,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	}
+};
+const languageModelRows = Object.entries(languageModelDefinitions);
+/** Entries for every listed model ID, documented or not. */
+const listedLanguageModelEntries = Object.fromEntries(languageModelRows.map(([modelId, row]) => [modelId, createAnthropicLanguageModelEntry(row)]));
+Object.fromEntries(languageModelRows.filter(([, row]) => row.documented).map(([modelId]) => [modelId, listedLanguageModelEntries[modelId]]));
 function getAnthropicLanguageModelEntry(modelId) {
-	return Object.prototype.hasOwnProperty.call(anthropicModelCatalog, modelId) ? anthropicModelCatalog[modelId] : createAnthropicLanguageModelEntry(modelId);
+	return Object.prototype.hasOwnProperty.call(listedLanguageModelEntries, modelId) ? listedLanguageModelEntries[modelId] : createAnthropicLanguageModelEntry(getUnlistedModelRow(modelId));
 }
-function createAnthropicLanguageModelEntry(modelId, documented) {
-	const runtime = resolveRuntimeDefinition(modelId);
-	const declared = documented != null;
-	const samplingSupport = runtime.samplingParameters ? true : { condition: "Only supported when thinking is disabled." };
-	const reasoningSupport = runtime.adaptiveThinking || runtime.budgetThinking;
+function createAnthropicLanguageModelEntry(row) {
+	const documentedSupport = row.documented ? true : "unknown";
+	const thinkingModes = row.thinking === false ? [] : row.thinking.modes;
+	const thinkingCanBeDisabled = row.thinking === false ? false : row.thinking.canBeDisabled;
 	return {
 		capabilities: { language: {
 			inputs: {
-				image: declared ? true : "unknown",
-				audio: declared ? false : "unknown"
+				image: documentedSupport,
+				audio: row.documented ? false : "unknown"
 			},
-			objectGeneration: declared ? true : "unknown",
+			objectGeneration: documentedSupport,
 			tools: {
-				usage: declared ? true : "unknown",
-				streaming: declared ? true : "unknown",
-				forcedChoice: runtime.forcedToolUse,
-				computerUse: declared ? true : "unknown",
-				webSearch: declared ? true : "unknown",
-				toolSearch: documented?.toolSearch ?? "unknown"
+				usage: documentedSupport,
+				streaming: documentedSupport,
+				forcedChoice: row.forcedToolUse,
+				computerUse: documentedSupport,
+				webSearch: documentedSupport,
+				toolSearch: row.toolSearch
 			},
 			reasoning: {
-				support: reasoningSupport,
-				efforts: runtime.xhighEffort ? [
-					"low",
-					"medium",
-					"high",
-					"xhigh",
-					"max"
-				] : void 0,
-				adaptive: runtime.adaptiveThinking,
-				budget: runtime.budgetThinking,
-				canDisable: runtime.thinkingCanBeDisabled,
-				canDisableAboveHighEffort: runtime.thinkingCanBeDisabledAboveHighEffort,
-				supportsXhighEffort: runtime.xhighEffort,
-				betweenTools: runtime.betweenToolsThinking
+				support: row.thinking !== false,
+				efforts: row.reasoningEfforts,
+				adaptive: thinkingModes.includes("adaptive"),
+				budget: thinkingModes.includes("budget"),
+				canDisable: thinkingCanBeDisabled !== false,
+				canDisableAboveHighEffort: thinkingCanBeDisabled === "always",
+				supportsXhighEffort: row.reasoningEfforts?.includes("xhigh") ?? false,
+				betweenTools: thinkingModes.includes("between-tools")
 			},
 			sampling: {
-				temperature: samplingSupport,
-				topP: samplingSupport,
-				topK: samplingSupport,
+				temperature: row.sampling,
+				topP: row.sampling,
+				topK: row.sampling,
 				logprobs: false
 			},
-			structuredOutput: { native: runtime.nativeStructuredOutput },
-			compaction: documented?.compaction ?? "unknown"
+			structuredOutput: { native: row.nativeStructuredOutput },
+			compaction: row.compaction
 		} },
-		providerOptions: { language: declareProviderOptions(anthropicProviderOptions.language, declared ? true : "unknown", {
+		providerOptions: { language: declareProviderOptions(anthropicProviderOptions.language, documentedSupport, {
 			includePings: true,
-			thinking: reasoningSupport,
-			effort: documented?.effort ?? "unknown",
-			speed: declared ? modelId === "claude-opus-4-6" : "unknown",
-			taskBudget: modelId === "claude-opus-4-7" ? true : "unknown"
+			thinking: row.thinking !== false,
+			effort: row.effort,
+			speed: row.speed,
+			taskBudget: row.taskBudget
 		}) },
 		requestConfig: { language: {
-			maxOutputTokens: runtime.maxOutputTokens,
-			knownModel: runtime.knownModel
+			maxOutputTokens: row.maxOutputTokens,
+			knownModel: row.knownModel
 		} }
 	};
 }
@@ -1857,14 +2152,158 @@ function createAnthropicLanguageModelEntry(modelId, documented) {
 function declareProviderOptions(definitions, support, exceptions) {
 	return Object.fromEntries(Object.keys(definitions).map((option) => [option, exceptions[option] ?? support]));
 }
-function resolveRuntimeDefinition(modelId) {
-	const rule = runtimeRules.find((rule) => rule.matches(modelId));
-	if (rule != null) return rule.definition;
-	return modelId.includes("claude-") ? defineRuntime({
-		...currentClaudeWithoutSampling,
-		thinkingCanBeDisabledAboveHighEffort: false,
-		knownModel: false
-	}) : defineRuntime({ knownModel: false });
+/**
+* Generic rows for model IDs that are not in the matrix and match no listed
+* model family.
+*/
+const unknownClaudeModel = {
+	documented: false,
+	maxOutputTokens: 128e3,
+	knownModel: false,
+	nativeStructuredOutput: true,
+	thinking: {
+		modes: ["adaptive", "budget"],
+		canBeDisabled: "up-to-high-effort"
+	},
+	reasoningEfforts: [
+		"low",
+		"medium",
+		"high",
+		"xhigh",
+		"max"
+	],
+	sampling: onlyWithoutThinking,
+	forcedToolUse: true,
+	toolSearch: "unknown",
+	compaction: "unknown",
+	effort: "unknown",
+	speed: "unknown",
+	taskBudget: "unknown"
+};
+/** Legacy Claude models (Claude Instant, 2, and 3) and non-Claude model IDs. */
+const unknownLegacyModel = {
+	documented: false,
+	maxOutputTokens: 4096,
+	knownModel: false,
+	nativeStructuredOutput: false,
+	thinking: {
+		modes: ["budget"],
+		canBeDisabled: "always"
+	},
+	reasoningEfforts: void 0,
+	sampling: true,
+	forcedToolUse: true,
+	toolSearch: "unknown",
+	compaction: "unknown",
+	effort: "unknown",
+	speed: "unknown",
+	taskBudget: "unknown"
+};
+/**
+* Family rules, used only for model IDs that are not listed in the matrix,
+* such as provider-prefixed, regional, or versioned IDs. The first match
+* decides which listed row's request behavior the model ID uses.
+*/
+const unlistedModelFamilies = [
+	{
+		matches: (modelId) => modelId.includes("claude-sonnet-5-5"),
+		row: languageModelDefinitions["claude-sonnet-5-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-5-5"),
+		row: languageModelDefinitions["claude-opus-5-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-haiku-5-5"),
+		row: languageModelDefinitions["claude-haiku-5-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-5"),
+		row: languageModelDefinitions["claude-opus-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-fable-5-2"),
+		row: languageModelDefinitions["claude-fable-5-2"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-fable-5-1"),
+		row: languageModelDefinitions["claude-fable-5-1"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-fable-5"),
+		row: languageModelDefinitions["claude-fable-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-4-8"),
+		row: languageModelDefinitions["claude-opus-4-8"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-4-7"),
+		row: languageModelDefinitions["claude-opus-4-7"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-sonnet-5"),
+		row: languageModelDefinitions["claude-sonnet-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-sonnet-4-6"),
+		row: languageModelDefinitions["claude-sonnet-4-6"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-4-6"),
+		row: languageModelDefinitions["claude-opus-4-6"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-sonnet-4-5"),
+		row: languageModelDefinitions["claude-sonnet-4-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-4-5"),
+		row: languageModelDefinitions["claude-opus-4-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-haiku-4-5"),
+		row: languageModelDefinitions["claude-haiku-4-5"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-opus-4-1"),
+		row: languageModelDefinitions["claude-opus-4-1"]
+	},
+	{
+		matches: (modelId) => /claude-sonnet-4(?:-|@)/.test(modelId),
+		row: languageModelDefinitions["claude-sonnet-4-0"]
+	},
+	{
+		matches: (modelId) => /claude-opus-4(?:-|@)/.test(modelId),
+		row: languageModelDefinitions["claude-opus-4-0"]
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-3-haiku"),
+		row: languageModelDefinitions["claude-3-haiku-20240307"]
+	},
+	{
+		matches: (modelId) => /claude-(?:instant(?:-|$)|v?2(?=$|[-.:])|3(?=$|[-.]))/.test(modelId),
+		row: unknownLegacyModel
+	},
+	{
+		matches: (modelId) => modelId.includes("claude-"),
+		row: unknownClaudeModel
+	}
+];
+/**
+* Resolves an unlisted model ID to a row. A family match keeps that family's
+* request behavior, but nothing is documented for the unlisted ID itself.
+*/
+function getUnlistedModelRow(modelId) {
+	return {
+		...unlistedModelFamilies.find((family) => family.matches(modelId))?.row ?? unknownLegacyModel,
+		documented: false,
+		toolSearch: "unknown",
+		compaction: "unknown",
+		effort: "unknown",
+		speed: "unknown",
+		taskBudget: "unknown"
+	};
 }
 /** Compatibility projection for the provider's existing request preparation. */
 function getAnthropicModelCapabilities(modelId) {
@@ -9086,7 +9525,7 @@ var AnthropicSkills = class {
 };
 //#endregion
 //#region src/version.ts
-const VERSION = "4.0.105";
+const VERSION = "4.0.108";
 //#endregion
 //#region src/anthropic-provider.ts
 const ANTHROPIC_API_URL = "https://api.anthropic.com";

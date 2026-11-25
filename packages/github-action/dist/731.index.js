@@ -1,18 +1,18 @@
-export const id = 680;
-export const ids = [680];
+export const id = 731;
+export const ids = [731];
 export const modules = {
 
-/***/ 17680:
+/***/ 98731:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createGoogleGenerativeAI: () => (/* binding */ createGoogle)
 /* harmony export */ });
 /* unused harmony exports Experimental_GoogleRealtimeModel, Experimental_GoogleSpeechTranslationModel, Experimental_GoogleTranslationModel, GoogleTranscriptionModel, VERSION, createGoogle, google */
-/* harmony import */ var _ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(73266);
+/* harmony import */ var _ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(28472);
 /* harmony import */ var _ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23428);
-/* harmony import */ var _ai_sdk_provider_utils_experimental_extraction__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(97429);
-/* harmony import */ var _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(66110);
+/* harmony import */ var _ai_sdk_provider_utils_experimental_extraction__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(21523);
+/* harmony import */ var _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(30647);
 /* harmony import */ var zod_v4__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3726);
 
 
@@ -265,7 +265,7 @@ function toText(input) {
 }
 //#endregion
 //#region src/version.ts
-const VERSION = "4.0.121";
+const VERSION = "4.0.126";
 //#endregion
 //#region src/google-embedding-model-options.ts
 const googleEmbeddingContentPartSchema = () => zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .union */ .KCZ([
@@ -559,15 +559,56 @@ function addTokenDetails(a, b) {
 	}));
 }
 //#endregion
-//#region src/google-prompt.ts
+//#region src/google-file-part-options.ts
 const googleVideoMetadataSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
 	/** Start offset as a duration in seconds, e.g. `'3.5s'`. */
 	startOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional(),
 	/** End offset as a duration in seconds, e.g. `'10s'`. */
 	endOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional(),
 	/** Frames per second in the range (0, 24]. Defaults to 1. */
-	fps: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().gt(0).max(24).optional()
+	fps: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().gt(0).max(24).optional(),
+	contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+		"FRAMES",
+		"AUDIO",
+		"TRANSCRIPT"
+	])).optional()
 });
+const googleFilePartOptionsSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+	/** Rendering resolution for this file, including tool-result files. */
+	mediaResolution: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({ level: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+		"MEDIA_RESOLUTION_LOW",
+		"MEDIA_RESOLUTION_MEDIUM",
+		"MEDIA_RESOLUTION_HIGH"
+	]) }).optional(),
+	documentMetadata: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+		/** Page numbers are 1-based and inclusive. */
+		startPage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+		endPage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+		contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n(["PAGE_IMAGE", "PAGE_TEXT"])).optional()
+	}).optional(),
+	spreadsheetMetadata: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+		/** Sheet numbers are 1-based, in workbook order. */
+		sheetIndex: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+		/** An A1 cell or range, such as `B5` or `A1:C5`, including VISUAL cropping. */
+		visibleCells: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional(),
+		contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+			"DATA",
+			"FORMULAS",
+			"VISUAL"
+		])).optional()
+	}).optional(),
+	audioMetadata: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+		startOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional(),
+		endOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional()
+	}).optional(),
+	videoMetadata: googleVideoMetadataSchema.optional()
+});
+function getGoogleFilePartOptions(options) {
+	return googleFilePartOptionsSchema.parse(Object.fromEntries(Object.entries(options ?? {}).filter(([, value]) => value != null)));
+}
+//#endregion
+//#region src/google-supported-file-url.ts
+const googleFilesUrlPattern = /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/files\/.*$/;
 //#endregion
 //#region src/tool/code-execution.ts
 const codeExecutionInputSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
@@ -594,6 +635,10 @@ const codeExecution = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .
 });
 //#endregion
 //#region src/convert-to-google-messages.ts
+function readGoogleProviderOptions(part, names) {
+	for (const name of names) if (part.providerOptions?.[name] != null) return part.providerOptions[name];
+	return names.includes("google") ? part.providerOptions?.googleVertex ?? part.providerOptions?.vertex : part.providerOptions?.google;
+}
 /**
 * Sentinel value Google documents for replaying functionCall parts whose
 * original thoughtSignature is not available to the client.
@@ -641,34 +686,56 @@ function containsNonJsonValue(value, ancestors = /* @__PURE__ */ new Set()) {
 		ancestors.delete(value);
 	}
 }
-function appendToolResultParts(parts, toolName, outputValue, toolCallId, includeFunctionCallIds = true, supportedUrls = {}) {
+function appendToolResultParts(parts, toolName, outputValue, toolCallId, includeFunctionCallIds = true, supportedUrls = {}, providerOptionsNames = ["google"]) {
 	const functionResponseParts = [];
 	const responseTextParts = [];
 	for (const contentPart of outputValue) switch (contentPart.type) {
 		case "text":
 			responseTextParts.push(contentPart.text);
 			break;
-		case "file":
-			if (contentPart.data.type === "data") functionResponseParts.push({ inlineData: {
-				mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part: contentPart }),
-				data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(contentPart.data.data)
-			} });
+		case "file": {
+			const metadata = getGoogleFilePartOptions(readGoogleProviderOptions(contentPart, providerOptionsNames));
+			const isVertexLike = !providerOptionsNames.includes("google");
+			if (contentPart.data.type === "data") functionResponseParts.push({
+				inlineData: {
+					mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part: contentPart }),
+					data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(contentPart.data.data)
+				},
+				...metadata
+			});
 			else if (contentPart.data.type === "url") {
 				const url = contentPart.data.url.toString();
 				const convertedUrlPart = convertUrlToolResultPart(url);
 				const supportedUrl = contentPart.data.url.protocol === "gs:" && contentPart.data.originalUrl != null ? contentPart.data.originalUrl : url;
-				if (convertedUrlPart != null) functionResponseParts.push(convertedUrlPart);
-				else if ((0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(contentPart.mediaType) && (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isUrlSupported */ .qs)({
+				if (convertedUrlPart != null) functionResponseParts.push({
+					...convertedUrlPart,
+					...metadata
+				});
+				else if ((0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(contentPart.mediaType) && (!isVertexLike && googleFilesUrlPattern.test(supportedUrl) || (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isUrlSupported */ .qs)({
 					url: supportedUrl,
 					mediaType: contentPart.mediaType,
 					supportedUrls
-				})) functionResponseParts.push({ fileData: {
-					mimeType: contentPart.mediaType,
-					fileUri: supportedUrl
-				} });
+				}))) functionResponseParts.push({
+					fileData: {
+						mimeType: contentPart.mediaType,
+						fileUri: supportedUrl
+					},
+					...metadata
+				});
 				else responseTextParts.push(JSON.stringify(contentPart));
-			} else responseTextParts.push(JSON.stringify(contentPart));
+			} else if (contentPart.data.type === "reference" && !isVertexLike) functionResponseParts.push({
+				fileData: {
+					mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part: contentPart }),
+					fileUri: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveProviderReference */ .p5)({
+						reference: contentPart.data.reference,
+						provider: "google"
+					})
+				},
+				...metadata
+			});
+			else responseTextParts.push(JSON.stringify(contentPart));
 			break;
+		}
 		default: responseTextParts.push(JSON.stringify(contentPart));
 	}
 	parts.push({ functionResponse: {
@@ -709,8 +776,8 @@ function convertToGoogleMessages(prompt, options) {
 	const systemInstructionParts = [];
 	const contents = [];
 	let systemMessagesAllowed = true;
-	const isGemmaModel = options?.isGemmaModel ?? false;
-	const isGemini3Model = options?.isGemini3Model ?? false;
+	const systemInstructionAsUserMessage = options?.systemInstructionAsUserMessage ?? false;
+	const requiresThoughtSignatures = options?.requiresThoughtSignatures ?? false;
 	const onWarning = options?.onWarning;
 	const providerOptionsNames = options?.providerOptionsNames ?? ["google"];
 	const isVertexLike = !providerOptionsNames.includes("google");
@@ -724,14 +791,7 @@ function convertToGoogleMessages(prompt, options) {
 		sentinelInjected = true;
 		return SKIP_THOUGHT_SIGNATURE_VALIDATOR;
 	};
-	const readProviderOpts = (part) => {
-		for (const name of providerOptionsNames) {
-			const v = part.providerOptions?.[name];
-			if (v != null) return v;
-		}
-		if (isVertexLike) return part.providerOptions?.google;
-		return part.providerOptions?.googleVertex ?? part.providerOptions?.vertex;
-	};
+	const readProviderOpts = (part) => readGoogleProviderOptions(part, providerOptionsNames);
 	for (const { role, content } of prompt) switch (role) {
 		case "system":
 			if (!systemMessagesAllowed) throw new _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_3__/* .UnsupportedFunctionalityError */ .b8({ functionality: "system messages are only supported at the beginning of the conversation" });
@@ -745,8 +805,7 @@ function convertToGoogleMessages(prompt, options) {
 					parts.push({ text: part.text });
 					break;
 				case "file": {
-					const rawVideoMetadata = readProviderOpts(part)?.videoMetadata;
-					const videoMetadata = rawVideoMetadata == null ? void 0 : googleVideoMetadataSchema.parse(rawVideoMetadata);
+					const metadata = getGoogleFilePartOptions(readProviderOpts(part));
 					switch (part.data.type) {
 						case "url":
 							parts.push({
@@ -754,7 +813,7 @@ function convertToGoogleMessages(prompt, options) {
 									mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part }),
 									fileUri: part.data.url.protocol === "gs:" && part.data.originalUrl != null ? part.data.originalUrl : part.data.url.toString()
 								},
-								...videoMetadata != null ? { videoMetadata } : {}
+								...metadata
 							});
 							break;
 						case "reference":
@@ -767,7 +826,7 @@ function convertToGoogleMessages(prompt, options) {
 										provider: "google"
 									})
 								},
-								...videoMetadata != null ? { videoMetadata } : {}
+								...metadata
 							});
 							break;
 						case "text":
@@ -776,7 +835,7 @@ function convertToGoogleMessages(prompt, options) {
 									mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(part.mediaType) ? part.mediaType : "text/plain",
 									data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(new TextEncoder().encode(part.data.text))
 								},
-								...videoMetadata != null ? { videoMetadata } : {}
+								...metadata
 							});
 							break;
 						case "data": parts.push({
@@ -784,7 +843,7 @@ function convertToGoogleMessages(prompt, options) {
 								mimeType: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part }),
 								data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(part.data.data)
 							},
-							...videoMetadata != null ? { videoMetadata } : {}
+							...metadata
 						});
 					}
 					break;
@@ -866,7 +925,7 @@ function convertToGoogleMessages(prompt, options) {
 							const serverToolCallId = providerOpts?.serverToolCallId != null ? String(providerOpts.serverToolCallId) : void 0;
 							const serverToolType = providerOpts?.serverToolType != null ? String(providerOpts.serverToolType) : void 0;
 							const isServerToolCall = serverToolCallId != null && serverToolType != null;
-							const effectiveThoughtSignature = thoughtSignature ?? (isGemini3Model && !(!isServerToolCall && thoughtSignature == null && modelResponseHasSignedFunctionCall) ? injectSkipSignature(part.toolName) : void 0);
+							const effectiveThoughtSignature = thoughtSignature ?? (requiresThoughtSignatures && !(!isServerToolCall && thoughtSignature == null && modelResponseHasSignedFunctionCall) ? injectSkipSignature(part.toolName) : void 0);
 							if (!isServerToolCall && thoughtSignature != null) modelResponseHasSignedFunctionCall = true;
 							if (isServerToolCall) return {
 								toolCall: {
@@ -931,7 +990,7 @@ function convertToGoogleMessages(prompt, options) {
 				}
 				const output = part.output;
 				if (output.type === "content") {
-					if (supportsFunctionResponseParts) appendToolResultParts(parts, part.toolName, output.value, part.toolCallId, includeFunctionCallIds, supportedFunctionResponseUrls);
+					if (supportsFunctionResponseParts) appendToolResultParts(parts, part.toolName, output.value, part.toolCallId, includeFunctionCallIds, supportedFunctionResponseUrls, providerOptionsNames);
 					else appendLegacyToolResultParts(parts, part.toolName, output.value, part.toolCallId, includeFunctionCallIds);
 				} else {
 					const isError = output.type === "error-text" || output.type === "error-json" || output.type === "execution-denied";
@@ -952,7 +1011,7 @@ function convertToGoogleMessages(prompt, options) {
 			break;
 		}
 	}
-	if (isGemmaModel && systemInstructionParts.length > 0 && contents.length > 0 && contents[0].role === "user") {
+	if (systemInstructionAsUserMessage && systemInstructionParts.length > 0 && contents.length > 0 && contents[0].role === "user") {
 		const systemText = systemInstructionParts.map((part) => part.text).join("\n\n");
 		contents[0].parts.unshift({ text: systemText + "\n\n" });
 	}
@@ -964,7 +1023,7 @@ function convertToGoogleMessages(prompt, options) {
 		});
 	}
 	return {
-		systemInstruction: systemInstructionParts.length > 0 && !isGemmaModel ? { parts: systemInstructionParts } : void 0,
+		systemInstruction: systemInstructionParts.length > 0 && !systemInstructionAsUserMessage ? { parts: systemInstructionParts } : void 0,
 		contents
 	};
 }
@@ -1330,131 +1389,1259 @@ const googleProviderOptions = { language: {
 	sharedRequestType: { description: "Shared PayGo tier. Vertex AI only." },
 	requestType: { description: "Request routing type. Vertex AI only." }
 } };
-const standard = {
-	image: true,
-	objectGeneration: true,
-	tools: true,
-	streaming: true,
-	googleSearch: true,
-	urlContext: true
-};
-const googleModelCatalog = Object.fromEntries(Object.entries({
+const vertexOnly = { condition: "Only supported on the Vertex AI API." };
+const googleLanguageModelRows = Object.entries({
 	"gemini-nano-banana-2.1": {
-		image: true,
-		objectGeneration: false,
-		tools: false,
-		streaming: false,
-		googleSearch: true,
-		urlContext: false
+		types: [
+			"language",
+			"interactions",
+			"image"
+		],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: false,
+			googleSearch: true,
+			urlContext: false,
+			functionTools: false,
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
 	},
-	"gemini-4-argon": standard,
-	"gemini-4-carbon": standard,
-	"gemini-4-hydrogen": standard,
-	"gemini-3.8-flash": standard,
-	"gemini-3.7-flash": standard,
-	"gemini-3.6-flash": standard,
-	"gemini-3.5-flash": standard,
-	"gemini-3.5-flash-lite": standard,
-	"gemini-3.1-pro-preview": standard,
-	"gemini-3.1-flash-image-preview": standard,
-	"gemini-3.1-flash-lite-preview": standard,
-	"gemini-3-pro-preview": standard,
-	"gemini-3-pro-image-preview": standard,
-	"gemini-3-flash-preview": standard,
-	"gemini-2.5-pro": standard,
-	"gemini-2.5-flash": standard,
-	"gemini-2.5-flash-lite": standard,
-	"gemini-2.5-flash-lite-preview-06-17": standard,
-	"gemini-2.0-flash": standard,
-	aqa: void 0,
-	"deep-research-max-preview-04-2026": void 0,
-	"deep-research-preview-04-2026": void 0,
-	"deep-research-pro-preview-12-2025": void 0,
-	"gemini-2.0-flash-001": void 0,
-	"gemini-2.0-flash-lite": void 0,
-	"gemini-2.0-flash-lite-001": void 0,
-	"gemini-2.5-computer-use-preview-10-2025": void 0,
-	"gemini-2.5-flash-image": void 0,
-	"gemini-2.5-flash-native-audio-latest": void 0,
-	"gemini-2.5-flash-native-audio-preview-09-2025": void 0,
-	"gemini-2.5-flash-native-audio-preview-12-2025": void 0,
-	"gemini-2.5-flash-preview-tts": void 0,
-	"gemini-2.5-pro-preview-tts": void 0,
-	"gemini-3.1-flash-tts-preview": void 0,
-	"gemini-3.1-pro-preview-customtools": void 0,
-	"gemini-flash-latest": void 0,
-	"gemini-flash-lite-latest": void 0,
-	"gemini-pro-latest": void 0,
-	"gemini-robotics-er-1.5-preview": void 0,
-	"gemma-3-12b-it": void 0,
-	"gemma-3-1b-it": void 0,
-	"gemma-3-27b-it": void 0,
-	"gemma-3-4b-it": void 0,
-	"gemma-3n-e2b-it": void 0,
-	"gemma-3n-e4b-it": void 0,
-	"nano-banana-pro-preview": void 0
-}).filter(([, definition]) => definition != null).map(([modelId, documented]) => [modelId, createGoogleLanguageModelEntry(modelId, documented)]));
+	"gemini-4-argon": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-4-carbon": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-4-hydrogen": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high",
+				"xhigh"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-4-neon": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high",
+				"xhigh"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.8-flash": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.7-flash": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.6-flash": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.5-flash": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.5-flash-lite": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.1-pro-preview": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.1-flash-image-preview": {
+		types: [
+			"language",
+			"interactions",
+			"image"
+		],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.1-flash-lite-preview": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3-pro-preview": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3-pro-image-preview": {
+		types: [
+			"language",
+			"interactions",
+			"image"
+		],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 32768,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3-flash-preview": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-pro": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 128,
+			maxThinkingBudget: 32768,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-lite": {
+		types: ["language", "interactions"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-lite-preview-06-17": {
+		types: ["language"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: true,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.0-flash": {
+		types: ["language"],
+		language: {
+			documented: true,
+			image: true,
+			externalFileUrls: false,
+			objectGeneration: true,
+			googleSearch: true,
+			urlContext: true,
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "without-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	aqa: {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"deep-research-max-preview-04-2026": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"deep-research-preview-04-2026": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"deep-research-pro-preview-12-2025": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.0-flash-001": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "without-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.0-flash-lite": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "without-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.0-flash-lite-001": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "without-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-computer-use-preview-10-2025": {
+		types: ["language", "interactions"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-image": {
+		types: [
+			"language",
+			"interactions",
+			"image"
+		],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-native-audio-latest": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-native-audio-preview-09-2025": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-native-audio-preview-12-2025": {
+		types: ["language", "interactions"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-preview-tts": {
+		types: [
+			"language",
+			"interactions",
+			"speech"
+		],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-pro-preview-tts": {
+		types: [
+			"language",
+			"interactions",
+			"speech"
+		],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: "with-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 128,
+			maxThinkingBudget: 32768,
+			penalties: vertexOnly,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.1-flash-tts-preview": {
+		types: [
+			"language",
+			"interactions",
+			"speech"
+		],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-3.1-pro-preview-customtools": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-flash-latest": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-flash-lite-latest": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-pro-latest": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: [
+				"streaming",
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema",
+				"json-response-tool"
+			],
+			providerTools: "with-file-search",
+			thinkingLevels: [
+				"minimal",
+				"low",
+				"medium",
+				"high"
+			],
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-robotics-er-1.5-preview": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: true,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming", "json-response-tool"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemma-3-12b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"gemma-3-1b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"gemma-3-27b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"gemma-3-4b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"gemma-3n-e2b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"gemma-3n-e4b-it": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: false,
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "user"
+		}
+	},
+	"nano-banana-pro-preview": {
+		types: ["language"],
+		language: {
+			documented: false,
+			image: "unknown",
+			externalFileUrls: false,
+			objectGeneration: "unknown",
+			googleSearch: "unknown",
+			urlContext: "unknown",
+			functionTools: ["streaming"],
+			providerTools: "without-file-search",
+			thinkingLevels: void 0,
+			minThinkingBudget: 0,
+			maxThinkingBudget: 24576,
+			penalties: true,
+			systemInstruction: "system"
+		}
+	},
+	"gemini-2.5-flash-lite-preview-09-2025": { types: ["interactions"] },
+	"gemini-2.5-flash-preview-09-2025": { types: ["interactions"] },
+	"lyria-3-clip-preview": { types: ["interactions"] },
+	"lyria-3-pro-preview": { types: ["interactions"] },
+	"gemini-3.8-flash-tts": { types: ["speech"] },
+	"gemini-3.8-flash-lite-tts": { types: ["speech"] },
+	"gemini-embedding-001": { types: ["embedding"] },
+	"gemini-embedding-2": { types: ["embedding"] },
+	"gemini-embedding-2-preview": { types: ["embedding"] },
+	"veo-3.1-fast-generate-preview": { types: ["video"] },
+	"veo-3.1-generate-preview": { types: ["video"] },
+	"veo-3.1-generate": { types: ["video"] },
+	"veo-3.1-lite-generate-preview": { types: ["video"] },
+	"veo-3.0-generate-001": { types: ["video"] },
+	"veo-3.0-fast-generate-001": { types: ["video"] },
+	"veo-2.0-generate-001": { types: ["video"] },
+	"gemini-3.5-transcribe": { types: ["transcription"] },
+	"gemini-3.5-transcribe-live": { types: ["transcription"] },
+	"gemini-3.5-live-translate-preview": { types: ["speechTranslation"] },
+	"gemini-decision-1": { types: ["decision"] }
+}).flatMap(([modelId, { language }]) => language == null ? [] : [[modelId, language]]);
+/** Entries for every listed language model ID, documented or not. */
+const googleListedLanguageModelEntries = Object.fromEntries(googleLanguageModelRows.map(([modelId, row]) => [modelId, createGoogleLanguageModelEntry(row)]));
+Object.fromEntries(googleLanguageModelRows.filter(([, row]) => row.documented).map(([modelId]) => [modelId, googleListedLanguageModelEntries[modelId]]));
+/**
+* Returns the entry of a listed language model ID from its row. Every other
+* model ID uses the fallback for unlisted IDs.
+*/
 function getGoogleLanguageModelEntry(modelId) {
-	return Object.prototype.hasOwnProperty.call(googleModelCatalog, modelId) ? googleModelCatalog[modelId] : createGoogleLanguageModelEntry(modelId);
+	return Object.prototype.hasOwnProperty.call(googleListedLanguageModelEntries, modelId) ? googleListedLanguageModelEntries[modelId] : createGoogleLanguageModelEntry(resolveUnlistedLanguageModelRow(modelId));
 }
-function createGoogleLanguageModelEntry(modelId, documented) {
-	const runtime = resolveRuntimeDefinition(modelId);
-	const declared = documented != null;
-	const id = modelId.toLowerCase();
-	const thinkingFormat = runtime.usesGemini3Features && !modelId.includes("gemini-3-pro-image") ? "level" : "budget";
-	const isHydrogen = /(^|[/.])gemini-4-hydrogen(?:-|$)/i.test(modelId);
-	const minLevel = isHydrogen ? "low" : getMinimumThinkingLevelForGemini3Model(modelId);
+/** Maps a matrix row to its entry. Nothing here inspects the model ID. */
+function createGoogleLanguageModelEntry(row) {
+	const functionTools = row.functionTools === false ? [] : row.functionTools;
 	return {
 		capabilities: { language: {
 			inputs: {
-				image: documented?.image ?? "unknown",
-				audio: "unknown"
+				image: row.image,
+				audio: "unknown",
+				externalFileUrls: row.externalFileUrls
 			},
-			objectGeneration: documented?.objectGeneration ?? "unknown",
+			objectGeneration: row.objectGeneration,
 			tools: {
-				usage: documented?.tools ?? "unknown",
-				streaming: documented?.streaming ?? "unknown",
-				gemini2: runtime.supportsGemini2Tools,
-				googleSearch: documented?.googleSearch ?? "unknown",
-				urlContext: documented?.urlContext ?? "unknown",
-				fileSearch: runtime.supportsFileSearch,
-				mixed: runtime.usesGemini3Features,
-				functionResponseParts: runtime.usesGemini3Features
+				usage: row.documented ? row.functionTools !== false : "unknown",
+				streaming: row.documented ? functionTools.includes("streaming") : "unknown",
+				providerTools: row.providerTools !== false,
+				googleSearch: row.googleSearch,
+				urlContext: row.urlContext,
+				fileSearch: row.providerTools === "with-file-search",
+				mixed: functionTools.includes("with-provider-tools"),
+				functionResponseParts: functionTools.includes("multimodal-responses"),
+				thoughtSignatures: functionTools.includes("thought-signatures")
 			},
 			reasoning: {
 				support: "unknown",
-				efforts: thinkingFormat === "level" ? [
-					...minLevel === "minimal" ? ["minimal"] : [],
-					"low",
-					"medium",
-					"high",
-					...isHydrogen ? ["xhigh"] : []
-				] : void 0,
-				minBudget: id.includes("2.5-pro") ? 128 : 0,
-				maxBudget: id.includes("2.5-pro") || id.includes("gemini-3-pro-image") ? 32768 : 24576
+				efforts: row.thinkingLevels,
+				minBudget: row.minThinkingBudget,
+				maxBudget: row.maxThinkingBudget
 			},
 			sampling: {
 				temperature: "unknown",
 				topP: "unknown",
 				topK: "unknown",
 				logprobs: false,
-				penalties: gemini25ModelPattern.test(modelId) ? { condition: "Only supported on the Vertex AI API." } : true
+				penalties: row.penalties
 			},
-			structuredOutput: { withFunctionTools: runtime.usesGemini3Features }
+			structuredOutput: { withFunctionTools: functionTools.includes("with-response-schema") }
 		} },
-		providerOptions: { language: declareProviderOptions(declared ? true : "unknown", {
-			labels: { condition: "Only supported on the Vertex AI API." },
-			sharedRequestType: { condition: "Only supported on the Vertex AI API." },
-			requestType: { condition: "Only supported on the Vertex AI API." },
+		providerOptions: { language: declareProviderOptions(row.documented ? true : "unknown", {
+			labels: vertexOnly,
+			sharedRequestType: vertexOnly,
+			requestType: vertexOnly,
 			serviceTier: { condition: "Only supported on the Gemini API." },
 			streamFunctionCallArguments: { condition: "Only supported for streaming requests on the Vertex AI API with Gemini 3 or newer." }
 		}) },
 		requestConfig: { language: {
-			systemInstruction: id.startsWith("gemma-") ? "user" : "system",
-			thinkingFormat,
+			systemInstruction: row.systemInstruction,
+			thinkingFormat: row.thinkingLevels == null ? "budget" : "level",
 			reasoningMaxOutputTokens: 65536,
-			jsonResponseTool: /(^|\/)gemini-/i.test(modelId)
+			jsonResponseTool: functionTools.includes("json-response-tool")
 		} }
+	};
+}
+/**
+* Fallback for model IDs that are not listed in the matrix above (including
+* prefixed IDs, Vertex AI paths, case variants, and listed IDs without a
+* language row). It is the only place that derives capabilities from the
+* model ID, using Gemini family and version rules so new models keep working
+* before they are listed.
+*/
+function resolveUnlistedLanguageModelRow(modelId) {
+	const runtime = resolveRuntimeDefinition(modelId);
+	const id = modelId.toLowerCase();
+	const thinkingFormat = runtime.usesGemini3Features && !modelId.includes("gemini-3-pro-image") ? "level" : "budget";
+	const supportsXhighThinking = /(^|[/.])gemini-4-(?:hydrogen|neon)(?:-|$)/i.test(modelId);
+	const minLevel = supportsXhighThinking ? "low" : getMinimumThinkingLevelForGemini3Model(modelId);
+	return {
+		documented: false,
+		image: "unknown",
+		externalFileUrls: /(^|\/)gemini-/.test(modelId) && !/(^|\/)gemini-2\.0/.test(modelId),
+		objectGeneration: "unknown",
+		googleSearch: "unknown",
+		urlContext: "unknown",
+		functionTools: [
+			"streaming",
+			...runtime.usesGemini3Features ? [
+				"with-provider-tools",
+				"multimodal-responses",
+				"thought-signatures",
+				"with-response-schema"
+			] : [],
+			.../(^|\/)gemini-/i.test(modelId) ? ["json-response-tool"] : []
+		],
+		providerTools: !runtime.supportsGemini2Tools ? false : runtime.supportsFileSearch ? "with-file-search" : "without-file-search",
+		thinkingLevels: thinkingFormat === "level" ? [
+			...minLevel === "minimal" ? ["minimal"] : [],
+			"low",
+			"medium",
+			"high",
+			...supportsXhighThinking ? ["xhigh"] : []
+		] : void 0,
+		minThinkingBudget: id.includes("2.5-pro") ? 128 : 0,
+		maxThinkingBudget: id.includes("2.5-pro") || id.includes("gemini-3-pro-image") ? 32768 : 24576,
+		penalties: gemini25ModelPattern.test(modelId) ? vertexOnly : true,
+		systemInstruction: id.startsWith("gemma-") ? "user" : "system"
 	};
 }
 function declareProviderOptions(support, exceptions) {
@@ -1494,13 +2681,13 @@ function getMinimumThinkingLevelForGemini3Model(modelId) {
 }
 //#endregion
 //#region src/google-model-capabilities.ts
-/** Compatibility projection of the resolved catalog for existing request code. */
+/** Tool capabilities of a model ID, as declared in the model catalog. */
 function getGoogleModelCapabilities(modelId) {
 	const { tools } = getGoogleLanguageModelEntry(modelId).capabilities.language;
 	return {
-		supportsGemini2Tools: tools.gemini2,
+		supportsProviderTools: tools.providerTools,
 		supportsFileSearch: tools.fileSearch,
-		usesGemini3Features: tools.mixed
+		supportsMixedTools: tools.mixed
 	};
 }
 //#endregion
@@ -1509,7 +2696,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 	if (toolChoice?.type === "none") tools = tools?.filter((tool) => tool.type === "function");
 	tools = tools?.length ? tools : void 0;
 	const toolWarnings = [];
-	const { supportsGemini2Tools, supportsFileSearch, usesGemini3Features } = getGoogleModelCapabilities(modelId);
+	const { supportsProviderTools, supportsFileSearch, supportsMixedTools } = getGoogleModelCapabilities(modelId);
 	if (tools == null) return {
 		tools: void 0,
 		toolConfig: void 0,
@@ -1517,7 +2704,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 	};
 	const hasFunctionTools = tools.some((tool) => tool.type === "function");
 	const hasProviderTools = tools.some((tool) => tool.type === "provider");
-	if (hasFunctionTools && hasProviderTools && !usesGemini3Features) toolWarnings.push({
+	if (hasFunctionTools && hasProviderTools && !supportsMixedTools) toolWarnings.push({
 		type: "unsupported",
 		feature: `combination of function and provider-defined tools`
 	});
@@ -1526,7 +2713,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 		tools.filter((tool) => tool.type === "provider").forEach((tool) => {
 			switch (tool.id) {
 				case "google.google_search":
-					if (supportsGemini2Tools) googleTools.push({ googleSearch: { ...tool.args } });
+					if (supportsProviderTools) googleTools.push({ googleSearch: { ...tool.args } });
 					else toolWarnings.push({
 						type: "unsupported",
 						feature: `provider-defined tool ${tool.id}`,
@@ -1534,7 +2721,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 					});
 					break;
 				case "google.enterprise_web_search":
-					if (supportsGemini2Tools) googleTools.push({ enterpriseWebSearch: {} });
+					if (supportsProviderTools) googleTools.push({ enterpriseWebSearch: {} });
 					else toolWarnings.push({
 						type: "unsupported",
 						feature: `provider-defined tool ${tool.id}`,
@@ -1542,7 +2729,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 					});
 					break;
 				case "google.url_context":
-					if (supportsGemini2Tools) googleTools.push({ urlContext: {} });
+					if (supportsProviderTools) googleTools.push({ urlContext: {} });
 					else toolWarnings.push({
 						type: "unsupported",
 						feature: `provider-defined tool ${tool.id}`,
@@ -1550,7 +2737,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 					});
 					break;
 				case "google.code_execution":
-					if (supportsGemini2Tools) googleTools.push({ codeExecution: {} });
+					if (supportsProviderTools) googleTools.push({ codeExecution: {} });
 					else toolWarnings.push({
 						type: "unsupported",
 						feature: `provider-defined tool ${tool.id}`,
@@ -1566,7 +2753,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 					});
 					break;
 				case "google.vertex_rag_store":
-					if (supportsGemini2Tools) googleTools.push({ retrieval: { vertex_rag_store: {
+					if (supportsProviderTools) googleTools.push({ retrieval: { vertex_rag_store: {
 						rag_resources: { rag_corpus: tool.args.ragCorpus },
 						similarity_top_k: tool.args.topK
 					} } });
@@ -1577,7 +2764,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 					});
 					break;
 				case "google.google_maps":
-					if (supportsGemini2Tools) googleTools.push({ googleMaps: {} });
+					if (supportsProviderTools) googleTools.push({ googleMaps: {} });
 					else toolWarnings.push({
 						type: "unsupported",
 						feature: `provider-defined tool ${tool.id}`,
@@ -1590,7 +2777,7 @@ function prepareTools({ tools, toolChoice, modelId, isVertexProvider = false }) 
 				});
 			}
 		});
-		if (hasFunctionTools && usesGemini3Features && googleTools.length > 0) {
+		if (hasFunctionTools && supportsMixedTools && googleTools.length > 0) {
 			const functionDeclarations = [];
 			for (const tool of tools) if (tool.type === "function") functionDeclarations.push(prepareFunctionDeclaration(tool));
 			const combinedToolConfig = {
@@ -2092,29 +3279,29 @@ var GoogleLanguageModel = class GoogleLanguageModel {
 			}
 		}
 		const entry = getGoogleLanguageModelEntry(modelId);
-		const isGemmaModel = entry.requestConfig.language.systemInstruction === "user";
-		const isGemini25DeveloperApiModel = !isVertexProvider && entry.capabilities.language.sampling.penalties !== true;
-		if (isGemini25DeveloperApiModel && frequencyPenalty != null) warnings.push({
+		const { tools: toolCapabilities, sampling } = entry.capabilities.language;
+		const systemInstructionAsUserMessage = entry.requestConfig.language.systemInstruction === "user";
+		const supportsPenalties = isVertexProvider || sampling.penalties === true;
+		if (!supportsPenalties && frequencyPenalty != null) warnings.push({
 			type: "unsupported",
 			feature: "frequencyPenalty"
 		});
-		if (isGemini25DeveloperApiModel && presencePenalty != null) warnings.push({
+		if (!supportsPenalties && presencePenalty != null) warnings.push({
 			type: "unsupported",
 			feature: "presencePenalty"
 		});
-		const usesGemini3Features = entry.capabilities.language.tools.functionResponseParts;
-		const supportedFunctionResponseUrls = usesGemini3Features && config.downloadToolResultFiles?.supportsGoogleCloudStorageUrls ? googleCloudStorageFunctionResponseUrls : void 0;
+		const supportedFunctionResponseUrls = toolCapabilities.functionResponseParts && config.downloadToolResultFiles?.supportsGoogleCloudStorageUrls ? googleCloudStorageFunctionResponseUrls : void 0;
 		const { contents, systemInstruction } = convertToGoogleMessages(config.downloadToolResultFiles ? await downloadToolResultFiles(prompt, {
 			abortSignal,
 			maxBytes: config.downloadToolResultFiles.maxBytes,
 			fetch: config.downloadToolResultFiles.fetch,
 			supportedUrls: supportedFunctionResponseUrls
 		}) : prompt, {
-			isGemmaModel,
-			isGemini3Model: usesGemini3Features,
+			systemInstructionAsUserMessage,
+			requiresThoughtSignatures: toolCapabilities.thoughtSignatures,
 			onWarning: (warning) => warnings.push(warning),
 			providerOptionsNames,
-			supportsFunctionResponseParts: usesGemini3Features,
+			supportsFunctionResponseParts: toolCapabilities.functionResponseParts,
 			includeFunctionCallIds: !isVertexProvider,
 			supportedFunctionResponseUrls
 		});
@@ -2158,8 +3345,8 @@ var GoogleLanguageModel = class GoogleLanguageModel {
 					temperature,
 					topK,
 					topP,
-					frequencyPenalty: isGemini25DeveloperApiModel ? void 0 : frequencyPenalty,
-					presencePenalty: isGemini25DeveloperApiModel ? void 0 : presencePenalty,
+					frequencyPenalty: supportsPenalties ? frequencyPenalty : void 0,
+					presencePenalty: supportsPenalties ? presencePenalty : void 0,
 					stopSequences,
 					seed,
 					responseMimeType: responseFormat?.type === "json" ? "application/json" : void 0,
@@ -2171,7 +3358,7 @@ var GoogleLanguageModel = class GoogleLanguageModel {
 					...imageConfig && { imageConfig }
 				},
 				contents,
-				systemInstruction: isGemmaModel ? void 0 : systemInstruction,
+				systemInstruction: systemInstructionAsUserMessage ? void 0 : systemInstruction,
 				safetySettings,
 				tools: googleTools,
 				toolConfig,
@@ -2938,18 +4125,18 @@ var GoogleLanguageModel = class GoogleLanguageModel {
 };
 function resolveThinkingConfig({ reasoning, modelId, warnings }) {
 	if (!(0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isCustomReasoning */ .g6)(reasoning)) return;
-	if (getGoogleLanguageModelEntry(modelId).requestConfig.language.thinkingFormat === "level") return resolveGemini3ThinkingConfig({
+	if (getGoogleLanguageModelEntry(modelId).requestConfig.language.thinkingFormat === "level") return resolveThinkingLevelConfig({
 		reasoning,
 		modelId,
 		warnings
 	});
-	return resolveGemini25ThinkingConfig({
+	return resolveThinkingBudgetConfig({
 		reasoning,
 		modelId,
 		warnings
 	});
 }
-function resolveGemini3ThinkingConfig({ reasoning, modelId, warnings }) {
+function resolveThinkingLevelConfig({ reasoning, modelId, warnings }) {
 	const thinkingLevels = getGoogleLanguageModelEntry(modelId).capabilities.language.reasoning.efforts;
 	const thinkingLevel = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .mapReasoningToProviderEffort */ .jv)({
 		reasoning,
@@ -2959,7 +4146,7 @@ function resolveGemini3ThinkingConfig({ reasoning, modelId, warnings }) {
 	if (thinkingLevel == null) return;
 	return { thinkingLevel };
 }
-function resolveGemini25ThinkingConfig({ reasoning, modelId, warnings }) {
+function resolveThinkingBudgetConfig({ reasoning, modelId, warnings }) {
 	const entry = getGoogleLanguageModelEntry(modelId);
 	const minThinkingBudget = entry.capabilities.language.reasoning.minBudget;
 	if (reasoning === "none" && minThinkingBudget === 0) return { thinkingBudget: 0 };
@@ -3207,6 +4394,7 @@ const responseSchema = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* 
 	usageMetadata: usageSchema$1().nullish(),
 	promptFeedback: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
 		blockReason: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().nullish(),
+		blockReasonMessage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().nullish(),
 		safetyRatings: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(getSafetyRatingSchema()).nullish()
 	}).nullish()
 })));
@@ -3225,6 +4413,7 @@ const chunkSchema = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .la
 	usageMetadata: usageSchema$1().nullish(),
 	promptFeedback: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
 		blockReason: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().nullish(),
+		blockReasonMessage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().nullish(),
 		safetyRatings: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(getSafetyRatingSchema()).nullish()
 	}).nullish()
 })));
@@ -3355,11 +4544,7 @@ var GoogleBatch = class {
 		let inlineInputBytes = textEncoder.encode(JSON.stringify(inlineBatchBody)).byteLength;
 		let fileParts;
 		for (const request of options.requests) {
-			const preparedRequest = request.type === "text" ? await GoogleLanguageModel.prepareRequest({
-				modelId: request.modelId,
-				config: this.batchConfig,
-				options: request.options
-			}) : await this.prepareImageRequest(request);
+			const preparedRequest = request.type === "text" ? await this.prepareTextRequest(request) : await this.prepareImageRequest(request);
 			const inlinedRequest = {
 				request: preparedRequest.args,
 				metadata: { key: request.id }
@@ -3651,6 +4836,18 @@ var GoogleBatch = class {
 			};
 		}
 	}
+	async prepareTextRequest(request) {
+		const preparedRequest = await GoogleLanguageModel.prepareRequest({
+			modelId: request.modelId,
+			config: this.batchConfig,
+			options: request.options
+		});
+		if (preparedRequest.args.generationConfig.responseJsonSchema != null) throw new _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_3__/* .UnsupportedFunctionalityError */ .b8({
+			functionality: "structured output schemas in Google batches",
+			message: `The Google Batch API does not reliably enforce JSON schemas (request "${request.id}"). Remove the output schema, use \`Output.json()\` without a schema, or set \`providerOptions.google.structuredOutputs\` to \`false\` to not send the schema and validate the results with \`getBatchResults({ output })\` instead.`
+		});
+		return preparedRequest;
+	}
 	async prepareImageRequest(request) {
 		const { prompt, n, size, aspectRatio, seed, files, mask, providerOptions } = request.options;
 		const warnings = [];
@@ -3854,6 +5051,62 @@ const fileSearch = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .cre
 	outputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({})))
 });
 //#endregion
+//#region src/tool/google-maps.ts
+const googleMaps = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .createProviderExecutedToolFactory */ .z)({
+	id: "google.google_maps",
+	inputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({}))),
+	outputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({})))
+});
+//#endregion
+//#region src/redact-google-tool-credentials.ts
+const REDACTED = "[redacted]";
+/**
+* Google owns both the SDK tool configuration and its Interactions wire
+* equivalent. MCP server headers carry connector credentials (for example an
+* `Authorization` header), so neither copy may reach telemetry unchanged.
+*/
+function redactGoogleToolArgs(id, args) {
+	return id === "google.mcp_server" ? redactHeaderValues(args) : args;
+}
+/** Preserve raw request/response bodies while providing a safe telemetry view. */
+function withGoogleInteractionsRequestRedaction(value) {
+	if (!isRecord$1(value) || !Array.isArray(value.tools)) return value;
+	if (!value.tools.some(hasMcpServerHeaders)) return value;
+	return (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .withTelemetryRedaction */ .jN)(value, (body) => ({
+		...body,
+		tools: body.tools.map((tool) => isRecord$1(tool) && tool.type === "mcp_server" ? redactHeaderValues(tool) : tool)
+	}));
+}
+function hasMcpServerHeaders(tool) {
+	return isRecord$1(tool) && tool.type === "mcp_server" && isRecord$1(tool.headers);
+}
+function redactHeaderValues(record) {
+	if (!isRecord$1(record.headers)) return record;
+	return {
+		...record,
+		headers: Object.fromEntries(Object.keys(record.headers).map((name) => [name, REDACTED]))
+	};
+}
+function isRecord$1(value) {
+	return value != null && typeof value === "object" && !Array.isArray(value);
+}
+//#endregion
+//#region src/tool/mcp-server.ts
+/**
+* A remote MCP server that Gemini connects to on the model's behalf.
+*
+* `headers` carry connector credentials, so the provider keeps them out of
+* telemetry while still sending them to the Interactions API.
+*
+* @see https://ai.google.dev/gemini-api/docs/interactions
+*/
+const mcpServer = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .createProviderExecutedToolFactory */ .z)({
+	id: "google.mcp_server",
+	redactArgs: (args) => redactGoogleToolArgs("google.mcp_server", args),
+	inputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({}))),
+	outputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({})))
+});
+//#endregion
 //#region src/google-tools.ts
 const googleTools = {
 	/**
@@ -3879,11 +5132,7 @@ const googleTools = {
 	* @see https://ai.google.dev/gemini-api/docs/maps-grounding
 	* @see https://cloud.google.com/vertex-ai/generative-ai/docs/grounding/grounding-with-google-maps
 	*/
-	googleMaps: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .createProviderExecutedToolFactory */ .z)({
-		id: "google.google_maps",
-		inputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({}))),
-		outputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({})))
-	}),
+	googleMaps,
 	/**
 	* Creates a URL context tool that gives Google direct access to real-time web content.
 	* Must have name "url_context".
@@ -3923,7 +5172,16 @@ const googleTools = {
 		id: "google.vertex_rag_store",
 		inputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({}))),
 		outputSchema: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .lazySchema */ .ID)(() => (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .zodSchema */ .C_)(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({})))
-	})
+	}),
+	/**
+	* Connects a remote MCP server so the model can call its tools.
+	* Must have name "mcp_server".
+	*
+	* @note Only available with `google.interactions(...)`.
+	*
+	* Headers carry connector credentials and are redacted from telemetry.
+	*/
+	mcpServer
 };
 //#endregion
 //#region src/google-image-model.ts
@@ -5481,6 +6739,46 @@ function buildGoogleInteractionsStreamTransform({ warnings, generateId, includeR
 	});
 }
 //#endregion
+//#region src/interactions/google-interactions-file-options.ts
+const pageOptionsSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+	/** Page numbers are 1-based and inclusive. */
+	startPage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+	endPage: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+	contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n(["page_image", "page_text"])).optional()
+});
+const spreadsheetOptionsSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+	/** Sheet numbers are 1-based, in workbook order. */
+	sheetIndex: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().int().min(1).optional(),
+	/** An A1 cell or range, such as `B5` or `A1:C5`, including visual cropping. */
+	visibleCells: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .string */ .YjP().optional(),
+	contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+		"data",
+		"formulas",
+		"visual"
+	])).optional()
+});
+const googleInteractionsFileOptionsSchema = zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+	resolution: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+		"low",
+		"medium",
+		"high"
+	]).optional(),
+	processing: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .union */ .KCZ([zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n(["agentic", "static"]), zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({
+		type: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .literal */ .euz("static"),
+		pageOptions: pageOptionsSchema.optional(),
+		spreadsheetOptions: spreadsheetOptionsSchema.optional(),
+		/** Offsets in seconds, converted to API duration strings. */
+		startOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().nonnegative().optional(),
+		endOffset: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().nonnegative().optional(),
+		fps: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .number */ .aig().gt(0).max(24).optional(),
+		contentLayers: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .array */ .YOg(zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n([
+			"frames",
+			"audio",
+			"transcript"
+		])).optional()
+	})]).optional()
+});
+//#endregion
 //#region src/interactions/convert-to-google-interactions-input.ts
 /**
 * Converts an AI SDK `LanguageModelV4Prompt` into the Gemini Interactions
@@ -5490,9 +6788,8 @@ function buildGoogleInteractionsStreamTransform({ warnings, generateId, includeR
 *   - text / image content → `model_output` step with a single `content` array
 *   - reasoning → `thought` step (`signature` + `summary`)
 *   - tool-call → `function_call` step
-* User turns (and tool-result turns from the previous round) are sent as
-* `user_input` steps whose `content[]` holds the user's parts (text, files,
-* and — for tool-result turns — `function_result` blocks).
+* User turns are sent as `user_input` steps whose `content[]` holds the
+* user's text and files. Tool results are top-level `function_result` inputs.
 *
 * Handles text parts, file parts (image / audio / document / video, all four
 * `data.type` shapes), tool-call/tool-result round-tripping, per-step
@@ -5607,30 +6904,22 @@ function convertToGoogleInteractionsInput({ prompt, previousInteractionId, store
 			flushModelOutput();
 			break;
 		}
-		case "tool": {
-			const content = [];
-			for (const part of message.content) {
-				if (part.type !== "tool-result") {
-					warnings.push({
-						type: "other",
-						message: `google.interactions: unsupported tool message part type "${part.type}"; part dropped.`
-					});
-					continue;
-				}
-				const block = convertToolResultPart({
-					toolCallId: part.toolCallId,
-					toolName: part.toolName,
-					output: part.output,
-					signature: part.providerOptions?.google?.signature,
-					warnings
+		case "tool": for (const part of message.content) {
+			if (part.type !== "tool-result") {
+				warnings.push({
+					type: "other",
+					message: `google.interactions: unsupported tool message part type "${part.type}"; part dropped.`
 				});
-				content.push(block);
+				continue;
 			}
-			if (content.length > 0) steps.push({
-				type: "user_input",
-				content
-			});
-			break;
+			steps.push(convertToolResultPart({
+				toolCallId: part.toolCallId,
+				toolName: part.toolName,
+				output: part.output,
+				signature: part.providerOptions?.google?.signature,
+				warnings,
+				mediaResolution
+			}));
 		}
 	}
 	return {
@@ -5673,11 +6962,10 @@ function convertFilePartToContent({ part, warnings, mediaResolution }) {
 		});
 		return;
 	}
-	const resolutionField = mediaResolution != null && (kind === "image" || kind === "video") ? { resolution: mediaResolution } : {};
-	const processingField = kind === "video" ? getVideoProcessingField({
-		part,
-		warnings
-	}) : {};
+	const fileOptions = googleInteractionsFileOptionsSchema.parse(Object.fromEntries(Object.entries(part.providerOptions?.google ?? {}).filter(([, value]) => value != null)));
+	const resolution = fileOptions.resolution ?? mediaResolution;
+	const resolutionField = resolution != null && kind !== "audio" ? { resolution } : {};
+	const processingField = kind !== "image" ? getFileProcessingField(fileOptions.processing) : {};
 	switch (part.data.type) {
 		case "data": {
 			const mimeType = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part });
@@ -5711,23 +6999,26 @@ function convertFilePartToContent({ part, warnings, mediaResolution }) {
 		}
 	}
 }
-function getVideoProcessingField({ part, warnings }) {
-	const processing = (part.providerOptions?.google)?.processing;
+function getFileProcessingField(processing) {
 	if (processing == null) return {};
 	if (processing === "agentic" || processing === "static") return { processing };
-	if (typeof processing === "object" && !Array.isArray(processing) && processing.type === "static") {
-		const config = processing;
-		return { processing: {
-			type: "static",
-			...typeof config.startOffset === "number" ? { start_offset: `${config.startOffset}s` } : {},
-			...typeof config.endOffset === "number" ? { end_offset: `${config.endOffset}s` } : {},
-			...typeof config.fps === "number" ? { fps: config.fps } : {}
-		} };
-	}
-	warnings.push({
-		type: "other",
-		message: "google.interactions: invalid providerOptions.google.processing on video file part; expected \"agentic\", \"static\", or a static processing configuration. Option dropped."
-	});
+	if (processing.type === "static") return { processing: {
+		type: "static",
+		...processing.startOffset != null ? { start_offset: `${processing.startOffset}s` } : {},
+		...processing.endOffset != null ? { end_offset: `${processing.endOffset}s` } : {},
+		...processing.fps != null ? { fps: processing.fps } : {},
+		...processing.contentLayers != null ? { content_layers: processing.contentLayers } : {},
+		...processing.pageOptions != null ? { page_options: {
+			...processing.pageOptions.startPage != null ? { start_page: processing.pageOptions.startPage } : {},
+			...processing.pageOptions.endPage != null ? { end_page: processing.pageOptions.endPage } : {},
+			...processing.pageOptions.contentLayers != null ? { content_layers: processing.pageOptions.contentLayers } : {}
+		} } : {},
+		...processing.spreadsheetOptions != null ? { spreadsheet_options: {
+			...processing.spreadsheetOptions.sheetIndex != null ? { sheet_index: processing.spreadsheetOptions.sheetIndex } : {},
+			...processing.spreadsheetOptions.visibleCells != null ? { visible_cells: processing.spreadsheetOptions.visibleCells } : {},
+			...processing.spreadsheetOptions.contentLayers != null ? { content_layers: processing.spreadsheetOptions.contentLayers } : {}
+		} } : {}
+	} };
 	return {};
 }
 function compactPromptForPreviousInteraction({ prompt, previousInteractionId }) {
@@ -5769,7 +7060,7 @@ function safeParseToolArgs(input) {
 		return { value: input };
 	}
 }
-function convertToolResultPart({ toolCallId, toolName, output, signature, warnings }) {
+function convertToolResultPart({ toolCallId, toolName, output, signature, warnings, mediaResolution }) {
 	const base = {
 		type: "function_result",
 		call_id: toolCallId,
@@ -5807,18 +7098,19 @@ function convertToolResultPart({ toolCallId, toolName, output, signature, warnin
 				text: item.text
 			});
 			else if (item.type === "file") {
-				if ((0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .getTopLevelMediaType */ .yu)(item.mediaType) !== "image") {
+				if ((0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .getTopLevelMediaType */ .yu)(item.mediaType) === "image" && item.data.type === "text") {
 					warnings.push({
 						type: "other",
-						message: `google.interactions: tool-result file with mediaType "${item.mediaType}" is not supported (Interactions \`function_result.result\` accepts only text and image content); part dropped.`
+						message: "google.interactions: tool-result image part with `data.type === \"text\"` is not representable as an image; part dropped."
 					});
 					continue;
 				}
-				const imageBlock = filePartToImageBlock({
+				const fileBlock = convertFilePartToContent({
 					part: item,
-					warnings
+					warnings,
+					mediaResolution
 				});
-				if (imageBlock != null) blocks.push(imageBlock);
+				if (fileBlock != null) blocks.push(fileBlock);
 			} else warnings.push({
 				type: "other",
 				message: `google.interactions: tool-result content part type "${item.type}" is not supported; part dropped.`
@@ -5828,41 +7120,6 @@ function convertToolResultPart({ toolCallId, toolName, output, signature, warnin
 				result: blocks
 			};
 		}
-	}
-}
-function filePartToImageBlock({ part, warnings }) {
-	switch (part.data.type) {
-		case "data": {
-			const mimeType = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(part.mediaType) ? part.mediaType : (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveFullMediaType */ .SL)({ part: {
-				type: "file",
-				mediaType: part.mediaType,
-				data: part.data
-			} });
-			return {
-				type: "image",
-				data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(part.data.data),
-				mime_type: mimeType
-			};
-		}
-		case "url": return {
-			type: "image",
-			uri: part.data.url.toString(),
-			...(0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(part.mediaType) ? { mime_type: part.mediaType } : {}
-		};
-		case "reference": return {
-			type: "image",
-			uri: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolveProviderReference */ .p5)({
-				reference: part.data.reference,
-				provider: "google"
-			}),
-			...(0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .isFullMediaType */ .Cs)(part.mediaType) ? { mime_type: part.mediaType } : {}
-		};
-		case "text":
-			warnings.push({
-				type: "other",
-				message: "google.interactions: tool-result image part with `data.type === \"text\"` is not representable as an image; part dropped."
-			});
-			return;
 	}
 }
 function mergeAdjacentTextContent(content) {
@@ -7190,6 +8447,7 @@ var GoogleInteractionsLanguageModel = class GoogleInteractionsLanguageModel {
 	get supportedUrls() {
 		if (this.config.supportedUrls) return this.config.supportedUrls();
 		return {
+			"*": [googleFilesUrlPattern],
 			"image/*": [/^https?:\/\/.+/],
 			"application/pdf": [/^https?:\/\/.+/],
 			"audio/*": [/^https?:\/\/.+/],
@@ -7381,7 +8639,7 @@ var GoogleInteractionsLanguageModel = class GoogleInteractionsLanguageModel {
 			}
 		}
 		return {
-			args: pruneUndefined({
+			args: withGoogleInteractionsRequestRedaction(pruneUndefined({
 				...isAgent ? { agent: this.agent } : { model: this.modelId },
 				input,
 				labels: googleOptions?.labels ?? void 0,
@@ -7396,7 +8654,7 @@ var GoogleInteractionsLanguageModel = class GoogleInteractionsLanguageModel {
 				agent_config: agentConfig,
 				environment,
 				background: googleOptions?.background ?? void 0
-			}),
+			})),
 			warnings,
 			isAgent,
 			isBackground: googleOptions?.background === true,
@@ -7482,10 +8740,10 @@ var GoogleInteractionsLanguageModel = class GoogleInteractionsLanguageModel {
 			options,
 			pollingTimeoutMs
 		});
-		const body = {
+		const body = withGoogleInteractionsRequestRedaction({
 			...args,
 			stream: true
-		};
+		});
 		const { responseHeaders, value: response } = await (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .postJsonToApi */ .GU)({
 			url,
 			headers: await (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .resolve */ .hd)(mergedHeaders),
@@ -8117,17 +9375,38 @@ const googleTranscriptionModelOptions = (0,_ai_sdk_provider_utils__WEBPACK_IMPOR
 	*   disfluency removal, inline self-corrections, structured formatting
 	*   (lists, numbers, dates, paragraph breaks), and grammar/casing polish.
 	*/
-	mode: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n(["SMART", "VERBATIM"]).optional()
+	mode: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* ["enum"] */ .k5n(["SMART", "VERBATIM"]).optional(),
+	/**
+	* Options for live transcription models such as
+	* `gemini-3.5-transcribe-live`.
+	*/
+	streaming: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({ 
+	/**
+	* Server-side voice activity detection, which splits the audio into
+	* segments at pauses (enabled by default).
+	*
+	* Set `disabled: true` for push-to-talk input: the whole audio
+	* stream is then transcribed as a single turn, without splitting at
+	* pauses, and the transcript is finalized as soon as the audio
+	* stream ends.
+	*/
+automaticActivityDetection: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .object */ .Ikc({ disabled: zod_v4__WEBPACK_IMPORTED_MODULE_1__/* .boolean */ .zMY().optional() }).optional() }).optional()
 })));
 //#endregion
 //#region src/transcription/google-transcription-model.ts
 const liveWebSocketPath$1 = "google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent";
 /**
-* After the input audio has ended, finish when no terminal signal
-* (`turnComplete` / idle `interactionStatus`) arrives within this window.
+* After the input audio has ended, finish when no terminal signal (idle
+* `interactionStatus`, `turnComplete`, or server VAD showing that all audio
+* was transcribed) arrives within this window.
 * Trailing transcripts reset the timer.
 */
 const defaultFinishGraceMs$1 = 3e3;
+/**
+* Speech that server VAD ended within this distance of the end of the sent
+* audio counts as ending at the end of the audio.
+*/
+const audioEndToleranceMs = 250;
 function getLiveWebSocketURL$1(baseURL, apiKey) {
 	const url = getRealtimeWebSocketURL(baseURL, liveWebSocketPath$1);
 	url.searchParams.set("key", apiKey);
@@ -8235,9 +9514,11 @@ var GoogleTranscriptionModel = class GoogleTranscriptionModel {
 		for (const [key, value] of Object.entries(headers)) if (key.toLowerCase() === "x-goog-api-key" && value != null) apiKey = value;
 		if (apiKey == null) throw new Error("Google Generative AI API key is required for streaming transcription.");
 		const webSocketHeaders = Object.fromEntries(Object.entries(headers).filter(([key]) => key.toLowerCase() !== "x-goog-api-key"));
+		const manualActivityDetection = googleOptions?.streaming?.automaticActivityDetection?.disabled === true;
 		const setup = {
 			model: getModelPath(this.modelId),
-			inputAudioTranscription: buildAudioTranscriptionConfig(googleOptions) ?? {}
+			inputAudioTranscription: buildAudioTranscriptionConfig(googleOptions) ?? {},
+			...manualActivityDetection ? { realtimeInputConfig: { automaticActivityDetection: { disabled: true } } } : {}
 		};
 		return {
 			request: { body: setup },
@@ -8251,6 +9532,7 @@ var GoogleTranscriptionModel = class GoogleTranscriptionModel {
 				headers: webSocketHeaders,
 				setup,
 				inputAudioRate: options.inputAudioFormat.rate ?? 16e3,
+				manualActivityDetection,
 				finishGraceMs: this.config._internal?.finishGraceMs ?? defaultFinishGraceMs$1,
 				warnings,
 				audio: options.audio,
@@ -8260,7 +9542,7 @@ var GoogleTranscriptionModel = class GoogleTranscriptionModel {
 		};
 	}
 };
-function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, inputAudioRate, finishGraceMs, warnings, audio, abortSignal, includeRawChunks }) {
+function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, inputAudioRate, manualActivityDetection, finishGraceMs, warnings, audio, abortSignal, includeRawChunks }) {
 	let finished = false;
 	let cleanup = () => {};
 	return new ReadableStream({
@@ -8279,6 +9561,8 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 			let audioEnded = false;
 			let usageMetadata;
 			let finishTimer;
+			let lastVoiceActivity;
+			let sentAudioBytes = 0;
 			const segmentId = () => `google-segment-${segmentCounter}`;
 			const cancelPendingFinish = () => {
 				if (finishTimer != null) {
@@ -8321,6 +9605,8 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 				segmentBuffer = "";
 				segmentCounter++;
 			};
+			const getSentAudioMs = () => sentAudioBytes / (inputAudioRate * 2) * 1e3;
+			const isTranscriptionComplete = () => lastVoiceActivity?.type === "ACTIVITY_END" && segmentBuffer === "" && latestInterim === "" && (lastVoiceActivity.audioOffsetMs ?? 0) >= getSentAudioMs() - audioEndToleranceMs;
 			const finish = () => {
 				if (finished) return;
 				completeSegment();
@@ -8338,13 +9624,17 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 				cleanup(1e3);
 			};
 			const sendAudio = async (socket) => {
+				if (manualActivityDetection) socket.send(JSON.stringify({ realtimeInput: { activityStart: {} } }));
 				audioReader = audio.getReader();
 				try {
 					while (true) {
 						const { done, value } = await audioReader.read();
 						if (done || finished) break;
+						const data = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(value);
+						const padding = data.endsWith("==") ? 2 : data.endsWith("=") ? 1 : 0;
+						sentAudioBytes += data.length * 3 / 4 - padding;
 						socket.send(JSON.stringify({ realtimeInput: { audio: {
-							data: (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .convertToBase64 */ .ej)(value),
+							data,
 							mimeType: `audio/pcm;rate=${inputAudioRate}`
 						} } }));
 						await (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .waitForWebSocketBufferDrain */ .E8)(socket);
@@ -8354,9 +9644,10 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 					audioReader = void 0;
 				}
 				if (!finished) {
-					socket.send(JSON.stringify({ realtimeInput: { audioStreamEnd: true } }));
+					socket.send(JSON.stringify({ realtimeInput: manualActivityDetection ? { activityEnd: {} } : { audioStreamEnd: true } }));
 					audioEnded = true;
-					schedulePendingFinish();
+					if (isTranscriptionComplete()) finish();
+					else schedulePendingFinish();
 				}
 			};
 			connection = (0,_ai_sdk_provider_utils__WEBPACK_IMPORTED_MODULE_0__/* .connectToWebSocket */ .L8)({
@@ -8385,6 +9676,13 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 					});
 					if (message.setupComplete != null) resolveSetupComplete();
 					if (message.usageMetadata != null) usageMetadata = message.usageMetadata;
+					if (message.voiceActivity?.type != null) {
+						const audioOffsetSeconds = parseOffsetSeconds(message.voiceActivity.audioOffset);
+						lastVoiceActivity = {
+							type: message.voiceActivity.type,
+							audioOffsetMs: audioOffsetSeconds != null ? audioOffsetSeconds * 1e3 : void 0
+						};
+					}
 					if (message.error != null) {
 						finishWithError(new Error(message.error.message ?? "Google Live API error"));
 						return;
@@ -8415,9 +9713,9 @@ function createGoogleLiveTranscriptionStream({ webSocket, url, headers, setup, i
 						}
 						if (transcription.finished === true) completeSegment();
 					}
-					if (serverContent?.turnComplete) completeSegment();
+					if (serverContent?.generationComplete || serverContent?.turnComplete) completeSegment();
 					const interactionStatus = serverContent?.interactionStatus;
-					if (audioEnded && (interactionStatus === "IDLE" || interactionStatus === "REQUIRES_ACTION" || serverContent?.turnComplete === true && interactionStatus == null)) finish();
+					if (audioEnded && (interactionStatus === "IDLE" || interactionStatus === "REQUIRES_ACTION" || serverContent?.turnComplete === true && interactionStatus == null || isTranscriptionComplete())) finish();
 				},
 				onSocketError: () => {
 					finishWithError(/* @__PURE__ */ new Error("Google Live transcription error"));
@@ -8847,7 +10145,6 @@ function validateGoogleSpeechTranslationInputAudioFormat(inputAudioFormat) {
 //#endregion
 //#region src/google-provider.ts
 const DEFAULT_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
-const googleFilesUrlPattern = /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/files\/.*$/;
 const supportedExternalUrlMediaTypes = [
 	"text/html",
 	"text/css",
@@ -8873,9 +10170,6 @@ const supportedExternalUrlMediaTypes = [
 	"video/3gpp"
 ];
 const externalHttpsUrlPattern = /^https:\/\/.*$/;
-function supportsExternalFileUrls(modelId) {
-	return /(^|\/)gemini-/.test(modelId) && !/(^|\/)gemini-2\.0/.test(modelId);
-}
 /**
 * Create a Google provider instance.
 */
@@ -8890,7 +10184,7 @@ function createGoogle(options = {}) {
 		}),
 		...options.headers
 	}, `ai-sdk-google/${VERSION}`));
-	const getSupportedUrls = (modelId, includeExternalUrls = modelId == null || supportsExternalFileUrls(modelId)) => ({
+	const getSupportedUrls = (modelId, includeExternalUrls = modelId == null || getGoogleLanguageModelEntry(modelId).capabilities.language.inputs.externalFileUrls) => ({
 		"*": [
 			googleFilesUrlPattern,
 			new RegExp(`^${baseURL}/files/.*$`),

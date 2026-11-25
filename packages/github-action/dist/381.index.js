@@ -1,8 +1,8 @@
-export const id = 567;
-export const ids = [567];
+export const id = 381;
+export const ids = [381];
 export const modules = {
 
-/***/ 73266:
+/***/ 28472:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 
@@ -112,10 +112,10 @@ __webpack_require__.d(__webpack_exports__, {
   C_: () => (/* binding */ zodSchema)
 });
 
-// UNUSED EXPORTS: DelayedPromise, EventSourceParserStream, SerializationError, VERSION, WORKFLOW_DESERIALIZE, WORKFLOW_SERIALIZE, convertImageModelFileToDataUri, createStatusCodeErrorResponseHandler, dynamicTool, experimental_parseSpeechStreamClientFrame, experimental_parseTranscriptionStreamClientFrame, experimental_serializeSpeechStreamPart, experimental_serializeTranscriptionStreamPart, extractLines, extractResponseHeaders, fetchWithValidatedEndpoint, fetchWithValidatedRedirects, getErrorMessage, getWebSocketConstructor, injectJsonInstructionIntoMessages, isBrowserRuntime, isParsableJson, isValidHostnamePart, jsonSchema, loadSetting, readWebSocketMessageText, stripFileExtension, tool, validateDownloadUrl
+// UNUSED EXPORTS: DelayedPromise, EventSourceParserStream, SerializationError, VERSION, WORKFLOW_DESERIALIZE, WORKFLOW_SERIALIZE, convertImageModelFileToDataUri, createStatusCodeErrorResponseHandler, createTextOutputCapture, dynamicTool, experimental_parseSpeechStreamClientFrame, experimental_parseTranscriptionStreamClientFrame, experimental_serializeSpeechStreamPart, experimental_serializeTranscriptionStreamPart, extractLines, extractResponseHeaders, fetchWithValidatedEndpoint, fetchWithValidatedRedirects, getErrorMessage, getWebSocketConstructor, injectJsonInstructionIntoMessages, isBrowserRuntime, isParsableJson, isValidHostnamePart, jsonSchema, loadSetting, readWebSocketMessageText, stripFileExtension, tool, validateDownloadUrl
 
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.38/node_modules/@ai-sdk/provider/dist/index.js
-var dist = __webpack_require__(66110);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.39/node_modules/@ai-sdk/provider/dist/index.js
+var dist = __webpack_require__(30647);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/parse.js + 1 modules
 var parse = __webpack_require__(23353);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js
@@ -331,7 +331,7 @@ class EventSourceParserStream extends TransformStream {
 
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@workflow+serde@4.1.0/node_modules/@workflow/serde/dist/index.js
 var serde_dist = __webpack_require__(23428);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.81_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.83_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js
 
 
 
@@ -785,6 +785,33 @@ function createNullLanguageModelUsage() {
 	};
 }
 //#endregion
+//#region src/create-text-output-capture.ts
+/**
+* Keeps a prefix of a text stream while counting all UTF-16 code units, like
+* `String.length`. Appending more output does not retain the discarded text.
+*/
+function createTextOutputCapture({ maxLength }) {
+	if (!Number.isSafeInteger(maxLength) || maxLength < 1) throw new InvalidArgumentError({
+		argument: "maxOutputLength",
+		message: "Must be a positive safe integer."
+	});
+	let text = "";
+	let length = 0;
+	return {
+		append(chunk) {
+			length += chunk.length;
+			const remaining = maxLength - text.length;
+			if (remaining > 0) text += chunk.slice(0, remaining).split("").join("");
+		},
+		get text() {
+			return text;
+		},
+		get length() {
+			return length;
+		}
+	};
+}
+//#endregion
 //#region src/create-tool-name-mapping.ts
 /**
 * @param tools - Tools that were passed to the language model.
@@ -959,7 +986,7 @@ function handleFetchError({ error, url, requestBodyValues }) {
 }
 //#endregion
 //#region src/version.ts
-const VERSION = "5.0.81";
+const VERSION = "5.0.83";
 //#endregion
 //#region src/normalize-headers.ts
 /**
@@ -3501,7 +3528,7 @@ function standardSchema(standardSchema) {
 		return addAdditionalPropertiesToJsonSchema(standardSchema["~standard"].jsonSchema.input({ target: "draft-07" }));
 	}, { validate: async (value) => {
 		const result = await standardSchema["~standard"].validate(value);
-		return "value" in result ? {
+		return result.issues === void 0 && "value" in result ? {
 			success: true,
 			value: result.value
 		} : {
@@ -5641,7 +5668,7 @@ function stringifyWithBigIntAndCycles(value) {
 
 /***/ }),
 
-/***/ 66110:
+/***/ 30647:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
