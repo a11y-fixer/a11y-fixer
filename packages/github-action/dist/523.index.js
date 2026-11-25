@@ -1,14 +1,14 @@
-export const id = 429;
-export const ids = [429];
+export const id = 523;
+export const ids = [523];
 export const modules = {
 
-/***/ 97429:
+/***/ 21523:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   k: () => (/* binding */ ExtractionLanguageModel)
 /* harmony export */ });
-/* harmony import */ var _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(66110);
+/* harmony import */ var _ai_sdk_provider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30647);
 /* harmony import */ var _workflow_serde__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(23428);
 /* harmony import */ var zod_v4__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23353);
 /* harmony import */ var zod_v4_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(48149);
@@ -1082,7 +1082,7 @@ function standardSchema(standardSchema) {
 		return addAdditionalPropertiesToJsonSchema(standardSchema["~standard"].jsonSchema.input({ target: "draft-07" }));
 	}, { validate: async (value) => {
 		const result = await standardSchema["~standard"].validate(value);
-		return "value" in result ? {
+		return result.issues === void 0 && "value" in result ? {
 			success: true,
 			value: result.value
 		} : {
@@ -1234,9 +1234,8 @@ function fieldSchema(field) {
 function round(value, decimals) {
 	return decimals !== void 0 && typeof value === "number" && Number.isFinite(value) ? Number(value.toFixed(decimals)) : value;
 }
-/** Maps empty strings and lists to null and rounds numbers to `decimals`. */
+/** Rounds numbers to `decimals`. */
 function answerValue(field, value) {
-	if (value === "" || Array.isArray(value) && value.length === 0) return null;
 	if (field.type === "list") return field.items === "number" && Array.isArray(value) ? value.map((item) => round(item, field.decimals)) : value;
 	return field.type === "number" || field.type === "duration" ? round(value, field.decimals) : value;
 }

@@ -1,5 +1,5 @@
-export const id = 876;
-export const ids = [876];
+export const id = 603;
+export const ids = [603];
 export const modules = {
 
 /***/ 20798:
@@ -718,7 +718,7 @@ function isExpired(token, bufferMs = 0) {
 
 /***/ }),
 
-/***/ 62876:
+/***/ 86603:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 
@@ -729,7 +729,7 @@ __webpack_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: AISDKError, AI_SDK_TELEMETRY_TRACING_CHANNEL, APICallError, AbstractChat, DefaultChatTransport, DefaultGeneratedFile, DirectChatTransport, DownloadError, EmptyResponseBodyError, Experimental_AbstractRealtimeSession, Experimental_Agent, Experimental_DecisionRefusalError, Experimental_DecisionUnsupportedQuestionTypeError, Experimental_EvaluationUnsupportedQuestionTypeError, Experimental_ExtractionRefusalError, Experimental_ExtractionUnsupportedFieldTypeError, HttpChatTransport, InvalidArgumentError, InvalidDataContentError, InvalidMessageRoleError, InvalidPromptError, InvalidResponseDataError, InvalidStreamPartError, InvalidToolApprovalError, InvalidToolApprovalSignatureError, InvalidToolInputError, JSONParseError, JsonToSseTransformStream, LoadAPIKeyError, LoadSettingError, MessageConversionError, MissingToolResultsError, NoContentGeneratedError, NoImageGeneratedError, NoObjectGeneratedError, NoOutputGeneratedError, NoSpeechGeneratedError, NoSuchModelError, NoSuchProviderError, NoSuchProviderReferenceError, NoSuchToolError, NoTranscriptGeneratedError, NoTranslationGeneratedError, NoVideoGeneratedError, Output, RetryError, SerialJobExecutor, StreamProviderError, TextStreamChatTransport, TooManyEmbeddingValuesForCallError, ToolCallNotFoundForApprovalError, ToolCallRepairError, ToolChoiceViolationError, ToolLoopAgent, TypeValidationError, UIMessageStreamError, UI_MESSAGE_STREAM_HEADERS, UnsupportedFunctionalityError, UnsupportedModelVersionError, WebSocketChatTransport, addToolInputExamplesMiddleware, asSchema, assistantModelMessageSchema, callCompletionApi, consumeStream, convertDataContentToBase64String, convertFileListToFileUIParts, convertToModelMessages, cosineSimilarity, createAgentUIStream, createAgentUIStreamResponse, createDownload, createGateway, createIdGenerator, createProviderRegistry, createTextStreamResponse, createUIMessageStream, createUIMessageStreamResponse, customProvider, defaultEmbeddingSettingsMiddleware, defaultInstructionsMiddleware, defaultSettingsMiddleware, detectToolDrift, dynamicTool, embed, embedMany, experimental_cancelBatch, experimental_createProviderRegistry, experimental_createSteering, experimental_decide, experimental_decodeRealtimeAudio, experimental_encodeRealtimeAudio, experimental_evaluate, experimental_extract, experimental_filterActiveTools, experimental_generateSpeech, experimental_generateVideo, experimental_getBatchResults, experimental_getBatchStatus, experimental_getRealtimeToolDefinitions, experimental_getVideoStatus, experimental_listBatches, experimental_resampleAudio, experimental_startBatch, experimental_startVideo, experimental_streamLanguageModelCall, experimental_streamSpeech, experimental_streamTextLowMemory, experimental_streamTranscribe, experimental_streamTranslate, experimental_toolCaller, experimental_transcribe, extractJsonMiddleware, extractReasoningMiddleware, filterActiveTools, fingerprintTools, gateway, generateId, generateImage, generateObject, generateSpeech, getChunkTimeoutMs, getFirstChunkTimeoutMs, getStaticToolName, getStepTimeoutMs, getTextFromDataUrl, getToolName, getToolOrDynamicToolName, getToolTimeoutMs, getTotalTimeoutMs, hasToolCall, isCustomContentUIPart, isDataUIPart, isDeepEqualData, isDynamicToolUIPart, isFileUIPart, isLoopFinished, isReasoningFileUIPart, isReasoningUIPart, isStaticToolUIPart, isStepCount, isTextUIPart, isToolOutputErrorUIPart, isToolUIPart, jsonSchema, lastAssistantMessageIsCompleteWithApprovalResponses, lastAssistantMessageIsCompleteWithToolCalls, modelMessageSchema, parseJsonEventStream, parsePartialJson, pipeAgentUIStreamToResponse, pipeTextStreamToResponse, pipeUIMessageStreamToResponse, pruneMessages, readUIMessageStream, registerTelemetry, rerank, safeValidateUIMessages, safeValidateWebSocketChatTransportRequest, simulateReadableStream, simulateStreamingMiddleware, smoothStream, stepCountIs, streamObject, streamText, systemModelMessageSchema, toTextStream, toUIMessageChunk, toUIMessageStream, tool, toolModelMessageSchema, toolSearch, transcribe, uiMessageChunkSchema, uploadFile, uploadSkill, userModelMessageSchema, validateUIMessages, wrapEmbeddingModel, wrapImageModel, wrapLanguageModel, wrapProvider, zodSchema
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@7.0.173_zod@4.6.7/node_modules/ai/dist/rolldown-runtime-D7D4PA-g.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@7.0.181_zod@4.6.7/node_modules/ai/dist/rolldown-runtime-D7D4PA-g.js
 //#region \0rolldown/runtime.js
 var __defProp = Object.defineProperty;
 var __exportAll = (all, no_symbols) => {
@@ -744,10 +744,10 @@ var __exportAll = (all, no_symbols) => {
 //#endregion
 
 
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.81_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js + 2 modules
-var dist = __webpack_require__(73266);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.38/node_modules/@ai-sdk/provider/dist/index.js
-var provider_dist = __webpack_require__(66110);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider-utils@5.0.83_zod@4.6.7/node_modules/@ai-sdk/provider-utils/dist/index.js + 2 modules
+var dist = __webpack_require__(28472);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@ai-sdk+provider@4.0.39/node_modules/@ai-sdk/provider/dist/index.js
+var provider_dist = __webpack_require__(30647);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@workflow+serde@4.1.0/node_modules/@workflow/serde/dist/index.js
 var serde_dist = __webpack_require__(23428);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/core.js
@@ -1768,7 +1768,7 @@ function _function(params) {
 var registries = __webpack_require__(56045);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@vercel+oidc@3.2.0/node_modules/@vercel/oidc/dist/index.js
 var oidc_dist = __webpack_require__(45774);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+gateway@4.0.146_zod@4.6.7/node_modules/@ai-sdk/gateway/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@ai-sdk+gateway@4.0.154_zod@4.6.7/node_modules/@ai-sdk/gateway/dist/index.js
 
 
 
@@ -1926,11 +1926,11 @@ function dist_describe(schema, description) {
 }
 //#endregion
 //#region src/errors/gateway-error.ts
-const symbol$10 = Symbol.for("vercel.ai.gateway.error");
+const symbol$11 = Symbol.for("vercel.ai.gateway.error");
 var GatewayError = class GatewayError extends Error {
 	constructor({ message, statusCode = 500, cause, generationId, isRetryable = statusCode != null && (statusCode === 408 || statusCode === 409 || statusCode === 429 || statusCode >= 500) }) {
 		super(generationId ? `${message} [${generationId}]` : message);
-		this[symbol$10] = true;
+		this[symbol$11] = true;
 		this.statusCode = statusCode;
 		this.cause = cause;
 		this.generationId = generationId;
@@ -1945,14 +1945,14 @@ var GatewayError = class GatewayError extends Error {
 		return GatewayError.hasMarker(error);
 	}
 	static hasMarker(error) {
-		return typeof error === "object" && error !== null && symbol$10 in error && error[symbol$10] === true;
+		return typeof error === "object" && error !== null && symbol$11 in error && error[symbol$11] === true;
 	}
 };
 //#endregion
 //#region src/errors/gateway-authentication-error.ts
-const name$9 = "GatewayAuthenticationError";
-const marker$9 = `vercel.ai.gateway.error.${name$9}`;
-const symbol$9 = Symbol.for(marker$9);
+const name$10 = "GatewayAuthenticationError";
+const marker$10 = `vercel.ai.gateway.error.${name$10}`;
+const symbol$10 = Symbol.for(marker$10);
 /**
 * Authentication failed - invalid API key or OIDC token
 */
@@ -1964,12 +1964,12 @@ var GatewayAuthenticationError = class GatewayAuthenticationError extends Gatewa
 			cause,
 			generationId
 		});
-		this[symbol$9] = true;
-		this.name = name$9;
+		this[symbol$10] = true;
+		this.name = name$10;
 		this.type = "authentication_error";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$9 in error;
+		return GatewayError.hasMarker(error) && symbol$10 in error;
 	}
 	/**
 	* Creates a contextual error message when authentication fails
@@ -2008,9 +2008,9 @@ Run 'npx vercel link' to link your project, then 'vc env pull' to fetch the toke
 };
 //#endregion
 //#region src/errors/gateway-invalid-request-error.ts
-const name$8 = "GatewayInvalidRequestError";
-const marker$8 = `vercel.ai.gateway.error.${name$8}`;
-const symbol$8 = Symbol.for(marker$8);
+const name$9 = "GatewayInvalidRequestError";
+const marker$9 = `vercel.ai.gateway.error.${name$9}`;
+const symbol$9 = Symbol.for(marker$9);
 /**
 * Invalid request - missing headers, malformed data, etc.
 */
@@ -2022,19 +2022,19 @@ var GatewayInvalidRequestError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$8] = true;
-		this.name = name$8;
+		this[symbol$9] = true;
+		this.name = name$9;
 		this.type = "invalid_request_error";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$8 in error;
+		return GatewayError.hasMarker(error) && symbol$9 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-rate-limit-error.ts
-const name$7 = "GatewayRateLimitError";
-const marker$7 = `vercel.ai.gateway.error.${name$7}`;
-const symbol$7 = Symbol.for(marker$7);
+const name$8 = "GatewayRateLimitError";
+const marker$8 = `vercel.ai.gateway.error.${name$8}`;
+const symbol$8 = Symbol.for(marker$8);
 /**
 * Rate limit exceeded.
 */
@@ -2046,19 +2046,19 @@ var GatewayRateLimitError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$7] = true;
-		this.name = name$7;
+		this[symbol$8] = true;
+		this.name = name$8;
 		this.type = "rate_limit_exceeded";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$7 in error;
+		return GatewayError.hasMarker(error) && symbol$8 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-model-not-found-error.ts
-const name$6 = "GatewayModelNotFoundError";
-const marker$6 = `vercel.ai.gateway.error.${name$6}`;
-const symbol$6 = Symbol.for(marker$6);
+const name$7 = "GatewayModelNotFoundError";
+const marker$7 = `vercel.ai.gateway.error.${name$7}`;
+const symbol$7 = Symbol.for(marker$7);
 const modelNotFoundParamSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({ modelId: z.string() })));
 /**
 * Model not found or not available
@@ -2071,20 +2071,20 @@ var GatewayModelNotFoundError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$6] = true;
-		this.name = name$6;
+		this[symbol$7] = true;
+		this.name = name$7;
 		this.type = "model_not_found";
 		this.modelId = modelId;
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$6 in error;
+		return GatewayError.hasMarker(error) && symbol$7 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-not-found-error.ts
-const name$5 = "GatewayNotFoundError";
-const marker$5 = `vercel.ai.gateway.error.${name$5}`;
-const symbol$5 = Symbol.for(marker$5);
+const name$6 = "GatewayNotFoundError";
+const marker$6 = `vercel.ai.gateway.error.${name$6}`;
+const symbol$6 = Symbol.for(marker$6);
 /**
 * Not found - the requested Gateway resource does not exist or is not
 * visible to the caller (e.g. an unknown async batch/video job id).
@@ -2098,19 +2098,19 @@ var GatewayNotFoundError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$5] = true;
-		this.name = name$5;
+		this[symbol$6] = true;
+		this.name = name$6;
 		this.type = "not_found";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$5 in error;
+		return GatewayError.hasMarker(error) && symbol$6 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-internal-server-error.ts
-const name$4 = "GatewayInternalServerError";
-const marker$4 = `vercel.ai.gateway.error.${name$4}`;
-const symbol$4 = Symbol.for(marker$4);
+const name$5 = "GatewayInternalServerError";
+const marker$5 = `vercel.ai.gateway.error.${name$5}`;
+const symbol$5 = Symbol.for(marker$5);
 /**
 * Internal server error from the Gateway
 */
@@ -2122,19 +2122,19 @@ var GatewayInternalServerError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$4] = true;
-		this.name = name$4;
+		this[symbol$5] = true;
+		this.name = name$5;
 		this.type = "internal_server_error";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$4 in error;
+		return GatewayError.hasMarker(error) && symbol$5 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-failed-dependency-error.ts
-const name$3 = "GatewayFailedDependencyError";
-const marker$3 = `vercel.ai.gateway.error.${name$3}`;
-const symbol$3 = Symbol.for(marker$3);
+const name$4 = "GatewayFailedDependencyError";
+const marker$4 = `vercel.ai.gateway.error.${name$4}`;
+const symbol$4 = Symbol.for(marker$4);
 /**
 * The request could not be fulfilled because a dependency it relied on was not
 * available on the credentials or provider used to serve it (HTTP 424). Not
@@ -2148,19 +2148,19 @@ var GatewayFailedDependencyError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$3] = true;
-		this.name = name$3;
+		this[symbol$4] = true;
+		this.name = name$4;
 		this.type = "failed_dependency";
 	}
 	static isInstance(error) {
-		return GatewayError.hasMarker(error) && symbol$3 in error;
+		return GatewayError.hasMarker(error) && symbol$4 in error;
 	}
 };
 //#endregion
 //#region src/errors/gateway-forbidden-error.ts
-const name$2 = "GatewayForbiddenError";
-const marker$2 = `vercel.ai.gateway.error.${name$2}`;
-const symbol$2 = Symbol.for(marker$2);
+const name$3 = "GatewayForbiddenError";
+const marker$3 = `vercel.ai.gateway.error.${name$3}`;
+const symbol$3 = Symbol.for(marker$3);
 const forbiddenParamSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({ ruleId: z.string() })));
 /**
 * Forbidden - the request was rejected by policy (e.g. a routing rule),
@@ -2174,10 +2174,43 @@ var GatewayForbiddenError = class extends GatewayError {
 			cause,
 			generationId
 		});
-		this[symbol$2] = true;
-		this.name = name$2;
+		this[symbol$3] = true;
+		this.name = name$3;
 		this.type = "forbidden";
 		this.ruleId = ruleId;
+	}
+	static isInstance(error) {
+		return GatewayError.hasMarker(error) && symbol$3 in error;
+	}
+};
+//#endregion
+//#region src/errors/gateway-access-policy-denied-error.ts
+const name$2 = "GatewayAccessPolicyDeniedError";
+const marker$2 = `vercel.ai.gateway.error.${name$2}`;
+const symbol$2 = Symbol.for(marker$2);
+const accessPolicyDeniedParamSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({
+	policyIds: z.optional(z.array(z.string())),
+	removedModels: z.optional(z.array(z.string())),
+	removedProviders: z.optional(z.array(z.string()))
+})));
+/**
+* Access policy denied - an AI Gateway access policy that applies to the
+* request does not allow the requested model or provider.
+*/
+var GatewayAccessPolicyDeniedError = class extends GatewayError {
+	constructor({ message = "Access policy denied", statusCode = 403, cause, generationId, policyIds, removedModels, removedProviders } = {}) {
+		super({
+			message,
+			statusCode,
+			cause,
+			generationId
+		});
+		this[symbol$2] = true;
+		this.name = name$2;
+		this.type = "access_policy_denied";
+		this.policyIds = policyIds;
+		this.removedModels = removedModels;
+		this.removedProviders = removedProviders;
 	}
 	static isInstance(error) {
 		return GatewayError.hasMarker(error) && symbol$2 in error;
@@ -2295,6 +2328,22 @@ async function createGatewayErrorFromResponse({ response, statusCode, defaultMes
 				cause,
 				generationId,
 				ruleId: ruleResult.success ? ruleResult.value.ruleId : void 0
+			});
+		}
+		case "access_policy_denied": {
+			const paramResult = await (0,dist/* safeValidateTypes */.ZZ)({
+				value: validatedResponse.error.param,
+				schema: accessPolicyDeniedParamSchema
+			});
+			const param = paramResult.success ? paramResult.value : void 0;
+			return new GatewayAccessPolicyDeniedError({
+				message,
+				statusCode,
+				cause,
+				generationId,
+				policyIds: param?.policyIds,
+				removedModels: param?.removedModels,
+				removedProviders: param?.removedProviders
 			});
 		}
 		default: return new GatewayInternalServerError({
@@ -2428,6 +2477,7 @@ const KNOWN_MODEL_TYPES = [
 	"embedding",
 	"decision",
 	"evaluation",
+	"extraction",
 	"image",
 	"language",
 	"realtime",
@@ -2649,6 +2699,66 @@ const gatewayGenerationInfoResponseSchema = (0,dist/* lazySchema */.ID)(() => (0
 	billableWebSearchCalls: billable_web_search_calls
 }))) }), z.transform(({ data }) => data))));
 //#endregion
+//#region src/redact-gateway-request-credentials.ts
+const REDACTED = "[redacted]";
+/**
+* Gateway request bodies can carry request-scoped BYOK credentials in
+* `providerOptions.gateway.byok`. The credentials must reach the Gateway and
+* stay on application-facing errors, but telemetry-only copies must not expose
+* them.
+*/
+function withGatewayRequestTelemetryRedaction(value) {
+	if (!isRecord$1(value)) return value;
+	const body = value;
+	if (!hasByok(body.providerOptions) && !hasRequestByok(body.requests)) return value;
+	return (0,dist/* withTelemetryRedaction */.jN)(body, (redacted) => ({
+		...redacted,
+		...hasByok(redacted.providerOptions) && { providerOptions: redactProviderOptions(redacted.providerOptions) },
+		...Array.isArray(redacted.requests) && { requests: redacted.requests.map(redactRequestProviderOptions) }
+	}));
+}
+/** Batch bodies nest the same provider options in every request's options. */
+function redactRequestProviderOptions(request) {
+	if (!isRecord$1(request) || !isRecord$1(request.options)) return request;
+	const options = request.options;
+	if (!hasByok(options.providerOptions)) return request;
+	return {
+		...request,
+		options: {
+			...options,
+			providerOptions: redactProviderOptions(options.providerOptions)
+		}
+	};
+}
+function redactProviderOptions(value) {
+	if (!isRecord$1(value) || !isRecord$1(value.gateway)) return value;
+	return {
+		...value,
+		gateway: {
+			...value.gateway,
+			byok: redactByok(value.gateway.byok)
+		}
+	};
+}
+/** Keep provider names and credential shapes; replace every BYOK value. */
+function redactByok(value) {
+	if (Array.isArray(value)) return value.map(redactByok);
+	if (isRecord$1(value)) return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, redactByok(entry)]));
+	return REDACTED;
+}
+function hasByok(providerOptions) {
+	return isRecord$1(providerOptions) && isRecord$1(providerOptions.gateway) && providerOptions.gateway.byok !== void 0;
+}
+function hasRequestByok(requests) {
+	return Array.isArray(requests) && requests.some((request) => {
+		if (!isRecord$1(request) || !isRecord$1(request.options)) return false;
+		return hasByok(request.options.providerOptions);
+	});
+}
+function isRecord$1(value) {
+	return value != null && typeof value === "object" && !Array.isArray(value);
+}
+//#endregion
 //#region src/gateway-batch.ts
 var GatewayBatch = class {
 	constructor(config) {
@@ -2674,7 +2784,7 @@ var GatewayBatch = class {
 			const { value: responseBody } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getBatchUrl("start"),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers, { "ai-model-id": modelId }, await (0,dist/* resolve */.hd)(this.config.o11yHeaders), idempotencyKey != null ? { "idempotency-key": idempotencyKey } : void 0),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					...webhookUrl != null && { callbackUrl: webhookUrl },
 					requests: requests.map((request) => ({
 						id: request.id,
@@ -2683,7 +2793,7 @@ var GatewayBatch = class {
 						options: maybeEncodeBatchFileParts(request.options)
 					})),
 					...forwardedProviderOptions != null && { providerOptions: forwardedProviderOptions }
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayBatchStartResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -2968,7 +3078,7 @@ var GatewayLanguageModel = class GatewayLanguageModel {
 	async getArgs(options) {
 		const { abortSignal: _abortSignal, ...optionsWithoutSignal } = options;
 		return {
-			args: this.maybeEncodeFileParts(optionsWithoutSignal),
+			args: withGatewayRequestTelemetryRedaction(this.maybeEncodeFileParts(optionsWithoutSignal)),
 			warnings: []
 		};
 	}
@@ -3107,11 +3217,11 @@ var GatewayEmbeddingModel = class GatewayEmbeddingModel {
 			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					values,
 					dimensions,
 					...providerOptions ? { providerOptions } : {}
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayEmbeddingResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3208,7 +3318,7 @@ var GatewayImageModel = class GatewayImageModel {
 			const { responseHeaders, value: responseBody } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					prompt,
 					n,
 					...size && { size },
@@ -3217,7 +3327,7 @@ var GatewayImageModel = class GatewayImageModel {
 					...requestProviderOptions && { providerOptions: requestProviderOptions },
 					...files && { files: files.map((file) => maybeEncodeImageFile(file)) },
 					...mask && { mask: maybeEncodeImageFile(mask) }
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayImageResponseSchema, streamingImageDecoding ? { experimental_binaryFields: ["images[*]"] } : void 0),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3320,7 +3430,7 @@ var GatewayVideoModel = class {
 			const { responseHeaders, value: responseBody } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders), { accept: "text/event-stream" }),
-				body: this.buildRequestBody(options),
+				body: withGatewayRequestTelemetryRedaction(this.buildRequestBody(options)),
 				successfulResponseHandler: async ({ response, url, requestBodyValues }) => {
 					if (response.body == null) throw new provider_dist/* APICallError */.hL({
 						message: "SSE response body is empty",
@@ -3405,10 +3515,10 @@ var GatewayVideoModel = class {
 			const { responseHeaders, value: responseBody } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getStartUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					...this.buildRequestBody(options),
 					...webhookUrl && { callbackUrl: webhookUrl }
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayVideoStartResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3659,6 +3769,47 @@ function conditionSchema(depth) {
 	]);
 }
 //#endregion
+//#region src/gateway-warning-schema.ts
+const gatewayWarningSchema = () => z.discriminatedUnion("type", [
+	z.object({
+		type: z.literal("unsupported"),
+		feature: z.string(),
+		details: z.optional(z.string())
+	}),
+	z.object({
+		type: z.literal("compatibility"),
+		feature: z.string(),
+		details: z.optional(z.string())
+	}),
+	z.object({
+		type: z.literal("deprecated"),
+		setting: z.string(),
+		message: z.string()
+	}),
+	z.object({
+		type: z.literal("other"),
+		message: z.string()
+	})
+]);
+//#endregion
+//#region src/to-gateway-state-parts.ts
+/** Converts inline file bytes to base64 and rejects file data that cannot be sent. */
+function toGatewayStateParts({ state, modelType, allowReferences = false }) {
+	return state.map((part) => {
+		if (part.type !== "file") return part;
+		if (allowReferences && part.data.type === "reference") return part;
+		if (part.data.type !== "data") throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `Gateway ${modelType} file input: ${part.data.type} data` });
+		const { data } = part.data;
+		return {
+			...part,
+			data: {
+				type: "data",
+				data: typeof data === "string" ? data : (0,dist/* convertUint8ArrayToBase64 */.n_)(data)
+			}
+		};
+	});
+}
+//#endregion
 //#region src/gateway-decision-model.ts
 var GatewayDecisionModel = class {
 	constructor(modelId, config) {
@@ -3679,7 +3830,10 @@ var GatewayDecisionModel = class {
 		return this.doDecide(options);
 	}
 	async doDecide({ state, questions, maxOutputTokens, reasoning, headers, abortSignal, providerOptions }) {
-		const stateParts = toGatewayDecisionState(state);
+		const stateParts = toGatewayStateParts({
+			state,
+			modelType: "decision"
+		});
 		const gatewayOptions = await (0,dist/* parseProviderOptions */.xI)({
 			provider: "gateway",
 			providerOptions,
@@ -3694,13 +3848,13 @@ var GatewayDecisionModel = class {
 			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					stateParts,
 					questions,
 					maxOutputTokens,
 					reasoning,
 					...validatedProviderOptions ? { providerOptions: validatedProviderOptions } : {}
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayDecisionResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3752,27 +3906,6 @@ const gatewayDecisionAnswerSchema = () => z.discriminatedUnion("type", [
 	}),
 	z.object({ type: z.literal("refusal") })
 ]);
-const gatewayDecisionWarningSchema = () => z.discriminatedUnion("type", [
-	z.object({
-		type: z.literal("unsupported"),
-		feature: z.string(),
-		details: z.optional(z.string())
-	}),
-	z.object({
-		type: z.literal("compatibility"),
-		feature: z.string(),
-		details: z.optional(z.string())
-	}),
-	z.object({
-		type: z.literal("deprecated"),
-		setting: z.string(),
-		message: z.string()
-	}),
-	z.object({
-		type: z.literal("other"),
-		message: z.string()
-	})
-]);
 const gatewayDecisionResponseSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({
 	answers: z.record(z.string(), gatewayDecisionAnswerSchema()),
 	model: z.optional(z.string()),
@@ -3784,22 +3917,175 @@ const gatewayDecisionResponseSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/
 		inputTokens: z.optional(z.number()),
 		outputTokens: z.optional(z.number())
 	})),
-	warnings: z.optional(z.array(gatewayDecisionWarningSchema())),
+	warnings: z.optional(z.array(gatewayWarningSchema())),
 	providerMetadata: z.optional(z.record(z.string(), z.record(z.string(), z.unknown())))
 })));
-function toGatewayDecisionState(state) {
-	return state.map((part) => {
-		if (part.type !== "file") return part;
-		if (part.data.type !== "data") throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `Gateway decision file input: ${part.data.type} data` });
-		const { data } = part.data;
+//#endregion
+//#region src/gateway-extraction-model.ts
+var GatewayExtractionModel = class {
+	constructor(modelId, config) {
+		this.modelId = modelId;
+		this.config = config;
+		this.specificationVersion = "v4";
+		this.supportedFieldTypes = [
+			"text",
+			"number",
+			"date",
+			"time",
+			"datetime",
+			"duration",
+			"list"
+		];
+	}
+	get provider() {
+		return this.config.provider;
+	}
+	async doExtract({ state, fields, referenceDate, maxOutputTokens, reasoning, headers, abortSignal, providerOptions }) {
+		const stateParts = toGatewayStateParts({
+			state,
+			modelType: "extraction",
+			allowReferences: true
+		});
+		const resolvedHeaders = this.config.headers ? await (0,dist/* resolve */.hd)(this.config.headers) : void 0;
+		try {
+			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
+				url: this.getUrl(),
+				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
+				body: withGatewayRequestTelemetryRedaction({
+					stateParts,
+					fields,
+					referenceDate,
+					maxOutputTokens,
+					reasoning,
+					...providerOptions ? { providerOptions } : {}
+				}),
+				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayExtractionResponseSchema),
+				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
+					errorSchema: z.any(),
+					errorToMessage: (data) => (0,provider_dist/* getErrorMessage */.u1)(data) ?? "unknown error"
+				}),
+				...abortSignal && { abortSignal },
+				fetch: this.config.fetch
+			});
+			return {
+				answers: omitNulls(responseBody.answers),
+				...responseBody.usage ? { usage: {
+					inputTokens: responseBody.usage.inputTokens ?? void 0,
+					outputTokens: responseBody.usage.outputTokens ?? void 0
+				} } : {},
+				warnings: responseBody.warnings ?? [],
+				providerMetadata: responseBody.providerMetadata ?? void 0,
+				response: {
+					modelId: responseBody.model ?? this.modelId,
+					headers: responseHeaders,
+					body: rawValue
+				}
+			};
+		} catch (error) {
+			const unsupportedField = await getUnsupportedField(error);
+			if (unsupportedField != null) throw new provider_dist/* Experimental_ExtractionUnsupportedFieldTypeError */.Uc({
+				...unsupportedField,
+				provider: this.provider,
+				modelId: this.modelId
+			});
+			throw await asGatewayError(error, await parseAuthMethod(resolvedHeaders ?? {}));
+		}
+	}
+	getUrl() {
+		return `${this.config.baseURL}/extraction-model`;
+	}
+	getModelConfigHeaders() {
 		return {
-			...part,
-			data: {
-				type: "data",
-				data: typeof data === "string" ? data : (0,dist/* convertUint8ArrayToBase64 */.n_)(data)
-			}
+			"ai-extraction-model-specification-version": "4",
+			"ai-model-id": this.modelId
 		};
+	}
+};
+const gatewayExtractionSourceSchema = () => z.discriminatedUnion("type", [z.object({
+	type: z.literal("text"),
+	part: z.number(),
+	start: z.number(),
+	end: z.number()
+}), z.object({
+	type: z.literal("file"),
+	part: z.number()
+})]);
+const stringAnswerSchema = (type) => z.object({
+	type: z.literal(type),
+	value: z.nullable(z.string()),
+	guess: z.nullish(z.string()),
+	pNull: z.nullish(z.number()),
+	confidence: z.nullish(z.number()),
+	source: z.nullish(gatewayExtractionSourceSchema())
+});
+const numberAnswerSchema = (type) => z.object({
+	type: z.literal(type),
+	value: z.nullable(z.number()),
+	guess: z.nullish(z.number()),
+	pNull: z.nullish(z.number()),
+	confidence: z.nullish(z.number()),
+	source: z.nullish(gatewayExtractionSourceSchema())
+});
+const gatewayExtractionAnswerSchema = () => z.discriminatedUnion("type", [
+	stringAnswerSchema("text"),
+	numberAnswerSchema("number"),
+	stringAnswerSchema("date"),
+	stringAnswerSchema("time"),
+	stringAnswerSchema("datetime"),
+	numberAnswerSchema("duration"),
+	z.object({
+		type: z.literal("list"),
+		value: z.nullable(z.union([z.array(z.string()), z.array(z.number())])),
+		pNull: z.nullish(z.number()),
+		confidence: z.nullish(z.number()),
+		items: z.nullish(z.array(z.object({
+			confidence: z.nullish(z.number()),
+			source: z.nullish(gatewayExtractionSourceSchema())
+		})))
+	}),
+	z.object({ type: z.literal("refusal") })
+]);
+const gatewayExtractionWarningSchema = () => z.union([gatewayWarningSchema(), z.pipe(z.unknown(), z.transform((warning) => ({
+	type: "other",
+	message: `Unknown warning: ${JSON.stringify(warning)}`
+})))]);
+const gatewayExtractionResponseSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({
+	answers: z.record(z.string(), gatewayExtractionAnswerSchema()),
+	model: z.nullish(z.string()),
+	usage: z.nullish(z.object({
+		inputTokens: z.nullish(z.number()),
+		outputTokens: z.nullish(z.number())
+	})),
+	warnings: z.nullish(z.array(gatewayExtractionWarningSchema())),
+	providerMetadata: z.nullish(z.record(z.string(), z.record(z.string(), z.unknown())))
+})));
+const gatewayUnsupportedFieldErrorSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z.object({ error: z.object({
+	type: z.literal("invalid_request_error"),
+	param: z.object({
+		name: z.literal("AI_ExtractionUnsupportedFieldTypeError"),
+		fieldId: z.string(),
+		fieldType: z.string()
+	})
+}) })));
+/** Reads the field from the gateway's unsupported field type response. */
+async function getUnsupportedField(error) {
+	if (!provider_dist/* APICallError */.hL.isInstance(error)) return void 0;
+	const result = await (0,dist/* safeValidateTypes */.ZZ)({
+		value: extractApiCallResponse(error),
+		schema: gatewayUnsupportedFieldErrorSchema
 	});
+	if (!result.success) return void 0;
+	const { fieldId, fieldType } = result.value.error.param;
+	return {
+		fieldId,
+		fieldType
+	};
+}
+/** Drops `null` optional fields, which the specification leaves out. */
+function omitNulls(value) {
+	if (Array.isArray(value)) return value.map(omitNulls);
+	if (value == null || typeof value !== "object") return value;
+	return Object.fromEntries(Object.entries(value).filter(([key, entry]) => entry !== null || key === "value").map(([key, entry]) => [key, omitNulls(entry)]));
 }
 //#endregion
 //#region src/gateway-reranking-model.ts
@@ -3818,12 +4104,12 @@ var GatewayRerankingModel = class {
 			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					documents,
 					query,
 					...topN != null ? { topN } : {},
 					...providerOptions ? { providerOptions } : {}
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayRerankingResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3943,11 +4229,11 @@ var GatewayTranscriptionModel = class {
 			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					audio: audio instanceof Uint8Array ? (0,dist/* convertUint8ArrayToBase64 */.n_)(audio) : audio,
 					mediaType,
 					...providerOptions && { providerOptions }
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewayTranscriptionResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -3991,12 +4277,12 @@ var GatewayTranscriptionModel = class {
 		const currentDate = this.config._internal?.currentDate?.() ?? /* @__PURE__ */ new Date();
 		const headers = (0,dist/* combineHeaders */.m2)(await (0,dist/* resolve */.hd)(this.config.headers ?? {}), options.headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders));
 		const authMethod = await parseAuthMethod(headers);
-		const startFrame = {
+		const startFrame = withGatewayRequestTelemetryRedaction({
 			type: dist/* EXPERIMENTAL_TRANSCRIPTION_STREAM_START_FRAME_TYPE */.dG,
 			inputAudioFormat: options.inputAudioFormat,
 			...options.providerOptions != null && { providerOptions: options.providerOptions },
 			...options.includeRawChunks != null && { includeRawChunks: options.includeRawChunks }
-		};
+		});
 		return {
 			stream: createGatewayTranscriptionStream({
 				webSocket: this.config.webSocket,
@@ -4221,7 +4507,7 @@ var GatewaySpeechModel = class {
 			const { responseHeaders, value: responseBody, rawValue } = await (0,dist/* postJsonToApi */.GU)({
 				url: this.getUrl(),
 				headers: (0,dist/* combineHeaders */.m2)(resolvedHeaders, headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders)),
-				body: {
+				body: withGatewayRequestTelemetryRedaction({
 					text,
 					...voice && { voice },
 					...outputFormat && { outputFormat },
@@ -4229,7 +4515,7 @@ var GatewaySpeechModel = class {
 					...speed != null && { speed },
 					...language && { language },
 					...providerOptions && { providerOptions }
-				},
+				}),
 				successfulResponseHandler: (0,dist/* createJsonResponseHandler */.cV)(gatewaySpeechResponseSchema),
 				failedResponseHandler: (0,dist/* createJsonErrorResponseHandler */.sl)({
 					errorSchema: z.any(),
@@ -4258,7 +4544,7 @@ var GatewaySpeechModel = class {
 		const currentDate = this.config._internal?.currentDate?.() ?? /* @__PURE__ */ new Date();
 		const headers = (0,dist/* combineHeaders */.m2)(await (0,dist/* resolve */.hd)(this.config.headers ?? {}), options.headers ?? {}, this.getModelConfigHeaders(), await (0,dist/* resolve */.hd)(this.config.o11yHeaders));
 		const authMethod = await parseAuthMethod(headers);
-		const startFrame = {
+		const startFrame = withGatewayRequestTelemetryRedaction({
 			type: dist/* EXPERIMENTAL_SPEECH_STREAM_START_FRAME_TYPE */.be,
 			...options.voice != null && { voice: options.voice },
 			...options.outputFormat != null && { outputFormat: options.outputFormat },
@@ -4267,7 +4553,7 @@ var GatewaySpeechModel = class {
 			...options.language != null && { language: options.language },
 			...options.providerOptions != null && { providerOptions: options.providerOptions },
 			...options.includeRawChunks != null && { includeRawChunks: options.includeRawChunks }
-		};
+		});
 		return {
 			stream: createGatewaySpeechStream({
 				webSocket: this.config.webSocket,
@@ -4471,6 +4757,215 @@ const gatewaySpeechResponseSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* 
 	providerMetadata: z.optional(z.record(z.string(), providerMetadataEntrySchema()))
 })));
 //#endregion
+//#region src/gateway-realtime-model-live.ts
+const supportedOpenAILiveOptions = /* @__PURE__ */ new Set([
+	"delegation",
+	"input",
+	"store",
+	"voice"
+]);
+const contextChannels = /* @__PURE__ */ new Set([
+	"commentary",
+	"instructions",
+	"thinking"
+]);
+const supportedSessionSettings = /* @__PURE__ */ new Set([
+	"instructions",
+	"voice",
+	"inputAudioFormat",
+	"outputAudioFormat",
+	"providerOptions"
+]);
+/**
+* Live model backed by the AI Gateway.
+*
+* Live is a continuous conversation API: one `session-start` opens the
+* session, PCM audio streams in both directions, and `session-close` ends it
+* with final usage. The client speaks the Gateway's normalized Live protocol
+* on `/v4/ai/live-model`, and the Gateway runs the provider mapping
+* server-side, so server events arrive already normalized.
+*/
+var GatewayRealtimeModelLive = class {
+	constructor(modelId, config) {
+		this.specificationVersion = "v4";
+		this.capabilities = {
+			conversation: "continuous",
+			transports: ["websocket"],
+			connections: ["client-secret-websocket", "server-websocket"],
+			startup: "session-start",
+			finalization: "session-close"
+		};
+		this.modelId = modelId;
+		this.provider = config.provider;
+		this.config = config;
+	}
+	/**
+	* Mints a short-lived client secret bound to this Live model. The browser
+	* opens the Live WebSocket with it through the `ai-gateway-auth.<token>`
+	* subprotocol; the session configuration is sent later in `session-start`.
+	*/
+	async doCreateClientSecret(options) {
+		const secret = await this.config.createClientSecret({
+			modelId: this.modelId,
+			routeKind: "live",
+			...options?.expiresAfterSeconds != null && { expiresAfterSeconds: options.expiresAfterSeconds }
+		});
+		return {
+			token: secret.token,
+			url: toGatewayLiveUrl(this.config.baseURL, this.modelId),
+			...secret.expiresAt != null && { expiresAt: secret.expiresAt }
+		};
+	}
+	getWebSocketConfig(options) {
+		return {
+			url: options.url,
+			protocols: getGatewayRealtimeProtocols(options.token, { teamIdOrSlug: this.config.teamIdOrSlug })
+		};
+	}
+	async getServerWebSocketConfig(options) {
+		this.assertConversationIntent(options);
+		return {
+			url: toGatewayLiveUrl(this.config.baseURL, this.modelId),
+			headers: (0,dist/* removeUndefinedEntries */.RG)(await this.config.getHeaders())
+		};
+	}
+	parseServerEvent(raw) {
+		if (raw == null || typeof raw !== "object" || Array.isArray(raw) || typeof raw.type !== "string") return {
+			type: "error",
+			code: "invalid_server_event",
+			message: "Invalid AI Gateway Live server event.",
+			raw
+		};
+		if (raw.type === "error" && !("raw" in raw)) return {
+			...raw,
+			raw
+		};
+		return raw;
+	}
+	serializeClientEvent(event, options) {
+		this.assertConversationIntent(options);
+		const eventId = "eventId" in event && event.eventId != null ? { eventId: event.eventId } : {};
+		switch (event.type) {
+			case "session-start": return {
+				type: "session-start",
+				modelId: this.modelId,
+				config: this.buildSessionConfig(event.config),
+				...eventId
+			};
+			case "session-close":
+			case "input-audio-mute":
+			case "input-audio-unmute": return {
+				type: event.type,
+				...eventId
+			};
+			case "input-audio-append": return {
+				type: "input-audio-append",
+				audio: event.audio,
+				...eventId
+			};
+			case "context-append":
+				validateContextOptions(event.providerOptions);
+				return {
+					type: "context-append",
+					content: event.content,
+					delegationId: event.delegationId,
+					...event.providerOptions != null && { providerOptions: event.providerOptions },
+					...eventId
+				};
+			default: throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `AI Gateway Live client event: ${event.type}` });
+		}
+	}
+	buildSessionConfig(config, options) {
+		this.assertConversationIntent(options);
+		for (const [key, value] of Object.entries(config)) if (value != null && !supportedSessionSettings.has(key)) throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `AI Gateway Live session setting: ${key}` });
+		validateSessionProviderOptions(config.providerOptions);
+		const input = config.inputAudioFormat;
+		const output = config.outputAudioFormat;
+		for (const [argument, format] of [["inputAudioFormat", input], ["outputAudioFormat", output]]) if (format != null && !isSupportedAudioFormat(format)) throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `AI Gateway Live ${argument} ${format.type} at ${format.rate ?? "an unspecified"} Hz; use audio/pcm at 16000 or 24000 Hz, or audio/pcma or audio/pcmu at 8000 Hz` });
+		if (input != null && output != null && (input.type !== output.type || input.rate !== output.rate)) throw new provider_dist/* InvalidArgumentError */.Di({
+			argument: "outputAudioFormat",
+			message: "AI Gateway Live requires the same input and output audio format."
+		});
+		return (0,dist/* removeUndefinedEntries */.RG)(config);
+	}
+	assertConversationIntent(options) {
+		if (options?.intent != null && options.intent !== "conversation") throw new Error(`AI Gateway Live does not support the '${options.intent}' session intent.`);
+	}
+};
+function isRecord(value) {
+	return value != null && typeof value === "object" && !Array.isArray(value);
+}
+/** Gateway options stay service-owned; OpenAI Live options are WebSocket-only. */
+function validateSessionProviderOptions(providerOptions) {
+	if (providerOptions == null) return;
+	if (!isRecord(providerOptions)) throw new provider_dist/* InvalidArgumentError */.Di({
+		argument: "providerOptions",
+		message: "providerOptions must be an object."
+	});
+	for (const [namespace, options] of Object.entries(providerOptions)) {
+		if (options === void 0) continue;
+		if (namespace !== "gateway" && namespace !== "openai") throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `AI Gateway Live provider options namespace: ${namespace}` });
+		if (!isRecord(options)) throw new provider_dist/* InvalidArgumentError */.Di({
+			argument: `providerOptions.${namespace}`,
+			message: `providerOptions.${namespace} must be an object.`
+		});
+	}
+	const openai = providerOptions.openai;
+	if (!isRecord(openai)) return;
+	for (const [key, value] of Object.entries(openai)) {
+		if (value === void 0) continue;
+		if (!supportedOpenAILiveOptions.has(key)) throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: `AI Gateway Live OpenAI option: ${key}` });
+		if (key === "delegation" && value !== null && !(hasExactKeys(value, ["type"]) && value.type === "client")) throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: "AI Gateway Live delegation other than { type: \"client\" } or null" });
+		if (!isValidOpenAILiveOption(key, value)) throw new provider_dist/* InvalidArgumentError */.Di({
+			argument: `providerOptions.openai.${key}`,
+			message: openaiLiveOptionMessages[key]
+		});
+	}
+}
+const openaiLiveOptionMessages = {
+	delegation: "delegation must be { type: \"client\" } or null.",
+	input: "input must be at most 128 messages, each { type: \"message\", role, content: [{ type, text }] }.",
+	store: "store must be a boolean.",
+	voice: "voice must be { id: string } with a nonempty id."
+};
+function isValidOpenAILiveOption(key, value) {
+	switch (key) {
+		case "delegation": return true;
+		case "store": return typeof value === "boolean";
+		case "voice": return hasExactKeys(value, ["id"]) && typeof value.id === "string" && value.id.length > 0;
+		case "input": return Array.isArray(value) && value.length <= 128 && Array.from(value).every(isInputMessage);
+		default: return false;
+	}
+}
+function isInputMessage(message) {
+	if (!hasExactKeys(message, [
+		"type",
+		"role",
+		"content"
+	]) || message.type !== "message" || !Array.isArray(message.content) || message.content.length !== 1) return false;
+	const [part] = message.content;
+	if (!hasExactKeys(part, ["type", "text"]) || typeof part.text !== "string") return false;
+	return message.role === "assistant" ? part.type === "text" || part.type === "output_text" : (message.role === "developer" || message.role === "user") && part.type === "input_text";
+}
+function hasExactKeys(value, keys) {
+	if (!isRecord(value)) return false;
+	const present = Object.keys(value).filter((key) => value[key] !== void 0);
+	return present.length === keys.length && keys.every((key) => present.includes(key));
+}
+function validateContextOptions(providerOptions) {
+	if (providerOptions == null) return;
+	if (!(isRecord(providerOptions) && Object.entries(providerOptions).every(([namespace, options]) => options === void 0 || namespace === "openai" && isRecord(options) && Object.entries(options).every(([key, value]) => value === void 0 || key === "channel" && typeof value === "string" && contextChannels.has(value))))) throw new provider_dist/* UnsupportedFunctionalityError */.b8({ functionality: "AI Gateway Live context options other than openai.channel commentary, instructions, or thinking" });
+}
+function isSupportedAudioFormat(format) {
+	return format.type === "audio/pcm" ? format.rate === 16e3 || format.rate === 24e3 : (format.type === "audio/pcma" || format.type === "audio/pcmu") && format.rate === 8e3;
+}
+/** Live WebSocket URL; the model id rides `?ai-model-id=` like the realtime route. */
+function toGatewayLiveUrl(baseURL, modelId) {
+	const url = new URL(`${baseURL.replace(/^http/, "ws")}/live-model`);
+	url.searchParams.set("ai-model-id", modelId);
+	return url.toString();
+}
+//#endregion
 //#region src/gateway-realtime-model.ts
 /**
 * Realtime model backed by the AI Gateway.
@@ -4556,6 +5051,13 @@ function toGatewayRealtimeUrl(baseURL, modelId) {
 	url.searchParams.set("ai-model-id", modelId);
 	return url.toString();
 }
+//#endregion
+//#region src/gateway-realtime-model-settings.ts
+/**
+* Realtime model IDs that use the continuous Live API by default. Other IDs use
+* the realtime API unless `{ api: 'live' }` is passed.
+*/
+const gatewayLiveModelIds = ["openai/gpt-live-1", "openai/gpt-live-1.1"];
 //#endregion
 //#region src/tool/browserbase-fetch.ts
 const jsonObjectSchema = () => z.record(z.string(), z.unknown());
@@ -5181,7 +5683,7 @@ async function getVercelRequestId() {
 }
 //#endregion
 //#region src/version.ts
-const VERSION = "4.0.146";
+const dist_VERSION = "4.0.154";
 //#endregion
 //#region src/gateway-provider.ts
 const AI_GATEWAY_PROTOCOL_VERSION = "0.0.1";
@@ -5205,7 +5707,7 @@ function createGateway(options = {}) {
 		[GATEWAY_AUTH_METHOD_HEADER]: auth.authMethod,
 		...options.teamIdOrSlug != null ? { [VERCEL_AI_GATEWAY_TEAM_HEADER]: options.teamIdOrSlug } : {},
 		...options.headers
-	}, `ai-sdk-gateway/${VERSION}`);
+	}, `ai-sdk-gateway/${dist_VERSION}`);
 	const getHeaders = async (onResolved) => {
 		try {
 			const headers = createAuthHeaders(await getGatewayAuthToken(options));
@@ -5426,6 +5928,17 @@ function createGateway(options = {}) {
 	provider.decision = createDecisionModel;
 	provider.evaluationModel = createDecisionModel;
 	provider.evaluation = createDecisionModel;
+	const createExtractionModel = (modelId) => {
+		return new GatewayExtractionModel(modelId, {
+			provider: "gateway",
+			baseURL,
+			headers: getHeaders,
+			fetch: options.fetch,
+			o11yHeaders: createO11yHeaders()
+		});
+	};
+	provider.extractionModel = createExtractionModel;
+	provider.extraction = createExtractionModel;
 	const createSpeechModel = (modelId) => {
 		return new GatewaySpeechModel(modelId, {
 			provider: "gateway",
@@ -5474,16 +5987,22 @@ function createGateway(options = {}) {
 			...secret.expiresAt != null && { expiresAt: secret.expiresAt }
 		};
 	} });
-	const createRealtimeModel = (modelId) => new GatewayRealtimeModel(modelId, {
+	const createRealtimeModel = (modelId, realtimeOptions) => resolveGatewayRealtimeApi(modelId, realtimeOptions) === "live" ? new GatewayRealtimeModelLive(modelId, {
+		provider: "gateway.live",
+		baseURL,
+		teamIdOrSlug: options.teamIdOrSlug,
+		createClientSecret: mintClientSecret,
+		getHeaders
+	}) : new GatewayRealtimeModel(modelId, {
 		provider: "gateway.realtime",
 		baseURL,
 		teamIdOrSlug: options.teamIdOrSlug,
 		createClientSecret: mintClientSecret,
 		getHeaders
 	});
-	provider.experimental_realtime = Object.assign((modelId) => createRealtimeModel(modelId), { getToken: async (tokenOptions) => {
-		const { model: modelId, ...secretOptions } = tokenOptions;
-		const secret = await createRealtimeModel(modelId).doCreateClientSecret(secretOptions);
+	provider.experimental_realtime = Object.assign((modelId, realtimeOptions) => createRealtimeModel(modelId, realtimeOptions), { getToken: async (tokenOptions) => {
+		const { model: modelId, api, ...secretOptions } = tokenOptions;
+		const secret = await createRealtimeModel(modelId, { api }).doCreateClientSecret(secretOptions);
 		return {
 			token: secret.token,
 			url: secret.url,
@@ -5497,7 +6016,7 @@ function createGateway(options = {}) {
 	provider.tools = gatewayTools;
 	return provider;
 }
-const gateway = createGateway();
+const dist_gateway = createGateway();
 /**
 * Resolves the credential for a Gateway request, in this order:
 *
@@ -5528,6 +6047,17 @@ async function getGatewayAuthToken(options) {
 		authMethod: "oidc"
 	};
 }
+function resolveGatewayRealtimeApi(modelId, options) {
+	const api = options?.api;
+	if (api !== void 0) {
+		if (api !== "live" && api !== "realtime") throw new provider_dist/* InvalidArgumentError */.Di({
+			argument: "api",
+			message: "AI Gateway realtime api must be \"live\" or \"realtime\"."
+		});
+		return api;
+	}
+	return gatewayLiveModelIds.includes(modelId) ? "live" : "realtime";
+}
 function assertGatewayClientSecretServerEnvironment() {
 	if (typeof globalThis.window !== "undefined") throw new Error("AI Gateway client secrets must be minted server-side: minting needs your Gateway credential, which must never reach the browser. Call gateway.experimental_realtime.getToken(), gateway.experimental_transcription.getToken(), or gateway.experimental_speech.getToken() from your server and pass the returned token to the client.");
 }
@@ -5535,438 +6065,179 @@ function assertGatewayClientSecretServerEnvironment() {
 
 
 //# sourceMappingURL=index.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.js + 1 modules
-var classic_schemas = __webpack_require__(3726);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@7.0.173_zod@4.6.7/node_modules/ai/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@7.0.181_zod@4.6.7/node_modules/ai/dist/default-stop-condition-D8PwkeWe.js
 
 
 
-
-
-
-//#region src/telemetry/get-request-origin.ts
-/** Remove credentials, paths, queries, and fragments before emitting telemetry. */
-function getRequestOrigin(url) {
-	if (url == null) return void 0;
-	try {
-		const endpoint = new URL(url);
-		return endpoint.protocol === "http:" || endpoint.protocol === "https:" ? endpoint.origin : void 0;
-	} catch {
-		return;
-	}
-}
-/** Preserve request metadata while keeping unknown or sensitive URL fields out of results. */
-function sanitizeRequestMetadata(request) {
-	if (request == null || !("url" in request)) return request;
-	const { url, ...rest } = request;
-	const origin = getRequestOrigin(url);
-	return {
-		...rest,
-		...origin != null ? { url: origin } : {}
-	};
-}
-//#endregion
 //#region src/error/invalid-argument-error.ts
-const name$23 = "AI_InvalidArgumentError";
-const marker$23 = `vercel.ai.error.${name$23}`;
-const symbol$23 = Symbol.for(marker$23);
-var InvalidArgumentError = class extends provider_dist/* AISDKError */.bD {
+const name$11 = "AI_InvalidArgumentError";
+const marker$11 = `vercel.ai.error.${name$11}`;
+const default_stop_condition_D8PwkeWe_symbol$11 = Symbol.for(marker$11);
+var default_stop_condition_D8PwkeWe_InvalidArgumentError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ parameter, value, message }) {
 		super({
-			name: name$23,
+			name: name$11,
 			message: `Invalid argument for parameter ${parameter}: ${message}`
 		});
-		this[symbol$23] = true;
+		this[default_stop_condition_D8PwkeWe_symbol$11] = true;
 		this.parameter = parameter;
 		this.value = value;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$23);
-	}
-};
-//#endregion
-//#region src/error/invalid-stream-part-error.ts
-const name$22 = "AI_InvalidStreamPartError";
-const marker$22 = `vercel.ai.error.${name$22}`;
-const symbol$22 = Symbol.for(marker$22);
-var InvalidStreamPartError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ chunk, message }) {
-		super({
-			name: name$22,
-			message
-		});
-		this[symbol$22] = true;
-		this.chunk = chunk;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$22);
-	}
-};
-//#endregion
-//#region src/error/invalid-tool-approval-error.ts
-const name$21 = "AI_InvalidToolApprovalError";
-const marker$21 = `vercel.ai.error.${name$21}`;
-const symbol$21 = Symbol.for(marker$21);
-var InvalidToolApprovalError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ approvalId }) {
-		super({
-			name: name$21,
-			message: `Tool approval response references unknown approvalId: "${approvalId}". No matching tool-approval-request found in message history.`
-		});
-		this[symbol$21] = true;
-		this.approvalId = approvalId;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$21);
-	}
-};
-//#endregion
-//#region src/error/invalid-tool-approval-signature-error.ts
-const name$20 = "AI_InvalidToolApprovalSignatureError";
-const marker$20 = `vercel.ai.error.${name$20}`;
-const symbol$20 = Symbol.for(marker$20);
-var InvalidToolApprovalSignatureError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ approvalId, toolCallId, reason }) {
-		super({
-			name: name$20,
-			message: `Tool approval signature verification failed for approval "${approvalId}" (tool call "${toolCallId}"): ${reason}`
-		});
-		this[symbol$20] = true;
-		this.approvalId = approvalId;
-		this.toolCallId = toolCallId;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$20);
-	}
-};
-//#endregion
-//#region src/error/invalid-tool-input-error.ts
-const name$19 = "AI_InvalidToolInputError";
-const marker$19 = `vercel.ai.error.${name$19}`;
-const symbol$19 = Symbol.for(marker$19);
-var InvalidToolInputError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ toolInput, toolName, cause, message = `Invalid input for tool ${toolName}: ${(0,provider_dist/* getErrorMessage */.u1)(cause)}` }) {
-		super({
-			name: name$19,
-			message,
-			cause
-		});
-		this[symbol$19] = true;
-		this.toolInput = toolInput;
-		this.toolName = toolName;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$19);
-	}
-};
-//#endregion
-//#region src/error/tool-call-not-found-for-approval-error.ts
-const name$18 = "AI_ToolCallNotFoundForApprovalError";
-const marker$18 = `vercel.ai.error.${name$18}`;
-const symbol$18 = Symbol.for(marker$18);
-var ToolCallNotFoundForApprovalError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ toolCallId, approvalId }) {
-		super({
-			name: name$18,
-			message: `Tool call "${toolCallId}" not found for approval request "${approvalId}".`
-		});
-		this[symbol$18] = true;
-		this.toolCallId = toolCallId;
-		this.approvalId = approvalId;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$18);
-	}
-};
-//#endregion
-//#region src/error/missing-tool-result-error.ts
-const name$17 = "AI_MissingToolResultsError";
-const marker$17 = `vercel.ai.error.${name$17}`;
-const symbol$17 = Symbol.for(marker$17);
-var MissingToolResultsError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ toolCallIds }) {
-		super({
-			name: name$17,
-			message: `Tool result${toolCallIds.length > 1 ? "s are" : " is"} missing for tool call${toolCallIds.length > 1 ? "s" : ""} ${toolCallIds.join(", ")}.`
-		});
-		this[symbol$17] = true;
-		this.toolCallIds = toolCallIds;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$17);
-	}
-};
-//#endregion
-//#region src/error/no-image-generated-error.ts
-const name$16 = "AI_NoImageGeneratedError";
-const marker$16 = `vercel.ai.error.${name$16}`;
-const symbol$16 = Symbol.for(marker$16);
-/**
-* Thrown when no image could be generated. This can have multiple causes:
-*
-* - The model failed to generate a response.
-* - The model generated a response that could not be parsed.
-*/
-var NoImageGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ message = "No image generated.", cause, calls, responses }) {
-		super({
-			name: name$16,
-			message,
-			cause
-		});
-		this[symbol$16] = true;
-		this.calls = calls;
-		this.responses = responses;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$16);
-	}
-};
-//#endregion
-//#region src/error/no-object-generated-error.ts
-const name$15 = "AI_NoObjectGeneratedError";
-const marker$15 = `vercel.ai.error.${name$15}`;
-const symbol$15 = Symbol.for(marker$15);
-/**
-* Thrown when no object could be generated. This can have several causes:
-*
-* - The model failed to generate a response.
-* - The model generated a response that could not be parsed.
-* - The model generated a response that could not be validated against the schema.
-*
-* The error contains the following properties:
-*
-* - `text`: The text that was generated by the model. This can be the raw text or the tool call text, depending on the model.
-*/
-var NoObjectGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ message = "No object generated.", cause, text, response, usage, finishReason }) {
-		super({
-			name: name$15,
-			message,
-			cause
-		});
-		this[symbol$15] = true;
-		this.text = text;
-		this.response = response;
-		this.usage = usage;
-		this.finishReason = finishReason;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$15);
-	}
-};
-//#endregion
-//#region src/error/no-output-generated-error.ts
-const name$14 = "AI_NoOutputGeneratedError";
-const marker$14 = `vercel.ai.error.${name$14}`;
-const symbol$14 = Symbol.for(marker$14);
-/**
-* Thrown when no LLM output was generated, e.g. because of errors.
-*/
-var NoOutputGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ message = "No output generated.", cause } = {}) {
-		super({
-			name: name$14,
-			message,
-			cause
-		});
-		this[symbol$14] = true;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$14);
-	}
-};
-//#endregion
-//#region src/error/no-speech-generated-error.ts
-const name$13 = "AI_NoSpeechGeneratedError";
-const marker$13 = `vercel.ai.error.${name$13}`;
-const symbol$13 = Symbol.for(marker$13);
-/**
-* Error that is thrown when no speech audio was generated.
-*/
-var NoSpeechGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor(options) {
-		super({
-			name: name$13,
-			message: "No speech audio generated.",
-			...options.cause !== void 0 && { cause: options.cause }
-		});
-		this[symbol$13] = true;
-		this.responses = options.responses;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$13);
-	}
-};
-//#endregion
-//#region src/error/no-transcript-generated-error.ts
-const name$12 = "AI_NoTranscriptGeneratedError";
-const marker$12 = `vercel.ai.error.${name$12}`;
-const symbol$12 = Symbol.for(marker$12);
-/**
-* Error that is thrown when no transcript was generated.
-*/
-var NoTranscriptGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor(options) {
-		super({
-			name: name$12,
-			message: "No transcript generated."
-		});
-		this[symbol$12] = true;
-		this.responses = options.responses;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$12);
-	}
-};
-//#endregion
-//#region src/error/no-translation-generated-error.ts
-const name$11 = "AI_NoTranslationGeneratedError";
-const marker$11 = `vercel.ai.error.${name$11}`;
-const symbol$11 = Symbol.for(marker$11);
-/**
-* Error that is thrown when no translation was generated.
-*/
-var NoTranslationGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor(options) {
-		super({
-			name: name$11,
-			message: "No translation generated."
-		});
-		this[symbol$11] = true;
-		this.response = options.response;
 	}
 	static isInstance(error) {
 		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$11);
 	}
 };
 //#endregion
-//#region src/error/no-video-generated-error.ts
-const name$10 = "AI_NoVideoGeneratedError";
-const marker$10 = `vercel.ai.error.${name$10}`;
-const dist_symbol$10 = Symbol.for(marker$10);
-var NoVideoGeneratedError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ message = "No video generated.", cause, responses }) {
+//#region src/error/invalid-tool-approval-error.ts
+const default_stop_condition_D8PwkeWe_name$10 = "AI_InvalidToolApprovalError";
+const default_stop_condition_D8PwkeWe_marker$10 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$10}`;
+const default_stop_condition_D8PwkeWe_symbol$10 = Symbol.for(default_stop_condition_D8PwkeWe_marker$10);
+var InvalidToolApprovalError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ approvalId }) {
 		super({
-			name: name$10,
+			name: default_stop_condition_D8PwkeWe_name$10,
+			message: `Tool approval response references unknown approvalId: "${approvalId}". No matching tool-approval-request found in message history.`
+		});
+		this[default_stop_condition_D8PwkeWe_symbol$10] = true;
+		this.approvalId = approvalId;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$10);
+	}
+};
+//#endregion
+//#region src/error/invalid-tool-approval-signature-error.ts
+const default_stop_condition_D8PwkeWe_name$9 = "AI_InvalidToolApprovalSignatureError";
+const default_stop_condition_D8PwkeWe_marker$9 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$9}`;
+const default_stop_condition_D8PwkeWe_symbol$9 = Symbol.for(default_stop_condition_D8PwkeWe_marker$9);
+var InvalidToolApprovalSignatureError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ approvalId, toolCallId, reason }) {
+		super({
+			name: default_stop_condition_D8PwkeWe_name$9,
+			message: `Tool approval signature verification failed for approval "${approvalId}" (tool call "${toolCallId}"): ${reason}`
+		});
+		this[default_stop_condition_D8PwkeWe_symbol$9] = true;
+		this.approvalId = approvalId;
+		this.toolCallId = toolCallId;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$9);
+	}
+};
+//#endregion
+//#region src/error/invalid-tool-input-error.ts
+const default_stop_condition_D8PwkeWe_name$8 = "AI_InvalidToolInputError";
+const default_stop_condition_D8PwkeWe_marker$8 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$8}`;
+const default_stop_condition_D8PwkeWe_symbol$8 = Symbol.for(default_stop_condition_D8PwkeWe_marker$8);
+var InvalidToolInputError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ toolInput, toolName, cause, message = `Invalid input for tool ${toolName}: ${(0,provider_dist/* getErrorMessage */.u1)(cause)}` }) {
+		super({
+			name: default_stop_condition_D8PwkeWe_name$8,
 			message,
 			cause
 		});
-		this[dist_symbol$10] = true;
-		this.responses = responses;
+		this[default_stop_condition_D8PwkeWe_symbol$8] = true;
+		this.toolInput = toolInput;
+		this.toolName = toolName;
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, marker$10);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$8);
 	}
-	/**
-	* @deprecated use `isInstance` instead
-	*/
-	static isNoVideoGeneratedError(error) {
-		return error instanceof Error && error.name === name$10 && typeof error.responses !== "undefined" ? true : false;
+};
+//#endregion
+//#region src/error/tool-call-not-found-for-approval-error.ts
+const default_stop_condition_D8PwkeWe_name$7 = "AI_ToolCallNotFoundForApprovalError";
+const default_stop_condition_D8PwkeWe_marker$7 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$7}`;
+const default_stop_condition_D8PwkeWe_symbol$7 = Symbol.for(default_stop_condition_D8PwkeWe_marker$7);
+var default_stop_condition_D8PwkeWe_ToolCallNotFoundForApprovalError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ toolCallId, approvalId }) {
+		super({
+			name: default_stop_condition_D8PwkeWe_name$7,
+			message: `Tool call "${toolCallId}" not found for approval request "${approvalId}".`
+		});
+		this[default_stop_condition_D8PwkeWe_symbol$7] = true;
+		this.toolCallId = toolCallId;
+		this.approvalId = approvalId;
 	}
-	/**
-	* @deprecated Do not use this method. It will be removed in the next major version.
-	*/
-	toJSON() {
-		return {
-			name: this.name,
-			message: this.message,
-			stack: this.stack,
-			cause: this.cause,
-			responses: this.responses
-		};
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$7);
+	}
+};
+//#endregion
+//#region src/error/missing-tool-result-error.ts
+const default_stop_condition_D8PwkeWe_name$6 = "AI_MissingToolResultsError";
+const default_stop_condition_D8PwkeWe_marker$6 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$6}`;
+const default_stop_condition_D8PwkeWe_symbol$6 = Symbol.for(default_stop_condition_D8PwkeWe_marker$6);
+var MissingToolResultsError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ toolCallIds }) {
+		super({
+			name: default_stop_condition_D8PwkeWe_name$6,
+			message: `Tool result${toolCallIds.length > 1 ? "s are" : " is"} missing for tool call${toolCallIds.length > 1 ? "s" : ""} ${toolCallIds.join(", ")}.`
+		});
+		this[default_stop_condition_D8PwkeWe_symbol$6] = true;
+		this.toolCallIds = toolCallIds;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$6);
+	}
+};
+//#endregion
+//#region src/error/no-output-generated-error.ts
+const default_stop_condition_D8PwkeWe_name$5 = "AI_NoOutputGeneratedError";
+const default_stop_condition_D8PwkeWe_marker$5 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$5}`;
+const default_stop_condition_D8PwkeWe_symbol$5 = Symbol.for(default_stop_condition_D8PwkeWe_marker$5);
+/**
+* Thrown when no LLM output was generated, e.g. because of errors.
+*/
+var default_stop_condition_D8PwkeWe_NoOutputGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ message = "No output generated.", cause } = {}) {
+		super({
+			name: default_stop_condition_D8PwkeWe_name$5,
+			message,
+			cause
+		});
+		this[default_stop_condition_D8PwkeWe_symbol$5] = true;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$5);
 	}
 };
 //#endregion
 //#region src/error/no-such-tool-error.ts
-const dist_name$9 = "AI_NoSuchToolError";
-const dist_marker$9 = `vercel.ai.error.${dist_name$9}`;
-const dist_symbol$9 = Symbol.for(dist_marker$9);
+const default_stop_condition_D8PwkeWe_name$4 = "AI_NoSuchToolError";
+const default_stop_condition_D8PwkeWe_marker$4 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$4}`;
+const default_stop_condition_D8PwkeWe_symbol$4 = Symbol.for(default_stop_condition_D8PwkeWe_marker$4);
 var NoSuchToolError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ toolName, availableTools = void 0, message = `Model tried to call unavailable tool '${toolName}'. ${availableTools === void 0 ? "No tools are available." : `Available tools: ${availableTools.join(", ")}.`}` }) {
 		super({
-			name: dist_name$9,
+			name: default_stop_condition_D8PwkeWe_name$4,
 			message
 		});
-		this[dist_symbol$9] = true;
+		this[default_stop_condition_D8PwkeWe_symbol$4] = true;
 		this.toolName = toolName;
 		this.availableTools = availableTools;
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$9);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$4);
 	}
 };
-//#endregion
-//#region src/error/stream-provider-error.ts
-const dist_name$8 = "AI_StreamProviderError";
-const dist_marker$8 = `vercel.ai.error.${dist_name$8}`;
-const dist_symbol$8 = Symbol.for(dist_marker$8);
-/**
-* Error reported by a provider after a model response stream has started.
-*/
-var StreamProviderError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ message, type, code, statusCode, isRetryable = isRetryableStatusCode$1(statusCode), data, cause }) {
-		super({
-			name: dist_name$8,
-			message,
-			cause
-		});
-		this[dist_symbol$8] = true;
-		this.type = type;
-		this.code = code;
-		this.statusCode = statusCode;
-		this.isRetryable = isRetryable;
-		this.data = data;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$8);
-	}
-};
-function isRetryableStatusCode$1(statusCode) {
-	return statusCode != null && (statusCode === 408 || statusCode === 409 || statusCode === 429 || statusCode >= 500);
-}
 //#endregion
 //#region src/error/tool-call-repair-error.ts
-const dist_name$7 = "AI_ToolCallRepairError";
-const dist_marker$7 = `vercel.ai.error.${dist_name$7}`;
-const dist_symbol$7 = Symbol.for(dist_marker$7);
+const default_stop_condition_D8PwkeWe_name$3 = "AI_ToolCallRepairError";
+const default_stop_condition_D8PwkeWe_marker$3 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$3}`;
+const default_stop_condition_D8PwkeWe_symbol$3 = Symbol.for(default_stop_condition_D8PwkeWe_marker$3);
 var ToolCallRepairError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ cause, originalError, message = `Error repairing tool call: ${(0,provider_dist/* getErrorMessage */.u1)(cause)}` }) {
 		super({
-			name: dist_name$7,
+			name: default_stop_condition_D8PwkeWe_name$3,
 			message,
 			cause
 		});
-		this[dist_symbol$7] = true;
+		this[default_stop_condition_D8PwkeWe_symbol$3] = true;
 		this.originalError = originalError;
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$7);
-	}
-};
-//#endregion
-//#region src/error/tool-choice-violation-error.ts
-const dist_name$6 = "AI_ToolChoiceViolationError";
-const dist_marker$6 = `vercel.ai.error.${dist_name$6}`;
-const dist_symbol$6 = Symbol.for(dist_marker$6);
-/**
-* Thrown when a model response does not satisfy an enforced tool choice.
-*/
-var ToolChoiceViolationError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ toolChoice, finishReason, provider, modelId, content, message = toolChoice.type === "none" ? "Model response contained a tool call even though tool choice was none." : toolChoice.type === "required" ? "Model response did not contain a tool call even though tool choice was required." : `Model response did not contain a call to the required tool '${toolChoice.toolName}'.` }) {
-		super({
-			name: dist_name$6,
-			message
-		});
-		this[dist_symbol$6] = true;
-		this.toolChoice = toolChoice;
-		this.finishReason = finishReason;
-		this.provider = provider;
-		this.modelId = modelId;
-		this.content = content;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$6);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$3);
 	}
 };
 //#endregion
@@ -5986,115 +6257,75 @@ var UnsupportedModelVersionError = class extends provider_dist/* AISDKError */.b
 	}
 };
 //#endregion
-//#region src/error/ui-message-stream-error.ts
-const dist_name$5 = "AI_UIMessageStreamError";
-const dist_marker$5 = `vercel.ai.error.${dist_name$5}`;
-const dist_symbol$5 = Symbol.for(dist_marker$5);
-/**
-* Error thrown when a UI message stream reports an error or contains invalid
-* or out-of-sequence chunks.
-*
-* This typically occurs when:
-* - An error chunk is received
-* - A delta chunk is received without a corresponding start chunk
-* - An end chunk is received without a corresponding start chunk
-* - A tool invocation is not found for the given toolCallId
-*
-* @see https://ai-sdk.dev/docs/reference/ai-sdk-errors/ai-ui-message-stream-error
-*/
-var UIMessageStreamError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ chunkType, chunkId, message }) {
-		super({
-			name: dist_name$5,
-			message
-		});
-		this[dist_symbol$5] = true;
-		this.chunkType = chunkType;
-		this.chunkId = chunkId;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$5);
-	}
-};
-//#endregion
 //#region src/prompt/invalid-data-content-error.ts
-const dist_name$4 = "AI_InvalidDataContentError";
-const dist_marker$4 = `vercel.ai.error.${dist_name$4}`;
-const dist_symbol$4 = Symbol.for(dist_marker$4);
+const default_stop_condition_D8PwkeWe_name$2 = "AI_InvalidDataContentError";
+const default_stop_condition_D8PwkeWe_marker$2 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$2}`;
+const default_stop_condition_D8PwkeWe_symbol$2 = Symbol.for(default_stop_condition_D8PwkeWe_marker$2);
 var InvalidDataContentError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ content, cause, message = `Invalid data content. Expected a base64 string, Uint8Array, ArrayBuffer, or Buffer, but got ${typeof content}.` }) {
 		super({
-			name: dist_name$4,
+			name: default_stop_condition_D8PwkeWe_name$2,
 			message,
 			cause
 		});
-		this[dist_symbol$4] = true;
+		this[default_stop_condition_D8PwkeWe_symbol$2] = true;
 		this.content = content;
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$4);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$2);
 	}
 };
 //#endregion
 //#region src/prompt/invalid-message-role-error.ts
-const dist_name$3 = "AI_InvalidMessageRoleError";
-const dist_marker$3 = `vercel.ai.error.${dist_name$3}`;
-const dist_symbol$3 = Symbol.for(dist_marker$3);
+const default_stop_condition_D8PwkeWe_name$1 = "AI_InvalidMessageRoleError";
+const default_stop_condition_D8PwkeWe_marker$1 = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name$1}`;
+const default_stop_condition_D8PwkeWe_symbol$1 = Symbol.for(default_stop_condition_D8PwkeWe_marker$1);
 var InvalidMessageRoleError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ role, message = `Invalid message role: '${role}'. Must be one of: "system", "user", "assistant", "tool".` }) {
 		super({
-			name: dist_name$3,
+			name: default_stop_condition_D8PwkeWe_name$1,
 			message
 		});
-		this[dist_symbol$3] = true;
+		this[default_stop_condition_D8PwkeWe_symbol$1] = true;
 		this.role = role;
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$3);
-	}
-};
-//#endregion
-//#region src/prompt/message-conversion-error.ts
-const dist_name$2 = "AI_MessageConversionError";
-const dist_marker$2 = `vercel.ai.error.${dist_name$2}`;
-const dist_symbol$2 = Symbol.for(dist_marker$2);
-var MessageConversionError = class extends provider_dist/* AISDKError */.bD {
-	constructor({ originalMessage, message }) {
-		super({
-			name: dist_name$2,
-			message
-		});
-		this[dist_symbol$2] = true;
-		this.originalMessage = originalMessage;
-	}
-	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$2);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker$1);
 	}
 };
 //#endregion
 //#region src/util/retry-error.ts
-const dist_name$1 = "AI_RetryError";
-const dist_marker$1 = `vercel.ai.error.${dist_name$1}`;
-const dist_symbol$1 = Symbol.for(dist_marker$1);
-var RetryError = class extends provider_dist/* AISDKError */.bD {
+const default_stop_condition_D8PwkeWe_name = "AI_RetryError";
+const default_stop_condition_D8PwkeWe_marker = `vercel.ai.error.${default_stop_condition_D8PwkeWe_name}`;
+const default_stop_condition_D8PwkeWe_symbol = Symbol.for(default_stop_condition_D8PwkeWe_marker);
+var default_stop_condition_D8PwkeWe_RetryError = class extends provider_dist/* AISDKError */.bD {
 	constructor({ message, reason, errors }) {
 		super({
-			name: dist_name$1,
+			name: default_stop_condition_D8PwkeWe_name,
 			message
 		});
-		this[dist_symbol$1] = true;
+		this[default_stop_condition_D8PwkeWe_symbol] = true;
 		this.reason = reason;
 		this.errors = errors;
 		this.lastError = errors[errors.length - 1];
 	}
 	static isInstance(error) {
-		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$1);
+		return provider_dist/* AISDKError */.bD.hasMarker(error, default_stop_condition_D8PwkeWe_marker);
 	}
 };
 //#endregion
-//#region src/error/index.ts
-/** @deprecated Use `Experimental_DecisionUnsupportedQuestionTypeError` instead. */
-const Experimental_EvaluationUnsupportedQuestionTypeError = (/* unused pure expression or super */ null && (Experimental_DecisionUnsupportedQuestionTypeError$1));
+//#region src/util/notify.ts
+/**
+* Notifies all provided callbacks with the given event in parallel.
+* Errors in callbacks do not break the generation flow.
+*/
+async function default_stop_condition_D8PwkeWe_notify(options) {
+	await Promise.all((0,dist/* asArray */._j)(options.callbacks).map(async (callback) => {
+		try {
+			await callback?.(options.event);
+		} catch {}
+	}));
+}
 //#endregion
 //#region src/logger/deprecations.ts
 const deprecationCodes = /* @__PURE__ */ new Map([
@@ -6178,7 +6409,7 @@ function emitWarning({ message, type, code }) {
 * @param options.provider - The provider id used for the call, if scoped to a specific provider.
 * @param options.model - The model id used for the call, if scoped to a specific provider.
 */
-const logWarnings = (options) => {
+const default_stop_condition_D8PwkeWe_logWarnings = (options) => {
 	if (options.warnings.length === 0) return;
 	const logger = globalThis.AI_SDK_LOG_WARNINGS;
 	if (logger === false) return;
@@ -6214,9 +6445,20 @@ const logWarnings = (options) => {
 	}
 };
 //#endregion
+//#region src/logger/create-log-warnings.ts
+function default_stop_condition_D8PwkeWe_createLogWarnings(onWarning) {
+	if (onWarning == null) return default_stop_condition_D8PwkeWe_logWarnings;
+	return (options) => {
+		if (options.warnings.length > 0) default_stop_condition_D8PwkeWe_notify({
+			event: options,
+			callbacks: onWarning
+		});
+	};
+}
+//#endregion
 //#region src/util/log-v2-compatibility-warning.ts
-function logV2CompatibilityWarning({ provider, modelId }) {
-	logWarnings({
+function logV2CompatibilityWarning({ provider, modelId, onWarning }) {
+	default_stop_condition_D8PwkeWe_createLogWarnings(onWarning)({
 		warnings: [{
 			type: "compatibility",
 			feature: "specificationVersion",
@@ -6241,7 +6483,7 @@ function asEmbeddingModelV3(model) {
 }
 //#endregion
 //#region src/model/as-embedding-model-v4.ts
-function asEmbeddingModelV4(model) {
+function default_stop_condition_D8PwkeWe_asEmbeddingModelV4(model) {
 	if (model.specificationVersion === "v4") return model;
 	const v3Model = model.specificationVersion === "v2" ? asEmbeddingModelV3(model) : model;
 	return new Proxy(v3Model, { get(target, prop) {
@@ -6264,7 +6506,7 @@ function asImageModelV3(model) {
 }
 //#endregion
 //#region src/model/as-image-model-v4.ts
-function asImageModelV4(model) {
+function default_stop_condition_D8PwkeWe_asImageModelV4(model) {
 	if (model.specificationVersion === "v4") return model;
 	const v3Model = model.specificationVersion === "v2" ? asImageModelV3(model) : model;
 	return new Proxy(v3Model, { get(target, prop) {
@@ -6274,11 +6516,12 @@ function asImageModelV4(model) {
 }
 //#endregion
 //#region src/model/as-language-model-v3.ts
-function asLanguageModelV3(model) {
+function asLanguageModelV3(model, onWarning) {
 	if (model.specificationVersion === "v3") return model;
 	logV2CompatibilityWarning({
 		provider: model.provider,
-		modelId: model.modelId
+		modelId: model.modelId,
+		onWarning
 	});
 	return new Proxy(model, { get(target, prop) {
 		switch (prop) {
@@ -6340,9 +6583,9 @@ function convertV2UsageToV3(usage) {
 }
 //#endregion
 //#region src/model/as-language-model-v4.ts
-function asLanguageModelV4(model) {
+function default_stop_condition_D8PwkeWe_asLanguageModelV4(model, onWarning) {
 	if (model.specificationVersion === "v4") return model;
-	const v3Model = model.specificationVersion === "v2" ? asLanguageModelV3(model) : model;
+	const v3Model = model.specificationVersion === "v2" ? asLanguageModelV3(model, onWarning) : model;
 	return new Proxy(v3Model, { get(target, prop) {
 		switch (prop) {
 			case "specificationVersion": return "v4";
@@ -6517,7 +6760,7 @@ function asTranscriptionModelV4(model) {
 }
 //#endregion
 //#region src/model/as-video-model-v4.ts
-function asVideoModelV4(model) {
+function default_stop_condition_D8PwkeWe_asVideoModelV4(model) {
 	if (model.specificationVersion === "v4") return model;
 	return new Proxy(model, { get(target, prop) {
 		if (prop === "specificationVersion") return "v4";
@@ -6541,14 +6784,14 @@ function asProviderV3(provider) {
 }
 //#endregion
 //#region src/model/as-provider-v4.ts
-function asProviderV4(provider) {
+function default_stop_condition_D8PwkeWe_asProviderV4(provider) {
 	if ("specificationVersion" in provider && provider.specificationVersion === "v4") return provider;
 	const v3Provider = !("specificationVersion" in provider) || provider.specificationVersion !== "v3" ? asProviderV3(provider) : provider;
 	return {
 		specificationVersion: "v4",
-		languageModel: (modelId) => asLanguageModelV4(v3Provider.languageModel(modelId)),
-		embeddingModel: (modelId) => asEmbeddingModelV4(v3Provider.embeddingModel(modelId)),
-		imageModel: (modelId) => asImageModelV4(v3Provider.imageModel(modelId)),
+		languageModel: (modelId) => default_stop_condition_D8PwkeWe_asLanguageModelV4(v3Provider.languageModel(modelId)),
+		embeddingModel: (modelId) => default_stop_condition_D8PwkeWe_asEmbeddingModelV4(v3Provider.embeddingModel(modelId)),
+		imageModel: (modelId) => default_stop_condition_D8PwkeWe_asImageModelV4(v3Provider.imageModel(modelId)),
 		transcriptionModel: v3Provider.transcriptionModel ? (modelId) => asTranscriptionModelV4(v3Provider.transcriptionModel(modelId)) : void 0,
 		speechModel: v3Provider.speechModel ? (modelId) => asSpeechModelV4(v3Provider.speechModel(modelId)) : void 0,
 		rerankingModel: v3Provider.rerankingModel ? (modelId) => asRerankingModelV4(v3Provider.rerankingModel(modelId)) : void 0
@@ -6556,8 +6799,8 @@ function asProviderV4(provider) {
 }
 //#endregion
 //#region src/model/resolve-model.ts
-function resolveLanguageModel(model) {
-	if (typeof model === "string") return getGlobalProvider().languageModel(model);
+function default_stop_condition_D8PwkeWe_resolveLanguageModel(model, onWarning) {
+	if (typeof model === "string") return default_stop_condition_D8PwkeWe_asLanguageModelV4((globalThis.AI_SDK_DEFAULT_PROVIDER ?? dist_gateway).languageModel(model), onWarning);
 	if (![
 		"v4",
 		"v3",
@@ -6570,9 +6813,9 @@ function resolveLanguageModel(model) {
 			modelId: unsupportedModel.modelId
 		});
 	}
-	return asLanguageModelV4(model);
+	return default_stop_condition_D8PwkeWe_asLanguageModelV4(model, onWarning);
 }
-function resolveEmbeddingModel(model) {
+function default_stop_condition_D8PwkeWe_resolveEmbeddingModel(model) {
 	if (typeof model === "string") return getGlobalProvider().embeddingModel(model);
 	if (![
 		"v4",
@@ -6586,9 +6829,9 @@ function resolveEmbeddingModel(model) {
 			modelId: unsupportedModel.modelId
 		});
 	}
-	return asEmbeddingModelV4(model);
+	return default_stop_condition_D8PwkeWe_asEmbeddingModelV4(model);
 }
-function resolveTranscriptionModel(model) {
+function default_stop_condition_D8PwkeWe_resolveTranscriptionModel(model) {
 	if (typeof model === "string") return getGlobalProvider().transcriptionModel?.(model);
 	if (![
 		"v4",
@@ -6604,9 +6847,9 @@ function resolveTranscriptionModel(model) {
 	}
 	return asTranscriptionModelV4(model);
 }
-function resolveSpeechTranslationModel(model) {
+function default_stop_condition_D8PwkeWe_resolveSpeechTranslationModel(model) {
 	if (typeof model === "string") {
-		const speechTranslationModel = (globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway$1).speechTranslationModel;
+		const speechTranslationModel = (globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway).speechTranslationModel;
 		if (!speechTranslationModel) throw new Error("The default provider does not support speech translation models. Please pass a provider model instance that implements the experimental speech translation model specification.");
 		return speechTranslationModel(model);
 	}
@@ -6620,7 +6863,7 @@ function resolveSpeechTranslationModel(model) {
 	}
 	return model;
 }
-function resolveSpeechModel(model) {
+function default_stop_condition_D8PwkeWe_resolveSpeechModel(model) {
 	if (typeof model === "string") return getGlobalProvider().speechModel?.(model);
 	if (![
 		"v4",
@@ -6636,7 +6879,7 @@ function resolveSpeechModel(model) {
 	}
 	return asSpeechModelV4(model);
 }
-function resolveImageModel(model) {
+function default_stop_condition_D8PwkeWe_resolveImageModel(model) {
 	if (typeof model === "string") return getGlobalProvider().imageModel(model);
 	if (![
 		"v4",
@@ -6650,11 +6893,11 @@ function resolveImageModel(model) {
 			modelId: unsupportedModel.modelId
 		});
 	}
-	return asImageModelV4(model);
+	return default_stop_condition_D8PwkeWe_asImageModelV4(model);
 }
-function resolveVideoModel(model) {
+function default_stop_condition_D8PwkeWe_resolveVideoModel(model) {
 	if (typeof model === "string") {
-		const videoModel = (globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway$1).videoModel;
+		const videoModel = (globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway).videoModel;
 		if (!videoModel) throw new Error("The default provider does not support video models. Please use a Experimental_VideoModelV4 object from a provider (e.g., vertex.video(\"model-id\")).");
 		return videoModel(model);
 	}
@@ -6666,9 +6909,9 @@ function resolveVideoModel(model) {
 			modelId: unsupportedModel.modelId
 		});
 	}
-	return asVideoModelV4(model);
+	return default_stop_condition_D8PwkeWe_asVideoModelV4(model);
 }
-function resolveRerankingModel(model) {
+function default_stop_condition_D8PwkeWe_resolveRerankingModel(model) {
 	if (typeof model === "string") {
 		const rerankingModel = getGlobalProvider().rerankingModel;
 		if (!rerankingModel) throw new Error("The default provider does not support reranking models. Please use a RerankingModel object from a provider (e.g., gateway.rerankingModel(\"model-id\")).");
@@ -6684,17 +6927,17 @@ function resolveRerankingModel(model) {
 	}
 	return asRerankingModelV4(model);
 }
-function resolveDecisionModel(model) {
+function default_stop_condition_D8PwkeWe_resolveDecisionModel(model) {
 	if (typeof model === "string") {
-		const provider = globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway$1;
+		const provider = globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway;
 		const factory = provider.decisionModel ?? provider.evaluationModel;
-		if (typeof factory !== "function") throw new NoSuchModelError$1({
+		if (typeof factory !== "function") throw new NoSuchModelError({
 			modelId: model,
 			modelType: "decisionModel",
 			message: "The default provider does not support decision models. Pass a decision model instance or configure AI_SDK_DEFAULT_PROVIDER with a decisionModel method."
 		});
 		const resolvedModel = factory.call(provider, model);
-		if (resolvedModel == null) throw new NoSuchModelError$1({
+		if (resolvedModel == null) throw new NoSuchModelError({
 			modelId: model,
 			modelType: "decisionModel"
 		});
@@ -6715,7 +6958,21 @@ function resolveDecisionModel(model) {
 		doDecide: (options) => legacyModel.doEvaluate(options)
 	};
 }
-function resolveExtractionModel(model) {
+function default_stop_condition_D8PwkeWe_resolveExtractionModel(model) {
+	if (typeof model === "string") {
+		const provider = globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway;
+		if (typeof provider.extractionModel !== "function") throw new NoSuchModelError({
+			modelId: model,
+			modelType: "extractionModel",
+			message: "The default provider does not support extraction models. Pass an extraction model instance or configure AI_SDK_DEFAULT_PROVIDER with an extractionModel method."
+		});
+		const resolvedModel = provider.extractionModel(model);
+		if (resolvedModel == null) throw new NoSuchModelError({
+			modelId: model,
+			modelType: "extractionModel"
+		});
+		model = resolvedModel;
+	}
 	const version = model.specificationVersion;
 	if (version !== "v4") throw new UnsupportedModelVersionError({
 		version,
@@ -6725,10 +6982,10 @@ function resolveExtractionModel(model) {
 	return model;
 }
 function getGlobalProvider() {
-	return asProviderV4(globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway);
+	return default_stop_condition_D8PwkeWe_asProviderV4(globalThis.AI_SDK_DEFAULT_PROVIDER ?? gateway);
 }
 /** Internal adapter for deprecated provider factories. */
-function asEvaluationModel(model) {
+function default_stop_condition_D8PwkeWe_asEvaluationModel(model) {
 	if ("doEvaluate" in model && typeof model.doEvaluate === "function") return model;
 	return {
 		specificationVersion: model.specificationVersion,
@@ -6740,58 +6997,8 @@ function asEvaluationModel(model) {
 	};
 }
 //#endregion
-//#region src/prompt/clone-model-message.ts
-/**
-* Clone model messages while preserving URL instances. Node's structuredClone
-* currently rejects URL objects, which are valid file/image prompt payloads.
-*/
-function cloneModelMessages(messages) {
-	return cloneValue(messages, /* @__PURE__ */ new Map());
-}
-function cloneValue(value, seen) {
-	if (value == null || typeof value !== "object") return value;
-	if (seen.has(value)) return seen.get(value);
-	if (value instanceof URL) {
-		const copy = new URL(value.href);
-		seen.set(value, copy);
-		return copy;
-	}
-	if (Array.isArray(value)) {
-		const copy = new Array(value.length);
-		seen.set(value, copy);
-		value.forEach((item, index) => {
-			copy[index] = cloneValue(item, seen);
-		});
-		return copy;
-	}
-	if ((0,dist/* isUint8Array */.mg)(value)) {
-		const copy = new Uint8Array(value);
-		seen.set(value, copy);
-		return copy;
-	}
-	if ((0,dist/* isArrayBuffer */.mw)(value)) {
-		const copy = new Uint8Array(value).slice().buffer;
-		seen.set(value, copy);
-		return copy;
-	}
-	if (value instanceof Date || Object.prototype.toString.call(value) === "[object Date]") try {
-		const copy = new Date(Date.prototype.getTime.call(value));
-		seen.set(value, copy);
-		return copy;
-	} catch {}
-	const copy = {};
-	seen.set(value, copy);
-	for (const [key, val] of Object.entries(value)) Object.defineProperty(copy, key, {
-		value: cloneValue(val, seen),
-		writable: true,
-		enumerable: true,
-		configurable: true
-	});
-	return copy;
-}
-//#endregion
 //#region src/version.ts
-const dist_VERSION = "7.0.173";
+const default_stop_condition_D8PwkeWe_VERSION = "7.0.181";
 //#endregion
 //#region src/util/download/download.ts
 /**
@@ -6808,7 +7015,7 @@ const dist_VERSION = "7.0.173";
 const download = async ({ url, maxBytes, abortSignal, fetch }) => {
 	const urlText = url.toString();
 	try {
-		const headers = (0,dist/* withUserAgentSuffix */.WZ)({}, `ai-sdk/${dist_VERSION}`, (0,dist/* getRuntimeEnvironmentUserAgent */.G1)());
+		const headers = (0,dist/* withUserAgentSuffix */.WZ)({}, `ai-sdk/${default_stop_condition_D8PwkeWe_VERSION}`, (0,dist/* getRuntimeEnvironmentUserAgent */.G1)());
 		const response = await (0,dist/* fetchUntrustedUrl */.CI)({
 			url: urlText,
 			headers,
@@ -6845,7 +7052,7 @@ const download = async ({ url, maxBytes, abortSignal, fetch }) => {
 * Default download function.
 * Downloads the file if it is not supported by the model.
 */
-const createDefaultDownloadFunction = (download$3 = download, abortSignal) => (requestedDownloads) => Promise.all(requestedDownloads.map(async (requestedDownload) => requestedDownload.isUrlSupportedByModel ? null : await download$3({
+const createDefaultDownloadFunction = (download$2 = download, abortSignal) => (requestedDownloads) => Promise.all(requestedDownloads.map(async (requestedDownload) => requestedDownload.isUrlSupportedByModel ? null : await download$2({
 	...requestedDownload,
 	abortSignal: abortSignal ?? requestedDownload.abortSignal
 })));
@@ -6864,7 +7071,7 @@ const createDefaultDownloadFunction = (download$3 = download, abortSignal) => (r
 * @param overrides The source object to merge from
 * @returns A new object with the merged properties, or undefined if both inputs are undefined
 */
-function mergeObjects(base, overrides) {
+function default_stop_condition_D8PwkeWe_mergeObjects(base, overrides) {
 	if (base === void 0 && overrides === void 0) return;
 	if (base === void 0) return overrides;
 	if (overrides === void 0) return base;
@@ -6877,7 +7084,7 @@ function mergeObjects(base, overrides) {
 			const baseValue = key in base ? base[key] : void 0;
 			const isSourceObject = overridesValue !== null && typeof overridesValue === "object" && !Array.isArray(overridesValue) && !(overridesValue instanceof Date) && !(overridesValue instanceof RegExp);
 			const isTargetObject = baseValue !== null && baseValue !== void 0 && typeof baseValue === "object" && !Array.isArray(baseValue) && !(baseValue instanceof Date) && !(baseValue instanceof RegExp);
-			if (isSourceObject && isTargetObject) result[key] = mergeObjects(baseValue, overridesValue);
+			if (isSourceObject && isTargetObject) result[key] = default_stop_condition_D8PwkeWe_mergeObjects(baseValue, overridesValue);
 			else result[key] = overridesValue;
 		}
 	}
@@ -6891,9 +7098,9 @@ function mergeObjects(base, overrides) {
 * @param content - Data content to convert.
 * @returns Base64-encoded string.
 */
-function convertDataContentToBase64String(content) {
+function default_stop_condition_D8PwkeWe_convertDataContentToBase64String(content) {
 	if (typeof content === "string") return content;
-	return convertUint8ArrayToBase64(convertDataContentToUint8Array(content));
+	return convertUint8ArrayToBase64(default_stop_condition_D8PwkeWe_convertDataContentToUint8Array(content));
 }
 /**
 * Converts data content to a Uint8Array.
@@ -6901,7 +7108,7 @@ function convertDataContentToBase64String(content) {
 * @param content - Data content to convert.
 * @returns Uint8Array.
 */
-function convertDataContentToUint8Array(content) {
+function default_stop_condition_D8PwkeWe_convertDataContentToUint8Array(content) {
 	if ((0,dist/* isUint8Array */.mg)(content)) {
 		if (content instanceof Uint8Array) return content;
 		const { buffer, byteOffset, byteLength } = content;
@@ -6921,7 +7128,7 @@ function convertDataContentToUint8Array(content) {
 }
 //#endregion
 //#region src/prompt/split-data-url.ts
-function splitDataUrl(dataUrl) {
+function default_stop_condition_D8PwkeWe_splitDataUrl(dataUrl) {
 	try {
 		const [header, base64Content] = dataUrl.split(",");
 		return {
@@ -6944,7 +7151,7 @@ function isTaggedFileData(value) {
 }
 function convertUrlToFilePartData(url, originalUrl) {
 	if (url.protocol === "data:") {
-		const { mediaType, base64Content } = splitDataUrl(url.toString());
+		const { mediaType, base64Content } = default_stop_condition_D8PwkeWe_splitDataUrl(url.toString());
 		if (mediaType == null || base64Content == null) throw new InvalidDataContentError({
 			content: url,
 			message: `Invalid data URL format in content ${url.toString()}`
@@ -6975,7 +7182,7 @@ function convertInlineDataToFilePartData(content) {
 	if ((0,dist/* isUint8Array */.mg)(content) || (0,dist/* isArrayBuffer */.mw)(content)) return {
 		data: {
 			type: "data",
-			data: convertDataContentToUint8Array(content)
+			data: default_stop_condition_D8PwkeWe_convertDataContentToUint8Array(content)
 		},
 		mediaType: void 0
 	};
@@ -7001,7 +7208,7 @@ function convertInlineDataToFilePartData(content) {
 * Returns the tagged `data` together with the resolved mediaType (extracted
 * from a `data:` URL when applicable).
 */
-function convertToLanguageModelV4FilePart(content) {
+function default_stop_condition_D8PwkeWe_convertToLanguageModelV4FilePart(content) {
 	if (isTaggedFileData(content)) switch (content.type) {
 		case "data":
 			if (typeof content.data === "string" && content.data.startsWith("data:")) throw new InvalidDataContentError({
@@ -7043,7 +7250,7 @@ function convertToLanguageModelV4FilePart(content) {
 }
 //#endregion
 //#region src/prompt/convert-to-language-model-prompt.ts
-async function convertToLanguageModelPrompt({ prompt, supportedUrls, download, abortSignal, provider }) {
+async function default_stop_condition_D8PwkeWe_convertToLanguageModelPrompt({ prompt, supportedUrls, download, abortSignal, provider, warnings }) {
 	const downloadedAssets = await downloadAssets(prompt.messages, download ?? createDefaultDownloadFunction(void 0, abortSignal), supportedUrls, abortSignal);
 	const messages = [...prompt.instructions != null ? typeof prompt.instructions === "string" ? [{
 		role: "system",
@@ -7055,7 +7262,8 @@ async function convertToLanguageModelPrompt({ prompt, supportedUrls, download, a
 	})) : [], ...prompt.messages.map((message) => convertToLanguageModelMessage({
 		message,
 		downloadedAssets,
-		provider
+		provider,
+		warnings
 	}))];
 	const combinedMessages = [];
 	for (const message of messages) {
@@ -7066,9 +7274,9 @@ async function convertToLanguageModelPrompt({ prompt, supportedUrls, download, a
 		const lastCombinedMessage = combinedMessages.at(-1);
 		if (lastCombinedMessage?.role === "tool") {
 			const lastContentPart = lastCombinedMessage.content.at(-1);
-			if (lastContentPart != null && lastCombinedMessage.providerOptions != null) lastContentPart.providerOptions = mergeObjects(lastCombinedMessage.providerOptions, lastContentPart.providerOptions);
+			if (lastContentPart != null && lastCombinedMessage.providerOptions != null) lastContentPart.providerOptions = default_stop_condition_D8PwkeWe_mergeObjects(lastCombinedMessage.providerOptions, lastContentPart.providerOptions);
 			lastCombinedMessage.content.push(...message.content);
-			lastCombinedMessage.providerOptions = lastContentPart == null ? mergeObjects(lastCombinedMessage.providerOptions, message.providerOptions) : message.providerOptions;
+			lastCombinedMessage.providerOptions = lastContentPart == null ? default_stop_condition_D8PwkeWe_mergeObjects(lastCombinedMessage.providerOptions, message.providerOptions) : message.providerOptions;
 		} else combinedMessages.push(message);
 	}
 	const toolCallIds = /* @__PURE__ */ new Set();
@@ -7092,8 +7300,8 @@ async function convertToLanguageModelPrompt({ prompt, supportedUrls, download, a
 * @param downloadedAssets - A map of URLs to their downloaded data. Only
 * available if the model does not support URLs, null otherwise.
 */
-function convertToLanguageModelMessage({ message, downloadedAssets, provider }) {
-	const warnings = [];
+function convertToLanguageModelMessage({ message, downloadedAssets, provider, warnings: collectedWarnings }) {
+	const warnings = collectedWarnings ?? [];
 	const role = message.role;
 	switch (role) {
 		case "system": return {
@@ -7122,7 +7330,7 @@ function convertToLanguageModelMessage({ message, downloadedAssets, provider }) 
 				}).map((part) => convertPartToLanguageModelPart(part, downloadedAssets)).filter((part) => part.type !== "text" || part.text !== ""),
 				providerOptions: message.providerOptions
 			};
-			if (warnings.length > 0) logWarnings({ warnings });
+			if (collectedWarnings == null && warnings.length > 0) default_stop_condition_D8PwkeWe_logWarnings({ warnings });
 			return converted;
 		}
 		case "assistant": {
@@ -7145,7 +7353,7 @@ function convertToLanguageModelMessage({ message, downloadedAssets, provider }) 
 							providerOptions
 						};
 						case "file": {
-							const { data, mediaType } = convertToLanguageModelV4FilePart(part.data);
+							const { data, mediaType } = default_stop_condition_D8PwkeWe_convertToLanguageModelV4FilePart(part.data);
 							return {
 								type: "file",
 								data,
@@ -7160,7 +7368,7 @@ function convertToLanguageModelMessage({ message, downloadedAssets, provider }) 
 							providerOptions
 						};
 						case "reasoning-file": {
-							const { data, mediaType } = convertToLanguageModelV4FilePart(part.data);
+							const { data, mediaType } = default_stop_condition_D8PwkeWe_convertToLanguageModelV4FilePart(part.data);
 							if (data.type !== "data" && data.type !== "url") throw new Error(`Unsupported reasoning-file data type: ${data.type}`);
 							return {
 								type: "reasoning-file",
@@ -7198,7 +7406,7 @@ function convertToLanguageModelMessage({ message, downloadedAssets, provider }) 
 				}),
 				providerOptions: message.providerOptions
 			};
-			if (warnings.length > 0) logWarnings({ warnings });
+			if (collectedWarnings == null && warnings.length > 0) default_stop_condition_D8PwkeWe_logWarnings({ warnings });
 			return converted;
 		}
 		case "tool": {
@@ -7228,7 +7436,7 @@ function convertToLanguageModelMessage({ message, downloadedAssets, provider }) 
 				}),
 				providerOptions: message.providerOptions
 			};
-			if (warnings.length > 0) logWarnings({ warnings });
+			if (collectedWarnings == null && warnings.length > 0) default_stop_condition_D8PwkeWe_logWarnings({ warnings });
 			return converted;
 		}
 		default: throw new InvalidMessageRoleError({ role });
@@ -7272,7 +7480,7 @@ async function downloadAssets(messages, download, supportedUrls, abortSignal) {
 	}
 	const plannedDownloads = downloadableFiles.map((part) => {
 		const mediaType = part.mediaType;
-		const { data } = convertToLanguageModelV4FilePart(part.data);
+		const { data } = default_stop_condition_D8PwkeWe_convertToLanguageModelV4FilePart(part.data);
 		return {
 			mediaType,
 			data
@@ -7357,7 +7565,7 @@ function convertPartToLanguageModelPart(part, downloadedAssets) {
 		text: part.text,
 		providerOptions: part.providerOptions
 	};
-	const { data: normalizedData, mediaType: dataUrlMediaType } = convertToLanguageModelV4FilePart(part.data);
+	const { data: normalizedData, mediaType: dataUrlMediaType } = default_stop_condition_D8PwkeWe_convertToLanguageModelV4FilePart(part.data);
 	let mediaType = dataUrlMediaType ?? part.mediaType;
 	let data = normalizedData;
 	if (data.type === "url") {
@@ -7417,10 +7625,7 @@ function mapToolResultOutput({ output, provider, warnings = [], downloadedAssets
 					const mediaType = item.mediaType ?? getMediaTypeFromUrl(item.url);
 					const url = new URL(item.url);
 					let message = `The "file-url" type for tool result content is deprecated. Use the "file" type with mediaType and { type: 'url', url } instead.`;
-					if (!item.mediaType) {
-						const inferenceSuffix = mediaType === "application/octet-stream" ? `Unable to infer media type from URL. Defaulting to 'application/octet-stream'.` : `Inferred media type '${mediaType}' from URL.`;
-						message = `The "file-url" tool result content part with URL "${item.url}" is missing a "mediaType". ${inferenceSuffix} ${message}`;
-					}
+					if (!item.mediaType) message = `A "file-url" tool result content part is missing a "mediaType". ${mediaType === "application/octet-stream" ? `Unable to infer media type from URL. Defaulting to 'application/octet-stream'.` : `Inferred media type '${mediaType}' from URL.`} ${message}`;
 					warnings.push({
 						type: "deprecated",
 						setting: "\"tool-result\" content of type \"file-url\"",
@@ -7574,7 +7779,7 @@ function getMediaTypeFromUrl(url, fallbackMediaType = "application/octet-stream"
 }
 //#endregion
 //#region src/prompt/create-tool-model-output.ts
-async function createToolModelOutput({ toolCallId, input, output, tool, errorMode }) {
+async function default_stop_condition_D8PwkeWe_createToolModelOutput({ toolCallId, input, output, tool, errorMode }) {
 	if (errorMode === "text") return {
 		type: "error-text",
 		value: (0,provider_dist/* getErrorMessage */.u1)(output)
@@ -7621,21 +7826,21 @@ function toJSONValue(value) {
 /**
 * Validates model call options and returns a new object with normalized values.
 */
-function prepareLanguageModelCallOptions({ maxOutputTokens, temperature, topP, topK, presencePenalty, frequencyPenalty, seed, stopSequences, reasoning }) {
+function default_stop_condition_D8PwkeWe_prepareLanguageModelCallOptions({ maxOutputTokens, temperature, topP, topK, presencePenalty, frequencyPenalty, seed, stopSequences, reasoning }) {
 	if (maxOutputTokens != null) {
-		if (!Number.isInteger(maxOutputTokens)) throw new InvalidArgumentError({
+		if (!Number.isInteger(maxOutputTokens)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter: "maxOutputTokens",
 			value: maxOutputTokens,
 			message: "maxOutputTokens must be an integer"
 		});
-		if (maxOutputTokens < 1) throw new InvalidArgumentError({
+		if (maxOutputTokens < 1) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter: "maxOutputTokens",
 			value: maxOutputTokens,
 			message: "maxOutputTokens must be >= 1"
 		});
 	}
 	if (seed != null) {
-		if (!Number.isInteger(seed)) throw new InvalidArgumentError({
+		if (!Number.isInteger(seed)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter: "seed",
 			value: seed,
 			message: "seed must be an integer"
@@ -7655,7 +7860,7 @@ function prepareLanguageModelCallOptions({ maxOutputTokens, temperature, topP, t
 }
 //#endregion
 //#region src/prompt/prepare-tool-choice.ts
-function prepareToolChoice({ toolChoice }) {
+function default_stop_condition_D8PwkeWe_prepareToolChoice({ toolChoice }) {
 	return toolChoice == null ? { type: "auto" } : typeof toolChoice === "string" ? { type: toolChoice } : {
 		type: "tool",
 		toolName: toolChoice.toolName
@@ -7668,7 +7873,7 @@ function isNonEmptyObject(object) {
 }
 //#endregion
 //#region src/prompt/prepare-tools.ts
-async function prepareTools({ tools, toolOrder, toolsContext = {}, experimental_sandbox: sandbox }) {
+async function default_stop_condition_D8PwkeWe_prepareTools({ tools, toolOrder, toolsContext = {}, experimental_sandbox: sandbox }) {
 	if (!isNonEmptyObject(tools)) return;
 	const languageModelTools = [];
 	for (const [name, tool] of orderToolEntries({
@@ -7727,55 +7932,6 @@ function resolveToolDescription({ tool, toolName, toolsContext, experimental_san
 	});
 }
 //#endregion
-//#region src/prompt/request-options.ts
-/**
-* Extracts the total timeout value in milliseconds from a TimeoutConfiguration.
-*
-* @param timeout - The timeout configuration.
-* @returns The total timeout in milliseconds, or undefined if no timeout is configured.
-*/
-function getTotalTimeoutMs(timeout) {
-	if (timeout == null) return;
-	if (typeof timeout === "number") return timeout;
-	return timeout.totalMs;
-}
-/**
-* Extracts the step timeout value in milliseconds from a TimeoutConfiguration.
-*
-* @param timeout - The timeout configuration.
-* @returns The step timeout in milliseconds, or undefined if no step timeout is configured.
-*/
-function getStepTimeoutMs(timeout) {
-	if (timeout == null || typeof timeout === "number") return;
-	return timeout.stepMs;
-}
-/**
-* Extracts the first chunk timeout value in milliseconds from a TimeoutConfiguration.
-* This timeout is for streaming only - it aborts if no content chunk is received within the specified duration.
-*
-* @param timeout - The timeout configuration.
-* @returns The first chunk timeout in milliseconds, or undefined if no first chunk timeout is configured.
-*/
-function getFirstChunkTimeoutMs(timeout) {
-	if (timeout == null || typeof timeout === "number") return;
-	return timeout.firstChunkMs;
-}
-/**
-* Extracts the chunk timeout value in milliseconds from a TimeoutConfiguration.
-* This timeout is for streaming only - it aborts if no new content chunk is received within the specified duration.
-*
-* @param timeout - The timeout configuration.
-* @returns The chunk timeout in milliseconds, or undefined if no chunk timeout is configured.
-*/
-function getChunkTimeoutMs(timeout) {
-	if (timeout == null || typeof timeout === "number") return;
-	return timeout.chunkMs;
-}
-function getToolTimeoutMs(timeout, toolName) {
-	if (timeout == null || typeof timeout === "number") return;
-	return timeout.tools?.[`${toolName}Ms`] ?? timeout.toolMs;
-}
-//#endregion
 //#region src/prompt/standardize-prompt.ts
 /**
 * Converts a prompt input into a standardized prompt with model messages.
@@ -7787,7 +7943,7 @@ function getToolTimeoutMs(timeout, toolName) {
 * @returns The standardized prompt.
 * @throws {InvalidPromptError} When the prompt is invalid.
 */
-async function standardizePrompt({ allowSystemInMessages = false, system, instructions = system, prompt, messages }) {
+async function default_stop_condition_D8PwkeWe_standardizePrompt({ allowSystemInMessages = false, system, instructions = system, prompt, messages }) {
 	messages = prompt == null ? messages : typeof prompt === "string" ? [{
 		role: "user",
 		content: prompt
@@ -7806,28 +7962,8 @@ async function standardizePrompt({ allowSystemInMessages = false, system, instru
 	};
 }
 //#endregion
-//#region src/prompt/wrap-gateway-error.ts
-function wrapGatewayError(error) {
-	if (!GatewayAuthenticationError.isInstance(error)) return error;
-	const isProductionEnv = process?.env.NODE_ENV === "production";
-	const moreInfoURL = "https://ai-sdk.dev/unauthenticated-ai-gateway";
-	if (isProductionEnv) return new provider_dist/* AISDKError */.bD({
-		name: "GatewayError",
-		message: `Unauthenticated. Configure AI_GATEWAY_API_KEY or use a provider module. Learn more: ${moreInfoURL}`
-	});
-	return Object.assign(/* @__PURE__ */ new Error(`\u001b[1m\u001b[31mUnauthenticated request to AI Gateway.\u001b[0m
-
-To authenticate, set the \u001b[33mAI_GATEWAY_API_KEY\u001b[0m environment variable with your API key.
-
-Alternatively, you can use a provider module instead of the AI Gateway.
-
-Learn more: \u001b[34m${moreInfoURL}\u001b[0m
-
-`), { name: "GatewayAuthenticationError" });
-}
-//#endregion
 //#region src/types/usage.ts
-function asLanguageModelUsage(usage) {
+function default_stop_condition_D8PwkeWe_asLanguageModelUsage(usage) {
 	return {
 		inputTokens: usage.inputTokens.total,
 		inputTokenDetails: {
@@ -7844,7 +7980,7 @@ function asLanguageModelUsage(usage) {
 		raw: usage.raw
 	};
 }
-function createNullLanguageModelUsage() {
+function default_stop_condition_D8PwkeWe_createNullLanguageModelUsage() {
 	return {
 		inputTokens: void 0,
 		inputTokenDetails: {
@@ -7861,7 +7997,7 @@ function createNullLanguageModelUsage() {
 		raw: void 0
 	};
 }
-function addLanguageModelUsage(usage1, usage2) {
+function default_stop_condition_D8PwkeWe_addLanguageModelUsage(usage1, usage2) {
 	const raw = isNullLanguageModelUsage(usage1) ? usage2.raw : isNullLanguageModelUsage(usage2) ? usage1.raw : void 0;
 	return {
 		inputTokens: addTokenCounts(usage1.inputTokens, usage2.inputTokens),
@@ -7885,7 +8021,7 @@ function isNullLanguageModelUsage(usage) {
 function addTokenCounts(tokenCount1, tokenCount2) {
 	return tokenCount1 == null && tokenCount2 == null ? void 0 : (tokenCount1 ?? 0) + (tokenCount2 ?? 0);
 }
-function addImageModelUsage(usage1, usage2) {
+function default_stop_condition_D8PwkeWe_addImageModelUsage(usage1, usage2) {
 	return {
 		inputTokens: addTokenCounts(usage1.inputTokens, usage2.inputTokens),
 		outputTokens: addTokenCounts(usage1.outputTokens, usage2.outputTokens),
@@ -7904,7 +8040,7 @@ function addImageModelUsage(usage1, usage2) {
 * past the `== null` / `!value` guards that treat an unknown name as "not
 * present". This helper returns `undefined` unless `key` is an own property.
 */
-function getOwn(obj, key) {
+function default_stop_condition_D8PwkeWe_getOwn(obj, key) {
 	return obj != null && Object.hasOwn(obj, key) ? obj[key] : void 0;
 }
 //#endregion
@@ -7919,27 +8055,9 @@ function getOwn(obj, key) {
 * @returns An `AbortSignal` that aborts when any valid source aborts,
 * or `undefined` if no valid sources are provided.
 */
-function mergeAbortSignals(...signals) {
+function default_stop_condition_D8PwkeWe_mergeAbortSignals(...signals) {
 	const validSignals = (0,dist/* filterNullable */.ur)(...signals).map((signal) => typeof signal === "number" ? AbortSignal.timeout(signal) : signal);
 	return validSignals.length === 0 ? void 0 : validSignals.length === 1 ? validSignals[0] : AbortSignal.any(validSignals);
-}
-//#endregion
-//#region src/util/now.ts
-function now() {
-	return globalThis?.performance?.now() ?? Date.now();
-}
-//#endregion
-//#region src/util/notify.ts
-/**
-* Notifies all provided callbacks with the given event in parallel.
-* Errors in callbacks do not break the generation flow.
-*/
-async function notify(options) {
-	await Promise.all((0,dist/* asArray */._j)(options.callbacks).map(async (callback) => {
-		try {
-			await callback?.(options.event);
-		} catch {}
-	}));
 }
 //#endregion
 //#region src/util/retry-with-exponential-backoff.ts
@@ -7976,7 +8094,7 @@ const retryWithExponentialBackoffRespectingRetryHeaders = ({ maxRetries = 2, ini
 		error,
 		exponentialBackoffDelay
 	}),
-	createRetryError: ({ message, reason, errors }) => new RetryError({
+	createRetryError: ({ message, reason, errors }) => new default_stop_condition_D8PwkeWe_RetryError({
 		message,
 		reason,
 		errors
@@ -7987,14 +8105,14 @@ const retryWithExponentialBackoffRespectingRetryHeaders = ({ maxRetries = 2, ini
 /**
 * Validate and prepare retries.
 */
-function prepareRetries({ maxRetries, abortSignal, additionalRetryableError, parameter = "maxRetries", defaultMaxRetries = 2 }) {
+function default_stop_condition_D8PwkeWe_prepareRetries({ maxRetries, abortSignal, additionalRetryableError, parameter = "maxRetries", defaultMaxRetries = 2 }) {
 	if (maxRetries != null) {
-		if (!Number.isInteger(maxRetries)) throw new InvalidArgumentError({
+		if (!Number.isInteger(maxRetries)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter,
 			value: maxRetries,
 			message: `${parameter} must be an integer`
 		});
-		if (maxRetries < 0) throw new InvalidArgumentError({
+		if (maxRetries < 0) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter,
 			value: maxRetries,
 			message: `${parameter} must be >= 0`
@@ -8025,7 +8143,7 @@ function prepareRetries({ maxRetries, abortSignal, additionalRetryableError, par
 * @returns The timeout id (suitable for passing to `clearTimeout`), or
 * `undefined` if no timeout was scheduled.
 */
-function setAbortTimeout({ abortController, label, timeoutMs }) {
+function default_stop_condition_D8PwkeWe_setAbortTimeout({ abortController, label, timeoutMs }) {
 	if (abortController == null || timeoutMs == null) return;
 	return setTimeout(() => abortController.abort(new DOMException(`${label} timeout of ${timeoutMs}ms exceeded`, "TimeoutError")), timeoutMs);
 }
@@ -8037,7 +8155,7 @@ function setAbortTimeout({ abortController, label, timeoutMs }) {
 * Returns 0 when the token count is unknown, the duration is unknown or 0, or
 * the computed rate cannot be represented as a finite JSON-safe number.
 */
-function calculateTokensPerSecond({ tokens, durationMs }) {
+function default_stop_condition_D8PwkeWe_calculateTokensPerSecond({ tokens, durationMs }) {
 	const tokenRate = 1e3 * (tokens ?? 0) / (durationMs ?? 0);
 	return Number.isFinite(tokenRate) ? tokenRate : 0;
 }
@@ -8047,7 +8165,7 @@ function calculateTokensPerSecond({ tokens, durationMs }) {
 * If the last message is a tool message, this function collects all tool approvals
 * from that message.
 */
-function collectToolApprovals({ messages }) {
+function default_stop_condition_D8PwkeWe_collectToolApprovals({ messages }) {
 	const lastMessage = messages.at(-1);
 	if (lastMessage?.role != "tool") return {
 		approvedToolApprovals: [],
@@ -8080,7 +8198,7 @@ function collectToolApprovals({ messages }) {
 		const existingToolResult = toolResults[approvalRequest.toolCallId];
 		if (existingToolResult != null && (approvalResponse.approved || existingToolResult.output.type !== "execution-denied")) continue;
 		const toolCall = toolCallsByToolCallId[approvalRequest.toolCallId];
-		if (toolCall == null) throw new ToolCallNotFoundForApprovalError({
+		if (toolCall == null) throw new default_stop_condition_D8PwkeWe_ToolCallNotFoundForApprovalError({
 			toolCallId: approvalRequest.toolCallId,
 			approvalId: approvalRequest.approvalId
 		});
@@ -8103,10 +8221,10 @@ function collectToolApprovals({ messages }) {
 }
 //#endregion
 //#region src/generate-text/generated-file.ts
-var DefaultGeneratedFile = class {
+var default_stop_condition_D8PwkeWe_DefaultGeneratedFile = class {
 	constructor({ data, mediaType, providerMetadata }) {
 		this.base64Data = typeof data === "string" ? data : void 0;
-		this.uint8ArrayData = typeof data === "string" ? void 0 : convertDataContentToUint8Array(data);
+		this.uint8ArrayData = typeof data === "string" ? void 0 : default_stop_condition_D8PwkeWe_convertDataContentToUint8Array(data);
 		this.mediaType = mediaType;
 		this.providerMetadata = providerMetadata;
 	}
@@ -8119,7 +8237,7 @@ var DefaultGeneratedFile = class {
 		return this.uint8ArrayData;
 	}
 };
-var DefaultGeneratedFileWithType = class extends DefaultGeneratedFile {
+var default_stop_condition_D8PwkeWe_DefaultGeneratedFileWithType = class extends default_stop_condition_D8PwkeWe_DefaultGeneratedFile {
 	constructor(..._args) {
 		super(..._args);
 		this.type = "file";
@@ -8127,16 +8245,16 @@ var DefaultGeneratedFileWithType = class extends DefaultGeneratedFile {
 };
 //#endregion
 //#region src/generate-text/resolve-generated-file-data.ts
-async function resolveGeneratedFileData({ data, download: download$2, abortSignal, cache }) {
+async function default_stop_condition_D8PwkeWe_resolveGeneratedFileData({ data, download: download$1, abortSignal, cache }) {
 	if (data.type === "data") return data.data;
 	const cachedData = cache?.get(data);
 	if (cachedData != null) return cachedData;
-	const downloadedData = download$2 == null ? (await download({
+	const downloadedData = download$1 == null ? (await download({
 		url: data.url,
 		abortSignal
 	})).data : await downloadGeneratedFile({
 		url: data.url,
-		download: download$2,
+		download: download$1,
 		abortSignal
 	});
 	cache?.set(data, downloadedData);
@@ -8156,7 +8274,7 @@ async function downloadGeneratedFile({ url, download, abortSignal }) {
 }
 //#endregion
 //#region src/generate-text/convert-language-model-content.ts
-async function convertLanguageModelContent({ content, toolCalls, toolOutputs, toolApprovalRequests, toolApprovalResponses, tools, download, abortSignal, generatedFileDataCache }) {
+async function default_stop_condition_D8PwkeWe_convertLanguageModelContent({ content, toolCalls, toolOutputs, toolApprovalRequests, toolApprovalResponses, tools, download, abortSignal, generatedFileDataCache }) {
 	const contentParts = [];
 	const toolOutputsWithApprovalResponses = [];
 	const toolOutputsWithoutApprovalResponses = [];
@@ -8172,8 +8290,8 @@ async function convertLanguageModelContent({ content, toolCalls, toolOutputs, to
 		case "reasoning-file":
 			contentParts.push({
 				type: part.type,
-				file: new DefaultGeneratedFile({
-					data: await resolveGeneratedFileData({
+				file: new default_stop_condition_D8PwkeWe_DefaultGeneratedFile({
+					data: await default_stop_condition_D8PwkeWe_resolveGeneratedFileData({
 						data: part.data,
 						download,
 						abortSignal,
@@ -8193,7 +8311,7 @@ async function convertLanguageModelContent({ content, toolCalls, toolOutputs, to
 		case "tool-result": {
 			const toolCall = toolCalls.find((toolCall) => toolCall.toolCallId === part.toolCallId);
 			if (toolCall == null) {
-				const tool = getOwn(tools, part.toolName);
+				const tool = default_stop_condition_D8PwkeWe_getOwn(tools, part.toolName);
 				if (!(tool?.type === "provider" && tool.supportsDeferredResults)) throw new Error(`Tool call ${part.toolCallId} not found.`);
 				if (part.isError) contentParts.push({
 					type: "tool-error",
@@ -8245,7 +8363,7 @@ async function convertLanguageModelContent({ content, toolCalls, toolOutputs, to
 		}
 		case "tool-approval-request": {
 			const toolCall = toolCalls.find((toolCall) => toolCall.toolCallId === part.toolCallId);
-			if (toolCall == null) throw new ToolCallNotFoundForApprovalError({
+			if (toolCall == null) throw new default_stop_condition_D8PwkeWe_ToolCallNotFoundForApprovalError({
 				toolCallId: part.toolCallId,
 				approvalId: part.approvalId
 			});
@@ -8267,11 +8385,11 @@ async function convertLanguageModelContent({ content, toolCalls, toolOutputs, to
 		...toolOutputsWithApprovalResponses
 	];
 }
-function resolveToolCallerConfiguration({ tools, toolCallers }) {
+function default_stop_condition_D8PwkeWe_resolveToolCallerConfiguration({ tools, toolCallers }) {
 	if (tools == null || toolCallers == null) return;
 	const resolved = {};
 	for (const [toolName, callers] of Object.entries(toolCallers)) {
-		if (!Object.prototype.hasOwnProperty.call(tools, toolName)) throw new InvalidArgumentError({
+		if (!Object.prototype.hasOwnProperty.call(tools, toolName)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 			parameter: "experimental_toolCallers",
 			value: toolCallers,
 			message: `unknown tool "${toolName}".`
@@ -8280,7 +8398,7 @@ function resolveToolCallerConfiguration({ tools, toolCallers }) {
 	}
 	return resolved;
 }
-function prepareToolsForToolCallers({ tools, toolCallers }) {
+function default_stop_condition_D8PwkeWe_prepareToolsForToolCallers({ tools, toolCallers }) {
 	if (tools == null || toolCallers == null) return {
 		executionTools: tools,
 		modelTools: tools,
@@ -8342,7 +8460,7 @@ function prepareToolsForToolCallers({ tools, toolCallers }) {
 		toolCallerMessages
 	};
 }
-function appendToolCallerMessages({ messages, toolCallerMessages }) {
+function default_stop_condition_D8PwkeWe_appendToolCallerMessages({ messages, toolCallerMessages }) {
 	if (toolCallerMessages.length === 0) return messages;
 	const latestUserText = messages.findLast((message) => message.role === "user" && typeof message.content === "string")?.content;
 	const existingUserText = new Set(latestUserText == null ? [] : [latestUserText]);
@@ -8364,14 +8482,14 @@ const toolSearchMaxResultsSymbol = Symbol.for("vercel.ai.toolSearch.maxResults")
 * Use directly or through code mode with `toolDiscovery: 'conversation'`.
 */
 function toolSearch({ search, maxResults = 5 } = {}) {
-	if (!Number.isSafeInteger(maxResults) || maxResults < 1) throw new InvalidArgumentError({
+	if (!Number.isSafeInteger(maxResults) || maxResults < 1) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: "maxResults",
 		value: maxResults,
 		message: "maxResults must be a positive safe integer."
 	});
-	return Object.assign(tool$1({
+	return Object.assign(tool({
 		description: `${search == null ? "Search for tools by keywords in their names and descriptions." : "Search for tools matching a query."} Returns up to ${maxResults === 5 ? "five" : maxResults} matching tools. Matches become available on the next model step, after this execution finishes. Wait for their tool definitions before calling the discovered tools. If no tools match, try different keywords.`,
-		inputSchema: jsonSchema$1({
+		inputSchema: jsonSchema({
 			type: "object",
 			properties: { query: {
 				type: "string",
@@ -8380,7 +8498,7 @@ function toolSearch({ search, maxResults = 5 } = {}) {
 			required: ["query"],
 			additionalProperties: false
 		}),
-		outputSchema: jsonSchema$1({
+		outputSchema: jsonSchema({
 			type: "object",
 			properties: { tools: {
 				type: "array",
@@ -8419,16 +8537,16 @@ function isToolSearch(tool) {
 //#endregion
 //#region src/tool-search/prepare-tool-search.ts
 /** Create discovery state for one generation, never for a shared tool instance. */
-function createToolSearchState({ tools, toolCallers }) {
+function default_stop_condition_D8PwkeWe_createToolSearchState({ tools, toolCallers }) {
 	const searchTools = Object.entries(tools ?? {}).filter(([, tool]) => tool.deferLoading || isToolSearch(tool));
 	if (searchTools.length === 0) return (activeTools) => activeTools;
 	const discovered = /* @__PURE__ */ new Set();
-	const getCallers = (name) => getOwn(toolCallers, name) ?? ["AI_SDK_DIRECT_TOOL_CALL"];
+	const getCallers = (name) => default_stop_condition_D8PwkeWe_getOwn(toolCallers, name) ?? ["AI_SDK_DIRECT_TOOL_CALL"];
 	for (const [name, tool] of searchTools) if (getCallers(name).some((name) => {
 		if (name === "AI_SDK_DIRECT_TOOL_CALL") return false;
 		const caller = (0,dist/* experimental_getToolCaller */.ls)(tools?.[name]);
 		return caller?.type !== "local" || caller.prepareModelMessage == null;
-	}) || isToolSearch(tool) && tool.deferLoading) throw new InvalidArgumentError({
+	}) || isToolSearch(tool) && tool.deferLoading) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: "tools",
 		value: name,
 		message: `tool "${name}" must be callable directly or through code mode with toolDiscovery: 'conversation'. The search tool itself must not defer loading.`
@@ -8495,7 +8613,7 @@ function tokenize(text) {
 * @throws {TypeValidationError} When the provided tool context does not match
 * the tool's declared `contextSchema`.
 */
-async function validateToolContext({ toolName, context, contextSchema }) {
+async function default_stop_condition_D8PwkeWe_validateToolContext({ toolName, context, contextSchema }) {
 	if (contextSchema == null) return context;
 	return await (0,dist/* validateTypes */.k5)({
 		value: context,
@@ -8505,142 +8623,6 @@ async function validateToolContext({ toolName, context, contextSchema }) {
 			entityName: toolName
 		}
 	});
-}
-//#endregion
-//#region src/generate-text/execute-tool-call.ts
-/**
-* Executes a single tool call and manages its lifecycle callbacks.
-*
-* This function handles the complete tool execution flow:
-* 1. Invokes `onToolExecutionStart` callback before execution
-* 2. Executes the tool's `execute` function with proper context
-* 3. Handles streaming outputs via `onPreliminaryToolResult`
-* 4. Invokes `onToolExecutionEnd` callback with success or error result
-*
-* @returns The tool output with performance metrics, or undefined if the tool has no execute function.
-*/
-async function executeToolCall({ toolCall, tools, toolsContext, callId, messages, abortSignal, timeout, experimental_sandbox: sandbox, onPreliminaryToolResult, onToolExecutionStart, onToolExecutionEnd, executeToolInTelemetryContext = async ({ execute }) => await execute(), runInTracingChannelSpan = async ({ execute }) => await execute() }) {
-	const { toolName, toolCallId, input } = toolCall;
-	const tool = getOwn(tools, toolName);
-	if (!(0,dist/* isExecutableTool */.v0)(tool)) return;
-	const context = await validateToolContext({
-		toolName,
-		context: getOwn(toolsContext, toolName),
-		contextSchema: tool.contextSchema
-	});
-	const toolExecutionContext = {
-		toolCall,
-		messages,
-		toolContext: context
-	};
-	const baseCallbackEvent = {
-		callId,
-		...toolExecutionContext
-	};
-	return await runInTracingChannelSpan({
-		type: "executeTool",
-		event: baseCallbackEvent,
-		execute: async () => {
-			let output;
-			await notify({
-				event: baseCallbackEvent,
-				callbacks: onToolExecutionStart
-			});
-			const toolAbortSignal = mergeAbortSignals(abortSignal, getToolTimeoutMs(timeout, toolName));
-			let toolExecutionMs = 0;
-			try {
-				await executeToolInTelemetryContext({
-					callId,
-					toolCallId,
-					...toolExecutionContext,
-					execute: async () => {
-						const startTime = now();
-						try {
-							const stream = (0,dist/* executeTool */.o8)({
-								tool,
-								input,
-								options: {
-									toolCallId,
-									messages,
-									abortSignal: toolAbortSignal,
-									context,
-									experimental_sandbox: sandbox
-								}
-							});
-							for await (const part of stream) if (part.type === "preliminary") onPreliminaryToolResult?.({
-								...toolCall,
-								type: "tool-result",
-								output: part.output,
-								preliminary: true
-							});
-							else output = part.output;
-						} finally {
-							toolExecutionMs = now() - startTime;
-						}
-					}
-				});
-			} catch (error) {
-				const toolError = {
-					type: "tool-error",
-					toolCallId,
-					toolName,
-					input,
-					error,
-					dynamic: tool.type === "dynamic",
-					...toolCall.providerMetadata != null ? { providerMetadata: toolCall.providerMetadata } : {},
-					...toolCall.toolMetadata != null ? { toolMetadata: toolCall.toolMetadata } : {}
-				};
-				await notify({
-					event: {
-						...baseCallbackEvent,
-						toolOutput: toolError,
-						toolExecutionMs
-					},
-					callbacks: onToolExecutionEnd
-				});
-				return {
-					output: toolError,
-					toolExecutionMs
-				};
-			}
-			const toolResult = {
-				type: "tool-result",
-				toolCallId,
-				toolName,
-				input,
-				output,
-				dynamic: tool.type === "dynamic",
-				...toolCall.providerMetadata != null ? { providerMetadata: toolCall.providerMetadata } : {},
-				...toolCall.toolMetadata != null ? { toolMetadata: toolCall.toolMetadata } : {}
-			};
-			await notify({
-				event: {
-					...baseCallbackEvent,
-					toolOutput: toolResult,
-					toolExecutionMs
-				},
-				callbacks: onToolExecutionEnd
-			});
-			return {
-				output: toolResult,
-				toolExecutionMs
-			};
-		}
-	});
-}
-//#endregion
-//#region src/generate-text/filter-active-tools.ts
-/**
-* Filters the tools to only include the active tools.
-* When activeTools is provided, we only include the tools that are in the list.
-*
-* @param tools - The tools to filter.
-* @param activeTools - The active tools to include.
-* @returns The filtered tools.
-*/
-function filterActiveTools({ tools, activeTools }) {
-	if (tools == null || activeTools == null) return tools;
-	return Object.fromEntries(Object.entries(tools).filter(([name]) => activeTools.includes(name)));
 }
 //#endregion
 //#region src/generate-text/reasoning-output.ts
@@ -8663,7 +8645,7 @@ function convertFromReasoningOutputs(parts) {
 		};
 	});
 }
-function convertToReasoningOutputs(parts) {
+function default_stop_condition_D8PwkeWe_convertToReasoningOutputs(parts) {
 	return parts.map((part) => {
 		if (part.type === "reasoning") return {
 			type: "reasoning",
@@ -8673,7 +8655,7 @@ function convertToReasoningOutputs(parts) {
 		const rawData = unwrapReasoningFileData(part.data);
 		return {
 			type: "reasoning-file",
-			file: new DefaultGeneratedFile({
+			file: new default_stop_condition_D8PwkeWe_DefaultGeneratedFile({
 				data: rawData instanceof ArrayBuffer ? new Uint8Array(rawData) : rawData instanceof URL ? rawData.toString() : rawData,
 				mediaType: part.mediaType
 			}),
@@ -8689,6 +8671,7 @@ var DefaultGenerateTextResult = class {
 		this.steps = options.steps;
 		this._output = options.output;
 		this.totalUsage = options.totalUsage;
+		this.stoppedBy = options.stoppedBy;
 	}
 	get finalStep() {
 		return this.steps.at(-1);
@@ -8706,7 +8689,7 @@ var DefaultGenerateTextResult = class {
 		return this.finalStep.reasoningText;
 	}
 	get reasoning() {
-		return convertToReasoningOutputs(this.finalStep.reasoning);
+		return default_stop_condition_D8PwkeWe_convertToReasoningOutputs(this.finalStep.reasoning);
 	}
 	get toolCalls() {
 		return this.steps.flatMap((step) => step.toolCalls);
@@ -8754,10 +8737,2151 @@ var DefaultGenerateTextResult = class {
 		return this.totalUsage;
 	}
 	get output() {
-		if (this._output == null) throw new NoOutputGeneratedError();
+		if (this._output == null) throw new default_stop_condition_D8PwkeWe_NoOutputGeneratedError();
 		return this._output;
 	}
 };
+//#endregion
+//#region src/generate-text/tool-call.ts
+const inputSchemaInputSymbol = Symbol("ai-sdk-tool-call-input-schema-input");
+function setToolCallInputSchemaInput(toolCall, inputSchemaInput) {
+	Object.defineProperty(toolCall, inputSchemaInputSymbol, { value: inputSchemaInput });
+	return toolCall;
+}
+function default_stop_condition_D8PwkeWe_getToolCallInputSchemaInput(toolCall) {
+	return inputSchemaInputSymbol in toolCall ? { value: toolCall[inputSchemaInputSymbol] } : void 0;
+}
+//#endregion
+//#region src/generate-text/parse-tool-call.ts
+async function default_stop_condition_D8PwkeWe_parseToolCall({ toolCall, tools, repairToolCall, refineToolInput, messages, instructions, abortSignal }) {
+	try {
+		if (tools == null) {
+			if (toolCall.providerExecuted && toolCall.dynamic) return await refineParsedToolCallInput({
+				toolCall: await parseProviderExecutedDynamicToolCall(toolCall),
+				refineToolInput
+			});
+			throw new NoSuchToolError({ toolName: toolCall.toolName });
+		}
+		try {
+			return await refineParsedToolCallInput({
+				toolCall: await doParseToolCall({
+					toolCall,
+					tools
+				}),
+				refineToolInput
+			});
+		} catch (error) {
+			if (repairToolCall == null || !(NoSuchToolError.isInstance(error) || InvalidToolInputError.isInstance(error))) throw error;
+			let repairedToolCall = null;
+			try {
+				abortSignal?.throwIfAborted();
+				repairedToolCall = await waitForPromiseWithAbortSignal({
+					promise: repairToolCall({
+						toolCall,
+						tools,
+						inputSchema: async ({ toolName }) => {
+							const inputSchema = default_stop_condition_D8PwkeWe_getOwn(tools, toolName)?.inputSchema;
+							return await (0,dist/* asSchema */.mD)(inputSchema).jsonSchema;
+						},
+						instructions,
+						system: instructions,
+						messages,
+						error,
+						abortSignal
+					}),
+					abortSignal
+				});
+			} catch (repairError) {
+				abortSignal?.throwIfAborted();
+				throw new ToolCallRepairError({
+					cause: repairError,
+					originalError: error
+				});
+			}
+			if (repairedToolCall == null) throw error;
+			const parsedRepairedToolCall = await refineParsedToolCallInput({
+				toolCall: await doParseToolCall({
+					toolCall: repairedToolCall,
+					tools
+				}),
+				refineToolInput
+			});
+			abortSignal?.throwIfAborted();
+			return parsedRepairedToolCall;
+		}
+	} catch (error) {
+		abortSignal?.throwIfAborted();
+		const parsedInput = await (0,dist/* safeParseJSON */.N8)({ text: toolCall.input });
+		const input = parsedInput.success ? parsedInput.value : toolCall.input;
+		const tool = default_stop_condition_D8PwkeWe_getOwn(tools, toolCall.toolName);
+		return {
+			type: "tool-call",
+			toolCallId: toolCall.toolCallId,
+			toolName: toolCall.toolName,
+			input,
+			dynamic: true,
+			invalid: true,
+			error,
+			title: tool?.title,
+			providerExecuted: toolCall.providerExecuted,
+			providerMetadata: toolCall.providerMetadata,
+			...tool?.metadata != null ? { toolMetadata: tool.metadata } : {}
+		};
+	}
+}
+async function waitForPromiseWithAbortSignal({ promise, abortSignal }) {
+	if (abortSignal == null) return await promise;
+	return await new Promise((resolve, reject) => {
+		const cleanup = () => {
+			abortSignal.removeEventListener("abort", onAbort);
+		};
+		const onAbort = () => {
+			cleanup();
+			reject(abortSignal.reason);
+		};
+		Promise.resolve(promise).then((value) => {
+			cleanup();
+			resolve(value);
+		}).catch((error) => {
+			cleanup();
+			reject(error);
+		});
+		abortSignal.addEventListener("abort", onAbort, { once: true });
+		if (abortSignal.aborted) onAbort();
+	});
+}
+async function refineParsedToolCallInput({ toolCall, refineToolInput }) {
+	const refine = default_stop_condition_D8PwkeWe_getOwn(refineToolInput, toolCall.toolName);
+	if (refine == null) return toolCall;
+	const refinedToolCall = {
+		...toolCall,
+		input: await refine(toolCall.input)
+	};
+	const inputSchemaInput = default_stop_condition_D8PwkeWe_getToolCallInputSchemaInput(toolCall);
+	return inputSchemaInput == null ? refinedToolCall : setToolCallInputSchemaInput(refinedToolCall, inputSchemaInput.value);
+}
+async function parseProviderExecutedDynamicToolCall(toolCall) {
+	const parseResult = toolCall.input.trim() === "" ? {
+		success: true,
+		value: {}
+	} : await (0,dist/* safeParseJSON */.N8)({ text: toolCall.input });
+	if (parseResult.success === false) throw new InvalidToolInputError({
+		toolName: toolCall.toolName,
+		toolInput: toolCall.input,
+		cause: parseResult.error
+	});
+	return {
+		type: "tool-call",
+		toolCallId: toolCall.toolCallId,
+		toolName: toolCall.toolName,
+		input: parseResult.value,
+		providerExecuted: true,
+		dynamic: true,
+		providerMetadata: toolCall.providerMetadata
+	};
+}
+async function doParseToolCall({ toolCall, tools }) {
+	const toolName = toolCall.toolName;
+	const tool = default_stop_condition_D8PwkeWe_getOwn(tools, toolName);
+	if (tool == null) {
+		if (toolCall.providerExecuted && toolCall.dynamic) return await parseProviderExecutedDynamicToolCall(toolCall);
+		throw new NoSuchToolError({
+			toolName: toolCall.toolName,
+			availableTools: Object.keys(tools)
+		});
+	}
+	const schema = (0,dist/* asSchema */.mD)(tool.inputSchema);
+	const parseResult = toolCall.input.trim() === "" ? await (0,dist/* safeValidateTypes */.ZZ)({
+		value: {},
+		schema
+	}) : await (0,dist/* safeParseJSON */.N8)({
+		text: toolCall.input,
+		schema
+	});
+	if (parseResult.success === false) throw new InvalidToolInputError({
+		toolName,
+		toolInput: toolCall.input,
+		cause: parseResult.error
+	});
+	return setToolCallInputSchemaInput(tool.type === "dynamic" ? {
+		type: "tool-call",
+		toolCallId: toolCall.toolCallId,
+		toolName: toolCall.toolName,
+		input: parseResult.value,
+		providerExecuted: toolCall.providerExecuted,
+		providerMetadata: toolCall.providerMetadata,
+		...tool.metadata != null ? { toolMetadata: tool.metadata } : {},
+		dynamic: true,
+		title: tool.title
+	} : {
+		type: "tool-call",
+		toolCallId: toolCall.toolCallId,
+		toolName,
+		input: parseResult.value,
+		providerExecuted: toolCall.providerExecuted,
+		providerMetadata: toolCall.providerMetadata,
+		...tool.metadata != null ? { toolMetadata: tool.metadata } : {},
+		title: tool.title
+	}, parseResult.rawValue);
+}
+//#endregion
+//#region src/generate-text/resolve-tool-approval.ts
+/**
+* Resolves the approval state for a tool call by checking user-supplied and tool-defined
+* approval settings, and normalizes the result to the object status shape.
+* User-defined approval settings take precedence over tool-defined settings.
+* If no approval settings are provided, the tool call does not require approval.
+*/
+async function default_stop_condition_D8PwkeWe_resolveToolApproval({ tools, toolCall, toolApproval, messages, toolsContext, runtimeContext }) {
+	if (toolApproval != null && typeof toolApproval === "function") return normalizeToolApprovalStatus(await toolApproval({
+		toolCall,
+		tools,
+		toolsContext,
+		messages,
+		runtimeContext
+	}));
+	const toolName = toolCall.toolName;
+	const tool = default_stop_condition_D8PwkeWe_getOwn(tools, toolName);
+	const input = toolCall.input;
+	const userDefinedToolApprovalStatus = default_stop_condition_D8PwkeWe_getOwn(toolApproval, toolName);
+	if (userDefinedToolApprovalStatus != null) return normalizeToolApprovalStatus(typeof userDefinedToolApprovalStatus === "function" ? await userDefinedToolApprovalStatus(input, {
+		toolCallId: toolCall.toolCallId,
+		messages,
+		toolContext: await default_stop_condition_D8PwkeWe_validateToolContext({
+			toolName,
+			context: default_stop_condition_D8PwkeWe_getOwn(toolsContext, toolName),
+			contextSchema: tool?.contextSchema
+		}),
+		runtimeContext
+	}) : userDefinedToolApprovalStatus);
+	if (tool?.needsApproval == null) return { type: "not-applicable" };
+	return (typeof tool.needsApproval === "function" ? await tool.needsApproval(input, {
+		toolCallId: toolCall.toolCallId,
+		messages,
+		context: await default_stop_condition_D8PwkeWe_validateToolContext({
+			toolName,
+			context: default_stop_condition_D8PwkeWe_getOwn(toolsContext, toolName),
+			contextSchema: tool?.contextSchema
+		})
+	}) : tool.needsApproval) ? { type: "user-approval" } : { type: "not-applicable" };
+}
+function normalizeToolApprovalStatus(status) {
+	return status === void 0 ? { type: "not-applicable" } : typeof status === "string" ? { type: status } : status;
+}
+//#endregion
+//#region src/telemetry/filter-included-context.ts
+/**
+* Returns a shallow copy of the runtime context with only top-level
+* properties marked for telemetry inclusion.
+*/
+function default_stop_condition_D8PwkeWe_filterIncludedContext({ context, includeContext }) {
+	if (context == null) return {};
+	return Object.fromEntries(Object.entries(context).filter(([key]) => includeContext?.[key] === true));
+}
+function filterToolsContext({ toolsContext, includeToolsContext }) {
+	if (includeToolsContext == null) return {};
+	return Object.fromEntries(Object.entries(toolsContext).map(([toolName, toolContext]) => [toolName, filterToolContext({
+		toolName,
+		toolContext,
+		includeToolsContext
+	})]));
+}
+function filterToolContext({ toolName, toolContext, includeToolsContext }) {
+	const includeToolContext = includeToolsContext?.[toolName];
+	return default_stop_condition_D8PwkeWe_filterIncludedContext({
+		context: toolContext,
+		includeContext: includeToolContext
+	});
+}
+//#endregion
+//#region src/util/merge-callbacks.ts
+/**
+* Creates an async callback that invokes the provided callbacks in parallel.
+* Undefined callbacks are skipped, and thrown or rejected callback errors are
+* ignored.
+*
+* @param callbacks The callbacks to invoke for each event.
+* @returns A callback that forwards each event to all callbacks and waits for
+* them to settle.
+*/
+function default_stop_condition_D8PwkeWe_mergeCallbacks(...callbacks) {
+	return async (event) => {
+		await Promise.allSettled(callbacks.map(async (callback) => {
+			await callback?.(event);
+		}));
+	};
+}
+//#endregion
+//#region src/telemetry/tracing-channel.ts
+const AI_SDK_TELEMETRY_TRACING_CHANNEL = "ai:telemetry";
+//#endregion
+//#region src/util/is-node-runtime.ts
+function isNodeRuntime() {
+	return globalThis.process?.release?.name === "node";
+}
+//#endregion
+//#region src/telemetry/redact-telemetry-credentials.ts
+/**
+* Apply provider-owned credential redaction on telemetry-only copies. Only visit SDK
+* metadata containers, never arbitrary prompts, tool outputs, or user context.
+*/
+function redactTelemetryCredentials(value) {
+	if (dist/* DownloadError */.nV.isInstance(value)) return redactDownloadError(value);
+	return replaceProperties(value, {
+		args: dist/* redactTelemetryValue */.IR,
+		tools: redactTools,
+		stepTools: redactTools,
+		request: redactMetadata,
+		response: redactMetadata,
+		steps: (steps) => mapArray(steps, redactTelemetryCredentials),
+		finalStep: redactTelemetryCredentials,
+		error: redactTelemetryCredentials,
+		cause: redactTelemetryCredentials,
+		errors: (errors) => mapArray(errors, redactTelemetryCredentials),
+		lastError: redactTelemetryCredentials,
+		requestBodyValues: redactBody
+	});
+}
+function redactDownloadError(error) {
+	return new dist/* DownloadError */.nV({
+		url: "[redacted]",
+		statusCode: error.statusCode,
+		statusText: error.statusText,
+		message: "Failed to download a file."
+	});
+}
+function redactMetadata(value) {
+	return Array.isArray(value) ? mapArray(value, redactMetadata) : replaceProperties(value, { body: redactBody });
+}
+function redactBody(value) {
+	return replaceProperties((0,dist/* redactTelemetryValue */.IR)(value), { tools: redactTools });
+}
+function redactTools(value) {
+	if (Array.isArray(value)) return mapArray(value, redactTelemetryCredentials);
+	if (!default_stop_condition_D8PwkeWe_isRecord(value)) return value;
+	return replaceProperties(value, Object.fromEntries(Object.keys(value).map((key) => [key, redactTelemetryCredentials])));
+}
+function default_stop_condition_D8PwkeWe_isRecord(value) {
+	return value != null && typeof value === "object" && !Array.isArray(value);
+}
+function mapArray(value, redact) {
+	if (!Array.isArray(value)) return value;
+	const copy = value.map(redact);
+	return copy.some((entry, index) => entry !== value[index]) ? copy : value;
+}
+/** Preserve result getters and property descriptors without mutation. */
+function replaceProperties(value, redactors) {
+	if (!default_stop_condition_D8PwkeWe_isRecord(value)) return value;
+	let descriptors;
+	for (const [key, redact] of Object.entries(redactors)) {
+		const descriptor = Object.getOwnPropertyDescriptor(value, key);
+		if (descriptor == null || !("value" in descriptor)) continue;
+		const redacted = redact(descriptor.value);
+		if (redacted !== descriptor.value) {
+			descriptors ??= Object.getOwnPropertyDescriptors(value);
+			descriptors[key] = {
+				...descriptor,
+				value: redacted
+			};
+		}
+	}
+	if (descriptors == null) return value;
+	const streamDescriptor = descriptors.stream;
+	if (streamDescriptor?.writable && streamDescriptor.value instanceof ReadableStream) {
+		const original = value;
+		descriptors.stream = {
+			configurable: streamDescriptor.configurable,
+			enumerable: streamDescriptor.enumerable,
+			get: () => original.stream,
+			set: (stream) => {
+				original.stream = stream;
+			}
+		};
+	}
+	return Object.create(Object.getPrototypeOf(value), descriptors);
+}
+//#endregion
+//#region src/telemetry/tracing-channel-publisher.ts
+let diagnosticsChannelPromise;
+/**
+* Loads Node's diagnostics channel module only when the current runtime supports
+* it. Unsupported runtimes and failed imports intentionally resolve to
+* undefined so telemetry tracing never crashes user code.
+*/
+async function loadDiagnosticsChannel() {
+	if (!isNodeRuntime()) return;
+	if (diagnosticsChannelPromise == null) diagnosticsChannelPromise = Promise.resolve(loadBuiltinModule("node:diagnostics_channel"));
+	return diagnosticsChannelPromise;
+}
+function loadBuiltinModule(id) {
+	const processWithBuiltins = globalThis.process;
+	try {
+		return processWithBuiltins?.getBuiltinModule?.(id);
+	} catch {
+		return;
+	}
+}
+/**
+* Runs an async operation inside the AI SDK telemetry tracing channel when
+* tracing subscribers may exist. Without Node diagnostics-channel support,
+* without tracingChannel support, or when the runtime reports no subscribers,
+* this is a direct pass-through.
+*
+* The execution bookkeeping preserves the original model/tool result or error
+* if tracing itself throws, and prevents falling back by calling `execute` a
+* second time.
+*/
+async function runWithTracingChannelSpan(message, execute, recordResult = true) {
+	const tracingChannel = (await loadDiagnosticsChannel())?.tracingChannel?.(AI_SDK_TELEMETRY_TRACING_CHANNEL);
+	if (tracingChannel == null || tracingChannel.hasSubscribers === false) return await execute();
+	let executePromise;
+	let executionResult;
+	let executionError;
+	let hasExecutionResult = false;
+	let hasExecutionError = false;
+	const tracedExecute = () => {
+		try {
+			executePromise = Promise.resolve(execute());
+		} catch (error) {
+			executePromise = Promise.reject(error);
+		}
+		executePromise = executePromise.then((result) => {
+			executionResult = result;
+			hasExecutionResult = true;
+			return result;
+		}, (error) => {
+			executionError = error;
+			hasExecutionError = true;
+			throw error;
+		});
+		return recordResult ? executePromise.then(redactTelemetryCredentials, (error) => {
+			throw redactTelemetryCredentials(error);
+		}) : executePromise.then(() => void 0, () => {
+			throw new Error("AI SDK operation failed");
+		});
+	};
+	try {
+		await tracingChannel.tracePromise(tracedExecute, message);
+		return executionResult;
+	} catch {
+		if (hasExecutionError) throw executionError;
+		if (hasExecutionResult) return executionResult;
+		if (executePromise != null) return await executePromise;
+		return await execute();
+	}
+}
+/**
+* Opens a long-lived tracing-channel span context and returns a runner that can
+* re-enter that context later without changing stream setup timing.
+*/
+function openTelemetryChannelSpanContext({ message, completion, recordResult = true }) {
+	if (!isNodeRuntime()) {
+		Promise.resolve(completion).catch(() => {});
+		return;
+	}
+	const diagnosticsChannel = loadBuiltinModule("node:diagnostics_channel");
+	const asyncHooks = loadBuiltinModule("node:async_hooks");
+	const tracingChannel = diagnosticsChannel?.tracingChannel?.(AI_SDK_TELEMETRY_TRACING_CHANNEL);
+	if (tracingChannel == null || tracingChannel.hasSubscribers === false || asyncHooks == null) {
+		Promise.resolve(completion).catch(() => {});
+		return;
+	}
+	const context = message;
+	let asyncResource;
+	let asyncEndPublished = false;
+	const safePublish = (publish) => {
+		try {
+			publish();
+		} catch {}
+	};
+	const publishAsyncEnd = ({ result, error }) => {
+		if (asyncEndPublished) return;
+		asyncEndPublished = true;
+		if (error !== void 0) {
+			context.error = recordResult ? redactTelemetryCredentials(error) : /* @__PURE__ */ new Error("AI SDK operation failed");
+			safePublish(() => tracingChannel.error.publish(context));
+		}
+		if (recordResult && result !== void 0) context.result = redactTelemetryCredentials(result);
+		safePublish(() => tracingChannel.asyncEnd.publish(context));
+	};
+	safePublish(() => {
+		tracingChannel.start.runStores(context, () => {
+			asyncResource = new asyncHooks.AsyncResource("ai.telemetry");
+		});
+	});
+	safePublish(() => tracingChannel.end.publish(context));
+	Promise.resolve(completion).then((result) => publishAsyncEnd({ result }), (error) => publishAsyncEnd({ error }));
+	return { run: (execute) => asyncResource == null ? execute() : asyncResource.runInAsyncScope(execute) };
+}
+//#endregion
+//#region src/telemetry/telemetry-registry.ts
+/**
+* Registers one or more telemetry integrations globally.
+*/
+function registerTelemetry(...integrations) {
+	if (!globalThis.AI_SDK_TELEMETRY_INTEGRATIONS) globalThis.AI_SDK_TELEMETRY_INTEGRATIONS = [];
+	globalThis.AI_SDK_TELEMETRY_INTEGRATIONS.push(...integrations);
+}
+function default_stop_condition_D8PwkeWe_getGlobalTelemetryIntegrations() {
+	return globalThis.AI_SDK_TELEMETRY_INTEGRATIONS ?? [];
+}
+//#endregion
+//#region src/telemetry/filter-telemetry-event.ts
+/**
+* Filters SDK-owned content fields on a copy. Only descend into SDK event
+* containers; user context has its own inclusion policy.
+*/
+function filterTelemetryEvent(event, telemetry) {
+	const hideInputs = telemetry.recordInputs === false;
+	const hideOutputs = telemetry.recordOutputs === false;
+	if (!hideInputs && !hideOutputs || event == null || typeof event !== "object") return event;
+	const filtered = Object.assign(Object.create(Object.getPrototypeOf(event)), event);
+	const replace = (fields) => {
+		for (const [key, value] of Object.entries(fields)) if (Object.hasOwn(event, key)) filtered[key] = value;
+	};
+	const isSpeech = filtered.operationId === "ai.generateSpeech";
+	if (hideInputs) {
+		replace({
+			instructions: void 0,
+			system: void 0,
+			prompt: void 0,
+			messages: [],
+			promptMessages: [],
+			experimental_steeringMessages: [],
+			tools: void 0,
+			stepTools: void 0,
+			schema: void 0,
+			schemaName: void 0,
+			schemaDescription: void 0,
+			...typeof filtered.output === "object" ? { output: void 0 } : {},
+			providerOptions: {},
+			value: "",
+			values: [],
+			query: "",
+			documents: [],
+			state: Array.isArray(filtered.state) ? [] : typeof filtered.state === "string" ? "" : {},
+			questions: {},
+			fields: {},
+			referenceDate: void 0,
+			...isSpeech ? { text: "" } : {}
+		});
+		if (filtered.toolCall != null) filtered.toolCall = {
+			...filtered.toolCall,
+			input: void 0
+		};
+		if (filtered.toolOutput != null) filtered.toolOutput = {
+			...filtered.toolOutput,
+			input: void 0
+		};
+		if (Array.isArray(filtered.ranking)) filtered.ranking = filtered.ranking.map((entry) => "document" in entry ? {
+			...entry,
+			document: typeof entry.document === "string" ? "" : {}
+		} : entry);
+	}
+	if (hideOutputs) {
+		replace({
+			content: [],
+			...!isSpeech ? { text: "" } : {},
+			reasoning: Array.isArray(filtered.reasoning) ? [] : void 0,
+			reasoningText: void 0,
+			files: [],
+			sources: [],
+			toolCalls: [],
+			staticToolCalls: [],
+			dynamicToolCalls: [],
+			toolResults: [],
+			staticToolResults: [],
+			dynamicToolResults: [],
+			responseMessages: [],
+			object: void 0,
+			objectText: "",
+			embedding: [],
+			embeddings: [],
+			ranking: [],
+			answers: {},
+			segments: [],
+			words: []
+		});
+		if (filtered.toolOutput != null) filtered.toolOutput = {
+			...filtered.toolOutput,
+			output: void 0,
+			error: void 0
+		};
+	}
+	replace({
+		providerMetadata: void 0,
+		error: filtered.error == null ? filtered.error : /* @__PURE__ */ new Error("AI SDK operation failed")
+	});
+	for (const key of ["toolCall", "toolOutput"]) {
+		const toolEvent = filtered[key];
+		if (toolEvent != null && typeof toolEvent === "object") filtered[key] = {
+			...toolEvent,
+			providerMetadata: void 0,
+			..."error" in toolEvent ? { error: toolEvent.error == null ? toolEvent.error : /* @__PURE__ */ new Error("AI SDK operation failed") } : {}
+		};
+	}
+	for (const key of ["request", "response"]) {
+		const filterMetadata = (metadata) => {
+			if (metadata == null || typeof metadata !== "object") return metadata;
+			const filteredMetadata = { ...metadata };
+			delete filteredMetadata.body;
+			if (key === "request" ? hideInputs : hideOutputs) {
+				if ("messages" in metadata) filteredMetadata.messages = [];
+				if ("instructions" in metadata) filteredMetadata.instructions = void 0;
+			}
+			return filteredMetadata;
+		};
+		const metadata = filtered[key];
+		if (metadata != null) filtered[key] = Array.isArray(metadata) ? metadata.map(filterMetadata) : filterMetadata(metadata);
+	}
+	if (Array.isArray(filtered.steps)) filtered.steps = filtered.steps.map((step) => filterTelemetryEvent(step, telemetry));
+	if (Object.hasOwn(event, "finalStep")) filtered.finalStep = filterTelemetryEvent(filtered.finalStep, telemetry);
+	return filtered;
+}
+//#endregion
+//#region src/telemetry/create-telemetry-dispatcher.ts
+function augmentEvent(event, telemetry, filterContext = false) {
+	const augmentedEvent = Object.assign(Object.create(Object.getPrototypeOf(event)), event, {
+		recordInputs: telemetry.recordInputs,
+		recordOutputs: telemetry.recordOutputs,
+		functionId: telemetry.functionId,
+		aiVersion: default_stop_condition_D8PwkeWe_VERSION
+	});
+	if (filterContext && event != null && typeof event === "object" && "runtimeContext" in event) augmentedEvent.runtimeContext = default_stop_condition_D8PwkeWe_filterIncludedContext({
+		context: event.runtimeContext,
+		includeContext: telemetry.includeRuntimeContext
+	});
+	if (filterContext && event != null && typeof event === "object") {
+		if ("toolsContext" in event) augmentedEvent.toolsContext = filterToolsContext({
+			toolsContext: event.toolsContext,
+			includeToolsContext: telemetry.includeToolsContext
+		});
+		else if ("toolContext" in event && event.toolContext != null && "toolCall" in event && event.toolCall != null && typeof event.toolCall === "object" && "toolName" in event.toolCall) augmentedEvent.toolContext = filterToolContext({
+			toolName: event.toolCall.toolName,
+			toolContext: event.toolContext,
+			includeToolsContext: telemetry.includeToolsContext
+		});
+	}
+	return redactTelemetryCredentials(filterTelemetryEvent(augmentedEvent, telemetry));
+}
+/**
+* Creates a telemetry dispatcher that sends telemetry events
+* to the resolved set of integrations.
+*
+* When per-call integrations are provided, they take precedence over the globally
+* registered integrations for that call. When no per-call integrations are
+* provided, the globally registered integrations are used.
+*
+* @param args.telemetry - Optional per-call telemetry settings and integrations.
+*
+* @returns A telemetry dispatcher that fans out lifecycle events to the
+* resolved set of integrations.
+*/
+function default_stop_condition_D8PwkeWe_createTelemetryDispatcher({ telemetry }) {
+	if (telemetry?.isEnabled === false) return {};
+	const localIntegrations = telemetry?.integrations;
+	const integrations = localIntegrations != null ? (0,dist/* asArray */._j)(localIntegrations) : default_stop_condition_D8PwkeWe_getGlobalTelemetryIntegrations();
+	const telemetryMetadata = {
+		recordInputs: telemetry?.recordInputs,
+		recordOutputs: telemetry?.recordOutputs,
+		functionId: telemetry?.functionId,
+		includeRuntimeContext: telemetry?.includeRuntimeContext,
+		includeToolsContext: telemetry?.includeToolsContext
+	};
+	const recordResult = telemetry?.recordInputs !== false && telemetry?.recordOutputs !== false;
+	const mergeTelemetryCallback = (key, deprecatedKey) => {
+		const integrationCallbacks = integrations.map((integration) => {
+			const callback = integration[key] ?? (deprecatedKey == null ? void 0 : integration[deprecatedKey]);
+			return typeof callback === "function" ? callback.bind(integration) : void 0;
+		}).filter(Boolean).map((callback) => ((event) => callback(augmentEvent(event, telemetryMetadata))));
+		if (integrationCallbacks.length === 0) return;
+		const mergedIntegrationCallback = default_stop_condition_D8PwkeWe_mergeCallbacks(...integrationCallbacks);
+		return async (event) => {
+			await mergedIntegrationCallback(event);
+		};
+	};
+	const onStepEnd = mergeTelemetryCallback("onStepEnd");
+	const onStepFinish = mergeTelemetryCallback("onStepFinish");
+	const executeLanguageModelCallWrappers = integrations.map((integration) => integration.executeLanguageModelCall?.bind(integration)).filter(Boolean);
+	const executeToolWrappers = integrations.map((integration) => integration.executeTool?.bind(integration)).filter(Boolean);
+	return {
+		runInTracingChannelSpan: async ({ type, event, execute }) => await runWithTracingChannelSpan({
+			type,
+			event: augmentEvent(event, telemetryMetadata, true)
+		}, execute, recordResult),
+		startTracingChannelContext: ({ type, event, completion }) => openTelemetryChannelSpanContext({
+			message: {
+				type,
+				event: augmentEvent(event, telemetryMetadata, true)
+			},
+			completion,
+			recordResult
+		}),
+		onStart: mergeTelemetryCallback("onStart"),
+		onStepStart: mergeTelemetryCallback("onStepStart"),
+		onLanguageModelCallStart: mergeTelemetryCallback("onLanguageModelCallStart"),
+		onLanguageModelCallEnd: mergeTelemetryCallback("onLanguageModelCallEnd"),
+		onToolExecutionStart: mergeTelemetryCallback("onToolExecutionStart"),
+		onToolExecutionEnd: mergeTelemetryCallback("onToolExecutionEnd"),
+		onStepEnd: onStepEnd == null && onStepFinish == null ? void 0 : default_stop_condition_D8PwkeWe_mergeCallbacks(onStepEnd, onStepFinish),
+		onStepError: mergeTelemetryCallback("onStepError"),
+		onObjectStepStart: mergeTelemetryCallback("onObjectStepStart"),
+		onObjectStepEnd: mergeTelemetryCallback("onObjectStepEnd"),
+		onEmbedStart: mergeTelemetryCallback("onEmbedStart"),
+		onEmbedEnd: mergeTelemetryCallback("onEmbedEnd"),
+		onRerankStart: mergeTelemetryCallback("onRerankStart"),
+		onRerankEnd: mergeTelemetryCallback("onRerankEnd"),
+		experimental_onDecideStart: mergeTelemetryCallback("experimental_onDecideStart", "experimental_onEvaluateStart"),
+		experimental_onDecisionModelCallStart: mergeTelemetryCallback("experimental_onDecisionModelCallStart", "experimental_onEvaluationModelCallStart"),
+		experimental_onDecisionModelCallEnd: mergeTelemetryCallback("experimental_onDecisionModelCallEnd", "experimental_onEvaluationModelCallEnd"),
+		experimental_onDecideEnd: mergeTelemetryCallback("experimental_onDecideEnd", "experimental_onEvaluateEnd"),
+		experimental_onExtractStart: mergeTelemetryCallback("experimental_onExtractStart"),
+		experimental_onExtractionModelCallStart: mergeTelemetryCallback("experimental_onExtractionModelCallStart"),
+		experimental_onExtractionModelCallEnd: mergeTelemetryCallback("experimental_onExtractionModelCallEnd"),
+		experimental_onExtractEnd: mergeTelemetryCallback("experimental_onExtractEnd"),
+		experimental_onStreamTranscriptionStart: mergeTelemetryCallback("experimental_onStreamTranscriptionStart"),
+		experimental_onStreamTranscriptionEnd: mergeTelemetryCallback("experimental_onStreamTranscriptionEnd"),
+		onEnd: mergeTelemetryCallback("onEnd"),
+		onAbort: mergeTelemetryCallback("onAbort"),
+		onError: mergeTelemetryCallback("onError"),
+		/**
+		* Runs provider calls inside integration-specific context so
+		* auto-instrumented provider requests can be associated with model work.
+		*/
+		executeLanguageModelCall: async ({ execute, ...event }) => {
+			const augmentedEvent = augmentEvent(event, telemetryMetadata);
+			let wrappedExecute = execute;
+			for (const executeWrapper of executeLanguageModelCallWrappers) {
+				const innerExecute = wrappedExecute;
+				wrappedExecute = async () => {
+					const originals = /* @__PURE__ */ new Map();
+					const redact = (original) => {
+						const redacted = redactTelemetryCredentials(original);
+						if (redacted !== original) originals.set(redacted, original);
+						return redacted;
+					};
+					const restore = (value) => originals.has(value) ? originals.get(value) : value;
+					try {
+						return restore(await executeWrapper({
+							...augmentedEvent,
+							execute: async () => {
+								try {
+									return redact(await innerExecute());
+								} catch (error) {
+									throw redact(error);
+								}
+							}
+						}));
+					} catch (error) {
+						throw restore(error);
+					}
+				};
+			}
+			return await runWithTracingChannelSpan({
+				type: "languageModelCall",
+				event: augmentedEvent
+			}, wrappedExecute, recordResult);
+		},
+		/**
+		* Composes all `executeTool` wrappers around the original tool execution.
+		* Each wrapper receives an `execute` function that calls the next wrapper in
+		* the chain, so integrations can establish nested telemetry context before
+		* delegating to the underlying tool.
+		*/
+		executeTool: async ({ execute, ...event }) => {
+			const augmentedEvent = augmentEvent(event, telemetryMetadata);
+			let wrappedExecute = execute;
+			for (const executeWrapper of executeToolWrappers) {
+				const innerExecute = wrappedExecute;
+				wrappedExecute = () => executeWrapper({
+					...augmentedEvent,
+					execute: innerExecute
+				});
+			}
+			return await wrappedExecute();
+		}
+	};
+}
+//#endregion
+//#region src/generate-text/reasoning.ts
+function asReasoningText(reasoningParts) {
+	const reasoningText = reasoningParts.map((part) => "text" in part ? part.text : "").join("");
+	return reasoningText.length > 0 ? reasoningText : void 0;
+}
+//#endregion
+//#region src/generate-text/step-result.ts
+var default_stop_condition_D8PwkeWe_DefaultStepResult = class {
+	constructor({ callId, stepNumber, provider, modelId, runtimeContext, toolsContext, content, finishReason, rawFinishReason, usage, performance, warnings, request, response, providerMetadata, steeringMessages }) {
+		this.callId = callId;
+		this.stepNumber = stepNumber;
+		this.model = {
+			provider,
+			modelId
+		};
+		this.runtimeContext = runtimeContext;
+		this.toolsContext = toolsContext;
+		this.content = content;
+		this.finishReason = finishReason;
+		this.rawFinishReason = rawFinishReason;
+		this.usage = usage;
+		this.performance = performance;
+		this.warnings = warnings;
+		this.request = request;
+		this.response = response;
+		this.providerMetadata = providerMetadata;
+		if (steeringMessages != null && steeringMessages.length > 0) this.experimental_steeringMessages = steeringMessages;
+	}
+	get text() {
+		return this.content.filter((part) => part.type === "text").map((part) => part.text).join("");
+	}
+	get reasoning() {
+		return convertFromReasoningOutputs(this.content.filter((part) => part.type === "reasoning" || part.type === "reasoning-file"));
+	}
+	get reasoningText() {
+		return asReasoningText(this.reasoning);
+	}
+	get files() {
+		return this.content.filter((part) => part.type === "file").map((part) => part.file);
+	}
+	get sources() {
+		return this.content.filter((part) => part.type === "source");
+	}
+	get toolCalls() {
+		return this.content.filter((part) => part.type === "tool-call");
+	}
+	get staticToolCalls() {
+		return this.toolCalls.filter((toolCall) => toolCall.dynamic !== true);
+	}
+	get dynamicToolCalls() {
+		return this.toolCalls.filter((toolCall) => toolCall.dynamic === true);
+	}
+	get toolResults() {
+		return this.content.filter((part) => part.type === "tool-result");
+	}
+	get staticToolResults() {
+		return this.toolResults.filter((toolResult) => toolResult.dynamic !== true);
+	}
+	get dynamicToolResults() {
+		return this.toolResults.filter((toolResult) => toolResult.dynamic === true);
+	}
+};
+//#endregion
+//#region src/generate-text/restricted-telemetry-dispatcher.ts
+/**
+* Creates a copy of a step result whose runtime context only contains
+* top-level properties marked for telemetry inclusion.
+*/
+function restrictStepResult({ step, includeRuntimeContext, includeToolsContext }) {
+	return new default_stop_condition_D8PwkeWe_DefaultStepResult({
+		callId: step.callId,
+		stepNumber: step.stepNumber,
+		provider: step.model.provider,
+		modelId: step.model.modelId,
+		runtimeContext: default_stop_condition_D8PwkeWe_filterIncludedContext({
+			context: step.runtimeContext,
+			includeContext: includeRuntimeContext
+		}),
+		toolsContext: filterToolsContext({
+			toolsContext: step.toolsContext,
+			includeToolsContext
+		}),
+		content: step.content,
+		finishReason: step.finishReason,
+		rawFinishReason: step.rawFinishReason,
+		usage: step.usage,
+		performance: step.performance,
+		warnings: step.warnings,
+		request: step.request,
+		response: step.response,
+		providerMetadata: step.providerMetadata,
+		steeringMessages: step.experimental_steeringMessages
+	});
+}
+/**
+* Creates a telemetry dispatcher that only includes configured runtime context
+* properties in text-generation lifecycle events before dispatching them.
+*/
+function createRestrictedTelemetryDispatcher({ telemetry, includeRuntimeContext, includeToolsContext }) {
+	const telemetryDispatcher = default_stop_condition_D8PwkeWe_createTelemetryDispatcher({ telemetry });
+	const restrictStepStartEvent = (event) => ({
+		...event,
+		runtimeContext: default_stop_condition_D8PwkeWe_filterIncludedContext({
+			context: event.runtimeContext,
+			includeContext: includeRuntimeContext
+		}),
+		steps: event.steps.map((step) => restrictStepResult({
+			step,
+			includeRuntimeContext,
+			includeToolsContext
+		})),
+		toolsContext: filterToolsContext({
+			toolsContext: event.toolsContext,
+			includeToolsContext
+		})
+	});
+	return {
+		...telemetryDispatcher,
+		onStart: (event) => telemetryDispatcher.onStart?.({
+			...event,
+			runtimeContext: default_stop_condition_D8PwkeWe_filterIncludedContext({
+				context: event.runtimeContext,
+				includeContext: includeRuntimeContext
+			}),
+			toolsContext: filterToolsContext({
+				toolsContext: event.toolsContext,
+				includeToolsContext
+			})
+		}),
+		onStepStart: (event) => telemetryDispatcher.onStepStart?.(restrictStepStartEvent(event)),
+		onStepEnd: (event) => telemetryDispatcher.onStepEnd?.(restrictStepResult({
+			step: event,
+			includeRuntimeContext,
+			includeToolsContext
+		})),
+		onStepFinish: (event) => telemetryDispatcher.onStepEnd?.(restrictStepResult({
+			step: event,
+			includeRuntimeContext,
+			includeToolsContext
+		})),
+		onStepError: (event) => telemetryDispatcher.onStepError?.(restrictStepStartEvent(event)),
+		onEnd: (event) => telemetryDispatcher.onEnd?.(((restrictedSteps) => {
+			return {
+				...event,
+				runtimeContext: default_stop_condition_D8PwkeWe_filterIncludedContext({
+					context: event.runtimeContext,
+					includeContext: includeRuntimeContext
+				}),
+				steps: restrictedSteps,
+				finalStep: restrictedSteps.at(-1),
+				toolsContext: filterToolsContext({
+					toolsContext: event.toolsContext,
+					includeToolsContext
+				})
+			};
+		})(event.steps.map((step) => restrictStepResult({
+			step,
+			includeRuntimeContext,
+			includeToolsContext
+		})))),
+		onAbort: (event) => telemetryDispatcher.onAbort?.({
+			...event,
+			steps: event.steps.map((step) => restrictStepResult({
+				step,
+				includeRuntimeContext,
+				includeToolsContext
+			}))
+		}),
+		onToolExecutionStart: (event) => telemetryDispatcher.onToolExecutionStart?.({
+			...event,
+			toolContext: filterToolContext({
+				toolName: event.toolCall.toolName,
+				toolContext: event.toolContext,
+				includeToolsContext
+			})
+		}),
+		onToolExecutionEnd: (event) => telemetryDispatcher.onToolExecutionEnd?.({
+			...event,
+			toolContext: filterToolContext({
+				toolName: event.toolCall.toolName,
+				toolContext: event.toolContext,
+				includeToolsContext
+			})
+		})
+	};
+}
+//#endregion
+//#region src/util/is-deep-equal-data.ts
+/**
+* Performs a deep-equal comparison of two parsed JSON objects.
+*
+* @param {any} obj1 - The first object to compare.
+* @param {any} obj2 - The second object to compare.
+* @returns {boolean} - Returns true if the two objects are deeply equal, false otherwise.
+*/
+function default_stop_condition_D8PwkeWe_isDeepEqualData(obj1, obj2) {
+	if (obj1 === obj2) return true;
+	if (obj1 == null || obj2 == null) return false;
+	if (typeof obj1 !== "object" && typeof obj2 !== "object") return obj1 === obj2;
+	if (obj1.constructor !== obj2.constructor) return false;
+	if (obj1 instanceof Date && obj2 instanceof Date) return obj1.getTime() === obj2.getTime();
+	if (Array.isArray(obj1)) {
+		if (obj1.length !== obj2.length) return false;
+		for (let i = 0; i < obj1.length; i++) if (!default_stop_condition_D8PwkeWe_isDeepEqualData(obj1[i], obj2[i])) return false;
+		return true;
+	}
+	const keys1 = Object.keys(obj1);
+	const keys2 = Object.keys(obj2);
+	if (keys1.length !== keys2.length) return false;
+	for (const key of keys1) {
+		if (!keys2.includes(key)) return false;
+		if (!default_stop_condition_D8PwkeWe_isDeepEqualData(obj1[key], obj2[key])) return false;
+	}
+	return true;
+}
+//#endregion
+//#region src/generate-text/to-response-messages.ts
+/**
+* Converts the result of a `generateText` or `streamText` call to a list of response messages.
+*/
+async function default_stop_condition_D8PwkeWe_toResponseMessages({ content: inputContent, tools }) {
+	const responseMessages = [];
+	const toolCallOrder = /* @__PURE__ */ new Map();
+	const content = [];
+	for (const part of inputContent) {
+		if (part.type === "source") continue;
+		if ((part.type === "tool-result" || part.type === "tool-error") && !part.providerExecuted) continue;
+		if (part.type === "text" && part.text.length === 0 && part.providerMetadata == null) continue;
+		switch (part.type) {
+			case "text":
+				content.push({
+					type: "text",
+					text: part.text,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "custom":
+				content.push({
+					type: "custom",
+					kind: part.kind,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "reasoning":
+				content.push({
+					type: "reasoning",
+					text: part.text,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "file":
+				content.push({
+					type: "file",
+					data: part.file.base64,
+					mediaType: part.file.mediaType,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "reasoning-file":
+				content.push({
+					type: "reasoning-file",
+					data: part.file.base64,
+					mediaType: part.file.mediaType,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "tool-call":
+				if (!toolCallOrder.has(part.toolCallId)) toolCallOrder.set(part.toolCallId, toolCallOrder.size);
+				content.push({
+					type: "tool-call",
+					toolCallId: part.toolCallId,
+					toolName: part.toolName,
+					input: part.invalid && typeof part.input !== "object" ? {} : part.input,
+					providerExecuted: part.providerExecuted,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			case "tool-result": {
+				const output = await default_stop_condition_D8PwkeWe_createToolModelOutput({
+					toolCallId: part.toolCallId,
+					input: part.input,
+					tool: default_stop_condition_D8PwkeWe_getOwn(tools, part.toolName),
+					output: part.output,
+					errorMode: "none"
+				});
+				content.push({
+					type: "tool-result",
+					toolCallId: part.toolCallId,
+					toolName: part.toolName,
+					output,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			}
+			case "tool-error": {
+				const output = await default_stop_condition_D8PwkeWe_createToolModelOutput({
+					toolCallId: part.toolCallId,
+					input: part.input,
+					tool: default_stop_condition_D8PwkeWe_getOwn(tools, part.toolName),
+					output: part.error,
+					errorMode: "json"
+				});
+				content.push({
+					type: "tool-result",
+					toolCallId: part.toolCallId,
+					toolName: part.toolName,
+					output,
+					providerOptions: part.providerMetadata
+				});
+				break;
+			}
+			case "tool-approval-request":
+				const inputSchemaInput = default_stop_condition_D8PwkeWe_getToolCallInputSchemaInput(part.toolCall);
+				content.push({
+					type: "tool-approval-request",
+					approvalId: part.approvalId,
+					toolCallId: part.toolCall.toolCallId,
+					...part.reason != null ? { reason: part.reason } : {},
+					isAutomatic: part.isAutomatic,
+					...part.signature != null ? { signature: part.signature } : {},
+					...inputSchemaInput != null && !default_stop_condition_D8PwkeWe_isDeepEqualData(inputSchemaInput.value, part.toolCall.input) ? { inputSchemaInput: inputSchemaInput.value } : {}
+				});
+		}
+	}
+	if (content.length > 0) responseMessages.push({
+		role: "assistant",
+		content
+	});
+	const toolResultContent = [];
+	for (const part of inputContent) {
+		if (part.type !== "tool-approval-response" && part.type !== "tool-result" && part.type !== "tool-error") continue;
+		if (part.type === "tool-approval-response") {
+			toolResultContent.push({
+				type: "tool-approval-response",
+				approvalId: part.approvalId,
+				approved: part.approved,
+				reason: part.reason,
+				providerExecuted: part.providerExecuted
+			});
+			if (part.approved === false) toolResultContent.push({
+				type: "tool-result",
+				toolCallId: part.toolCall.toolCallId,
+				toolName: part.toolCall.toolName,
+				output: {
+					type: "execution-denied",
+					reason: part.reason
+				}
+			});
+			continue;
+		}
+		if (part.providerExecuted) continue;
+		const output = await default_stop_condition_D8PwkeWe_createToolModelOutput({
+			toolCallId: part.toolCallId,
+			input: part.input,
+			tool: default_stop_condition_D8PwkeWe_getOwn(tools, part.toolName),
+			output: part.type === "tool-result" ? part.output : part.error,
+			errorMode: part.type === "tool-error" ? "text" : "none"
+		});
+		toolResultContent.push({
+			type: "tool-result",
+			toolCallId: part.toolCallId,
+			toolName: part.toolName,
+			output,
+			...part.providerMetadata != null ? { providerOptions: part.providerMetadata } : {}
+		});
+	}
+	if (toolResultContent.length > 0) responseMessages.push({
+		role: "tool",
+		content: sortToolResultContentByToolCallOrder({
+			toolResultContent,
+			toolCallOrder
+		})
+	});
+	return responseMessages;
+}
+function sortToolResultContentByToolCallOrder({ toolResultContent, toolCallOrder }) {
+	const sortedToolResults = toolResultContent.filter((part) => part.type === "tool-result").map((part, index) => ({
+		part,
+		index
+	})).sort((a, b) => {
+		const aOrder = toolCallOrder.get(a.part.toolCallId);
+		const bOrder = toolCallOrder.get(b.part.toolCallId);
+		if (aOrder == null && bOrder == null) return a.index - b.index;
+		if (aOrder == null) return 1;
+		if (bOrder == null) return -1;
+		return aOrder - bOrder || a.index - b.index;
+	}).map(({ part }) => part);
+	let toolResultIndex = 0;
+	return toolResultContent.map((part) => part.type === "tool-result" ? sortedToolResults[toolResultIndex++] : part);
+}
+//#endregion
+//#region src/util/canonical-hash.ts
+const encoder$1 = new TextEncoder();
+/**
+* Deterministic JSON serialization: object keys are sorted so that two
+* structurally-equal values always produce the same string regardless of key
+* insertion order. Used as the input to content hashing.
+*/
+function canonicalJSON(value) {
+	if (value === null || value === void 0) return JSON.stringify(value);
+	if (typeof value !== "object") return JSON.stringify(value);
+	if (Array.isArray(value)) return `[${value.map((element) => element === void 0 ? "null" : canonicalJSON(element)).join(",")}]`;
+	return `{${Object.keys(value).sort().map((k) => `${JSON.stringify(k)}:${canonicalJSON(value[k])}`).join(",")}}`;
+}
+function toBase64url(bytes) {
+	return (0,dist/* convertUint8ArrayToBase64 */.n_)(bytes).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+/**
+* Canonical SHA-256 digest (base64url) of an arbitrary JSON-serializable value.
+*/
+async function default_stop_condition_D8PwkeWe_hashCanonical(value) {
+	const digest = await crypto.subtle.digest("SHA-256", encoder$1.encode(canonicalJSON(value)));
+	return toBase64url(new Uint8Array(digest));
+}
+//#endregion
+//#region src/generate-text/tool-approval-signature.ts
+const encoder = new TextEncoder();
+function fromBase64url(str) {
+	return (0,dist/* convertBase64ToUint8Array */.Z9)(str);
+}
+async function importKey(secret) {
+	const keyData = typeof secret === "string" ? encoder.encode(secret) : secret;
+	return crypto.subtle.importKey("raw", keyData, {
+		name: "HMAC",
+		hash: "SHA-256"
+	}, false, ["sign", "verify"]);
+}
+function buildPayload(approvalId, toolCallId, toolName, inputDigest) {
+	return encoder.encode(JSON.stringify([
+		"ai-sdk-tool-approval-v1",
+		approvalId,
+		toolCallId,
+		toolName,
+		inputDigest
+	]));
+}
+function buildLegacyPayload(approvalId, toolCallId, toolName, inputDigest) {
+	return encoder.encode(`${approvalId}\n${toolCallId}\n${toolName}\n${inputDigest}`);
+}
+async function signToolApproval({ secret, approvalId, toolCallId, toolName, input }) {
+	const key = await importKey(secret);
+	const payload = buildPayload(approvalId, toolCallId, toolName, await default_stop_condition_D8PwkeWe_hashCanonical(input));
+	const sig = await crypto.subtle.sign("HMAC", key, payload);
+	return toBase64url(new Uint8Array(sig));
+}
+async function verifyToolApprovalSignature({ secret, signature, approvalId, toolCallId, toolName, input }) {
+	const key = await importKey(secret);
+	const inputDigest = await default_stop_condition_D8PwkeWe_hashCanonical(input);
+	const sigBytes = fromBase64url(signature);
+	const payload = buildPayload(approvalId, toolCallId, toolName, inputDigest);
+	if (await crypto.subtle.verify("HMAC", key, sigBytes, payload)) return true;
+	if (!approvalId.includes("\n") && !toolCallId.includes("\n") && !toolName.includes("\n")) {
+		const legacyPayload = buildLegacyPayload(approvalId, toolCallId, toolName, inputDigest);
+		return crypto.subtle.verify("HMAC", key, sigBytes, legacyPayload);
+	}
+	return false;
+}
+async function default_stop_condition_D8PwkeWe_maybeSignApproval({ secret, approvalId, toolCallId, toolName, input }) {
+	if (secret == null) return void 0;
+	return signToolApproval({
+		secret,
+		approvalId,
+		toolCallId,
+		toolName,
+		input
+	});
+}
+//#endregion
+//#region src/generate-text/validate-tool-approvals.ts
+/**
+* Re-validates approved tool approvals reconstructed from client-supplied
+* message history before they are executed. Checks HMAC signature (when
+* configured), input schema, and approval policy.
+*/
+async function default_stop_condition_D8PwkeWe_validateApprovedToolApprovals({ approvedToolApprovals, tools, toolApproval, messages, toolsContext, runtimeContext, toolApprovalSecret, refineToolInput }) {
+	const approved = [];
+	const denied = [];
+	const invalid = [];
+	for (const collectedApproval of approvedToolApprovals) {
+		const tool = default_stop_condition_D8PwkeWe_getOwn(tools, collectedApproval.toolCall.toolName);
+		const { toolMetadata: _toolMetadata, dynamic: _dynamic, ...toolCallFromHistory } = collectedApproval.toolCall;
+		const approval = {
+			...collectedApproval,
+			toolCall: {
+				...toolCallFromHistory,
+				...tool?.metadata != null ? { toolMetadata: tool.metadata } : {},
+				...tool?.type === "dynamic" ? { dynamic: true } : {},
+				title: tool?.title
+			}
+		};
+		const { approvalRequest, toolCall } = approval;
+		if (toolApprovalSecret != null) {
+			if (approvalRequest.signature == null) throw new InvalidToolApprovalSignatureError({
+				approvalId: approvalRequest.approvalId,
+				toolCallId: toolCall.toolCallId,
+				reason: "missing signature"
+			});
+			if (!await verifyToolApprovalSignature({
+				secret: toolApprovalSecret,
+				signature: approvalRequest.signature,
+				approvalId: approvalRequest.approvalId,
+				toolCallId: toolCall.toolCallId,
+				toolName: toolCall.toolName,
+				input: toolCall.input
+			})) throw new InvalidToolApprovalSignatureError({
+				approvalId: approvalRequest.approvalId,
+				toolCallId: toolCall.toolCallId,
+				reason: "invalid signature"
+			});
+		}
+		if ((0,dist/* isExecutableTool */.v0)(tool) && tool.inputSchema != null) {
+			let validationError;
+			try {
+				const approvedInput = structuredClone(toolCall.input);
+				const hasInputSchemaInput = Object.prototype.hasOwnProperty.call(approvalRequest, "inputSchemaInput");
+				const validation = await (0,dist/* safeValidateTypes */.ZZ)({
+					value: structuredClone(hasInputSchemaInput ? approvalRequest.inputSchemaInput : toolCall.input),
+					schema: (0,dist/* asSchema */.mD)(tool.inputSchema)
+				});
+				if (!validation.success) validationError = validation.error;
+				else {
+					const revalidatedToolCall = await refineParsedToolCallInput({
+						toolCall: {
+							...toolCall,
+							input: validation.value
+						},
+						refineToolInput
+					});
+					if (!default_stop_condition_D8PwkeWe_isDeepEqualData(structuredClone(revalidatedToolCall.input), approvedInput)) validationError = /* @__PURE__ */ new Error("Approved tool input does not match the validated schema output.");
+				}
+			} catch (error) {
+				validationError = error;
+			}
+			if (validationError != null) {
+				invalid.push({
+					...approval,
+					error: new InvalidToolInputError({
+						toolName: toolCall.toolName,
+						toolInput: JSON.stringify(toolCall.input),
+						cause: validationError
+					})
+				});
+				continue;
+			}
+		}
+		const approvalStatus = await default_stop_condition_D8PwkeWe_resolveToolApproval({
+			tools,
+			toolApproval,
+			toolCall,
+			messages,
+			toolsContext,
+			runtimeContext
+		});
+		if (approvalStatus.type === "denied") denied.push({
+			...approval,
+			approvalResponse: {
+				...approval.approvalResponse,
+				approved: false,
+				reason: approvalStatus.reason ?? approval.approvalResponse.reason
+			}
+		});
+		else approved.push(approval);
+	}
+	return {
+		approvedToolApprovals: approved,
+		deniedToolApprovals: denied,
+		invalidToolApprovals: invalid
+	};
+}
+//#endregion
+//#region src/generate-text/tool-call-concurrency.ts
+/**
+* Validates the maximum number of tool calls that may execute concurrently.
+*/
+function default_stop_condition_D8PwkeWe_prepareToolCallConcurrency(toolCallConcurrency) {
+	if (toolCallConcurrency == null) return;
+	if (!Number.isInteger(toolCallConcurrency)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
+		parameter: "toolCallConcurrency",
+		value: toolCallConcurrency,
+		message: "toolCallConcurrency must be an integer"
+	});
+	if (toolCallConcurrency < 1) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
+		parameter: "toolCallConcurrency",
+		value: toolCallConcurrency,
+		message: "toolCallConcurrency must be >= 1"
+	});
+	return toolCallConcurrency;
+}
+/**
+* Maps items with an optional concurrency limit while preserving result order.
+*
+* Workers claim items in input order. When the signal is aborted or an
+* execution rejects, no additional queued items are started.
+*/
+async function default_stop_condition_D8PwkeWe_mapWithConcurrency({ items, concurrency, abortSignal, execute }) {
+	if (concurrency == null || concurrency >= items.length) return Promise.all(items.map(execute));
+	const results = new Array(items.length);
+	let nextIndex = 0;
+	let stopped = false;
+	const worker = async () => {
+		while (!stopped) {
+			abortSignal?.throwIfAborted();
+			const index = nextIndex++;
+			if (index >= items.length) return;
+			try {
+				results[index] = await execute(items[index], index);
+			} catch (error) {
+				stopped = true;
+				throw error;
+			}
+		}
+	};
+	await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, worker));
+	return results;
+}
+//#endregion
+//#region src/util/async-iterable-stream.ts
+/**
+* Wraps a ReadableStream and returns an object that is both a ReadableStream and an AsyncIterable.
+* This enables consumption of the stream using for-await-of, with proper resource cleanup on early exit or error.
+*
+* @template T The type of the stream's chunks.
+* @param source The source ReadableStream to wrap.
+* @returns An AsyncIterableStream that can be used as both a ReadableStream and an AsyncIterable.
+*/
+function default_stop_condition_D8PwkeWe_createAsyncIterableStream(source) {
+	return default_stop_condition_D8PwkeWe_asAsyncIterableStream(source.pipeThrough(new TransformStream()));
+}
+/**
+* Attaches the async iterator protocol to an existing ReadableStream in place,
+* turning it into an AsyncIterableStream without piping through an additional
+* TransformStream.
+*
+* Use this when the stream is already known to be fresh and exclusively owned
+* (e.g. the readable side of a TransformStream created for this consumer).
+* Adding an extra `pipeThrough` in that situation creates a chain of two
+* transforms fed by an active upstream pipe, which can surface a spurious
+* unhandled `undefined` rejection when the consumer cancels early (observed on
+* Node.js 26). {@link createAsyncIterableStream} wraps this after adding a
+* fresh transform for callers that may pass shared or locked streams.
+*
+* @template T The type of the stream's chunks.
+* @param stream The ReadableStream to augment. It must be fresh and unlocked.
+* @returns The same stream, augmented with the async iterator protocol.
+*/
+function default_stop_condition_D8PwkeWe_asAsyncIterableStream(stream) {
+	/**
+	* Implements the async iterator protocol for the stream.
+	* Ensures proper cleanup (cancelling and releasing the reader) on completion, early exit, or error.
+	*/
+	stream[Symbol.asyncIterator] = function() {
+		const reader = this.getReader();
+		let finished = false;
+		/**
+		* Cleans up the reader by cancelling and releasing the lock.
+		*/
+		async function cleanup(cancelStream) {
+			if (finished) return;
+			finished = true;
+			try {
+				if (cancelStream) await reader.cancel?.();
+			} finally {
+				try {
+					reader.releaseLock();
+				} catch {}
+			}
+		}
+		return {
+			/**
+			* Reads the next chunk from the stream.
+			* @returns A promise resolving to the next IteratorResult.
+			*/
+			async next() {
+				if (finished) return {
+					done: true,
+					value: void 0
+				};
+				let result;
+				try {
+					result = await reader.read();
+				} catch (error) {
+					await cleanup(false);
+					throw error;
+				}
+				const { done, value } = result;
+				if (done) {
+					await cleanup(true);
+					return {
+						done: true,
+						value: void 0
+					};
+				}
+				return {
+					done: false,
+					value
+				};
+			},
+			/**
+			* May be called on early exit (e.g., break from for-await) or after completion.
+			* Ensures the stream is cancelled and resources are released.
+			* @returns A promise resolving to a completed IteratorResult.
+			*/
+			async return() {
+				await cleanup(true);
+				return {
+					done: true,
+					value: void 0
+				};
+			},
+			/**
+			* Called on early exit with error.
+			* Ensures the stream is cancelled and resources are released, then rethrows the error.
+			* @param err The error to throw.
+			* @returns A promise that rejects with the provided error.
+			*/
+			async throw(err) {
+				await cleanup(true);
+				throw err;
+			}
+		};
+	};
+	return stream;
+}
+//#endregion
+//#region src/generate-text/is-output-chunk.ts
+const isOutputChunkType = {
+	file: true,
+	custom: false,
+	source: false,
+	"text-start": false,
+	"text-end": false,
+	"text-delta": true,
+	"reasoning-start": false,
+	"reasoning-end": false,
+	"reasoning-delta": true,
+	"reasoning-file": true,
+	"tool-input-start": false,
+	"tool-input-end": false,
+	"tool-input-delta": true,
+	"tool-approval-request": false,
+	"tool-approval-response": false,
+	"tool-call": true,
+	"tool-result": false,
+	"tool-error": false,
+	"tool-output-denied": false,
+	"tool-execution-end": false,
+	"model-call-start": false,
+	"model-call-response-metadata": false,
+	"model-call-end": false,
+	error: false,
+	ping: false,
+	raw: false
+};
+function isOutputChunk(chunk) {
+	if (!isOutputChunkType[chunk.type]) return false;
+	switch (chunk.type) {
+		case "text-delta":
+		case "reasoning-delta": return chunk.text.length > 0;
+		case "tool-input-delta": return chunk.delta.length > 0;
+		case "file":
+		case "reasoning-file":
+		case "tool-call": return true;
+		default: return false;
+	}
+}
+//#endregion
+//#region src/agent/default-stop-condition.ts
+/**
+* Logs the warning for the default stopWhen condition.
+*/
+function logDefaultStopConditionWarning({ stepCount, provider, modelId, onWarning }) {
+	default_stop_condition_D8PwkeWe_createLogWarnings(onWarning)({
+		provider,
+		model: modelId,
+		warnings: [{
+			type: "other",
+			message: `The tool loop stopped because it reached the default stopWhen condition, isStepCount(${stepCount}). To allow more steps, set stopWhen to isStepCount(...) with a higher limit or provide a custom stop condition. Learn more: https://ai-sdk.dev/docs/agents/loop-control`
+		}]
+	});
+}
+/**
+* Stop conditions are only evaluated when the tool loop can otherwise continue,
+* so logging here avoids warning when a call finishes naturally at the limit.
+*/
+function default_stop_condition_D8PwkeWe_createDefaultStopCondition(stepCount, onWarning) {
+	return ({ steps }) => {
+		if (steps.length !== stepCount) return false;
+		const { provider, modelId } = steps[steps.length - 1].model;
+		logDefaultStopConditionWarning({
+			stepCount,
+			provider,
+			modelId,
+			onWarning
+		});
+		return true;
+	};
+}
+//#endregion
+
+
+//# sourceMappingURL=default-stop-condition-D8PwkeWe.js.map
+// EXTERNAL MODULE: ../../node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/classic/schemas.js + 1 modules
+var classic_schemas = __webpack_require__(3726);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/ai@7.0.181_zod@4.6.7/node_modules/ai/dist/index.js
+
+
+
+
+
+
+
+
+//#region src/telemetry/get-request-origin.ts
+/** Remove credentials, paths, queries, and fragments before emitting telemetry. */
+function getRequestOrigin(url) {
+	if (url == null) return void 0;
+	try {
+		const endpoint = new URL(url);
+		return endpoint.protocol === "http:" || endpoint.protocol === "https:" ? endpoint.origin : void 0;
+	} catch {
+		return;
+	}
+}
+/** Preserve request metadata while keeping unknown or sensitive URL fields out of results. */
+function sanitizeRequestMetadata(request) {
+	if (request == null || !("url" in request)) return request;
+	const { url, ...rest } = request;
+	const origin = getRequestOrigin(url);
+	return {
+		...rest,
+		...origin != null ? { url: origin } : {}
+	};
+}
+//#endregion
+//#region src/error/invalid-stream-part-error.ts
+const dist_name$11 = "AI_InvalidStreamPartError";
+const dist_marker$11 = `vercel.ai.error.${dist_name$11}`;
+const dist_symbol$11 = Symbol.for(dist_marker$11);
+var InvalidStreamPartError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ chunk, message }) {
+		super({
+			name: dist_name$11,
+			message
+		});
+		this[dist_symbol$11] = true;
+		this.chunk = chunk;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$11);
+	}
+};
+//#endregion
+//#region src/error/no-image-generated-error.ts
+const dist_name$10 = "AI_NoImageGeneratedError";
+const dist_marker$10 = `vercel.ai.error.${dist_name$10}`;
+const dist_symbol$10 = Symbol.for(dist_marker$10);
+/**
+* Thrown when no image could be generated. This can have multiple causes:
+*
+* - The model failed to generate a response.
+* - The model generated a response that could not be parsed.
+*/
+var NoImageGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ message = "No image generated.", cause, calls, responses }) {
+		super({
+			name: dist_name$10,
+			message,
+			cause
+		});
+		this[dist_symbol$10] = true;
+		this.calls = calls;
+		this.responses = responses;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$10);
+	}
+};
+//#endregion
+//#region src/error/no-object-generated-error.ts
+const dist_name$9 = "AI_NoObjectGeneratedError";
+const dist_marker$9 = `vercel.ai.error.${dist_name$9}`;
+const dist_symbol$9 = Symbol.for(dist_marker$9);
+/**
+* Thrown when no object could be generated. This can have several causes:
+*
+* - The model failed to generate a response.
+* - The model generated a response that could not be parsed.
+* - The model generated a response that could not be validated against the schema.
+*
+* The error contains the following properties:
+*
+* - `text`: The text that was generated by the model. This can be the raw text or the tool call text, depending on the model.
+*/
+var NoObjectGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ message = "No object generated.", cause, text, response, usage, finishReason }) {
+		super({
+			name: dist_name$9,
+			message,
+			cause
+		});
+		this[dist_symbol$9] = true;
+		this.text = text;
+		this.response = response;
+		this.usage = usage;
+		this.finishReason = finishReason;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$9);
+	}
+};
+//#endregion
+//#region src/error/no-speech-generated-error.ts
+const dist_name$8 = "AI_NoSpeechGeneratedError";
+const dist_marker$8 = `vercel.ai.error.${dist_name$8}`;
+const dist_symbol$8 = Symbol.for(dist_marker$8);
+/**
+* Error that is thrown when no speech audio was generated.
+*/
+var NoSpeechGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor(options) {
+		super({
+			name: dist_name$8,
+			message: "No speech audio generated.",
+			...options.cause !== void 0 && { cause: options.cause }
+		});
+		this[dist_symbol$8] = true;
+		this.responses = options.responses;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$8);
+	}
+};
+//#endregion
+//#region src/error/no-transcript-generated-error.ts
+const dist_name$7 = "AI_NoTranscriptGeneratedError";
+const dist_marker$7 = `vercel.ai.error.${dist_name$7}`;
+const dist_symbol$7 = Symbol.for(dist_marker$7);
+/**
+* Error that is thrown when no transcript was generated.
+*/
+var NoTranscriptGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor(options) {
+		super({
+			name: dist_name$7,
+			message: "No transcript generated."
+		});
+		this[dist_symbol$7] = true;
+		this.responses = options.responses;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$7);
+	}
+};
+//#endregion
+//#region src/error/no-translation-generated-error.ts
+const dist_name$6 = "AI_NoTranslationGeneratedError";
+const dist_marker$6 = `vercel.ai.error.${dist_name$6}`;
+const dist_symbol$6 = Symbol.for(dist_marker$6);
+/**
+* Error that is thrown when no translation was generated.
+*/
+var NoTranslationGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor(options) {
+		super({
+			name: dist_name$6,
+			message: "No translation generated."
+		});
+		this[dist_symbol$6] = true;
+		this.response = options.response;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$6);
+	}
+};
+//#endregion
+//#region src/error/no-video-generated-error.ts
+const dist_name$5 = "AI_NoVideoGeneratedError";
+const dist_marker$5 = `vercel.ai.error.${dist_name$5}`;
+const dist_symbol$5 = Symbol.for(dist_marker$5);
+var NoVideoGeneratedError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ message = "No video generated.", cause, responses }) {
+		super({
+			name: dist_name$5,
+			message,
+			cause
+		});
+		this[dist_symbol$5] = true;
+		this.responses = responses;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$5);
+	}
+	/**
+	* @deprecated use `isInstance` instead
+	*/
+	static isNoVideoGeneratedError(error) {
+		return error instanceof Error && error.name === dist_name$5 && typeof error.responses !== "undefined" ? true : false;
+	}
+	/**
+	* @deprecated Do not use this method. It will be removed in the next major version.
+	*/
+	toJSON() {
+		return {
+			name: this.name,
+			message: this.message,
+			stack: this.stack,
+			cause: this.cause,
+			responses: this.responses
+		};
+	}
+};
+//#endregion
+//#region src/error/stream-provider-error.ts
+const dist_name$4 = "AI_StreamProviderError";
+const dist_marker$4 = `vercel.ai.error.${dist_name$4}`;
+const dist_symbol$4 = Symbol.for(dist_marker$4);
+/**
+* Error reported by a provider after a model response stream has started.
+*/
+var StreamProviderError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ message, type, code, statusCode, isRetryable = isRetryableStatusCode$1(statusCode), data, cause }) {
+		super({
+			name: dist_name$4,
+			message,
+			cause
+		});
+		this[dist_symbol$4] = true;
+		this.type = type;
+		this.code = code;
+		this.statusCode = statusCode;
+		this.isRetryable = isRetryable;
+		this.data = data;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$4);
+	}
+};
+function isRetryableStatusCode$1(statusCode) {
+	return statusCode != null && (statusCode === 408 || statusCode === 409 || statusCode === 429 || statusCode >= 500);
+}
+//#endregion
+//#region src/error/tool-choice-violation-error.ts
+const dist_name$3 = "AI_ToolChoiceViolationError";
+const dist_marker$3 = `vercel.ai.error.${dist_name$3}`;
+const dist_symbol$3 = Symbol.for(dist_marker$3);
+/**
+* Thrown when a model response does not satisfy an enforced tool choice.
+*/
+var ToolChoiceViolationError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ toolChoice, finishReason, provider, modelId, content, message = toolChoice.type === "none" ? "Model response contained a tool call even though tool choice was none." : toolChoice.type === "required" ? "Model response did not contain a tool call even though tool choice was required." : `Model response did not contain a call to the required tool '${toolChoice.toolName}'.` }) {
+		super({
+			name: dist_name$3,
+			message
+		});
+		this[dist_symbol$3] = true;
+		this.toolChoice = toolChoice;
+		this.finishReason = finishReason;
+		this.provider = provider;
+		this.modelId = modelId;
+		this.content = content;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$3);
+	}
+};
+//#endregion
+//#region src/error/ui-message-stream-error.ts
+const dist_name$2 = "AI_UIMessageStreamError";
+const dist_marker$2 = `vercel.ai.error.${dist_name$2}`;
+const dist_symbol$2 = Symbol.for(dist_marker$2);
+/**
+* Error thrown when a UI message stream reports an error or contains invalid
+* or out-of-sequence chunks.
+*
+* This typically occurs when:
+* - An error chunk is received
+* - A delta chunk is received without a corresponding start chunk
+* - An end chunk is received without a corresponding start chunk
+* - A tool invocation is not found for the given toolCallId
+*
+* @see https://ai-sdk.dev/docs/reference/ai-sdk-errors/ai-ui-message-stream-error
+*/
+var UIMessageStreamError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ chunkType, chunkId, message }) {
+		super({
+			name: dist_name$2,
+			message
+		});
+		this[dist_symbol$2] = true;
+		this.chunkType = chunkType;
+		this.chunkId = chunkId;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$2);
+	}
+};
+//#endregion
+//#region src/prompt/message-conversion-error.ts
+const dist_name$1 = "AI_MessageConversionError";
+const dist_marker$1 = `vercel.ai.error.${dist_name$1}`;
+const dist_symbol$1 = Symbol.for(dist_marker$1);
+var MessageConversionError = class extends provider_dist/* AISDKError */.bD {
+	constructor({ originalMessage, message }) {
+		super({
+			name: dist_name$1,
+			message
+		});
+		this[dist_symbol$1] = true;
+		this.originalMessage = originalMessage;
+	}
+	static isInstance(error) {
+		return provider_dist/* AISDKError */.bD.hasMarker(error, dist_marker$1);
+	}
+};
+//#endregion
+//#region src/error/index.ts
+/** @deprecated Use `Experimental_DecisionUnsupportedQuestionTypeError` instead. */
+const Experimental_EvaluationUnsupportedQuestionTypeError = (/* unused pure expression or super */ null && (Experimental_DecisionUnsupportedQuestionTypeError$1));
+//#endregion
+//#region src/prompt/clone-model-message.ts
+/**
+* Clone model messages while preserving URL instances. Node's structuredClone
+* currently rejects URL objects, which are valid file/image prompt payloads.
+*/
+function cloneModelMessages(messages) {
+	return cloneValue(messages, /* @__PURE__ */ new Map());
+}
+function cloneValue(value, seen) {
+	if (value == null || typeof value !== "object") return value;
+	if (seen.has(value)) return seen.get(value);
+	if (value instanceof URL) {
+		const copy = new URL(value.href);
+		seen.set(value, copy);
+		return copy;
+	}
+	if (Array.isArray(value)) {
+		const copy = new Array(value.length);
+		seen.set(value, copy);
+		value.forEach((item, index) => {
+			copy[index] = cloneValue(item, seen);
+		});
+		return copy;
+	}
+	if ((0,dist/* isUint8Array */.mg)(value)) {
+		const copy = new Uint8Array(value);
+		seen.set(value, copy);
+		return copy;
+	}
+	if ((0,dist/* isArrayBuffer */.mw)(value)) {
+		const copy = new Uint8Array(value).slice().buffer;
+		seen.set(value, copy);
+		return copy;
+	}
+	if (value instanceof Date || Object.prototype.toString.call(value) === "[object Date]") try {
+		const copy = new Date(Date.prototype.getTime.call(value));
+		seen.set(value, copy);
+		return copy;
+	} catch {}
+	const copy = {};
+	seen.set(value, copy);
+	for (const [key, val] of Object.entries(value)) Object.defineProperty(copy, key, {
+		value: cloneValue(val, seen),
+		writable: true,
+		enumerable: true,
+		configurable: true
+	});
+	return copy;
+}
+//#endregion
+//#region src/prompt/request-options.ts
+/**
+* Extracts the total timeout value in milliseconds from a TimeoutConfiguration.
+*
+* @param timeout - The timeout configuration.
+* @returns The total timeout in milliseconds, or undefined if no timeout is configured.
+*/
+function getTotalTimeoutMs(timeout) {
+	if (timeout == null) return;
+	if (typeof timeout === "number") return timeout;
+	return timeout.totalMs;
+}
+/**
+* Extracts the step timeout value in milliseconds from a TimeoutConfiguration.
+*
+* @param timeout - The timeout configuration.
+* @returns The step timeout in milliseconds, or undefined if no step timeout is configured.
+*/
+function getStepTimeoutMs(timeout) {
+	if (timeout == null || typeof timeout === "number") return;
+	return timeout.stepMs;
+}
+/**
+* Extracts the first chunk timeout value in milliseconds from a TimeoutConfiguration.
+* This timeout is for streaming only - it aborts if no content chunk is received within the specified duration.
+*
+* @param timeout - The timeout configuration.
+* @returns The first chunk timeout in milliseconds, or undefined if no first chunk timeout is configured.
+*/
+function getFirstChunkTimeoutMs(timeout) {
+	if (timeout == null || typeof timeout === "number") return;
+	return timeout.firstChunkMs;
+}
+/**
+* Extracts the chunk timeout value in milliseconds from a TimeoutConfiguration.
+* This timeout is for streaming only - it aborts if no new content chunk is received within the specified duration.
+*
+* @param timeout - The timeout configuration.
+* @returns The chunk timeout in milliseconds, or undefined if no chunk timeout is configured.
+*/
+function getChunkTimeoutMs(timeout) {
+	if (timeout == null || typeof timeout === "number") return;
+	return timeout.chunkMs;
+}
+function getToolTimeoutMs(timeout, toolName) {
+	if (timeout == null || typeof timeout === "number") return;
+	return timeout.tools?.[`${toolName}Ms`] ?? timeout.toolMs;
+}
+//#endregion
+//#region src/prompt/wrap-gateway-error.ts
+function wrapGatewayError(error) {
+	if (!GatewayAuthenticationError.isInstance(error)) return error;
+	const isProductionEnv = process?.env.NODE_ENV === "production";
+	const moreInfoURL = "https://ai-sdk.dev/unauthenticated-ai-gateway";
+	if (isProductionEnv) return new provider_dist/* AISDKError */.bD({
+		name: "GatewayError",
+		message: `Unauthenticated. Configure AI_GATEWAY_API_KEY or use a provider module. Learn more: ${moreInfoURL}`
+	});
+	return Object.assign(/* @__PURE__ */ new Error(`\u001b[1m\u001b[31mUnauthenticated request to AI Gateway.\u001b[0m
+
+To authenticate, set the \u001b[33mAI_GATEWAY_API_KEY\u001b[0m environment variable with your API key.
+
+Alternatively, you can use a provider module instead of the AI Gateway.
+
+Learn more: \u001b[34m${moreInfoURL}\u001b[0m
+
+`), { name: "GatewayAuthenticationError" });
+}
+//#endregion
+//#region src/util/now.ts
+function now() {
+	return globalThis?.performance?.now() ?? Date.now();
+}
+//#endregion
+//#region src/generate-text/execute-tool-call.ts
+/**
+* Executes a single tool call and manages its lifecycle callbacks.
+*
+* This function handles the complete tool execution flow:
+* 1. Invokes `onToolExecutionStart` callback before execution
+* 2. Executes the tool's `execute` function with proper context
+* 3. Handles streaming outputs via `onPreliminaryToolResult`
+* 4. Invokes `onToolExecutionEnd` callback with success or error result
+*
+* @returns The tool output with performance metrics, or undefined if the tool has no execute function.
+*/
+async function executeToolCall({ toolCall, tools, toolsContext, callId, messages, abortSignal, timeout, experimental_sandbox: sandbox, onPreliminaryToolResult, onToolExecutionStart, onToolExecutionEnd, executeToolInTelemetryContext = async ({ execute }) => await execute(), runInTracingChannelSpan = async ({ execute }) => await execute() }) {
+	const { toolName, toolCallId, input } = toolCall;
+	const tool = default_stop_condition_D8PwkeWe_getOwn(tools, toolName);
+	if (!(0,dist/* isExecutableTool */.v0)(tool)) return;
+	const context = await default_stop_condition_D8PwkeWe_validateToolContext({
+		toolName,
+		context: default_stop_condition_D8PwkeWe_getOwn(toolsContext, toolName),
+		contextSchema: tool.contextSchema
+	});
+	const toolExecutionContext = {
+		toolCall,
+		messages,
+		toolContext: context
+	};
+	const baseCallbackEvent = {
+		callId,
+		...toolExecutionContext
+	};
+	return await runInTracingChannelSpan({
+		type: "executeTool",
+		event: baseCallbackEvent,
+		execute: async () => {
+			let output;
+			await default_stop_condition_D8PwkeWe_notify({
+				event: baseCallbackEvent,
+				callbacks: onToolExecutionStart
+			});
+			const toolTimeoutMs = getToolTimeoutMs(timeout, toolName);
+			const toolAbortSignal = default_stop_condition_D8PwkeWe_mergeAbortSignals(abortSignal, toolTimeoutMs);
+			let toolExecutionMs = 0;
+			try {
+				await executeToolInTelemetryContext({
+					callId,
+					toolCallId,
+					...toolExecutionContext,
+					execute: async () => {
+						const startTime = now();
+						try {
+							const stream = (0,dist/* executeTool */.o8)({
+								tool,
+								input,
+								options: {
+									toolCallId,
+									messages,
+									abortSignal: toolAbortSignal,
+									context,
+									experimental_sandbox: sandbox
+								}
+							});
+							for await (const part of stream) if (part.type === "preliminary") onPreliminaryToolResult?.({
+								...toolCall,
+								type: "tool-result",
+								output: part.output,
+								preliminary: true
+							});
+							else output = part.output;
+						} finally {
+							toolExecutionMs = now() - startTime;
+						}
+					}
+				});
+			} catch (error) {
+				const toolError = {
+					type: "tool-error",
+					toolCallId,
+					toolName,
+					input,
+					error,
+					dynamic: tool.type === "dynamic",
+					...toolCall.providerMetadata != null ? { providerMetadata: toolCall.providerMetadata } : {},
+					...toolCall.toolMetadata != null ? { toolMetadata: toolCall.toolMetadata } : {}
+				};
+				await default_stop_condition_D8PwkeWe_notify({
+					event: {
+						...baseCallbackEvent,
+						toolOutput: toolError,
+						toolExecutionMs
+					},
+					callbacks: onToolExecutionEnd
+				});
+				return {
+					output: toolError,
+					toolExecutionMs
+				};
+			}
+			const toolResult = {
+				type: "tool-result",
+				toolCallId,
+				toolName,
+				input,
+				output,
+				dynamic: tool.type === "dynamic",
+				...toolCall.providerMetadata != null ? { providerMetadata: toolCall.providerMetadata } : {},
+				...toolCall.toolMetadata != null ? { toolMetadata: toolCall.toolMetadata } : {}
+			};
+			await default_stop_condition_D8PwkeWe_notify({
+				event: {
+					...baseCallbackEvent,
+					toolOutput: toolResult,
+					toolExecutionMs
+				},
+				callbacks: onToolExecutionEnd
+			});
+			return {
+				output: toolResult,
+				toolExecutionMs
+			};
+		}
+	});
+}
+//#endregion
+//#region src/generate-text/filter-active-tools.ts
+/**
+* Filters the tools to only include the active tools.
+* When activeTools is provided, we only include the tools that are in the list.
+*
+* @param tools - The tools to filter.
+* @param activeTools - The active tools to include.
+* @returns The filtered tools.
+*/
+function filterActiveTools({ tools, activeTools }) {
+	if (tools == null || activeTools == null) return tools;
+	return Object.fromEntries(Object.entries(tools).filter(([name]) => activeTools.includes(name)));
+}
 //#endregion
 //#region src/generate-text/is-tool-execution-allowed-finish-reason.ts
 function isToolExecutionAllowedFinishReason(finishReason) {
@@ -9203,7 +11327,7 @@ function array$2({ element: inputElementSchema, minItems, maxItems, name, descri
 		name: "maxItems",
 		value: maxItems
 	});
-	if (minItems != null && maxItems != null && minItems > maxItems) throw new InvalidArgumentError({
+	if (minItems != null && maxItems != null && minItems > maxItems) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: "minItems",
 		value: minItems,
 		message: "minItems must be less than or equal to maxItems"
@@ -9322,12 +11446,12 @@ function array$2({ element: inputElementSchema, minItems, maxItems, name, descri
 }
 function validateArrayBound({ name, value }) {
 	if (value == null) return;
-	if (!Number.isInteger(value)) throw new InvalidArgumentError({
+	if (!Number.isInteger(value)) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: name,
 		value,
 		message: `${name} must be an integer`
 	});
-	if (value < 0) throw new InvalidArgumentError({
+	if (value < 0) throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: name,
 		value,
 		message: `${name} must be greater than or equal to 0`
@@ -9449,189 +11573,6 @@ const dist_json = ({ name, description } = {}) => {
 	};
 };
 //#endregion
-//#region src/generate-text/tool-call.ts
-const inputSchemaInputSymbol = Symbol("ai-sdk-tool-call-input-schema-input");
-function setToolCallInputSchemaInput(toolCall, inputSchemaInput) {
-	Object.defineProperty(toolCall, inputSchemaInputSymbol, { value: inputSchemaInput });
-	return toolCall;
-}
-function getToolCallInputSchemaInput(toolCall) {
-	return inputSchemaInputSymbol in toolCall ? { value: toolCall[inputSchemaInputSymbol] } : void 0;
-}
-//#endregion
-//#region src/generate-text/parse-tool-call.ts
-async function parseToolCall({ toolCall, tools, repairToolCall, refineToolInput, messages, instructions, abortSignal }) {
-	try {
-		if (tools == null) {
-			if (toolCall.providerExecuted && toolCall.dynamic) return await refineParsedToolCallInput({
-				toolCall: await parseProviderExecutedDynamicToolCall(toolCall),
-				refineToolInput
-			});
-			throw new NoSuchToolError({ toolName: toolCall.toolName });
-		}
-		try {
-			return await refineParsedToolCallInput({
-				toolCall: await doParseToolCall({
-					toolCall,
-					tools
-				}),
-				refineToolInput
-			});
-		} catch (error) {
-			if (repairToolCall == null || !(NoSuchToolError.isInstance(error) || InvalidToolInputError.isInstance(error))) throw error;
-			let repairedToolCall = null;
-			try {
-				abortSignal?.throwIfAborted();
-				repairedToolCall = await waitForPromiseWithAbortSignal({
-					promise: repairToolCall({
-						toolCall,
-						tools,
-						inputSchema: async ({ toolName }) => {
-							const inputSchema = getOwn(tools, toolName)?.inputSchema;
-							return await (0,dist/* asSchema */.mD)(inputSchema).jsonSchema;
-						},
-						instructions,
-						system: instructions,
-						messages,
-						error,
-						abortSignal
-					}),
-					abortSignal
-				});
-			} catch (repairError) {
-				abortSignal?.throwIfAborted();
-				throw new ToolCallRepairError({
-					cause: repairError,
-					originalError: error
-				});
-			}
-			if (repairedToolCall == null) throw error;
-			const parsedRepairedToolCall = await refineParsedToolCallInput({
-				toolCall: await doParseToolCall({
-					toolCall: repairedToolCall,
-					tools
-				}),
-				refineToolInput
-			});
-			abortSignal?.throwIfAborted();
-			return parsedRepairedToolCall;
-		}
-	} catch (error) {
-		abortSignal?.throwIfAborted();
-		const parsedInput = await (0,dist/* safeParseJSON */.N8)({ text: toolCall.input });
-		const input = parsedInput.success ? parsedInput.value : toolCall.input;
-		const tool = getOwn(tools, toolCall.toolName);
-		return {
-			type: "tool-call",
-			toolCallId: toolCall.toolCallId,
-			toolName: toolCall.toolName,
-			input,
-			dynamic: true,
-			invalid: true,
-			error,
-			title: tool?.title,
-			providerExecuted: toolCall.providerExecuted,
-			providerMetadata: toolCall.providerMetadata,
-			...tool?.metadata != null ? { toolMetadata: tool.metadata } : {}
-		};
-	}
-}
-async function waitForPromiseWithAbortSignal({ promise, abortSignal }) {
-	if (abortSignal == null) return await promise;
-	return await new Promise((resolve, reject) => {
-		const cleanup = () => {
-			abortSignal.removeEventListener("abort", onAbort);
-		};
-		const onAbort = () => {
-			cleanup();
-			reject(abortSignal.reason);
-		};
-		Promise.resolve(promise).then((value) => {
-			cleanup();
-			resolve(value);
-		}).catch((error) => {
-			cleanup();
-			reject(error);
-		});
-		abortSignal.addEventListener("abort", onAbort, { once: true });
-		if (abortSignal.aborted) onAbort();
-	});
-}
-async function refineParsedToolCallInput({ toolCall, refineToolInput }) {
-	const refine = getOwn(refineToolInput, toolCall.toolName);
-	if (refine == null) return toolCall;
-	const refinedToolCall = {
-		...toolCall,
-		input: await refine(toolCall.input)
-	};
-	const inputSchemaInput = getToolCallInputSchemaInput(toolCall);
-	return inputSchemaInput == null ? refinedToolCall : setToolCallInputSchemaInput(refinedToolCall, inputSchemaInput.value);
-}
-async function parseProviderExecutedDynamicToolCall(toolCall) {
-	const parseResult = toolCall.input.trim() === "" ? {
-		success: true,
-		value: {}
-	} : await (0,dist/* safeParseJSON */.N8)({ text: toolCall.input });
-	if (parseResult.success === false) throw new InvalidToolInputError({
-		toolName: toolCall.toolName,
-		toolInput: toolCall.input,
-		cause: parseResult.error
-	});
-	return {
-		type: "tool-call",
-		toolCallId: toolCall.toolCallId,
-		toolName: toolCall.toolName,
-		input: parseResult.value,
-		providerExecuted: true,
-		dynamic: true,
-		providerMetadata: toolCall.providerMetadata
-	};
-}
-async function doParseToolCall({ toolCall, tools }) {
-	const toolName = toolCall.toolName;
-	const tool = getOwn(tools, toolName);
-	if (tool == null) {
-		if (toolCall.providerExecuted && toolCall.dynamic) return await parseProviderExecutedDynamicToolCall(toolCall);
-		throw new NoSuchToolError({
-			toolName: toolCall.toolName,
-			availableTools: Object.keys(tools)
-		});
-	}
-	const schema = (0,dist/* asSchema */.mD)(tool.inputSchema);
-	const parseResult = toolCall.input.trim() === "" ? await (0,dist/* safeValidateTypes */.ZZ)({
-		value: {},
-		schema
-	}) : await (0,dist/* safeParseJSON */.N8)({
-		text: toolCall.input,
-		schema
-	});
-	if (parseResult.success === false) throw new InvalidToolInputError({
-		toolName,
-		toolInput: toolCall.input,
-		cause: parseResult.error
-	});
-	return setToolCallInputSchemaInput(tool.type === "dynamic" ? {
-		type: "tool-call",
-		toolCallId: toolCall.toolCallId,
-		toolName: toolCall.toolName,
-		input: parseResult.value,
-		providerExecuted: toolCall.providerExecuted,
-		providerMetadata: toolCall.providerMetadata,
-		...tool.metadata != null ? { toolMetadata: tool.metadata } : {},
-		dynamic: true,
-		title: tool.title
-	} : {
-		type: "tool-call",
-		toolCallId: toolCall.toolCallId,
-		toolName,
-		input: parseResult.value,
-		providerExecuted: toolCall.providerExecuted,
-		providerMetadata: toolCall.providerMetadata,
-		...tool.metadata != null ? { toolMetadata: tool.metadata } : {},
-		title: tool.title
-	}, parseResult.rawValue);
-}
-//#endregion
 //#region src/generate-text/prepare-step-call-settings.ts
 /**
 * Resolves model call settings for a single step.
@@ -9640,7 +11581,7 @@ async function doParseToolCall({ toolCall, tools }) {
 * while defined falsy values such as `temperature: 0` and `seed: 0` are kept.
 */
 function prepareStepCallSettings({ callSettings, stepSettings }) {
-	return prepareLanguageModelCallOptions({
+	return default_stop_condition_D8PwkeWe_prepareLanguageModelCallOptions({
 		maxOutputTokens: stepSettings?.maxOutputTokens ?? callSettings.maxOutputTokens,
 		temperature: stepSettings?.temperature ?? callSettings.temperature,
 		topP: stepSettings?.topP ?? callSettings.topP,
@@ -9653,743 +11594,6 @@ function prepareStepCallSettings({ callSettings, stepSettings }) {
 	});
 }
 //#endregion
-//#region src/generate-text/resolve-tool-approval.ts
-/**
-* Resolves the approval state for a tool call by checking user-supplied and tool-defined
-* approval settings, and normalizes the result to the object status shape.
-* User-defined approval settings take precedence over tool-defined settings.
-* If no approval settings are provided, the tool call does not require approval.
-*/
-async function resolveToolApproval({ tools, toolCall, toolApproval, messages, toolsContext, runtimeContext }) {
-	if (toolApproval != null && typeof toolApproval === "function") return normalizeToolApprovalStatus(await toolApproval({
-		toolCall,
-		tools,
-		toolsContext,
-		messages,
-		runtimeContext
-	}));
-	const toolName = toolCall.toolName;
-	const tool = getOwn(tools, toolName);
-	const input = toolCall.input;
-	const userDefinedToolApprovalStatus = getOwn(toolApproval, toolName);
-	if (userDefinedToolApprovalStatus != null) return normalizeToolApprovalStatus(typeof userDefinedToolApprovalStatus === "function" ? await userDefinedToolApprovalStatus(input, {
-		toolCallId: toolCall.toolCallId,
-		messages,
-		toolContext: await validateToolContext({
-			toolName,
-			context: getOwn(toolsContext, toolName),
-			contextSchema: tool?.contextSchema
-		}),
-		runtimeContext
-	}) : userDefinedToolApprovalStatus);
-	if (tool?.needsApproval == null) return { type: "not-applicable" };
-	return (typeof tool.needsApproval === "function" ? await tool.needsApproval(input, {
-		toolCallId: toolCall.toolCallId,
-		messages,
-		context: await validateToolContext({
-			toolName,
-			context: getOwn(toolsContext, toolName),
-			contextSchema: tool?.contextSchema
-		})
-	}) : tool.needsApproval) ? { type: "user-approval" } : { type: "not-applicable" };
-}
-function normalizeToolApprovalStatus(status) {
-	return status === void 0 ? { type: "not-applicable" } : typeof status === "string" ? { type: status } : status;
-}
-//#endregion
-//#region src/telemetry/filter-included-context.ts
-/**
-* Returns a shallow copy of the runtime context with only top-level
-* properties marked for telemetry inclusion.
-*/
-function filterIncludedContext({ context, includeContext }) {
-	if (context == null) return {};
-	return Object.fromEntries(Object.entries(context).filter(([key]) => includeContext?.[key] === true));
-}
-function filterToolsContext({ toolsContext, includeToolsContext }) {
-	if (includeToolsContext == null) return {};
-	return Object.fromEntries(Object.entries(toolsContext).map(([toolName, toolContext]) => [toolName, filterToolContext({
-		toolName,
-		toolContext,
-		includeToolsContext
-	})]));
-}
-function filterToolContext({ toolName, toolContext, includeToolsContext }) {
-	const includeToolContext = includeToolsContext?.[toolName];
-	return filterIncludedContext({
-		context: toolContext,
-		includeContext: includeToolContext
-	});
-}
-//#endregion
-//#region src/util/merge-callbacks.ts
-/**
-* Creates an async callback that invokes the provided callbacks in parallel.
-* Undefined callbacks are skipped, and thrown or rejected callback errors are
-* ignored.
-*
-* @param callbacks The callbacks to invoke for each event.
-* @returns A callback that forwards each event to all callbacks and waits for
-* them to settle.
-*/
-function mergeCallbacks(...callbacks) {
-	return async (event) => {
-		await Promise.allSettled(callbacks.map(async (callback) => {
-			await callback?.(event);
-		}));
-	};
-}
-//#endregion
-//#region src/telemetry/tracing-channel.ts
-const AI_SDK_TELEMETRY_TRACING_CHANNEL = "ai:telemetry";
-//#endregion
-//#region src/util/is-node-runtime.ts
-function isNodeRuntime() {
-	return globalThis.process?.release?.name === "node";
-}
-//#endregion
-//#region src/telemetry/redact-telemetry-credentials.ts
-/**
-* Apply provider-owned credential redaction on telemetry-only copies. Only visit SDK
-* metadata containers, never arbitrary prompts, tool outputs, or user context.
-*/
-function redactTelemetryCredentials(value) {
-	return replaceProperties(value, {
-		args: dist/* redactTelemetryValue */.IR,
-		tools: redactTools,
-		stepTools: redactTools,
-		request: redactMetadata,
-		response: redactMetadata,
-		steps: (steps) => mapArray(steps, redactTelemetryCredentials),
-		finalStep: redactTelemetryCredentials,
-		error: redactTelemetryCredentials,
-		cause: redactTelemetryCredentials,
-		errors: (errors) => mapArray(errors, redactTelemetryCredentials),
-		lastError: redactTelemetryCredentials,
-		requestBodyValues: redactBody
-	});
-}
-function redactMetadata(value) {
-	return Array.isArray(value) ? mapArray(value, redactMetadata) : replaceProperties(value, { body: redactBody });
-}
-function redactBody(value) {
-	return replaceProperties((0,dist/* redactTelemetryValue */.IR)(value), { tools: redactTools });
-}
-function redactTools(value) {
-	if (Array.isArray(value)) return mapArray(value, redactTelemetryCredentials);
-	if (!isRecord$2(value)) return value;
-	return replaceProperties(value, Object.fromEntries(Object.keys(value).map((key) => [key, redactTelemetryCredentials])));
-}
-function isRecord$2(value) {
-	return value != null && typeof value === "object" && !Array.isArray(value);
-}
-function mapArray(value, redact) {
-	if (!Array.isArray(value)) return value;
-	const copy = value.map(redact);
-	return copy.some((entry, index) => entry !== value[index]) ? copy : value;
-}
-/** Preserve result getters, streams, and property descriptors without mutation. */
-function replaceProperties(value, redactors) {
-	if (!isRecord$2(value)) return value;
-	let descriptors;
-	for (const [key, redact] of Object.entries(redactors)) {
-		const descriptor = Object.getOwnPropertyDescriptor(value, key);
-		if (descriptor == null || !("value" in descriptor)) continue;
-		const redacted = redact(descriptor.value);
-		if (redacted !== descriptor.value) {
-			descriptors ??= Object.getOwnPropertyDescriptors(value);
-			descriptors[key] = {
-				...descriptor,
-				value: redacted
-			};
-		}
-	}
-	return descriptors == null ? value : Object.create(Object.getPrototypeOf(value), descriptors);
-}
-//#endregion
-//#region src/telemetry/tracing-channel-publisher.ts
-let diagnosticsChannelPromise;
-/**
-* Loads Node's diagnostics channel module only when the current runtime supports
-* it. Unsupported runtimes and failed imports intentionally resolve to
-* undefined so telemetry tracing never crashes user code.
-*/
-async function loadDiagnosticsChannel() {
-	if (!isNodeRuntime()) return;
-	if (diagnosticsChannelPromise == null) diagnosticsChannelPromise = Promise.resolve(loadBuiltinModule("node:diagnostics_channel"));
-	return diagnosticsChannelPromise;
-}
-function loadBuiltinModule(id) {
-	const processWithBuiltins = globalThis.process;
-	try {
-		return processWithBuiltins?.getBuiltinModule?.(id);
-	} catch {
-		return;
-	}
-}
-/**
-* Runs an async operation inside the AI SDK telemetry tracing channel when
-* tracing subscribers may exist. Without Node diagnostics-channel support,
-* without tracingChannel support, or when the runtime reports no subscribers,
-* this is a direct pass-through.
-*
-* The execution bookkeeping preserves the original model/tool result or error
-* if tracing itself throws, and prevents falling back by calling `execute` a
-* second time.
-*/
-async function runWithTracingChannelSpan(message, execute, recordResult = true) {
-	const tracingChannel = (await loadDiagnosticsChannel())?.tracingChannel?.(AI_SDK_TELEMETRY_TRACING_CHANNEL);
-	if (tracingChannel == null || tracingChannel.hasSubscribers === false) return await execute();
-	let executePromise;
-	let executionResult;
-	let executionError;
-	let hasExecutionResult = false;
-	let hasExecutionError = false;
-	const tracedExecute = () => {
-		try {
-			executePromise = Promise.resolve(execute());
-		} catch (error) {
-			executePromise = Promise.reject(error);
-		}
-		executePromise = executePromise.then((result) => {
-			executionResult = result;
-			hasExecutionResult = true;
-			return result;
-		}, (error) => {
-			executionError = error;
-			hasExecutionError = true;
-			throw error;
-		});
-		return recordResult ? executePromise.then(redactTelemetryCredentials, (error) => {
-			throw redactTelemetryCredentials(error);
-		}) : executePromise.then(() => void 0, () => {
-			throw new Error("AI SDK operation failed");
-		});
-	};
-	try {
-		await tracingChannel.tracePromise(tracedExecute, message);
-		return executionResult;
-	} catch {
-		if (hasExecutionError) throw executionError;
-		if (hasExecutionResult) return executionResult;
-		if (executePromise != null) return await executePromise;
-		return await execute();
-	}
-}
-/**
-* Opens a long-lived tracing-channel span context and returns a runner that can
-* re-enter that context later without changing stream setup timing.
-*/
-function openTelemetryChannelSpanContext({ message, completion, recordResult = true }) {
-	if (!isNodeRuntime()) {
-		Promise.resolve(completion).catch(() => {});
-		return;
-	}
-	const diagnosticsChannel = loadBuiltinModule("node:diagnostics_channel");
-	const asyncHooks = loadBuiltinModule("node:async_hooks");
-	const tracingChannel = diagnosticsChannel?.tracingChannel?.(AI_SDK_TELEMETRY_TRACING_CHANNEL);
-	if (tracingChannel == null || tracingChannel.hasSubscribers === false || asyncHooks == null) {
-		Promise.resolve(completion).catch(() => {});
-		return;
-	}
-	const context = message;
-	let asyncResource;
-	let asyncEndPublished = false;
-	const safePublish = (publish) => {
-		try {
-			publish();
-		} catch {}
-	};
-	const publishAsyncEnd = ({ result, error }) => {
-		if (asyncEndPublished) return;
-		asyncEndPublished = true;
-		if (error !== void 0) {
-			context.error = recordResult ? redactTelemetryCredentials(error) : /* @__PURE__ */ new Error("AI SDK operation failed");
-			safePublish(() => tracingChannel.error.publish(context));
-		}
-		if (recordResult && result !== void 0) context.result = redactTelemetryCredentials(result);
-		safePublish(() => tracingChannel.asyncEnd.publish(context));
-	};
-	safePublish(() => {
-		tracingChannel.start.runStores(context, () => {
-			asyncResource = new asyncHooks.AsyncResource("ai.telemetry");
-		});
-	});
-	safePublish(() => tracingChannel.end.publish(context));
-	Promise.resolve(completion).then((result) => publishAsyncEnd({ result }), (error) => publishAsyncEnd({ error }));
-	return { run: (execute) => asyncResource == null ? execute() : asyncResource.runInAsyncScope(execute) };
-}
-//#endregion
-//#region src/telemetry/telemetry-registry.ts
-/**
-* Registers one or more telemetry integrations globally.
-*/
-function registerTelemetry(...integrations) {
-	if (!globalThis.AI_SDK_TELEMETRY_INTEGRATIONS) globalThis.AI_SDK_TELEMETRY_INTEGRATIONS = [];
-	globalThis.AI_SDK_TELEMETRY_INTEGRATIONS.push(...integrations);
-}
-function getGlobalTelemetryIntegrations() {
-	return globalThis.AI_SDK_TELEMETRY_INTEGRATIONS ?? [];
-}
-//#endregion
-//#region src/telemetry/filter-telemetry-event.ts
-/**
-* Filters SDK-owned content fields on a copy. Only descend into SDK event
-* containers; user context has its own inclusion policy.
-*/
-function filterTelemetryEvent(event, telemetry) {
-	const hideInputs = telemetry.recordInputs === false;
-	const hideOutputs = telemetry.recordOutputs === false;
-	if (!hideInputs && !hideOutputs || event == null || typeof event !== "object") return event;
-	const filtered = Object.assign(Object.create(Object.getPrototypeOf(event)), event);
-	const replace = (fields) => {
-		for (const [key, value] of Object.entries(fields)) if (Object.hasOwn(event, key)) filtered[key] = value;
-	};
-	const isSpeech = filtered.operationId === "ai.generateSpeech";
-	if (hideInputs) {
-		replace({
-			instructions: void 0,
-			system: void 0,
-			prompt: void 0,
-			messages: [],
-			promptMessages: [],
-			experimental_steeringMessages: [],
-			tools: void 0,
-			stepTools: void 0,
-			schema: void 0,
-			schemaName: void 0,
-			schemaDescription: void 0,
-			...typeof filtered.output === "object" ? { output: void 0 } : {},
-			providerOptions: {},
-			value: "",
-			values: [],
-			query: "",
-			documents: [],
-			state: Array.isArray(filtered.state) ? [] : typeof filtered.state === "string" ? "" : {},
-			questions: {},
-			...isSpeech ? { text: "" } : {}
-		});
-		if (filtered.toolCall != null) filtered.toolCall = {
-			...filtered.toolCall,
-			input: void 0
-		};
-		if (filtered.toolOutput != null) filtered.toolOutput = {
-			...filtered.toolOutput,
-			input: void 0
-		};
-		if (Array.isArray(filtered.ranking)) filtered.ranking = filtered.ranking.map((entry) => "document" in entry ? {
-			...entry,
-			document: typeof entry.document === "string" ? "" : {}
-		} : entry);
-	}
-	if (hideOutputs) {
-		replace({
-			content: [],
-			...!isSpeech ? { text: "" } : {},
-			reasoning: Array.isArray(filtered.reasoning) ? [] : void 0,
-			reasoningText: void 0,
-			files: [],
-			sources: [],
-			toolCalls: [],
-			staticToolCalls: [],
-			dynamicToolCalls: [],
-			toolResults: [],
-			staticToolResults: [],
-			dynamicToolResults: [],
-			responseMessages: [],
-			object: void 0,
-			objectText: "",
-			embedding: [],
-			embeddings: [],
-			ranking: [],
-			answers: {},
-			segments: [],
-			words: []
-		});
-		if (filtered.toolOutput != null) filtered.toolOutput = {
-			...filtered.toolOutput,
-			output: void 0,
-			error: void 0
-		};
-	}
-	replace({
-		providerMetadata: void 0,
-		error: filtered.error == null ? filtered.error : /* @__PURE__ */ new Error("AI SDK operation failed")
-	});
-	for (const key of ["toolCall", "toolOutput"]) {
-		const toolEvent = filtered[key];
-		if (toolEvent != null && typeof toolEvent === "object") filtered[key] = {
-			...toolEvent,
-			providerMetadata: void 0,
-			..."error" in toolEvent ? { error: toolEvent.error == null ? toolEvent.error : /* @__PURE__ */ new Error("AI SDK operation failed") } : {}
-		};
-	}
-	for (const key of ["request", "response"]) {
-		const filterMetadata = (metadata) => {
-			if (metadata == null || typeof metadata !== "object") return metadata;
-			const filteredMetadata = { ...metadata };
-			delete filteredMetadata.body;
-			if (key === "request" ? hideInputs : hideOutputs) {
-				if ("messages" in metadata) filteredMetadata.messages = [];
-				if ("instructions" in metadata) filteredMetadata.instructions = void 0;
-			}
-			return filteredMetadata;
-		};
-		const metadata = filtered[key];
-		if (metadata != null) filtered[key] = Array.isArray(metadata) ? metadata.map(filterMetadata) : filterMetadata(metadata);
-	}
-	if (Array.isArray(filtered.steps)) filtered.steps = filtered.steps.map((step) => filterTelemetryEvent(step, telemetry));
-	if (Object.hasOwn(event, "finalStep")) filtered.finalStep = filterTelemetryEvent(filtered.finalStep, telemetry);
-	return filtered;
-}
-//#endregion
-//#region src/telemetry/create-telemetry-dispatcher.ts
-function augmentEvent(event, telemetry, filterContext = false) {
-	const augmentedEvent = Object.assign(Object.create(Object.getPrototypeOf(event)), event, {
-		recordInputs: telemetry.recordInputs,
-		recordOutputs: telemetry.recordOutputs,
-		functionId: telemetry.functionId,
-		aiVersion: dist_VERSION
-	});
-	if (filterContext && event != null && typeof event === "object" && "runtimeContext" in event) augmentedEvent.runtimeContext = filterIncludedContext({
-		context: event.runtimeContext,
-		includeContext: telemetry.includeRuntimeContext
-	});
-	if (filterContext && event != null && typeof event === "object") {
-		if ("toolsContext" in event) augmentedEvent.toolsContext = filterToolsContext({
-			toolsContext: event.toolsContext,
-			includeToolsContext: telemetry.includeToolsContext
-		});
-		else if ("toolContext" in event && event.toolContext != null && "toolCall" in event && event.toolCall != null && typeof event.toolCall === "object" && "toolName" in event.toolCall) augmentedEvent.toolContext = filterToolContext({
-			toolName: event.toolCall.toolName,
-			toolContext: event.toolContext,
-			includeToolsContext: telemetry.includeToolsContext
-		});
-	}
-	return redactTelemetryCredentials(filterTelemetryEvent(augmentedEvent, telemetry));
-}
-/**
-* Creates a telemetry dispatcher that sends telemetry events
-* to the resolved set of integrations.
-*
-* When per-call integrations are provided, they take precedence over the globally
-* registered integrations for that call. When no per-call integrations are
-* provided, the globally registered integrations are used.
-*
-* @param args.telemetry - Optional per-call telemetry settings and integrations.
-*
-* @returns A telemetry dispatcher that fans out lifecycle events to the
-* resolved set of integrations.
-*/
-function createTelemetryDispatcher({ telemetry }) {
-	if (telemetry?.isEnabled === false) return {};
-	const localIntegrations = telemetry?.integrations;
-	const integrations = localIntegrations != null ? (0,dist/* asArray */._j)(localIntegrations) : getGlobalTelemetryIntegrations();
-	const telemetryMetadata = {
-		recordInputs: telemetry?.recordInputs,
-		recordOutputs: telemetry?.recordOutputs,
-		functionId: telemetry?.functionId,
-		includeRuntimeContext: telemetry?.includeRuntimeContext,
-		includeToolsContext: telemetry?.includeToolsContext
-	};
-	const recordResult = telemetry?.recordInputs !== false && telemetry?.recordOutputs !== false;
-	const mergeTelemetryCallback = (key, deprecatedKey) => {
-		const integrationCallbacks = integrations.map((integration) => {
-			const callback = integration[key] ?? (deprecatedKey == null ? void 0 : integration[deprecatedKey]);
-			return typeof callback === "function" ? callback.bind(integration) : void 0;
-		}).filter(Boolean).map((callback) => ((event) => callback(augmentEvent(event, telemetryMetadata))));
-		if (integrationCallbacks.length === 0) return;
-		const mergedIntegrationCallback = mergeCallbacks(...integrationCallbacks);
-		return async (event) => {
-			await mergedIntegrationCallback(event);
-		};
-	};
-	const onStepEnd = mergeTelemetryCallback("onStepEnd");
-	const onStepFinish = mergeTelemetryCallback("onStepFinish");
-	const executeLanguageModelCallWrappers = integrations.map((integration) => integration.executeLanguageModelCall?.bind(integration)).filter(Boolean);
-	const executeToolWrappers = integrations.map((integration) => integration.executeTool?.bind(integration)).filter(Boolean);
-	return {
-		runInTracingChannelSpan: async ({ type, event, execute }) => await runWithTracingChannelSpan({
-			type,
-			event: augmentEvent(event, telemetryMetadata, true)
-		}, execute, recordResult),
-		startTracingChannelContext: ({ type, event, completion }) => openTelemetryChannelSpanContext({
-			message: {
-				type,
-				event: augmentEvent(event, telemetryMetadata, true)
-			},
-			completion,
-			recordResult
-		}),
-		onStart: mergeTelemetryCallback("onStart"),
-		onStepStart: mergeTelemetryCallback("onStepStart"),
-		onLanguageModelCallStart: mergeTelemetryCallback("onLanguageModelCallStart"),
-		onLanguageModelCallEnd: mergeTelemetryCallback("onLanguageModelCallEnd"),
-		onToolExecutionStart: mergeTelemetryCallback("onToolExecutionStart"),
-		onToolExecutionEnd: mergeTelemetryCallback("onToolExecutionEnd"),
-		onStepEnd: onStepEnd == null && onStepFinish == null ? void 0 : mergeCallbacks(onStepEnd, onStepFinish),
-		onStepError: mergeTelemetryCallback("onStepError"),
-		onObjectStepStart: mergeTelemetryCallback("onObjectStepStart"),
-		onObjectStepEnd: mergeTelemetryCallback("onObjectStepEnd"),
-		onEmbedStart: mergeTelemetryCallback("onEmbedStart"),
-		onEmbedEnd: mergeTelemetryCallback("onEmbedEnd"),
-		onRerankStart: mergeTelemetryCallback("onRerankStart"),
-		onRerankEnd: mergeTelemetryCallback("onRerankEnd"),
-		experimental_onDecideStart: mergeTelemetryCallback("experimental_onDecideStart", "experimental_onEvaluateStart"),
-		experimental_onDecisionModelCallStart: mergeTelemetryCallback("experimental_onDecisionModelCallStart", "experimental_onEvaluationModelCallStart"),
-		experimental_onDecisionModelCallEnd: mergeTelemetryCallback("experimental_onDecisionModelCallEnd", "experimental_onEvaluationModelCallEnd"),
-		experimental_onDecideEnd: mergeTelemetryCallback("experimental_onDecideEnd", "experimental_onEvaluateEnd"),
-		experimental_onStreamTranscriptionStart: mergeTelemetryCallback("experimental_onStreamTranscriptionStart"),
-		experimental_onStreamTranscriptionEnd: mergeTelemetryCallback("experimental_onStreamTranscriptionEnd"),
-		onEnd: mergeTelemetryCallback("onEnd"),
-		onAbort: mergeTelemetryCallback("onAbort"),
-		onError: mergeTelemetryCallback("onError"),
-		/**
-		* Runs provider calls inside integration-specific context so
-		* auto-instrumented provider requests can be associated with model work.
-		*/
-		executeLanguageModelCall: async ({ execute, ...event }) => {
-			const augmentedEvent = augmentEvent(event, telemetryMetadata);
-			let wrappedExecute = execute;
-			for (const executeWrapper of executeLanguageModelCallWrappers) {
-				const innerExecute = wrappedExecute;
-				wrappedExecute = async () => {
-					const originals = /* @__PURE__ */ new Map();
-					const redact = (original) => {
-						const redacted = redactTelemetryCredentials(original);
-						if (redacted !== original) originals.set(redacted, original);
-						return redacted;
-					};
-					const restore = (value) => originals.has(value) ? originals.get(value) : value;
-					try {
-						return restore(await executeWrapper({
-							...augmentedEvent,
-							execute: async () => {
-								try {
-									return redact(await innerExecute());
-								} catch (error) {
-									throw redact(error);
-								}
-							}
-						}));
-					} catch (error) {
-						throw restore(error);
-					}
-				};
-			}
-			return await runWithTracingChannelSpan({
-				type: "languageModelCall",
-				event: augmentedEvent
-			}, wrappedExecute, recordResult);
-		},
-		/**
-		* Composes all `executeTool` wrappers around the original tool execution.
-		* Each wrapper receives an `execute` function that calls the next wrapper in
-		* the chain, so integrations can establish nested telemetry context before
-		* delegating to the underlying tool.
-		*/
-		executeTool: async ({ execute, ...event }) => {
-			const augmentedEvent = augmentEvent(event, telemetryMetadata);
-			let wrappedExecute = execute;
-			for (const executeWrapper of executeToolWrappers) {
-				const innerExecute = wrappedExecute;
-				wrappedExecute = () => executeWrapper({
-					...augmentedEvent,
-					execute: innerExecute
-				});
-			}
-			return await wrappedExecute();
-		}
-	};
-}
-//#endregion
-//#region src/generate-text/reasoning.ts
-function asReasoningText(reasoningParts) {
-	const reasoningText = reasoningParts.map((part) => "text" in part ? part.text : "").join("");
-	return reasoningText.length > 0 ? reasoningText : void 0;
-}
-//#endregion
-//#region src/generate-text/step-result.ts
-var DefaultStepResult = class {
-	constructor({ callId, stepNumber, provider, modelId, runtimeContext, toolsContext, content, finishReason, rawFinishReason, usage, performance, warnings, request, response, providerMetadata, steeringMessages }) {
-		this.callId = callId;
-		this.stepNumber = stepNumber;
-		this.model = {
-			provider,
-			modelId
-		};
-		this.runtimeContext = runtimeContext;
-		this.toolsContext = toolsContext;
-		this.content = content;
-		this.finishReason = finishReason;
-		this.rawFinishReason = rawFinishReason;
-		this.usage = usage;
-		this.performance = performance;
-		this.warnings = warnings;
-		this.request = request;
-		this.response = response;
-		this.providerMetadata = providerMetadata;
-		if (steeringMessages != null && steeringMessages.length > 0) this.experimental_steeringMessages = steeringMessages;
-	}
-	get text() {
-		return this.content.filter((part) => part.type === "text").map((part) => part.text).join("");
-	}
-	get reasoning() {
-		return convertFromReasoningOutputs(this.content.filter((part) => part.type === "reasoning" || part.type === "reasoning-file"));
-	}
-	get reasoningText() {
-		return asReasoningText(this.reasoning);
-	}
-	get files() {
-		return this.content.filter((part) => part.type === "file").map((part) => part.file);
-	}
-	get sources() {
-		return this.content.filter((part) => part.type === "source");
-	}
-	get toolCalls() {
-		return this.content.filter((part) => part.type === "tool-call");
-	}
-	get staticToolCalls() {
-		return this.toolCalls.filter((toolCall) => toolCall.dynamic !== true);
-	}
-	get dynamicToolCalls() {
-		return this.toolCalls.filter((toolCall) => toolCall.dynamic === true);
-	}
-	get toolResults() {
-		return this.content.filter((part) => part.type === "tool-result");
-	}
-	get staticToolResults() {
-		return this.toolResults.filter((toolResult) => toolResult.dynamic !== true);
-	}
-	get dynamicToolResults() {
-		return this.toolResults.filter((toolResult) => toolResult.dynamic === true);
-	}
-};
-//#endregion
-//#region src/generate-text/restricted-telemetry-dispatcher.ts
-/**
-* Creates a copy of a step result whose runtime context only contains
-* top-level properties marked for telemetry inclusion.
-*/
-function restrictStepResult({ step, includeRuntimeContext, includeToolsContext }) {
-	return new DefaultStepResult({
-		callId: step.callId,
-		stepNumber: step.stepNumber,
-		provider: step.model.provider,
-		modelId: step.model.modelId,
-		runtimeContext: filterIncludedContext({
-			context: step.runtimeContext,
-			includeContext: includeRuntimeContext
-		}),
-		toolsContext: filterToolsContext({
-			toolsContext: step.toolsContext,
-			includeToolsContext
-		}),
-		content: step.content,
-		finishReason: step.finishReason,
-		rawFinishReason: step.rawFinishReason,
-		usage: step.usage,
-		performance: step.performance,
-		warnings: step.warnings,
-		request: step.request,
-		response: step.response,
-		providerMetadata: step.providerMetadata,
-		steeringMessages: step.experimental_steeringMessages
-	});
-}
-/**
-* Creates a telemetry dispatcher that only includes configured runtime context
-* properties in text-generation lifecycle events before dispatching them.
-*/
-function createRestrictedTelemetryDispatcher$3({ telemetry, includeRuntimeContext, includeToolsContext }) {
-	const telemetryDispatcher = createTelemetryDispatcher({ telemetry });
-	const restrictStepStartEvent = (event) => ({
-		...event,
-		runtimeContext: filterIncludedContext({
-			context: event.runtimeContext,
-			includeContext: includeRuntimeContext
-		}),
-		steps: event.steps.map((step) => restrictStepResult({
-			step,
-			includeRuntimeContext,
-			includeToolsContext
-		})),
-		toolsContext: filterToolsContext({
-			toolsContext: event.toolsContext,
-			includeToolsContext
-		})
-	});
-	return {
-		...telemetryDispatcher,
-		onStart: (event) => telemetryDispatcher.onStart?.({
-			...event,
-			runtimeContext: filterIncludedContext({
-				context: event.runtimeContext,
-				includeContext: includeRuntimeContext
-			}),
-			toolsContext: filterToolsContext({
-				toolsContext: event.toolsContext,
-				includeToolsContext
-			})
-		}),
-		onStepStart: (event) => telemetryDispatcher.onStepStart?.(restrictStepStartEvent(event)),
-		onStepEnd: (event) => telemetryDispatcher.onStepEnd?.(restrictStepResult({
-			step: event,
-			includeRuntimeContext,
-			includeToolsContext
-		})),
-		onStepFinish: (event) => telemetryDispatcher.onStepEnd?.(restrictStepResult({
-			step: event,
-			includeRuntimeContext,
-			includeToolsContext
-		})),
-		onStepError: (event) => telemetryDispatcher.onStepError?.(restrictStepStartEvent(event)),
-		onEnd: (event) => telemetryDispatcher.onEnd?.(((restrictedSteps) => {
-			return {
-				...event,
-				runtimeContext: filterIncludedContext({
-					context: event.runtimeContext,
-					includeContext: includeRuntimeContext
-				}),
-				steps: restrictedSteps,
-				finalStep: restrictedSteps.at(-1),
-				toolsContext: filterToolsContext({
-					toolsContext: event.toolsContext,
-					includeToolsContext
-				})
-			};
-		})(event.steps.map((step) => restrictStepResult({
-			step,
-			includeRuntimeContext,
-			includeToolsContext
-		})))),
-		onAbort: (event) => telemetryDispatcher.onAbort?.({
-			...event,
-			steps: event.steps.map((step) => restrictStepResult({
-				step,
-				includeRuntimeContext,
-				includeToolsContext
-			}))
-		}),
-		onToolExecutionStart: (event) => telemetryDispatcher.onToolExecutionStart?.({
-			...event,
-			toolContext: filterToolContext({
-				toolName: event.toolCall.toolName,
-				toolContext: event.toolContext,
-				includeToolsContext
-			})
-		}),
-		onToolExecutionEnd: (event) => telemetryDispatcher.onToolExecutionEnd?.({
-			...event,
-			toolContext: filterToolContext({
-				toolName: event.toolCall.toolName,
-				toolContext: event.toolContext,
-				includeToolsContext
-			})
-		})
-	};
-}
-//#endregion
 //#region src/generate-text/steering.ts
 const generateSteeringId = (0,dist/* createIdGenerator */.hK)({
 	prefix: "steer",
@@ -10399,17 +11603,31 @@ const steeringRunStarter = Symbol.for("vercel.ai.steering.start");
 var DefaultSteering = class {
 	constructor() {
 		this.state = "idle";
+		this.endReason = "finished";
 		this.pending = [];
 		this.queued = [];
 		this.taken = [];
 		this.outcomes = /* @__PURE__ */ new Map();
+		this.interruptRequested = false;
 	}
 	steer(message, options) {
-		return this.add({
+		const isNew = options?.id == null || !this.outcomes.has(options.id);
+		const outcome = this.add({
 			message,
 			id: options?.id,
 			target: this.pending
 		});
+		if (options?.interrupt === true && isNew) this.requestInterrupt();
+		return outcome;
+	}
+	requestInterrupt() {
+		const onInterrupt = this.onInterrupt;
+		if (onInterrupt == null) {
+			this.interruptRequested = true;
+			return;
+		}
+		this.onInterrupt = void 0;
+		onInterrupt();
 	}
 	queue(message, options) {
 		return this.add({
@@ -10429,7 +11647,7 @@ var DefaultSteering = class {
 			type: "not-delivered",
 			id,
 			message: userMessage,
-			reason: "finished"
+			reason: this.endReason
 		}) : new Promise((resolve) => {
 			target.push({
 				id,
@@ -10459,7 +11677,20 @@ var DefaultSteering = class {
 				if (this.state !== "running") return [];
 				this.taken = [...this.taken, ...this.pending];
 				this.pending = [];
+				this.interruptRequested = false;
 				return this.taken.map(({ message }) => message);
+			},
+			watchInterrupt: (onInterrupt) => {
+				if (this.state !== "running") return () => {};
+				if (this.interruptRequested) {
+					this.interruptRequested = false;
+					onInterrupt();
+					return () => {};
+				}
+				this.onInterrupt = onInterrupt;
+				return () => {
+					if (this.onInterrupt === onInterrupt) this.onInterrupt = void 0;
+				};
 			},
 			resolveTakenMessages: ({ stepNumber, sentMessages }) => {
 				const taken = this.taken;
@@ -10498,6 +11729,9 @@ var DefaultSteering = class {
 				this.pending = [];
 				this.queued = [];
 				this.state = "ended";
+				this.endReason = reason;
+				this.interruptRequested = false;
+				this.onInterrupt = void 0;
 				for (const { id, message, resolve } of notDelivered) resolve({
 					type: "not-delivered",
 					id,
@@ -10509,8 +11743,14 @@ var DefaultSteering = class {
 	}
 };
 function isSent({ message, sentMessages }) {
-	const content = JSON.stringify(message.content);
-	return sentMessages.some((sentMessage) => sentMessage === message || sentMessage.role === "user" && JSON.stringify(sentMessage.content) === content);
+	const content = normalizeContent(message.content);
+	return sentMessages.some((sentMessage) => sentMessage === message || sentMessage.role === "user" && normalizeContent(sentMessage.content) === content);
+}
+function normalizeContent(content) {
+	return JSON.stringify((typeof content === "string" ? [{
+		type: "text",
+		text: content
+	}] : content).map(({ providerOptions: _providerOptions, ...part }) => part));
 }
 /**
 * Creates a steering object that sends user messages to a running generation.
@@ -10538,12 +11778,24 @@ function createSteering() {
 function startSteeringRun(steering) {
 	if (steering == null) return;
 	const start = steering[steeringRunStarter];
-	if (typeof start !== "function") throw new InvalidArgumentError({
+	if (typeof start !== "function") throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 		parameter: "experimental_steering",
 		value: steering,
 		message: "The steering object must be created with experimental_createSteering()."
 	});
 	return start.call(steering);
+}
+//#endregion
+//#region src/generate-text/stopped-by.ts
+function getPendingToolCallStoppedBy(step) {
+	if (!isToolExecutionAllowedFinishReason(step.finishReason)) return "model";
+	return hasPendingApproval(step) ? "approval" : "tool-without-execute";
+}
+function getModelStoppedBy(step) {
+	return hasPendingApproval(step) ? "approval" : "model";
+}
+function hasPendingApproval({ content }) {
+	return content.some((part) => part.type === "tool-approval-request" && part.isAutomatic !== true);
 }
 //#endregion
 //#region src/generate-text/stop-condition.ts
@@ -10595,441 +11847,12 @@ function sumTokenCounts(tokenCount1, tokenCount2) {
 	return tokenCount1 == null && tokenCount2 == null ? void 0 : (tokenCount1 ?? 0) + (tokenCount2 ?? 0);
 }
 //#endregion
-//#region src/util/is-deep-equal-data.ts
-/**
-* Performs a deep-equal comparison of two parsed JSON objects.
-*
-* @param {any} obj1 - The first object to compare.
-* @param {any} obj2 - The second object to compare.
-* @returns {boolean} - Returns true if the two objects are deeply equal, false otherwise.
-*/
-function isDeepEqualData(obj1, obj2) {
-	if (obj1 === obj2) return true;
-	if (obj1 == null || obj2 == null) return false;
-	if (typeof obj1 !== "object" && typeof obj2 !== "object") return obj1 === obj2;
-	if (obj1.constructor !== obj2.constructor) return false;
-	if (obj1 instanceof Date && obj2 instanceof Date) return obj1.getTime() === obj2.getTime();
-	if (Array.isArray(obj1)) {
-		if (obj1.length !== obj2.length) return false;
-		for (let i = 0; i < obj1.length; i++) if (!isDeepEqualData(obj1[i], obj2[i])) return false;
-		return true;
-	}
-	const keys1 = Object.keys(obj1);
-	const keys2 = Object.keys(obj2);
-	if (keys1.length !== keys2.length) return false;
-	for (const key of keys1) {
-		if (!keys2.includes(key)) return false;
-		if (!isDeepEqualData(obj1[key], obj2[key])) return false;
-	}
-	return true;
-}
-//#endregion
-//#region src/generate-text/to-response-messages.ts
-/**
-* Converts the result of a `generateText` or `streamText` call to a list of response messages.
-*/
-async function toResponseMessages({ content: inputContent, tools }) {
-	const responseMessages = [];
-	const toolCallOrder = /* @__PURE__ */ new Map();
-	const content = [];
-	for (const part of inputContent) {
-		if (part.type === "source") continue;
-		if ((part.type === "tool-result" || part.type === "tool-error") && !part.providerExecuted) continue;
-		if (part.type === "text" && part.text.length === 0 && part.providerMetadata == null) continue;
-		switch (part.type) {
-			case "text":
-				content.push({
-					type: "text",
-					text: part.text,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "custom":
-				content.push({
-					type: "custom",
-					kind: part.kind,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "reasoning":
-				content.push({
-					type: "reasoning",
-					text: part.text,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "file":
-				content.push({
-					type: "file",
-					data: part.file.base64,
-					mediaType: part.file.mediaType,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "reasoning-file":
-				content.push({
-					type: "reasoning-file",
-					data: part.file.base64,
-					mediaType: part.file.mediaType,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "tool-call":
-				if (!toolCallOrder.has(part.toolCallId)) toolCallOrder.set(part.toolCallId, toolCallOrder.size);
-				content.push({
-					type: "tool-call",
-					toolCallId: part.toolCallId,
-					toolName: part.toolName,
-					input: part.invalid && typeof part.input !== "object" ? {} : part.input,
-					providerExecuted: part.providerExecuted,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			case "tool-result": {
-				const output = await createToolModelOutput({
-					toolCallId: part.toolCallId,
-					input: part.input,
-					tool: getOwn(tools, part.toolName),
-					output: part.output,
-					errorMode: "none"
-				});
-				content.push({
-					type: "tool-result",
-					toolCallId: part.toolCallId,
-					toolName: part.toolName,
-					output,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			}
-			case "tool-error": {
-				const output = await createToolModelOutput({
-					toolCallId: part.toolCallId,
-					input: part.input,
-					tool: getOwn(tools, part.toolName),
-					output: part.error,
-					errorMode: "json"
-				});
-				content.push({
-					type: "tool-result",
-					toolCallId: part.toolCallId,
-					toolName: part.toolName,
-					output,
-					providerOptions: part.providerMetadata
-				});
-				break;
-			}
-			case "tool-approval-request":
-				const inputSchemaInput = getToolCallInputSchemaInput(part.toolCall);
-				content.push({
-					type: "tool-approval-request",
-					approvalId: part.approvalId,
-					toolCallId: part.toolCall.toolCallId,
-					...part.reason != null ? { reason: part.reason } : {},
-					isAutomatic: part.isAutomatic,
-					...part.signature != null ? { signature: part.signature } : {},
-					...inputSchemaInput != null && !isDeepEqualData(inputSchemaInput.value, part.toolCall.input) ? { inputSchemaInput: inputSchemaInput.value } : {}
-				});
-		}
-	}
-	if (content.length > 0) responseMessages.push({
-		role: "assistant",
-		content
-	});
-	const toolResultContent = [];
-	for (const part of inputContent) {
-		if (part.type !== "tool-approval-response" && part.type !== "tool-result" && part.type !== "tool-error") continue;
-		if (part.type === "tool-approval-response") {
-			toolResultContent.push({
-				type: "tool-approval-response",
-				approvalId: part.approvalId,
-				approved: part.approved,
-				reason: part.reason,
-				providerExecuted: part.providerExecuted
-			});
-			if (part.approved === false) toolResultContent.push({
-				type: "tool-result",
-				toolCallId: part.toolCall.toolCallId,
-				toolName: part.toolCall.toolName,
-				output: {
-					type: "execution-denied",
-					reason: part.reason
-				}
-			});
-			continue;
-		}
-		if (part.providerExecuted) continue;
-		const output = await createToolModelOutput({
-			toolCallId: part.toolCallId,
-			input: part.input,
-			tool: getOwn(tools, part.toolName),
-			output: part.type === "tool-result" ? part.output : part.error,
-			errorMode: part.type === "tool-error" ? "text" : "none"
-		});
-		toolResultContent.push({
-			type: "tool-result",
-			toolCallId: part.toolCallId,
-			toolName: part.toolName,
-			output,
-			...part.providerMetadata != null ? { providerOptions: part.providerMetadata } : {}
-		});
-	}
-	if (toolResultContent.length > 0) responseMessages.push({
-		role: "tool",
-		content: sortToolResultContentByToolCallOrder({
-			toolResultContent,
-			toolCallOrder
-		})
-	});
-	return responseMessages;
-}
-function sortToolResultContentByToolCallOrder({ toolResultContent, toolCallOrder }) {
-	const sortedToolResults = toolResultContent.filter((part) => part.type === "tool-result").map((part, index) => ({
-		part,
-		index
-	})).sort((a, b) => {
-		const aOrder = toolCallOrder.get(a.part.toolCallId);
-		const bOrder = toolCallOrder.get(b.part.toolCallId);
-		if (aOrder == null && bOrder == null) return a.index - b.index;
-		if (aOrder == null) return 1;
-		if (bOrder == null) return -1;
-		return aOrder - bOrder || a.index - b.index;
-	}).map(({ part }) => part);
-	let toolResultIndex = 0;
-	return toolResultContent.map((part) => part.type === "tool-result" ? sortedToolResults[toolResultIndex++] : part);
-}
-//#endregion
-//#region src/util/canonical-hash.ts
-const encoder$1 = new TextEncoder();
-/**
-* Deterministic JSON serialization: object keys are sorted so that two
-* structurally-equal values always produce the same string regardless of key
-* insertion order. Used as the input to content hashing.
-*/
-function canonicalJSON(value) {
-	if (value === null || value === void 0) return JSON.stringify(value);
-	if (typeof value !== "object") return JSON.stringify(value);
-	if (Array.isArray(value)) return `[${value.map((element) => element === void 0 ? "null" : canonicalJSON(element)).join(",")}]`;
-	return `{${Object.keys(value).sort().map((k) => `${JSON.stringify(k)}:${canonicalJSON(value[k])}`).join(",")}}`;
-}
-function toBase64url(bytes) {
-	return (0,dist/* convertUint8ArrayToBase64 */.n_)(bytes).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-/**
-* Canonical SHA-256 digest (base64url) of an arbitrary JSON-serializable value.
-*/
-async function hashCanonical(value) {
-	const digest = await crypto.subtle.digest("SHA-256", encoder$1.encode(canonicalJSON(value)));
-	return toBase64url(new Uint8Array(digest));
-}
-//#endregion
-//#region src/generate-text/tool-approval-signature.ts
-const encoder = new TextEncoder();
-function fromBase64url(str) {
-	return (0,dist/* convertBase64ToUint8Array */.Z9)(str);
-}
-async function importKey(secret) {
-	const keyData = typeof secret === "string" ? encoder.encode(secret) : secret;
-	return crypto.subtle.importKey("raw", keyData, {
-		name: "HMAC",
-		hash: "SHA-256"
-	}, false, ["sign", "verify"]);
-}
-function buildPayload(approvalId, toolCallId, toolName, inputDigest) {
-	return encoder.encode(JSON.stringify([
-		"ai-sdk-tool-approval-v1",
-		approvalId,
-		toolCallId,
-		toolName,
-		inputDigest
-	]));
-}
-function buildLegacyPayload(approvalId, toolCallId, toolName, inputDigest) {
-	return encoder.encode(`${approvalId}\n${toolCallId}\n${toolName}\n${inputDigest}`);
-}
-async function signToolApproval({ secret, approvalId, toolCallId, toolName, input }) {
-	const key = await importKey(secret);
-	const payload = buildPayload(approvalId, toolCallId, toolName, await hashCanonical(input));
-	const sig = await crypto.subtle.sign("HMAC", key, payload);
-	return toBase64url(new Uint8Array(sig));
-}
-async function verifyToolApprovalSignature({ secret, signature, approvalId, toolCallId, toolName, input }) {
-	const key = await importKey(secret);
-	const inputDigest = await hashCanonical(input);
-	const sigBytes = fromBase64url(signature);
-	const payload = buildPayload(approvalId, toolCallId, toolName, inputDigest);
-	if (await crypto.subtle.verify("HMAC", key, sigBytes, payload)) return true;
-	if (!approvalId.includes("\n") && !toolCallId.includes("\n") && !toolName.includes("\n")) {
-		const legacyPayload = buildLegacyPayload(approvalId, toolCallId, toolName, inputDigest);
-		return crypto.subtle.verify("HMAC", key, sigBytes, legacyPayload);
-	}
-	return false;
-}
-async function maybeSignApproval({ secret, approvalId, toolCallId, toolName, input }) {
-	if (secret == null) return void 0;
-	return signToolApproval({
-		secret,
-		approvalId,
-		toolCallId,
-		toolName,
-		input
-	});
-}
-//#endregion
-//#region src/generate-text/validate-tool-approvals.ts
-/**
-* Re-validates approved tool approvals reconstructed from client-supplied
-* message history before they are executed. Checks HMAC signature (when
-* configured), input schema, and approval policy.
-*/
-async function validateApprovedToolApprovals({ approvedToolApprovals, tools, toolApproval, messages, toolsContext, runtimeContext, toolApprovalSecret, refineToolInput }) {
-	const approved = [];
-	const denied = [];
-	const invalid = [];
-	for (const collectedApproval of approvedToolApprovals) {
-		const tool = getOwn(tools, collectedApproval.toolCall.toolName);
-		const { toolMetadata: _toolMetadata, dynamic: _dynamic, ...toolCallFromHistory } = collectedApproval.toolCall;
-		const approval = {
-			...collectedApproval,
-			toolCall: {
-				...toolCallFromHistory,
-				...tool?.metadata != null ? { toolMetadata: tool.metadata } : {},
-				...tool?.type === "dynamic" ? { dynamic: true } : {},
-				title: tool?.title
-			}
-		};
-		const { approvalRequest, toolCall } = approval;
-		if (toolApprovalSecret != null) {
-			if (approvalRequest.signature == null) throw new InvalidToolApprovalSignatureError({
-				approvalId: approvalRequest.approvalId,
-				toolCallId: toolCall.toolCallId,
-				reason: "missing signature"
-			});
-			if (!await verifyToolApprovalSignature({
-				secret: toolApprovalSecret,
-				signature: approvalRequest.signature,
-				approvalId: approvalRequest.approvalId,
-				toolCallId: toolCall.toolCallId,
-				toolName: toolCall.toolName,
-				input: toolCall.input
-			})) throw new InvalidToolApprovalSignatureError({
-				approvalId: approvalRequest.approvalId,
-				toolCallId: toolCall.toolCallId,
-				reason: "invalid signature"
-			});
-		}
-		if ((0,dist/* isExecutableTool */.v0)(tool) && tool.inputSchema != null) {
-			let validationError;
-			try {
-				const approvedInput = structuredClone(toolCall.input);
-				const hasInputSchemaInput = Object.prototype.hasOwnProperty.call(approvalRequest, "inputSchemaInput");
-				const validation = await (0,dist/* safeValidateTypes */.ZZ)({
-					value: structuredClone(hasInputSchemaInput ? approvalRequest.inputSchemaInput : toolCall.input),
-					schema: (0,dist/* asSchema */.mD)(tool.inputSchema)
-				});
-				if (!validation.success) validationError = validation.error;
-				else {
-					const revalidatedToolCall = await refineParsedToolCallInput({
-						toolCall: {
-							...toolCall,
-							input: validation.value
-						},
-						refineToolInput
-					});
-					if (!isDeepEqualData(structuredClone(revalidatedToolCall.input), approvedInput)) validationError = /* @__PURE__ */ new Error("Approved tool input does not match the validated schema output.");
-				}
-			} catch (error) {
-				validationError = error;
-			}
-			if (validationError != null) {
-				invalid.push({
-					...approval,
-					error: new InvalidToolInputError({
-						toolName: toolCall.toolName,
-						toolInput: JSON.stringify(toolCall.input),
-						cause: validationError
-					})
-				});
-				continue;
-			}
-		}
-		const approvalStatus = await resolveToolApproval({
-			tools,
-			toolApproval,
-			toolCall,
-			messages,
-			toolsContext,
-			runtimeContext
-		});
-		if (approvalStatus.type === "denied") denied.push({
-			...approval,
-			approvalResponse: {
-				...approval.approvalResponse,
-				approved: false,
-				reason: approvalStatus.reason ?? approval.approvalResponse.reason
-			}
-		});
-		else approved.push(approval);
-	}
-	return {
-		approvedToolApprovals: approved,
-		deniedToolApprovals: denied,
-		invalidToolApprovals: invalid
-	};
-}
-//#endregion
-//#region src/generate-text/tool-call-concurrency.ts
-/**
-* Validates the maximum number of tool calls that may execute concurrently.
-*/
-function prepareToolCallConcurrency(toolCallConcurrency) {
-	if (toolCallConcurrency == null) return;
-	if (!Number.isInteger(toolCallConcurrency)) throw new InvalidArgumentError({
-		parameter: "toolCallConcurrency",
-		value: toolCallConcurrency,
-		message: "toolCallConcurrency must be an integer"
-	});
-	if (toolCallConcurrency < 1) throw new InvalidArgumentError({
-		parameter: "toolCallConcurrency",
-		value: toolCallConcurrency,
-		message: "toolCallConcurrency must be >= 1"
-	});
-	return toolCallConcurrency;
-}
-/**
-* Maps items with an optional concurrency limit while preserving result order.
-*
-* Workers claim items in input order. When the signal is aborted or an
-* execution rejects, no additional queued items are started.
-*/
-async function mapWithConcurrency({ items, concurrency, abortSignal, execute }) {
-	if (concurrency == null || concurrency >= items.length) return Promise.all(items.map(execute));
-	const results = new Array(items.length);
-	let nextIndex = 0;
-	let stopped = false;
-	const worker = async () => {
-		while (!stopped) {
-			abortSignal?.throwIfAborted();
-			const index = nextIndex++;
-			if (index >= items.length) return;
-			try {
-				results[index] = await execute(items[index], index);
-			} catch (error) {
-				stopped = true;
-				throw error;
-			}
-		}
-	};
-	await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, worker));
-	return results;
-}
-//#endregion
 //#region src/generate-text/generate-text.ts
 const originalGenerateId$4 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "aitxt",
 	size: 24
 });
-const originalGenerateCallId$9 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$10 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
@@ -11097,6 +11920,7 @@ const originalGenerateCallId$9 = (0,dist/* createIdGenerator */.hK)({
 * @param experimental_onToolCallFinish - Deprecated alias for `onToolExecutionEnd`.
 * @param onStepFinish - Callback that is called when each step (LLM call) is finished, including intermediate steps.
 * @param onStepError - Callback that is called when a step that started fails before it produces a step result, i.e. when the provider call throws or rejects, or when the call is aborted or times out.
+* @param onWarning - Callback that receives the warnings of the call instead of the global warning logger.
 * @param onEnd - Callback that is called when all steps are finished and the response is complete.
 * @param onFinish - Deprecated alias for `onEnd`.
 *
@@ -11112,19 +11936,19 @@ async function generateText(options) {
 		throw error;
 	}
 }
-async function generateTextInternal({ model: modelArg, tools, toolChoice, instructions, system, prompt, messages, allowSystemInMessages, maxRetries: maxRetriesArg, abortSignal, timeout, headers, stopWhen = isStepCount(1), experimental_sandbox: sandbox, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, experimental_telemetry, telemetry = experimental_telemetry, providerOptions, activeTools, toolOrder, toolCallConcurrency, prepareStep, experimental_repairToolCall, repairToolCall = experimental_repairToolCall, experimental_refineToolInput: refineToolInput, experimental_download: download, runtimeContext = {}, toolsContext = {}, experimental_include, include = experimental_include, _internal: { generateId = originalGenerateId$4, generateCallId = originalGenerateCallId$9, now: now$4 = now } = {}, onStart, experimental_onStart, onStepStart, experimental_onStepStart, onLanguageModelCallStart, experimental_onLanguageModelCallStart, onLanguageModelCallEnd, experimental_onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, experimental_onToolCallStart, experimental_onToolCallFinish, onStepEnd, onStepError, onStepFinish, onFinish, onEnd = onFinish, ...settings }, steeringRun) {
+async function generateTextInternal({ model: modelArg, tools, toolChoice, instructions, system, prompt, messages, allowSystemInMessages, maxRetries: maxRetriesArg, abortSignal, timeout, headers, stopWhen = isStepCount(1), experimental_sandbox: sandbox, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, experimental_telemetry, telemetry = experimental_telemetry, providerOptions, activeTools, toolOrder, toolCallConcurrency, prepareStep, experimental_repairToolCall, repairToolCall = experimental_repairToolCall, experimental_refineToolInput: refineToolInput, experimental_download: download, runtimeContext = {}, toolsContext = {}, experimental_include, include = experimental_include, _internal: { generateId = originalGenerateId$4, generateCallId = originalGenerateCallId$10, now: now$4 = now } = {}, onStart, experimental_onStart, onStepStart, experimental_onStepStart, onLanguageModelCallStart, experimental_onLanguageModelCallStart, onLanguageModelCallEnd, experimental_onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, experimental_onToolCallStart, experimental_onToolCallFinish, onStepEnd, onStepError, onStepFinish, onWarning, onFinish, onEnd = onFinish, ...settings }, steeringRun) {
 	include = {
 		requestBody: include?.requestBody ?? false,
 		requestMessages: include?.requestMessages ?? false,
 		responseBody: include?.responseBody ?? false
 	};
-	const resolvedToolCallConcurrency = prepareToolCallConcurrency(toolCallConcurrency);
-	const model = resolveLanguageModel(modelArg);
-	const resolvedToolCallers = resolveToolCallerConfiguration({
+	const resolvedToolCallConcurrency = default_stop_condition_D8PwkeWe_prepareToolCallConcurrency(toolCallConcurrency);
+	const model = default_stop_condition_D8PwkeWe_resolveLanguageModel(modelArg, onWarning);
+	const resolvedToolCallers = default_stop_condition_D8PwkeWe_resolveToolCallerConfiguration({
 		tools,
 		toolCallers: experimental_toolCallers
 	});
-	const prepareToolSearch = createToolSearchState({
+	const prepareToolSearch = default_stop_condition_D8PwkeWe_createToolSearchState({
 		tools,
 		toolCallers: resolvedToolCallers
 	});
@@ -11136,6 +11960,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 	const resolvedOnToolExecutionStart = onToolExecutionStart ?? experimental_onToolCallStart;
 	const resolvedOnToolExecutionEnd = onToolExecutionEnd ?? experimental_onToolCallFinish;
 	const resolvedOnStepEnd = onStepEnd ?? onStepFinish;
+	const logCallWarnings = default_stop_condition_D8PwkeWe_createLogWarnings(onWarning);
 	const unsupportedTimeoutWarnings = [];
 	if (getFirstChunkTimeoutMs(timeout) != null) unsupportedTimeoutWarnings.push({
 		type: "unsupported",
@@ -11147,7 +11972,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 		feature: "timeout.chunkMs",
 		details: "The chunkMs timeout is only supported by streaming functions."
 	});
-	if (unsupportedTimeoutWarnings.length > 0) logWarnings({
+	if (unsupportedTimeoutWarnings.length > 0) logCallWarnings({
 		warnings: unsupportedTimeoutWarnings,
 		provider: model.provider,
 		model: model.modelId
@@ -11155,14 +11980,14 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 	const totalTimeoutMs = getTotalTimeoutMs(timeout);
 	const stepTimeoutMs = getStepTimeoutMs(timeout);
 	const stepAbortController = stepTimeoutMs != null ? new AbortController() : void 0;
-	const mergedAbortSignal = mergeAbortSignals(abortSignal, totalTimeoutMs, stepAbortController?.signal);
-	const { maxRetries, retry } = prepareRetries({
+	const mergedAbortSignal = default_stop_condition_D8PwkeWe_mergeAbortSignals(abortSignal, totalTimeoutMs, stepAbortController?.signal);
+	const { maxRetries, retry } = default_stop_condition_D8PwkeWe_prepareRetries({
 		maxRetries: maxRetriesArg,
 		abortSignal: mergedAbortSignal
 	});
-	const callSettings = prepareLanguageModelCallOptions(settings);
-	const headersWithUserAgent = (0,dist/* withUserAgentSuffix */.WZ)(headers ?? {}, `ai/${dist_VERSION}`);
-	const initialPrompt = await standardizePrompt({
+	const callSettings = default_stop_condition_D8PwkeWe_prepareLanguageModelCallOptions(settings);
+	const headersWithUserAgent = (0,dist/* withUserAgentSuffix */.WZ)(headers ?? {}, `ai/${default_stop_condition_D8PwkeWe_VERSION}`);
+	const initialPrompt = await default_stop_condition_D8PwkeWe_standardizePrompt({
 		instructions,
 		system,
 		prompt,
@@ -11170,7 +11995,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 		allowSystemInMessages
 	});
 	const callId = generateCallId();
-	const telemetryDispatcher = createRestrictedTelemetryDispatcher$3({
+	const telemetryDispatcher = createRestrictedTelemetryDispatcher({
 		telemetry,
 		includeRuntimeContext: telemetry?.includeRuntimeContext,
 		includeToolsContext: telemetry?.includeToolsContext
@@ -11205,7 +12030,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 		toolsContext
 	};
 	const executeGenerateText = async () => {
-		await notify({
+		await default_stop_condition_D8PwkeWe_notify({
 			event: generateTextStartEvent,
 			callbacks: [resolvedOnStart, telemetryDispatcher.onStart]
 		});
@@ -11213,8 +12038,8 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 		try {
 			const initialMessages = initialPrompt.messages;
 			const initialResponseMessages = [];
-			const { approvedToolApprovals, deniedToolApprovals: collectedDeniedToolApprovals } = collectToolApprovals({ messages: initialMessages });
-			const { approvedToolApprovals: localApprovedToolApprovals, deniedToolApprovals: revalidationDeniedToolApprovals, invalidToolApprovals } = await validateApprovedToolApprovals({
+			const { approvedToolApprovals, deniedToolApprovals: collectedDeniedToolApprovals } = default_stop_condition_D8PwkeWe_collectToolApprovals({ messages: initialMessages });
+			const { approvedToolApprovals: localApprovedToolApprovals, deniedToolApprovals: revalidationDeniedToolApprovals, invalidToolApprovals } = await default_stop_condition_D8PwkeWe_validateApprovedToolApprovals({
 				approvedToolApprovals: approvedToolApprovals.filter((toolApproval) => !toolApproval.toolCall.providerExecuted),
 				tools,
 				toolApproval,
@@ -11235,11 +12060,11 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 					timeout,
 					experimental_sandbox: sandbox,
 					toolsContext,
-					onToolExecutionStart: (event) => notify({
+					onToolExecutionStart: (event) => default_stop_condition_D8PwkeWe_notify({
 						event,
 						callbacks: [resolvedOnToolExecutionStart, telemetryDispatcher.onToolExecutionStart]
 					}),
-					onToolExecutionEnd: (event) => notify({
+					onToolExecutionEnd: (event) => default_stop_condition_D8PwkeWe_notify({
 						event,
 						callbacks: [resolvedOnToolExecutionEnd, telemetryDispatcher.onToolExecutionEnd]
 					}),
@@ -11250,10 +12075,10 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 				const toolContent = [];
 				for (const result of toolResults) {
 					const output = result.output;
-					const modelOutput = await createToolModelOutput({
+					const modelOutput = await default_stop_condition_D8PwkeWe_createToolModelOutput({
 						toolCallId: output.toolCallId,
 						input: output.input,
-						tool: getOwn(tools, output.toolName),
+						tool: default_stop_condition_D8PwkeWe_getOwn(tools, output.toolName),
 						output: output.type === "tool-result" ? output.output : output.error,
 						errorMode: output.type === "tool-error" ? "text" : "none"
 					});
@@ -11268,10 +12093,10 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 					type: "tool-result",
 					toolCallId: toolApproval.toolCall.toolCallId,
 					toolName: toolApproval.toolCall.toolName,
-					output: await createToolModelOutput({
+					output: await default_stop_condition_D8PwkeWe_createToolModelOutput({
 						toolCallId: toolApproval.toolCall.toolCallId,
 						input: toolApproval.toolCall.input,
-						tool: getOwn(tools, toolApproval.toolCall.toolName),
+						tool: default_stop_condition_D8PwkeWe_getOwn(tools, toolApproval.toolCall.toolName),
 						output: toolApproval.error,
 						errorMode: "text"
 					})
@@ -11291,7 +12116,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 					content: toolContent
 				});
 			}
-			const callSettings = prepareLanguageModelCallOptions(settings);
+			const callSettings = default_stop_condition_D8PwkeWe_prepareLanguageModelCallOptions(settings);
 			let currentModelResponse;
 			let clientToolCalls = [];
 			let clientToolOutputs = [];
@@ -11302,15 +12127,20 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 			let messagesForNextStep = [...initialMessages, ...initialResponseMessages];
 			const pendingDeferredToolCalls = /* @__PURE__ */ new Map();
 			let steeringEndReason = "finished";
+			let stoppedBy = "model";
 			const shouldStartNextStep = async () => {
 				if (steps[steps.length - 1].finishReason === "interrupted") return false;
 				if (clientToolOutputs.length + deniedToolApprovalResponses.length !== clientToolCalls.length) {
 					steeringEndReason = "waiting-for-tool-results";
+					stoppedBy = getPendingToolCallStoppedBy(steps[steps.length - 1]);
 					return false;
 				}
 				if (clientToolCalls.length === 0 && pendingDeferredToolCalls.size === 0) {
 					const isTruncated = steps[steps.length - 1].finishReason === "length" || steps[steps.length - 1].finishReason === "content-filter";
-					if (!steeringRun?.hasPendingMessages() && (isTruncated || !steeringRun?.promoteQueuedMessage())) return false;
+					if (!steeringRun?.hasPendingMessages() && (isTruncated || !steeringRun?.promoteQueuedMessage())) {
+						stoppedBy = getModelStoppedBy(steps[steps.length - 1]);
+						return false;
+					}
 					if (steps[steps.length - 1].finishReason === "error") {
 						steeringEndReason = "error";
 						return false;
@@ -11321,20 +12151,25 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 					steps
 				})) {
 					steeringEndReason = "stop-condition";
+					stoppedBy = "stop-condition";
 					return false;
 				}
 				return true;
 			};
 			do {
 				if (steps.length > 0) mergedAbortSignal?.throwIfAborted();
-				const stepTimeoutId = setAbortTimeout({
+				const stepTimeoutId = default_stop_condition_D8PwkeWe_setAbortTimeout({
 					abortController: stepAbortController,
 					label: "Step",
 					timeoutMs: stepTimeoutMs
 				});
 				const stepNumber = steps.length;
-				const steeringMessages = steeringRun?.takeMessages() ?? [];
+				let steeringMessages = steeringRun?.takeMessages() ?? [];
 				if (steeringMessages.length > 0) messagesForNextStep = [...messagesForNextStep, ...steeringMessages];
+				let stepSteeringMessages = [];
+				let hasNotifiedStepStart = false;
+				const stepStartRuntimeContext = runtimeContext;
+				const stepStartToolsContext = toolsContext;
 				try {
 					await runInTracingChannelSpan({
 						type: "step",
@@ -11342,419 +12177,446 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 							callId,
 							stepNumber
 						},
-						execute: async () => {
-							const accumulatedResponseMessages = [...initialResponseMessages, ...steps.flatMap((step) => step.response.messages)];
-							const stepInputMessages = messagesForNextStep;
-							const prepareStepResult = await prepareStep?.({
-								model,
-								steps,
-								stepNumber: steps.length,
-								instructions: instructionsForNextStep,
-								initialInstructions: initialPrompt.instructions,
-								messages: stepInputMessages,
-								initialMessages,
-								responseMessages: accumulatedResponseMessages,
-								...steeringMessages.length > 0 ? { experimental_steeringMessages: steeringMessages } : {},
-								runtimeContext,
-								toolsContext,
-								experimental_sandbox: sandbox
-							});
-							const stepSandbox = prepareStepResult?.experimental_sandbox ?? sandbox;
-							const stepModel = resolveLanguageModel(prepareStepResult?.model ?? model);
-							const stepInstructions = prepareStepResult?.instructions ?? prepareStepResult?.system ?? instructionsForNextStep;
-							runtimeContext = prepareStepResult?.runtimeContext ?? runtimeContext;
-							toolsContext = prepareStepResult?.toolsContext ?? toolsContext;
-							const stepActiveTools = filterActiveTools({
-								tools,
-								activeTools: prepareStepResult?.activeTools ?? activeTools
-							});
-							const { executionTools, modelTools: stepModelTools, toolCallerMessages } = prepareToolsForToolCallers({
-								tools: prepareToolSearch(stepActiveTools, {
+						execute: () => redoInterruptedStepAttempts({
+							onInterrupt: () => {
+								runtimeContext = stepStartRuntimeContext;
+								toolsContext = stepStartToolsContext;
+								const interruptMessages = steeringRun?.takeMessages() ?? [];
+								steeringMessages = [...steeringMessages, ...interruptMessages];
+								messagesForNextStep = [...messagesForNextStep, ...interruptMessages];
+							},
+							attempt: async () => {
+								const accumulatedResponseMessages = [...initialResponseMessages, ...steps.flatMap((step) => step.response.messages)];
+								const stepInputMessages = messagesForNextStep;
+								const prepareStepResult = await prepareStep?.({
+									model,
+									steps,
+									stepNumber: steps.length,
+									instructions: instructionsForNextStep,
+									initialInstructions: initialPrompt.instructions,
+									messages: stepInputMessages,
+									initialMessages,
+									responseMessages: accumulatedResponseMessages,
+									...steeringMessages.length > 0 ? { experimental_steeringMessages: steeringMessages } : {},
+									runtimeContext,
+									toolsContext,
+									experimental_sandbox: sandbox
+								});
+								const stepSandbox = prepareStepResult?.experimental_sandbox ?? sandbox;
+								const stepModel = default_stop_condition_D8PwkeWe_resolveLanguageModel(prepareStepResult?.model ?? model, onWarning);
+								const stepInstructions = prepareStepResult?.instructions ?? prepareStepResult?.system ?? instructionsForNextStep;
+								runtimeContext = prepareStepResult?.runtimeContext ?? runtimeContext;
+								toolsContext = prepareStepResult?.toolsContext ?? toolsContext;
+								const stepActiveTools = filterActiveTools({
+									tools,
+									activeTools: prepareStepResult?.activeTools ?? activeTools
+								});
+								const { executionTools, modelTools: stepModelTools, toolCallerMessages } = default_stop_condition_D8PwkeWe_prepareToolsForToolCallers({
+									tools: prepareToolSearch(stepActiveTools, {
+										toolsContext,
+										experimental_sandbox: stepSandbox
+									}),
+									toolCallers: resolvedToolCallers
+								});
+								const stepToolOrder = prepareStepResult?.toolOrder ?? toolOrder;
+								const stepTools = await default_stop_condition_D8PwkeWe_prepareTools({
+									tools: stepModelTools,
+									toolOrder: stepToolOrder,
 									toolsContext,
 									experimental_sandbox: stepSandbox
-								}),
-								toolCallers: resolvedToolCallers
-							});
-							const stepToolOrder = prepareStepResult?.toolOrder ?? toolOrder;
-							const stepTools = await prepareTools({
-								tools: stepModelTools,
-								toolOrder: stepToolOrder,
-								toolsContext,
-								experimental_sandbox: stepSandbox
-							});
-							const stepToolChoice = prepareToolChoice({ toolChoice: prepareStepResult?.toolChoice ?? toolChoice });
-							const stepExecutionTools = stepToolChoice.type === "none" ? void 0 : executionTools;
-							const stepMessages = appendToolCallerMessages({
-								messages: prepareStepResult?.messages ?? stepInputMessages,
-								toolCallerMessages
-							});
-							const deliveredSteeringMessages = (steeringRun?.resolveTakenMessages({
-								stepNumber,
-								sentMessages: stepMessages
-							}) ?? []).map(({ message }) => message);
-							const promptMessages = await convertToLanguageModelPrompt({
-								prompt: {
+								});
+								const stepToolChoice = default_stop_condition_D8PwkeWe_prepareToolChoice({ toolChoice: prepareStepResult?.toolChoice ?? toolChoice });
+								const stepExecutionTools = stepToolChoice.type === "none" ? void 0 : executionTools;
+								const stepMessages = default_stop_condition_D8PwkeWe_appendToolCallerMessages({
+									messages: prepareStepResult?.messages != null ? [...prepareStepResult.messages] : stepInputMessages,
+									toolCallerMessages
+								});
+								stepSteeringMessages = [...stepSteeringMessages, ...(steeringRun?.resolveTakenMessages({
+									stepNumber,
+									sentMessages: stepMessages
+								}) ?? []).map(({ message }) => message)];
+								const promptWarnings = [];
+								const promptMessages = await default_stop_condition_D8PwkeWe_convertToLanguageModelPrompt({
+									prompt: {
+										instructions: stepInstructions,
+										messages: stepMessages
+									},
+									supportedUrls: await stepModel.supportedUrls,
+									download,
+									abortSignal: mergedAbortSignal,
+									provider: stepModel.provider.split(".")[0],
+									warnings: promptWarnings
+								});
+								if (promptWarnings.length > 0) logCallWarnings({ warnings: promptWarnings });
+								const stepProviderOptions = default_stop_condition_D8PwkeWe_mergeObjects(providerOptions, prepareStepResult?.providerOptions);
+								const stepCallSettings = prepareStepCallSettings({
+									callSettings,
+									stepSettings: prepareStepResult
+								});
+								const stepStartEvent = {
+									callId,
+									provider: stepModel.provider,
+									modelId: stepModel.modelId,
+									stepNumber,
 									instructions: stepInstructions,
-									messages: stepMessages
-								},
-								supportedUrls: await stepModel.supportedUrls,
-								download,
-								abortSignal: mergedAbortSignal,
-								provider: stepModel.provider.split(".")[0]
-							});
-							const stepProviderOptions = mergeObjects(providerOptions, prepareStepResult?.providerOptions);
-							const stepCallSettings = prepareStepCallSettings({
-								callSettings,
-								stepSettings: prepareStepResult
-							});
-							const stepStartEvent = {
-								callId,
-								provider: stepModel.provider,
-								modelId: stepModel.modelId,
-								stepNumber,
-								instructions: stepInstructions,
-								messages: stepMessages,
-								tools,
-								toolChoice: prepareStepResult?.toolChoice ?? toolChoice,
-								activeTools: prepareStepResult?.activeTools ?? activeTools,
-								toolOrder: stepToolOrder,
-								steps: [...steps],
-								providerOptions: stepProviderOptions,
-								output,
-								runtimeContext,
-								promptMessages,
-								stepTools,
-								stepToolChoice,
-								toolsContext
-							};
-							await notify({
-								event: stepStartEvent,
-								callbacks: [resolvedOnStepStart, telemetryDispatcher.onStepStart]
-							});
-							openStep = stepStartEvent;
-							const languageModelCallContext = {
-								provider: stepModel.provider,
-								modelId: stepModel.modelId,
-								instructions: stepInstructions,
-								messages: stepMessages,
-								tools: stepTools,
-								...stepCallSettings
-							};
-							const languageModelCallStartEvent = {
-								callId,
-								...languageModelCallContext
-							};
-							const stepStartTimestampMs = now$4();
-							await notify({
-								event: languageModelCallStartEvent,
-								callbacks: [resolvedOnLanguageModelCallStart, telemetryDispatcher.onLanguageModelCallStart]
-							});
-							const executeLanguageModelCallInTelemetryContext = telemetryDispatcher.executeLanguageModelCall ?? (async ({ execute }) => await execute());
-							currentModelResponse = await retry(async () => {
-								const result = await executeLanguageModelCallInTelemetryContext({
-									...languageModelCallStartEvent,
-									execute: async () => {
-										const result = await stepModel.doGenerate({
-											...stepCallSettings,
-											tools: stepTools,
-											toolChoice: stepToolChoice,
-											responseFormat: await output?.responseFormat,
-											prompt: promptMessages,
-											providerOptions: stepProviderOptions,
-											abortSignal: mergedAbortSignal,
-											headers: headersWithUserAgent
+									messages: stepMessages,
+									tools,
+									toolChoice: prepareStepResult?.toolChoice ?? toolChoice,
+									activeTools: prepareStepResult?.activeTools ?? activeTools,
+									toolOrder: stepToolOrder,
+									steps: [...steps],
+									providerOptions: stepProviderOptions,
+									output,
+									runtimeContext,
+									promptMessages,
+									stepTools,
+									stepToolChoice,
+									toolsContext
+								};
+								if (!hasNotifiedStepStart) {
+									hasNotifiedStepStart = true;
+									await default_stop_condition_D8PwkeWe_notify({
+										event: stepStartEvent,
+										callbacks: [resolvedOnStepStart, telemetryDispatcher.onStepStart]
+									});
+								}
+								openStep = stepStartEvent;
+								const languageModelCallContext = {
+									provider: stepModel.provider,
+									modelId: stepModel.modelId,
+									instructions: stepInstructions,
+									messages: stepMessages,
+									tools: stepTools,
+									...stepCallSettings
+								};
+								const languageModelCallStartEvent = {
+									callId,
+									...languageModelCallContext
+								};
+								const stepStartTimestampMs = now$4();
+								await default_stop_condition_D8PwkeWe_notify({
+									event: languageModelCallStartEvent,
+									callbacks: [resolvedOnLanguageModelCallStart, telemetryDispatcher.onLanguageModelCallStart]
+								});
+								const executeLanguageModelCallInTelemetryContext = telemetryDispatcher.executeLanguageModelCall ?? (async ({ execute }) => await execute());
+								const interruptController = steeringRun == null ? void 0 : new AbortController();
+								const stopWatchingInterrupt = steeringRun?.watchInterrupt(() => interruptController?.abort());
+								const modelCallAbortSignal = default_stop_condition_D8PwkeWe_mergeAbortSignals(mergedAbortSignal, interruptController?.signal);
+								try {
+									currentModelResponse = await retry(async () => {
+										const result = await executeLanguageModelCallInTelemetryContext({
+											...languageModelCallStartEvent,
+											execute: async () => {
+												const result = await stepModel.doGenerate({
+													...stepCallSettings,
+													tools: stepTools,
+													toolChoice: stepToolChoice,
+													responseFormat: await output?.responseFormat,
+													prompt: promptMessages,
+													providerOptions: stepProviderOptions,
+													abortSignal: modelCallAbortSignal,
+													headers: headersWithUserAgent
+												});
+												return {
+													...result,
+													...result.request && { request: sanitizeRequestMetadata(result.request) }
+												};
+											}
 										});
 										return {
 											...result,
-											...result.request && { request: sanitizeRequestMetadata(result.request) }
+											response: {
+												id: result.response?.id ?? generateId(),
+												timestamp: result.response?.timestamp ?? /* @__PURE__ */ new Date(),
+												modelId: result.response?.modelId ?? stepModel.modelId,
+												headers: result.response?.headers,
+												body: result.response?.body
+											}
 										};
-									}
-								});
-								return {
-									...result,
-									response: {
-										id: result.response?.id ?? generateId(),
-										timestamp: result.response?.timestamp ?? /* @__PURE__ */ new Date(),
-										modelId: result.response?.modelId ?? stepModel.modelId,
-										headers: result.response?.headers,
-										body: result.response?.body
-									}
-								};
-							});
-							const responseTimeMs = now$4() - stepStartTimestampMs;
-							const stepUsage = asLanguageModelUsage(currentModelResponse.usage);
-							const stepToolCalls = await Promise.all(currentModelResponse.content.filter((part) => part.type === "tool-call").map((toolCall) => parseToolCall({
-								toolCall,
-								tools: stepModelTools,
-								repairToolCall: stepToolChoice.type === "none" ? void 0 : repairToolCall,
-								refineToolInput: stepToolChoice.type === "none" ? void 0 : refineToolInput,
-								instructions: stepInstructions,
-								messages: stepMessages,
-								abortSignal: mergedAbortSignal
-							})));
-							const toolApprovalRequests = {};
-							const stepToolApprovalResponses = {};
-							const blockedToolCallIds = /* @__PURE__ */ new Set();
-							const generatedFileDataCache = /* @__PURE__ */ new WeakMap();
-							const modelCallContent = await convertLanguageModelContent({
-								content: currentModelResponse.content,
-								toolCalls: stepToolCalls,
-								toolOutputs: [],
-								toolApprovalRequests: [],
-								toolApprovalResponses: [],
-								tools,
-								download,
-								abortSignal: mergedAbortSignal,
-								generatedFileDataCache
-							});
-							await notify({
-								event: {
-									callId,
-									provider: stepModel.provider,
-									modelId: currentModelResponse.response.modelId,
-									finishReason: currentModelResponse.finishReason.unified,
-									usage: stepUsage,
-									content: modelCallContent,
-									responseId: currentModelResponse.response.id,
-									...currentModelResponse.request?.url != null ? { request: { url: getRequestOrigin(currentModelResponse.request.url) } } : {},
-									...currentModelResponse.providerMetadata != null ? { providerMetadata: currentModelResponse.providerMetadata } : {},
-									performance: {
-										responseTimeMs,
-										effectiveOutputTokensPerSecond: calculateTokensPerSecond({
-											tokens: stepUsage.outputTokens,
-											durationMs: responseTimeMs
-										}),
-										outputTokensPerSecond: void 0,
-										inputTokensPerSecond: void 0,
-										effectiveTotalTokensPerSecond: calculateTokensPerSecond({
-											tokens: sumTokenCounts(stepUsage.inputTokens, stepUsage.outputTokens),
-											durationMs: responseTimeMs
-										}),
-										timeToFirstOutputMs: void 0
-									}
-								},
-								callbacks: [resolvedOnLanguageModelCallEnd, telemetryDispatcher.onLanguageModelCallEnd]
-							});
-							const enforcedToolChoice = stepToolChoice.type === "auto" ? void 0 : stepToolChoice;
-							if (enforcedToolChoice != null && (enforcedToolChoice.type === "none" ? stepToolCalls.length > 0 : currentModelResponse.finishReason.unified !== "interrupted" && !stepToolCalls.some((toolCall) => enforcedToolChoice.type === "required" || toolCall.toolName === enforcedToolChoice.toolName))) throw new ToolChoiceViolationError({
-								toolChoice: enforcedToolChoice,
-								finishReason: currentModelResponse.finishReason.unified,
-								provider: stepModel.provider,
-								modelId: stepModel.modelId,
-								content: currentModelResponse.content
-							});
-							for (const toolCall of stepToolCalls) {
-								if (toolCall.invalid) continue;
-								const tool = getOwn(stepExecutionTools, toolCall.toolName);
-								if (tool == null) continue;
-								if (tool.onInputStart != null || tool.onInputAvailable != null) {
-									const context = await validateToolContext({
-										toolName: toolCall.toolName,
-										context: getOwn(toolsContext, toolCall.toolName),
-										contextSchema: tool.contextSchema
 									});
-									if (tool.onInputStart != null) await tool.onInputStart({
-										toolCallId: toolCall.toolCallId,
-										messages: stepMessages,
-										abortSignal: mergedAbortSignal,
-										context
-									});
-									if (tool.onInputAvailable != null) await tool.onInputAvailable({
-										input: toolCall.input,
-										toolCallId: toolCall.toolCallId,
-										messages: stepMessages,
-										abortSignal: mergedAbortSignal,
-										context
-									});
+								} catch (error) {
+									if (interruptController?.signal.aborted === true) {
+										if (mergedAbortSignal?.aborted === true) throw mergedAbortSignal.reason;
+										throw new InterruptedStepAttempt();
+									}
+									throw error;
+								} finally {
+									stopWatchingInterrupt?.();
 								}
-								const toolApprovalStatus = await resolveToolApproval({
-									tools: stepExecutionTools,
-									toolApproval,
+								const responseTimeMs = now$4() - stepStartTimestampMs;
+								const stepUsage = default_stop_condition_D8PwkeWe_asLanguageModelUsage(currentModelResponse.usage);
+								const stepToolCalls = await Promise.all(currentModelResponse.content.filter((part) => part.type === "tool-call").map((toolCall) => default_stop_condition_D8PwkeWe_parseToolCall({
 									toolCall,
+									tools: stepModelTools,
+									repairToolCall: stepToolChoice.type === "none" ? void 0 : repairToolCall,
+									refineToolInput: stepToolChoice.type === "none" ? void 0 : refineToolInput,
+									instructions: stepInstructions,
 									messages: stepMessages,
-									toolsContext,
-									runtimeContext
+									abortSignal: mergedAbortSignal
+								})));
+								const toolApprovalRequests = {};
+								const stepToolApprovalResponses = {};
+								const blockedToolCallIds = /* @__PURE__ */ new Set();
+								const generatedFileDataCache = /* @__PURE__ */ new WeakMap();
+								const modelCallContent = await default_stop_condition_D8PwkeWe_convertLanguageModelContent({
+									content: currentModelResponse.content,
+									toolCalls: stepToolCalls,
+									toolOutputs: [],
+									toolApprovalRequests: [],
+									toolApprovalResponses: [],
+									tools,
+									download,
+									abortSignal: mergedAbortSignal,
+									generatedFileDataCache
 								});
-								if (toolApprovalStatus.type === "not-applicable") continue;
-								const approvalId = generateId();
-								const signature = await maybeSignApproval({
-									secret: experimental_toolApprovalSecret,
-									approvalId,
+								await default_stop_condition_D8PwkeWe_notify({
+									event: {
+										callId,
+										provider: stepModel.provider,
+										modelId: currentModelResponse.response.modelId,
+										finishReason: currentModelResponse.finishReason.unified,
+										usage: stepUsage,
+										content: modelCallContent,
+										responseId: currentModelResponse.response.id,
+										...currentModelResponse.request?.url != null ? { request: { url: getRequestOrigin(currentModelResponse.request.url) } } : {},
+										...currentModelResponse.providerMetadata != null ? { providerMetadata: currentModelResponse.providerMetadata } : {},
+										performance: {
+											responseTimeMs,
+											effectiveOutputTokensPerSecond: default_stop_condition_D8PwkeWe_calculateTokensPerSecond({
+												tokens: stepUsage.outputTokens,
+												durationMs: responseTimeMs
+											}),
+											outputTokensPerSecond: void 0,
+											inputTokensPerSecond: void 0,
+											effectiveTotalTokensPerSecond: default_stop_condition_D8PwkeWe_calculateTokensPerSecond({
+												tokens: sumTokenCounts(stepUsage.inputTokens, stepUsage.outputTokens),
+												durationMs: responseTimeMs
+											}),
+											timeToFirstOutputMs: void 0
+										}
+									},
+									callbacks: [resolvedOnLanguageModelCallEnd, telemetryDispatcher.onLanguageModelCallEnd]
+								});
+								const enforcedToolChoice = stepToolChoice.type === "auto" ? void 0 : stepToolChoice;
+								if (enforcedToolChoice != null && (enforcedToolChoice.type === "none" ? stepToolCalls.length > 0 : currentModelResponse.finishReason.unified !== "interrupted" && !stepToolCalls.some((toolCall) => enforcedToolChoice.type === "required" || toolCall.toolName === enforcedToolChoice.toolName))) throw new ToolChoiceViolationError({
+									toolChoice: enforcedToolChoice,
+									finishReason: currentModelResponse.finishReason.unified,
+									provider: stepModel.provider,
+									modelId: stepModel.modelId,
+									content: currentModelResponse.content
+								});
+								for (const toolCall of stepToolCalls) {
+									if (toolCall.invalid) continue;
+									const tool = default_stop_condition_D8PwkeWe_getOwn(stepExecutionTools, toolCall.toolName);
+									if (tool == null) continue;
+									if (tool.onInputStart != null || tool.onInputAvailable != null) {
+										const context = await default_stop_condition_D8PwkeWe_validateToolContext({
+											toolName: toolCall.toolName,
+											context: default_stop_condition_D8PwkeWe_getOwn(toolsContext, toolCall.toolName),
+											contextSchema: tool.contextSchema
+										});
+										if (tool.onInputStart != null) await tool.onInputStart({
+											toolCallId: toolCall.toolCallId,
+											messages: stepMessages,
+											abortSignal: mergedAbortSignal,
+											context
+										});
+										if (tool.onInputAvailable != null) await tool.onInputAvailable({
+											input: toolCall.input,
+											toolCallId: toolCall.toolCallId,
+											messages: stepMessages,
+											abortSignal: mergedAbortSignal,
+											context
+										});
+									}
+									const toolApprovalStatus = await default_stop_condition_D8PwkeWe_resolveToolApproval({
+										tools: stepExecutionTools,
+										toolApproval,
+										toolCall,
+										messages: stepMessages,
+										toolsContext,
+										runtimeContext
+									});
+									if (toolApprovalStatus.type === "not-applicable") continue;
+									const approvalId = generateId();
+									const signature = toolApprovalStatus.type === "denied" ? void 0 : await default_stop_condition_D8PwkeWe_maybeSignApproval({
+										secret: experimental_toolApprovalSecret,
+										approvalId,
+										toolCallId: toolCall.toolCallId,
+										toolName: toolCall.toolName,
+										input: toolCall.input
+									});
+									switch (toolApprovalStatus.type) {
+										case "user-approval":
+											toolApprovalRequests[toolCall.toolCallId] = {
+												type: "tool-approval-request",
+												approvalId,
+												toolCall,
+												...toolApprovalStatus.reason != null ? { reason: toolApprovalStatus.reason } : {},
+												...signature != null ? { signature } : {}
+											};
+											blockedToolCallIds.add(toolCall.toolCallId);
+											break;
+										case "approved":
+											toolApprovalRequests[toolCall.toolCallId] = {
+												type: "tool-approval-request",
+												approvalId,
+												toolCall,
+												isAutomatic: true,
+												...signature != null ? { signature } : {}
+											};
+											stepToolApprovalResponses[toolCall.toolCallId] = {
+												type: "tool-approval-response",
+												approvalId,
+												toolCall,
+												approved: true,
+												reason: toolApprovalStatus.reason,
+												providerExecuted: toolCall.providerExecuted
+											};
+											break;
+										case "denied":
+											toolApprovalRequests[toolCall.toolCallId] = {
+												type: "tool-approval-request",
+												approvalId,
+												toolCall,
+												isAutomatic: true
+											};
+											stepToolApprovalResponses[toolCall.toolCallId] = {
+												type: "tool-approval-response",
+												approvalId,
+												toolCall,
+												approved: false,
+												reason: toolApprovalStatus.reason,
+												providerExecuted: toolCall.providerExecuted
+											};
+											blockedToolCallIds.add(toolCall.toolCallId);
+									}
+								}
+								const invalidToolCalls = stepToolCalls.filter((toolCall) => toolCall.invalid && toolCall.dynamic && !toolCall.providerExecuted);
+								clientToolOutputs = [];
+								for (const toolCall of invalidToolCalls) clientToolOutputs.push({
+									type: "tool-error",
 									toolCallId: toolCall.toolCallId,
 									toolName: toolCall.toolName,
-									input: toolCall.input
+									input: toolCall.input,
+									error: (0,provider_dist/* getErrorMessage */.u1)(toolCall.error),
+									dynamic: true
 								});
-								switch (toolApprovalStatus.type) {
-									case "user-approval":
-										toolApprovalRequests[toolCall.toolCallId] = {
-											type: "tool-approval-request",
-											approvalId,
-											toolCall,
-											...toolApprovalStatus.reason != null ? { reason: toolApprovalStatus.reason } : {},
-											...signature != null ? { signature } : {}
-										};
-										blockedToolCallIds.add(toolCall.toolCallId);
-										break;
-									case "approved":
-										toolApprovalRequests[toolCall.toolCallId] = {
-											type: "tool-approval-request",
-											approvalId,
-											toolCall,
-											isAutomatic: true,
-											...signature != null ? { signature } : {}
-										};
-										stepToolApprovalResponses[toolCall.toolCallId] = {
-											type: "tool-approval-response",
-											approvalId,
-											toolCall,
-											approved: true,
-											reason: toolApprovalStatus.reason,
-											providerExecuted: toolCall.providerExecuted
-										};
-										break;
-									case "denied":
-										toolApprovalRequests[toolCall.toolCallId] = {
-											type: "tool-approval-request",
-											approvalId,
-											toolCall,
-											isAutomatic: true,
-											...signature != null ? { signature } : {}
-										};
-										stepToolApprovalResponses[toolCall.toolCallId] = {
-											type: "tool-approval-response",
-											approvalId,
-											toolCall,
-											approved: false,
-											reason: toolApprovalStatus.reason,
-											providerExecuted: toolCall.providerExecuted
-										};
-										blockedToolCallIds.add(toolCall.toolCallId);
+								clientToolCalls = stepToolCalls.filter((toolCall) => !toolCall.providerExecuted);
+								toolApprovalResponses = Object.values(stepToolApprovalResponses);
+								deniedToolApprovalResponses = toolApprovalResponses.filter((toolApprovalResponse) => toolApprovalResponse.approved === false);
+								const toolExecutionMs = {};
+								if (stepExecutionTools != null && isToolExecutionAllowedFinishReason(currentModelResponse.finishReason.unified)) {
+									const toolExecutionResults = await executeTools({
+										toolCalls: clientToolCalls.filter((toolCall) => !toolCall.invalid && !blockedToolCallIds.has(toolCall.toolCallId)),
+										tools: stepExecutionTools,
+										callId,
+										messages: stepMessages,
+										abortSignal: mergedAbortSignal,
+										timeout,
+										experimental_sandbox: stepSandbox,
+										toolsContext,
+										onToolExecutionStart: (event) => default_stop_condition_D8PwkeWe_notify({
+											event,
+											callbacks: [resolvedOnToolExecutionStart, telemetryDispatcher.onToolExecutionStart]
+										}),
+										onToolExecutionEnd: (event) => default_stop_condition_D8PwkeWe_notify({
+											event,
+											callbacks: [resolvedOnToolExecutionEnd, telemetryDispatcher.onToolExecutionEnd]
+										}),
+										executeToolInTelemetryContext: telemetryDispatcher.executeTool,
+										runInTracingChannelSpan,
+										toolCallConcurrency: resolvedToolCallConcurrency
+									});
+									for (const result of toolExecutionResults) {
+										toolExecutionMs[result.output.toolCallId] = result.toolExecutionMs;
+										clientToolOutputs.push(result.output);
+									}
 								}
-							}
-							const invalidToolCalls = stepToolCalls.filter((toolCall) => toolCall.invalid && toolCall.dynamic && !toolCall.providerExecuted);
-							clientToolOutputs = [];
-							for (const toolCall of invalidToolCalls) clientToolOutputs.push({
-								type: "tool-error",
-								toolCallId: toolCall.toolCallId,
-								toolName: toolCall.toolName,
-								input: toolCall.input,
-								error: (0,provider_dist/* getErrorMessage */.u1)(toolCall.error),
-								dynamic: true
-							});
-							clientToolCalls = stepToolCalls.filter((toolCall) => !toolCall.providerExecuted);
-							toolApprovalResponses = Object.values(stepToolApprovalResponses);
-							deniedToolApprovalResponses = toolApprovalResponses.filter((toolApprovalResponse) => toolApprovalResponse.approved === false);
-							const toolExecutionMs = {};
-							if (stepExecutionTools != null && isToolExecutionAllowedFinishReason(currentModelResponse.finishReason.unified)) {
-								const toolExecutionResults = await executeTools({
-									toolCalls: clientToolCalls.filter((toolCall) => !toolCall.invalid && !blockedToolCallIds.has(toolCall.toolCallId)),
-									tools: stepExecutionTools,
-									callId,
-									messages: stepMessages,
+								const stepTimeMs = now$4() - stepStartTimestampMs;
+								const stepPerformance = {
+									effectiveOutputTokensPerSecond: default_stop_condition_D8PwkeWe_calculateTokensPerSecond({
+										tokens: stepUsage.outputTokens,
+										durationMs: responseTimeMs
+									}),
+									outputTokensPerSecond: void 0,
+									inputTokensPerSecond: void 0,
+									effectiveTotalTokensPerSecond: default_stop_condition_D8PwkeWe_calculateTokensPerSecond({
+										tokens: sumTokenCounts(stepUsage.inputTokens, stepUsage.outputTokens),
+										durationMs: responseTimeMs
+									}),
+									stepTimeMs,
+									responseTimeMs,
+									toolExecutionMs,
+									timeToFirstOutputMs: void 0
+								};
+								for (const toolCall of stepToolCalls) {
+									if (!toolCall.providerExecuted) continue;
+									const tool = default_stop_condition_D8PwkeWe_getOwn(stepExecutionTools, toolCall.toolName);
+									if (tool?.type === "provider" && tool.supportsDeferredResults) {
+										if (!currentModelResponse.content.some((part) => part.type === "tool-result" && part.toolCallId === toolCall.toolCallId)) pendingDeferredToolCalls.set(toolCall.toolCallId, { toolName: toolCall.toolName });
+									}
+								}
+								for (const part of currentModelResponse.content) if (part.type === "tool-result") pendingDeferredToolCalls.delete(part.toolCallId);
+								const stepContent = await default_stop_condition_D8PwkeWe_convertLanguageModelContent({
+									content: currentModelResponse.content,
+									toolCalls: stepToolCalls,
+									toolOutputs: clientToolOutputs,
+									toolApprovalRequests: Object.values(toolApprovalRequests),
+									toolApprovalResponses,
+									tools,
+									download,
 									abortSignal: mergedAbortSignal,
-									timeout,
-									experimental_sandbox: stepSandbox,
-									toolsContext,
-									onToolExecutionStart: (event) => notify({
-										event,
-										callbacks: [resolvedOnToolExecutionStart, telemetryDispatcher.onToolExecutionStart]
-									}),
-									onToolExecutionEnd: (event) => notify({
-										event,
-										callbacks: [resolvedOnToolExecutionEnd, telemetryDispatcher.onToolExecutionEnd]
-									}),
-									executeToolInTelemetryContext: telemetryDispatcher.executeTool,
-									runInTracingChannelSpan,
-									toolCallConcurrency: resolvedToolCallConcurrency
+									generatedFileDataCache
 								});
-								for (const result of toolExecutionResults) {
-									toolExecutionMs[result.output.toolCallId] = result.toolExecutionMs;
-									clientToolOutputs.push(result.output);
-								}
+								const stepResponseMessages = await default_stop_condition_D8PwkeWe_toResponseMessages({
+									content: stepContent,
+									tools
+								});
+								const stepRequest = {
+									...currentModelResponse.request,
+									body: include.requestBody ? currentModelResponse.request?.body : void 0,
+									messages: include.requestMessages ? cloneModelMessages(stepMessages) : void 0
+								};
+								const stepResponse = {
+									...currentModelResponse.response,
+									messages: cloneModelMessages(stepResponseMessages),
+									body: include.responseBody ? currentModelResponse.response?.body : void 0
+								};
+								const currentStepResult = new default_stop_condition_D8PwkeWe_DefaultStepResult({
+									callId,
+									stepNumber,
+									provider: stepModel.provider,
+									modelId: stepModel.modelId,
+									runtimeContext,
+									content: stepContent,
+									finishReason: currentModelResponse.finishReason.unified,
+									rawFinishReason: currentModelResponse.finishReason.raw,
+									usage: stepUsage,
+									performance: stepPerformance,
+									warnings: [...promptWarnings, ...currentModelResponse.warnings ?? []],
+									providerMetadata: currentModelResponse.providerMetadata,
+									request: stepRequest,
+									response: stepResponse,
+									toolsContext,
+									steeringMessages: stepSteeringMessages
+								});
+								logCallWarnings({
+									warnings: currentModelResponse.warnings ?? [],
+									provider: stepModel.provider,
+									model: stepModel.modelId
+								});
+								steps.push(currentStepResult);
+								instructionsForNextStep = stepInstructions;
+								messagesForNextStep = [...stepMessages, ...stepResponseMessages];
+								openStep = void 0;
+								await default_stop_condition_D8PwkeWe_notify({
+									event: currentStepResult,
+									callbacks: [resolvedOnStepEnd, telemetryDispatcher.onStepEnd]
+								});
+								return currentStepResult;
 							}
-							const stepTimeMs = now$4() - stepStartTimestampMs;
-							const stepPerformance = {
-								effectiveOutputTokensPerSecond: calculateTokensPerSecond({
-									tokens: stepUsage.outputTokens,
-									durationMs: responseTimeMs
-								}),
-								outputTokensPerSecond: void 0,
-								inputTokensPerSecond: void 0,
-								effectiveTotalTokensPerSecond: calculateTokensPerSecond({
-									tokens: sumTokenCounts(stepUsage.inputTokens, stepUsage.outputTokens),
-									durationMs: responseTimeMs
-								}),
-								stepTimeMs,
-								responseTimeMs,
-								toolExecutionMs,
-								timeToFirstOutputMs: void 0
-							};
-							for (const toolCall of stepToolCalls) {
-								if (!toolCall.providerExecuted) continue;
-								const tool = getOwn(stepExecutionTools, toolCall.toolName);
-								if (tool?.type === "provider" && tool.supportsDeferredResults) {
-									if (!currentModelResponse.content.some((part) => part.type === "tool-result" && part.toolCallId === toolCall.toolCallId)) pendingDeferredToolCalls.set(toolCall.toolCallId, { toolName: toolCall.toolName });
-								}
-							}
-							for (const part of currentModelResponse.content) if (part.type === "tool-result") pendingDeferredToolCalls.delete(part.toolCallId);
-							const stepContent = await convertLanguageModelContent({
-								content: currentModelResponse.content,
-								toolCalls: stepToolCalls,
-								toolOutputs: clientToolOutputs,
-								toolApprovalRequests: Object.values(toolApprovalRequests),
-								toolApprovalResponses,
-								tools,
-								download,
-								abortSignal: mergedAbortSignal,
-								generatedFileDataCache
-							});
-							const stepResponseMessages = await toResponseMessages({
-								content: stepContent,
-								tools
-							});
-							const stepRequest = {
-								...currentModelResponse.request,
-								body: include.requestBody ? currentModelResponse.request?.body : void 0,
-								messages: include.requestMessages ? cloneModelMessages(stepMessages) : void 0
-							};
-							const stepResponse = {
-								...currentModelResponse.response,
-								messages: cloneModelMessages(stepResponseMessages),
-								body: include.responseBody ? currentModelResponse.response?.body : void 0
-							};
-							const currentStepResult = new DefaultStepResult({
-								callId,
-								stepNumber,
-								provider: stepModel.provider,
-								modelId: stepModel.modelId,
-								runtimeContext,
-								content: stepContent,
-								finishReason: currentModelResponse.finishReason.unified,
-								rawFinishReason: currentModelResponse.finishReason.raw,
-								usage: stepUsage,
-								performance: stepPerformance,
-								warnings: currentModelResponse.warnings,
-								providerMetadata: currentModelResponse.providerMetadata,
-								request: stepRequest,
-								response: stepResponse,
-								toolsContext,
-								steeringMessages: deliveredSteeringMessages
-							});
-							logWarnings({
-								warnings: currentModelResponse.warnings ?? [],
-								provider: stepModel.provider,
-								model: stepModel.modelId
-							});
-							steps.push(currentStepResult);
-							instructionsForNextStep = stepInstructions;
-							messagesForNextStep = [...stepMessages, ...stepResponseMessages];
-							openStep = void 0;
-							await notify({
-								event: currentStepResult,
-								callbacks: [resolvedOnStepEnd, telemetryDispatcher.onStepEnd]
-							});
-							return currentStepResult;
-						}
+						})
 					});
 				} finally {
 					if (stepTimeoutId != null) clearTimeout(stepTimeoutId);
@@ -11763,7 +12625,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 			steeringRun?.end(steeringEndReason);
 			const lastStep = steps[steps.length - 1];
 			const totalUsage = steps.reduce((totalUsage, step) => {
-				return addLanguageModelUsage(totalUsage, step.usage);
+				return default_stop_condition_D8PwkeWe_addLanguageModelUsage(totalUsage, step.usage);
 			}, {
 				inputTokens: void 0,
 				inputTokenDetails: {
@@ -11787,37 +12649,39 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 			const staticToolResults = steps.flatMap((step) => step.staticToolResults);
 			const dynamicToolResults = steps.flatMap((step) => step.dynamicToolResults);
 			const warnings = steps.flatMap((step) => step.warnings ?? []);
-			await notify({
-				event: {
-					callId,
-					stepNumber: lastStep.stepNumber,
-					model: lastStep.model,
-					runtimeContext: lastStep.runtimeContext,
-					finishReason: lastStep.finishReason,
-					rawFinishReason: lastStep.rawFinishReason,
-					usage: totalUsage,
-					totalUsage,
-					content: steps.flatMap((step) => step.content),
-					text: lastStep.text,
-					reasoning: lastStep.reasoning,
-					reasoningText: lastStep.reasoningText,
-					files,
-					sources,
-					toolCalls,
-					staticToolCalls,
-					dynamicToolCalls,
-					toolResults,
-					staticToolResults,
-					dynamicToolResults,
-					responseMessages: [...initialResponseMessages, ...steps.flatMap((step) => step.response.messages)],
-					warnings,
-					request: lastStep.request,
-					response: lastStep.response,
-					providerMetadata: lastStep.providerMetadata,
-					steps,
-					finalStep: lastStep,
-					toolsContext
-				},
+			const onEndEvent = {
+				callId,
+				stepNumber: lastStep.stepNumber,
+				model: lastStep.model,
+				runtimeContext: lastStep.runtimeContext,
+				finishReason: lastStep.finishReason,
+				rawFinishReason: lastStep.rawFinishReason,
+				stoppedBy,
+				usage: totalUsage,
+				totalUsage,
+				content: steps.flatMap((step) => step.content),
+				text: lastStep.text,
+				reasoning: lastStep.reasoning,
+				reasoningText: lastStep.reasoningText,
+				files,
+				sources,
+				toolCalls,
+				staticToolCalls,
+				dynamicToolCalls,
+				toolResults,
+				staticToolResults,
+				dynamicToolResults,
+				responseMessages: [...initialResponseMessages, ...steps.flatMap((step) => step.response.messages)],
+				warnings,
+				request: lastStep.request,
+				response: lastStep.response,
+				providerMetadata: lastStep.providerMetadata,
+				steps,
+				finalStep: lastStep,
+				toolsContext
+			};
+			await default_stop_condition_D8PwkeWe_notify({
+				event: onEndEvent,
 				callbacks: [onEnd, telemetryDispatcher.onEnd]
 			});
 			let resolvedOutput;
@@ -11834,12 +12698,13 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 				initialResponseMessages,
 				steps,
 				totalUsage,
-				output: resolvedOutput
+				output: resolvedOutput,
+				stoppedBy
 			});
 		} catch (error) {
 			const wrappedError = wrapGatewayError(error);
 			steeringRun?.end(mergedAbortSignal?.aborted ? "aborted" : "error");
-			if (openStep != null) await notify({
+			if (openStep != null) await default_stop_condition_D8PwkeWe_notify({
 				event: {
 					...openStep,
 					error: wrappedError
@@ -11860,7 +12725,7 @@ async function generateTextInternal({ model: modelArg, tools, toolChoice, instru
 	});
 }
 async function executeTools({ toolCalls, tools, callId, messages, abortSignal, timeout, experimental_sandbox: sandbox, toolsContext, onToolExecutionStart, onToolExecutionEnd, executeToolInTelemetryContext, runInTracingChannelSpan, toolCallConcurrency }) {
-	return (await mapWithConcurrency({
+	return (await default_stop_condition_D8PwkeWe_mapWithConcurrency({
 		items: toolCalls,
 		concurrency: toolCallConcurrency,
 		abortSignal,
@@ -11879,6 +12744,24 @@ async function executeTools({ toolCalls, tools, callId, messages, abortSignal, t
 			runInTracingChannelSpan
 		})
 	})).filter((result) => result != null);
+}
+/**
+* Thrown inside a step attempt when a steering interrupt cancelled its model
+* call. It is not an error that callers see. It only ends the attempt so that
+* the step is made again.
+*/
+var InterruptedStepAttempt = class {};
+/**
+* Runs a step attempt, and runs it again for as long as steering interrupts
+* cancel its model call.
+*/
+async function redoInterruptedStepAttempts({ attempt, onInterrupt }) {
+	for (;;) try {
+		return await attempt();
+	} catch (error) {
+		if (!(error instanceof InterruptedStepAttempt)) throw error;
+		onInterrupt();
+	}
 }
 //#endregion
 //#region src/util/prepare-headers.ts
@@ -12215,43 +13098,50 @@ const dist_z = {
 };
 //#endregion
 //#region src/types/json-value.ts
-const jsonValueSchema = dist_z.lazy(() => dist_z.union([
+const jsonValueSchema$1 = dist_z.lazy(() => dist_z.union([
 	dist_z.null(),
 	dist_z.string(),
 	dist_z.number(),
 	dist_z.boolean(),
-	dist_z.record(dist_z.string(), jsonValueSchema.optional()),
-	dist_z.array(jsonValueSchema)
+	dist_z.record(dist_z.string(), jsonValueSchema$1.optional()),
+	dist_z.array(jsonValueSchema$1)
 ]));
 //#endregion
 //#region src/types/provider-metadata.ts
-const providerMetadataSchema$1 = dist_z.record(dist_z.string(), dist_z.record(dist_z.string(), jsonValueSchema.optional()));
+const providerMetadataSchema$1 = dist_z.record(dist_z.string(), dist_z.record(dist_z.string(), jsonValueSchema$1.optional()));
 //#endregion
 //#region src/types/citation.ts
-const citationSchema = z$1.object({
-	source: z$1.discriminatedUnion("sourceType", [z$1.object({
-		type: z$1.literal("source"),
-		sourceType: z$1.literal("url"),
-		id: z$1.string(),
-		url: z$1.string(),
-		title: z$1.optional(z$1.string()),
-		providerMetadata: z$1.optional(providerMetadataSchema$1)
-	}), z$1.object({
-		type: z$1.literal("source"),
-		sourceType: z$1.literal("document"),
-		id: z$1.string(),
-		mediaType: z$1.string(),
-		title: z$1.string(),
-		filename: z$1.optional(z$1.string()),
-		providerMetadata: z$1.optional(providerMetadataSchema$1)
-	})]),
-	startIndex: z$1.optional(z$1.number().check(z$1.int()).check(z$1.nonnegative())),
-	endIndex: z$1.optional(z$1.number().check(z$1.int()).check(z$1.nonnegative())),
-	citedText: z$1.optional(z$1.string())
-});
+/**
+* Creates a citation schema that validates the provider metadata of the
+* source with the given schema.
+*/
+function createCitationSchema(providerMetadataSchema) {
+	return z$1.object({
+		source: z$1.discriminatedUnion("sourceType", [z$1.object({
+			type: z$1.literal("source"),
+			sourceType: z$1.literal("url"),
+			id: z$1.string(),
+			url: z$1.string(),
+			title: z$1.optional(z$1.string()),
+			providerMetadata: z$1.optional(providerMetadataSchema)
+		}), z$1.object({
+			type: z$1.literal("source"),
+			sourceType: z$1.literal("document"),
+			id: z$1.string(),
+			mediaType: z$1.string(),
+			title: z$1.string(),
+			filename: z$1.optional(z$1.string()),
+			providerMetadata: z$1.optional(providerMetadataSchema)
+		})]),
+		startIndex: z$1.optional(z$1.number().check(z$1.int()).check(z$1.nonnegative())),
+		endIndex: z$1.optional(z$1.number().check(z$1.int()).check(z$1.nonnegative())),
+		citedText: z$1.optional(z$1.string())
+	});
+}
+const citationSchema = createCitationSchema(providerMetadataSchema$1);
 //#endregion
 //#region src/ui-message-stream/ui-message-chunks.ts
-const toolMetadataSchema$1 = z$1.record(z$1.string(), z$1.optional(jsonValueSchema));
+const toolMetadataSchema$1 = z$1.record(z$1.string(), z$1.optional(jsonValueSchema$1));
 const uiMessageChunkSchema = (0,dist/* lazySchema */.ID)(() => (0,dist/* zodSchema */.C_)(z$1.union([
 	z$1.looseObject({
 		type: z$1.literal("text-start"),
@@ -13608,114 +14498,6 @@ function toUIMessageStream({ stream, tools, sendReasoning = true, sendSources = 
 	});
 }
 //#endregion
-//#region src/util/async-iterable-stream.ts
-/**
-* Wraps a ReadableStream and returns an object that is both a ReadableStream and an AsyncIterable.
-* This enables consumption of the stream using for-await-of, with proper resource cleanup on early exit or error.
-*
-* @template T The type of the stream's chunks.
-* @param source The source ReadableStream to wrap.
-* @returns An AsyncIterableStream that can be used as both a ReadableStream and an AsyncIterable.
-*/
-function createAsyncIterableStream(source) {
-	return asAsyncIterableStream(source.pipeThrough(new TransformStream()));
-}
-/**
-* Attaches the async iterator protocol to an existing ReadableStream in place,
-* turning it into an AsyncIterableStream without piping through an additional
-* TransformStream.
-*
-* Use this when the stream is already known to be fresh and exclusively owned
-* (e.g. the readable side of a TransformStream created for this consumer).
-* Adding an extra `pipeThrough` in that situation creates a chain of two
-* transforms fed by an active upstream pipe, which can surface a spurious
-* unhandled `undefined` rejection when the consumer cancels early (observed on
-* Node.js 26). {@link createAsyncIterableStream} wraps this after adding a
-* fresh transform for callers that may pass shared or locked streams.
-*
-* @template T The type of the stream's chunks.
-* @param stream The ReadableStream to augment. It must be fresh and unlocked.
-* @returns The same stream, augmented with the async iterator protocol.
-*/
-function asAsyncIterableStream(stream) {
-	/**
-	* Implements the async iterator protocol for the stream.
-	* Ensures proper cleanup (cancelling and releasing the reader) on completion, early exit, or error.
-	*/
-	stream[Symbol.asyncIterator] = function() {
-		const reader = this.getReader();
-		let finished = false;
-		/**
-		* Cleans up the reader by cancelling and releasing the lock.
-		*/
-		async function cleanup(cancelStream) {
-			if (finished) return;
-			finished = true;
-			try {
-				if (cancelStream) await reader.cancel?.();
-			} finally {
-				try {
-					reader.releaseLock();
-				} catch {}
-			}
-		}
-		return {
-			/**
-			* Reads the next chunk from the stream.
-			* @returns A promise resolving to the next IteratorResult.
-			*/
-			async next() {
-				if (finished) return {
-					done: true,
-					value: void 0
-				};
-				let result;
-				try {
-					result = await reader.read();
-				} catch (error) {
-					await cleanup(false);
-					throw error;
-				}
-				const { done, value } = result;
-				if (done) {
-					await cleanup(true);
-					return {
-						done: true,
-						value: void 0
-					};
-				}
-				return {
-					done: false,
-					value
-				};
-			},
-			/**
-			* May be called on early exit (e.g., break from for-await) or after completion.
-			* Ensures the stream is cancelled and resources are released.
-			* @returns A promise resolving to a completed IteratorResult.
-			*/
-			async return() {
-				await cleanup(true);
-				return {
-					done: true,
-					value: void 0
-				};
-			},
-			/**
-			* Called on early exit with error.
-			* Ensures the stream is cancelled and resources are released, then rethrows the error.
-			* @param err The error to throw.
-			* @returns A promise that rejects with the provided error.
-			*/
-			async throw(err) {
-				await cleanup(true);
-				throw err;
-			}
-		};
-	};
-	return stream;
-}
-//#endregion
 //#region src/util/consume-stream.ts
 /**
 * Consumes a ReadableStream until it's fully read.
@@ -13911,7 +14693,7 @@ function executeToolsFromStream({ stream, tools, callId, messages, abortSignal, 
 					return;
 				}
 				const approvalId = generateId();
-				const signature = await maybeSignApproval({
+				const signature = toolApprovalStatus.type === "denied" ? void 0 : await maybeSignApproval({
 					secret: toolApprovalSecret,
 					approvalId,
 					toolCallId: chunk.toolCallId,
@@ -13933,8 +14715,7 @@ function executeToolsFromStream({ stream, tools, callId, messages, abortSignal, 
 							type: "tool-approval-request",
 							approvalId,
 							toolCall: chunk,
-							isAutomatic: true,
-							...signature != null ? { signature } : {}
+							isAutomatic: true
 						});
 						controller.enqueue({
 							type: "tool-approval-response",
@@ -14013,48 +14794,6 @@ function executeToolsFromStream({ stream, tools, callId, messages, abortSignal, 
 				});
 		}
 	} }));
-}
-//#endregion
-//#region src/generate-text/is-output-chunk.ts
-const isOutputChunkType = {
-	file: true,
-	custom: false,
-	source: false,
-	"text-start": false,
-	"text-end": false,
-	"text-delta": true,
-	"reasoning-start": false,
-	"reasoning-end": false,
-	"reasoning-delta": true,
-	"reasoning-file": true,
-	"tool-input-start": false,
-	"tool-input-end": false,
-	"tool-input-delta": true,
-	"tool-approval-request": false,
-	"tool-approval-response": false,
-	"tool-call": true,
-	"tool-result": false,
-	"tool-error": false,
-	"tool-output-denied": false,
-	"tool-execution-end": false,
-	"model-call-start": false,
-	"model-call-response-metadata": false,
-	"model-call-end": false,
-	error: false,
-	ping: false,
-	raw: false
-};
-function isOutputChunk$1(chunk) {
-	if (!isOutputChunkType[chunk.type]) return false;
-	switch (chunk.type) {
-		case "text-delta":
-		case "reasoning-delta": return chunk.text.length > 0;
-		case "tool-input-delta": return chunk.delta.length > 0;
-		case "file":
-		case "reasoning-file":
-		case "tool-call": return true;
-		default: return false;
-	}
 }
 //#endregion
 //#region src/generate-text/invoke-tool-callbacks-from-stream.ts
@@ -14249,7 +14988,7 @@ const originalGenerateId$3 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "aitxt",
 	size: 24
 });
-const originalGenerateCallId$8 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$9 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
@@ -14302,7 +15041,7 @@ const originalGenerateCallId$8 = (0,dist/* createIdGenerator */.hK)({
 *
 * @returns A stream of model call parts together with request and response metadata when available.
 */
-async function streamLanguageModelCall({ model, tools, toolOrder, output, toolChoice, prompt, system, instructions, messages, allowSystemInMessages, download, abortSignal, headers, includeRawChunks, providerOptions, repairToolCall, refineToolInput, executeLanguageModelCallInTelemetryContext = async ({ execute }) => await execute(), callId, toolsContext, experimental_sandbox: sandbox, _internal: { generateId = originalGenerateId$3, generateCallId = originalGenerateCallId$8, now: now$3 = now, collectContent = true } = {}, onStart, onLanguageModelCallStart, onLanguageModelCallEnd, ...callSettings }) {
+async function streamLanguageModelCall({ model, tools, toolOrder, output, toolChoice, prompt, system, instructions, messages, allowSystemInMessages, download, abortSignal, headers, includeRawChunks, providerOptions, repairToolCall, refineToolInput, executeLanguageModelCallInTelemetryContext = async ({ execute }) => await execute(), callId, toolsContext, experimental_sandbox: sandbox, _internal: { generateId = originalGenerateId$3, generateCallId = originalGenerateCallId$9, now: now$3 = now, collectContent = true } = {}, onStart, onLanguageModelCallStart, onLanguageModelCallEnd, ...callSettings }) {
 	const resolvedModel = resolveLanguageModel(model);
 	const effectiveCallId = callId ?? generateCallId();
 	const standardizedPrompt = await standardizePrompt({
@@ -14312,6 +15051,7 @@ async function streamLanguageModelCall({ model, tools, toolOrder, output, toolCh
 		messages,
 		allowSystemInMessages
 	});
+	const promptWarnings = [];
 	const promptMessages = await convertToLanguageModelPrompt({
 		prompt: {
 			instructions: standardizedPrompt.instructions,
@@ -14320,7 +15060,8 @@ async function streamLanguageModelCall({ model, tools, toolOrder, output, toolCh
 		supportedUrls: await resolvedModel.supportedUrls,
 		download,
 		abortSignal,
-		provider: resolvedModel.provider.split(".")[0]
+		provider: resolvedModel.provider.split(".")[0],
+		warnings: promptWarnings
 	});
 	const stepTools = await prepareTools({
 		tools,
@@ -14330,7 +15071,10 @@ async function streamLanguageModelCall({ model, tools, toolOrder, output, toolCh
 	});
 	const stepToolChoice = prepareToolChoice({ toolChoice });
 	await notify({
-		event: { promptMessages },
+		event: {
+			promptMessages,
+			promptWarnings
+		},
 		callbacks: onStart
 	});
 	const languageModelCallStartEvent = {
@@ -14367,31 +15111,33 @@ async function streamLanguageModelCall({ model, tools, toolOrder, output, toolCh
 			};
 		}
 	});
+	const standardizedStream = languageModelStream.pipeThrough(createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({
+		tools,
+		instructions: standardizedPrompt.instructions,
+		messages: standardizedPrompt.messages,
+		repairToolCall,
+		refineToolInput,
+		download,
+		abortSignal,
+		callId: effectiveCallId,
+		provider: resolvedModel.provider,
+		modelId: resolvedModel.modelId,
+		toolChoice: stepToolChoice,
+		generateId,
+		now: now$3,
+		callStartTimestampMs,
+		request,
+		onLanguageModelCallEnd,
+		collectContent,
+		promptWarnings
+	}));
 	return {
-		stream: createAsyncIterableStream(languageModelStream.pipeThrough(createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({
-			tools,
-			instructions: standardizedPrompt.instructions,
-			messages: standardizedPrompt.messages,
-			repairToolCall,
-			refineToolInput,
-			download,
-			abortSignal,
-			callId: effectiveCallId,
-			provider: resolvedModel.provider,
-			modelId: resolvedModel.modelId,
-			toolChoice: stepToolChoice,
-			generateId,
-			now: now$3,
-			callStartTimestampMs,
-			request,
-			onLanguageModelCallEnd,
-			collectContent
-		}))),
+		stream: createAsyncIterableStream(standardizedStream),
 		response,
 		request
 	};
 }
-function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ tools, instructions, messages, repairToolCall, refineToolInput, download, abortSignal, callId, provider, modelId, toolChoice, generateId, now, callStartTimestampMs, request, onLanguageModelCallEnd, collectContent }) {
+function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ tools, instructions, messages, repairToolCall, refineToolInput, download, abortSignal, callId, provider, modelId, toolChoice, generateId, now, callStartTimestampMs, request, onLanguageModelCallEnd, collectContent, promptWarnings }) {
 	const toolCallsByToolCallId = /* @__PURE__ */ new Map();
 	const modelCallContent = [];
 	const rawModelCallContent = [];
@@ -14405,8 +15151,16 @@ function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ too
 	let previousOutputChunkTimestampMs;
 	const timeBetweenOutputChunksMs = [];
 	const withholdToolParts = toolChoice.type === "none";
+	let hasStarted = false;
 	return new TransformStream({ async transform(chunk, controller) {
-		if (isOutputChunk(chunk)) {
+		if (!hasStarted && chunk.type !== "stream-start") {
+			hasStarted = true;
+			if (promptWarnings.length > 0) controller.enqueue({
+				type: "model-call-start",
+				warnings: promptWarnings
+			});
+		}
+		if (dist_isOutputChunk(chunk)) {
 			const outputChunkTimestampMs = now();
 			if (timeToFirstOutputMs == null) timeToFirstOutputMs = outputChunkTimestampMs - callStartTimestampMs;
 			else if (previousOutputChunkTimestampMs != null) timeBetweenOutputChunksMs.push(outputChunkTimestampMs - previousOutputChunkTimestampMs);
@@ -14682,6 +15436,7 @@ function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ too
 					output: chunk.result,
 					providerExecuted: true,
 					dynamic: chunk.dynamic,
+					...chunk.preliminary != null ? { preliminary: chunk.preliminary } : {},
 					...chunk.providerMetadata != null ? { providerMetadata: chunk.providerMetadata } : {},
 					...toolCall?.toolMetadata != null ? { toolMetadata: toolCall.toolMetadata } : {}
 				};
@@ -14702,8 +15457,9 @@ function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ too
 			case "stream-start":
 				controller.enqueue({
 					type: "model-call-start",
-					warnings: chunk.warnings
+					warnings: [...promptWarnings, ...chunk.warnings]
 				});
+				hasStarted = true;
 				break;
 			case "response-metadata":
 				responseId = chunk.id ?? responseId;
@@ -14729,7 +15485,7 @@ function createLanguageModelV4StreamPartToLanguageModelStreamPartTransform({ too
 * Used to measure time-to-first-output for text, reasoning, generated files,
 * and tool calls.
 */
-function isOutputChunk(chunk) {
+function dist_isOutputChunk(chunk) {
 	return chunk.type === "text-delta" && chunk.delta.length > 0 || chunk.type === "reasoning-delta" && chunk.delta.length > 0 || chunk.type === "tool-input-delta" && chunk.delta.length > 0 || chunk.type === "file" || chunk.type === "reasoning-file" || chunk.type === "tool-call";
 }
 function calculateOutputChunkTimingStats(timingsMs) {
@@ -14787,7 +15543,7 @@ const originalGenerateId$2 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "aitxt",
 	size: 24
 });
-const originalGenerateCallId$7 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$8 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
@@ -14855,6 +15611,7 @@ const originalGenerateCallId$7 = (0,dist/* createIdGenerator */.hK)({
 * @param onStepEnd - Callback that is called when each step (LLM call) ends, including intermediate steps.
 * @param onStepError - Callback that is called when a step that started fails before it produces a step result, i.e. when the provider call throws or rejects, or when the model stream ends without output. A provider `error` chunk still ends the step with `onStepEnd`, and an abort or timeout ends it with `onAbort`.
 * @param onStepFinish - Deprecated alias for `onStepEnd`.
+* @param onWarning - Callback that receives the warnings of the call instead of the global warning logger.
 * @param onEnd - Callback that is called when all steps are finished and the response is complete.
 * @param onFinish - Deprecated alias for `onEnd`.
 *
@@ -14892,7 +15649,7 @@ function startStreamText(options) {
 		throw error;
 	}
 }
-function streamTextInternal({ model, tools, toolChoice, instructions, system, prompt, messages, allowSystemInMessages, maxRetries, streamRetries, abortSignal, timeout, headers, stopWhen = isStepCount(1), experimental_sandbox: sandbox, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, experimental_telemetry, telemetry = experimental_telemetry, prepareStep, providerOptions, activeTools, toolOrder, toolCallConcurrency, experimental_repairToolCall, repairToolCall = experimental_repairToolCall, experimental_refineToolInput: refineToolInput, experimental_transform: transform, experimental_download: download, includeRawChunks, onChunk, onError: onErrorArg, onFinish, onEnd = onFinish, onAbort, onStepEnd, onStepError, onStepFinish, onStart, experimental_onStart, onStepStart, experimental_onStepStart, onLanguageModelCallStart, experimental_onLanguageModelCallStart, onLanguageModelCallEnd, experimental_onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, experimental_onToolCallStart, experimental_onToolCallFinish, runtimeContext = {}, toolsContext = {}, experimental_include, include = experimental_include, _internal: { now: now$2 = now, generateId = originalGenerateId$2, generateCallId = originalGenerateCallId$7, retention = {
+function streamTextInternal({ model, tools, toolChoice, instructions, system, prompt, messages, allowSystemInMessages, maxRetries, streamRetries, abortSignal, timeout, headers, stopWhen = isStepCount(1), experimental_sandbox: sandbox, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, experimental_telemetry, telemetry = experimental_telemetry, prepareStep, providerOptions, activeTools, toolOrder, toolCallConcurrency, experimental_repairToolCall, repairToolCall = experimental_repairToolCall, experimental_refineToolInput: refineToolInput, experimental_transform: transform, experimental_download: download, includeRawChunks, onChunk, onError: onErrorArg, onFinish, onEnd = onFinish, onAbort, onStepEnd, onStepError, onStepFinish, onWarning, onStart, experimental_onStart, onStepStart, experimental_onStepStart, onLanguageModelCallStart, experimental_onLanguageModelCallStart, onLanguageModelCallEnd, experimental_onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, experimental_onToolCallStart, experimental_onToolCallFinish, runtimeContext = {}, toolsContext = {}, experimental_include, include = experimental_include, _internal: { now: now$2 = now, generateId = originalGenerateId$2, generateCallId = originalGenerateCallId$8, retention = {
 	replay: true,
 	collectContent: true
 } } = {}, ...settings }, steeringRun) {
@@ -14916,7 +15673,7 @@ function streamTextInternal({ model, tools, toolChoice, instructions, system, pr
 	const resolvedOnStepEnd = onStepEnd ?? onStepFinish;
 	return new DefaultStreamTextResult({
 		retention,
-		model: resolveLanguageModel(model),
+		model: resolveLanguageModel(model, onWarning),
 		telemetry,
 		headers,
 		settings,
@@ -14961,6 +15718,7 @@ function streamTextInternal({ model, tools, toolChoice, instructions, system, pr
 		onAbort,
 		onStepFinish: resolvedOnStepEnd,
 		onStepError,
+		onWarning,
 		onStart: resolvedOnStart,
 		onStepStart: resolvedOnStepStart,
 		onLanguageModelCallStart: resolvedOnLanguageModelCallStart,
@@ -15180,10 +15938,11 @@ function applyStreamTextTransforms({ stream, transforms, tools, stopStream }) {
 	});
 }
 var DefaultStreamTextResult = class {
-	constructor({ retention, model, telemetry, headers, settings, maxRetries: maxRetriesArg, streamRetries: streamRetriesArg, abortSignal, stepTimeoutMs, stepAbortController, firstChunkTimeoutMs, firstChunkAbortController, chunkTimeoutMs, chunkAbortController, instructions, system, prompt, messages, allowSystemInMessages, experimental_sandbox: sandbox, steeringRun, tools, toolChoice, transforms, activeTools, toolOrder, toolCallConcurrency, repairToolCall, refineToolInput, stopConditions, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, providerOptions, prepareStep, now, generateId, generateCallId, timeout, onChunk, onError, canRetryStreamViaOnError, onEnd, onAbort, onStepFinish, onStepError, onStart, onStepStart, onLanguageModelCallStart, onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, runtimeContext, toolsContext, download, include }) {
+	constructor({ retention, model, telemetry, headers, settings, maxRetries: maxRetriesArg, streamRetries: streamRetriesArg, abortSignal, stepTimeoutMs, stepAbortController, firstChunkTimeoutMs, firstChunkAbortController, chunkTimeoutMs, chunkAbortController, instructions, system, prompt, messages, allowSystemInMessages, experimental_sandbox: sandbox, steeringRun, tools, toolChoice, transforms, activeTools, toolOrder, toolCallConcurrency, repairToolCall, refineToolInput, stopConditions, output, toolApproval, experimental_toolCallers, experimental_toolApprovalSecret, providerOptions, prepareStep, now, generateId, generateCallId, timeout, onChunk, onError, canRetryStreamViaOnError, onEnd, onAbort, onStepFinish, onStepError, onWarning, onStart, onStepStart, onLanguageModelCallStart, onLanguageModelCallEnd, onToolExecutionStart, onToolExecutionEnd, runtimeContext, toolsContext, download, include }) {
 		this._totalUsage = new DelayedPromise();
 		this._finishReason = new DelayedPromise();
 		this._rawFinishReason = new DelayedPromise();
+		this._stoppedBy = new DelayedPromise();
 		this._steps = new DelayedPromise();
 		this._initialResponseMessages = new DelayedPromise();
 		this.streamClaimed = false;
@@ -15198,19 +15957,22 @@ var DefaultStreamTextResult = class {
 			tools,
 			toolCallers: resolvedToolCallers
 		});
-		const telemetryDispatcher = createRestrictedTelemetryDispatcher$3({
+		const telemetryDispatcher = createRestrictedTelemetryDispatcher$4({
 			telemetry,
 			includeRuntimeContext: telemetry?.includeRuntimeContext,
 			includeToolsContext: telemetry?.includeToolsContext
 		});
 		let stepFinish;
+		const logCallWarnings = createLogWarnings(onWarning);
 		let recordedContent = [];
 		let recordedFinishReason = void 0;
 		let recordedRawFinishReason = void 0;
+		let recordedStoppedBy = void 0;
 		let recordedTotalUsage = void 0;
 		let recordedRequest = {};
 		let recordedRequestMessages = [];
 		let recordedWarnings = [];
+		let recordedPromptWarnings = [];
 		let recordedSteps = [];
 		const initialResponseMessages = [];
 		let stepMessagesForNextStep;
@@ -15417,8 +16179,8 @@ var DefaultStreamTextResult = class {
 						event: currentStepResult,
 						callbacks: [onStepFinish, telemetryDispatcher.onStepEnd]
 					});
-					logWarnings({
-						warnings: recordedWarnings,
+					logCallWarnings({
+						warnings: recordedWarnings.filter((warning) => !recordedPromptWarnings.includes(warning)),
 						provider: currentStepModel.provider,
 						model: currentStepModel.modelId
 					});
@@ -15430,6 +16192,7 @@ var DefaultStreamTextResult = class {
 					recordedTotalUsage = part.totalUsage;
 					recordedFinishReason = part.finishReason;
 					recordedRawFinishReason = part.rawFinishReason;
+					recordedStoppedBy = part.stoppedBy;
 				}
 			},
 			async flush(controller) {
@@ -15450,6 +16213,7 @@ var DefaultStreamTextResult = class {
 					const totalUsage = recordedTotalUsage ?? createNullLanguageModelUsage();
 					self._finishReason.resolve(finishReason);
 					self._rawFinishReason.resolve(recordedRawFinishReason);
+					self._stoppedBy.resolve(recordedStoppedBy);
 					self._totalUsage.resolve(totalUsage);
 					self._steps.resolve(retention.replay ? recordedSteps : []);
 					if (isAborted) return;
@@ -15479,6 +16243,7 @@ var DefaultStreamTextResult = class {
 						runtimeContext: finalStep.runtimeContext,
 						finishReason: finalStep.finishReason,
 						rawFinishReason: finalStep.rawFinishReason,
+						stoppedBy: recordedStoppedBy,
 						usage: totalUsage,
 						totalUsage,
 						content,
@@ -15596,7 +16361,7 @@ var DefaultStreamTextResult = class {
 		stream = applyStreamTextTransforms({
 			stream,
 			transforms,
-			tools,
+			tools: tools ?? {},
 			stopStream() {
 				stitchableStream.terminate();
 				isRunning = false;
@@ -15775,8 +16540,8 @@ var DefaultStreamTextResult = class {
 				}
 			}
 			self._initialResponseMessages.resolve(initialResponseMessages);
-			async function streamStep({ currentStep, usage }) {
-				const stepTimeoutId = setAbortTimeout({
+			async function streamStep({ currentStep, usage, redo }) {
+				const stepTimeoutId = redo != null ? redo.stepTimeoutId : setAbortTimeout({
 					abortController: stepAbortController,
 					label: "Step",
 					timeoutMs: stepTimeoutMs
@@ -15829,8 +16594,8 @@ var DefaultStreamTextResult = class {
 				}
 				abortSignal?.addEventListener("abort", cleanupStepTimeouts, { once: true });
 				try {
-					stepFinish = new DelayedPromise();
-					const stepTracingChannelContext = telemetryDispatcher.startTracingChannelContext?.({
+					if (redo == null) stepFinish = new DelayedPromise();
+					const stepTracingChannelContext = redo != null ? redo.stepTracingChannelContext : telemetryDispatcher.startTracingChannelContext?.({
 						type: "step",
 						event: {
 							callId,
@@ -15841,7 +16606,15 @@ var DefaultStreamTextResult = class {
 					const runInStepTracingChannelContext = (execute) => stepTracingChannelContext?.run(execute) ?? execute();
 					const responseMessagesFromPreviousSteps = recordedSteps.flatMap((step) => step.response.messages);
 					const accumulatedResponseMessages = [...initialResponseMessages, ...responseMessagesFromPreviousSteps];
-					const steeringMessages = steeringRun?.takeMessages() ?? [];
+					const steeringMessages = [...redo?.steeringMessages ?? [], ...steeringRun?.takeMessages() ?? []];
+					const stepStartState = redo?.stepStartState ?? {
+						instructions: instructionsForNextStep,
+						runtimeContext,
+						toolsContext
+					};
+					instructionsForNextStep = stepStartState.instructions;
+					runtimeContext = stepStartState.runtimeContext;
+					toolsContext = stepStartState.toolsContext;
 					const stepInputMessages = [...stepMessagesForNextStep ?? [...initialMessages, ...initialResponseMessages], ...steeringMessages];
 					const prepareStepResult = await prepareStep?.({
 						model,
@@ -15860,7 +16633,7 @@ var DefaultStreamTextResult = class {
 					const stepSandbox = prepareStepResult?.experimental_sandbox ?? sandbox;
 					runtimeContext = prepareStepResult?.runtimeContext ?? runtimeContext;
 					toolsContext = prepareStepResult?.toolsContext ?? toolsContext;
-					const stepModel = resolveLanguageModel(prepareStepResult?.model ?? model);
+					const stepModel = resolveLanguageModel(prepareStepResult?.model ?? model, onWarning);
 					currentStepModel = stepModel;
 					const stepActiveTools = filterActiveTools({
 						tools,
@@ -15883,7 +16656,7 @@ var DefaultStreamTextResult = class {
 					const stepToolChoice = prepareToolChoice({ toolChoice: prepareStepResult?.toolChoice ?? toolChoice });
 					const stepExecutionTools = stepToolChoice.type === "none" ? void 0 : executionTools;
 					const stepMessages = appendToolCallerMessages({
-						messages: prepareStepResult?.messages ?? stepInputMessages,
+						messages: prepareStepResult?.messages != null ? [...prepareStepResult.messages] : stepInputMessages,
 						toolCallerMessages
 					});
 					currentStepMessages = stepMessages;
@@ -15891,7 +16664,7 @@ var DefaultStreamTextResult = class {
 						stepNumber: currentStep,
 						sentMessages: stepMessages
 					}) ?? [];
-					currentStepSteeringMessages = deliveredSteeringMessages.map(({ message }) => message);
+					currentStepSteeringMessages = [...redo?.deliveredSteeringMessages ?? [], ...deliveredSteeringMessages.map(({ message }) => message)];
 					if (deliveredSteeringMessages.length > 0) self.addStream(new ReadableStream({ start(controller) {
 						for (const { id, message } of deliveredSteeringMessages) controller.enqueue({
 							type: "steering-message",
@@ -15913,9 +16686,37 @@ var DefaultStreamTextResult = class {
 						maxRetries,
 						abortSignal
 					});
-					let hasNotifiedStepStart = false;
+					const stepStart = redo?.stepStart ?? {
+						notified: false,
+						enqueued: false
+					};
+					const interruptController = steeringRun == null ? void 0 : new AbortController();
+					const interruptRequested = interruptController == null ? void 0 : new Promise((resolve) => {
+						interruptController.signal.addEventListener("abort", () => resolve("interrupted"), { once: true });
+					});
+					const stopWatchingInterrupt = steeringRun?.watchInterrupt(() => interruptController?.abort()) ?? (() => {});
+					const isInterrupted = () => interruptController?.signal.aborted === true && abortSignal?.aborted !== true;
+					const modelCallAbortSignal = mergeAbortSignals(abortSignal, interruptController?.signal);
+					const redoStep = () => {
+						abortSignal?.removeEventListener("abort", cleanupStepTimeouts);
+						clearModelOutputTimeouts();
+						return streamStep({
+							currentStep,
+							usage,
+							redo: {
+								steeringMessages,
+								deliveredSteeringMessages: currentStepSteeringMessages,
+								stepStart,
+								stepTimeoutId,
+								stepTracingChannelContext,
+								stepStartState
+							}
+						});
+					};
+					let interruptWindowClosed = false;
+					let attemptInterrupted = false;
 					const callLanguageModel = () => runInStepTracingChannelContext(() => retry(async () => streamLanguageModelCall({
-						model: prepareStepResult?.model ?? model,
+						model: stepModel,
 						tools: stepModelTools,
 						toolOrder: stepToolOrder,
 						toolChoice: prepareStepResult?.toolChoice ?? toolChoice,
@@ -15924,7 +16725,7 @@ var DefaultStreamTextResult = class {
 						allowSystemInMessages,
 						repairToolCall,
 						refineToolInput,
-						abortSignal,
+						abortSignal: modelCallAbortSignal,
 						headers,
 						includeRawChunks: include.rawChunks,
 						providerOptions: stepProviderOptions,
@@ -15936,9 +16737,11 @@ var DefaultStreamTextResult = class {
 						experimental_sandbox: stepSandbox,
 						onLanguageModelCallStart: filterNullable(onLanguageModelCallStart, telemetryDispatcher.onLanguageModelCallStart),
 						onLanguageModelCallEnd: filterNullable(onLanguageModelCallEnd, telemetryDispatcher.onLanguageModelCallEnd),
-						onStart: async ({ promptMessages }) => {
-							if (hasNotifiedStepStart) return;
-							hasNotifiedStepStart = true;
+						onStart: async ({ promptMessages, promptWarnings }) => {
+							recordedPromptWarnings = promptWarnings;
+							if (!stepStart.notified && promptWarnings.length > 0) logCallWarnings({ warnings: promptWarnings });
+							if (stepStart.notified) return;
+							stepStart.notified = true;
 							const stepStartEvent = {
 								callId,
 								provider: stepModel.provider,
@@ -15971,7 +16774,17 @@ var DefaultStreamTextResult = class {
 						},
 						...stepCallSettings
 					})));
-					const initialLanguageModelCall = await callLanguageModel();
+					let initialLanguageModelCall;
+					try {
+						initialLanguageModelCall = await callLanguageModel();
+					} catch (error) {
+						if (!isInterrupted()) {
+							stopWatchingInterrupt();
+							throw error;
+						}
+						await redoStep();
+						return;
+					}
 					let request = initialLanguageModelCall.request;
 					let response = initialLanguageModelCall.response;
 					let languageModelStreamReader = initialLanguageModelCall.stream.getReader();
@@ -16015,15 +16828,37 @@ var DefaultStreamTextResult = class {
 								});
 								openReasoningParts.clear();
 							};
+							const interruptAttempt = async () => {
+								await languageModelStreamReader.cancel().catch(() => {});
+								bufferedAttemptParts = [];
+								closeOpenAttemptParts();
+								clearModelOutputTimeouts();
+								attemptInterrupted = true;
+								controller.close();
+							};
 							while (true) {
 								let result;
 								try {
-									result = await languageModelStreamReader.read();
+									if (interruptRequested == null || interruptWindowClosed) result = await languageModelStreamReader.read();
+									else result = await Promise.race([languageModelStreamReader.read(), interruptRequested]);
 								} catch (error) {
+									if (!interruptWindowClosed && isInterrupted()) {
+										await interruptAttempt();
+										return;
+									}
+									stopWatchingInterrupt();
 									clearModelOutputTimeouts();
 									throw error;
 								}
+								if (result === "interrupted" || !interruptWindowClosed && isInterrupted()) {
+									await interruptAttempt();
+									return;
+								}
 								const { done, value } = result;
+								if (!interruptWindowClosed && (done || value.type === "model-call-end" || value.type === "tool-input-start" || isOutputChunk$1(value))) {
+									interruptWindowClosed = true;
+									stopWatchingInterrupt();
+								}
 								if (enqueueStreamRetryAttemptBoundary) {
 									controller.enqueue(createStreamRetryAttemptBoundaryPart({ warnings: !done && value.type === "model-call-start" ? value.warnings : [] }));
 									enqueueStreamRetryAttemptBoundary = false;
@@ -16081,6 +16916,10 @@ var DefaultStreamTextResult = class {
 								try {
 									retryLanguageModelCall = await callLanguageModel();
 								} catch (retryError) {
+									if (!interruptWindowClosed && isInterrupted()) {
+										await interruptAttempt();
+										return;
+									}
 									controller.enqueue({
 										type: "error",
 										error: retryError
@@ -16193,11 +17032,17 @@ var DefaultStreamTextResult = class {
 							}
 							if (stepFirstChunk) {
 								stepFirstChunk = false;
-								enqueueStepPart(controller, {
-									type: "start-step",
+								const stepStartMetadata = {
 									request: getStepRequest(),
 									warnings: warnings ?? []
-								});
+								};
+								if (!stepStart.enqueued) {
+									stepStart.enqueued = true;
+									enqueueStepPart(controller, {
+										type: "start-step",
+										...stepStartMetadata
+									});
+								} else controller.enqueue({ [streamRetryBoundarySymbol]: stepStartMetadata });
 							}
 							const chunkType = chunk.type;
 							if (isOutputChunk$1(chunk)) hasReceivedOutputChunk = true;
@@ -16304,6 +17149,23 @@ var DefaultStreamTextResult = class {
 							}
 						},
 						async flush(controller) {
+							stopWatchingInterrupt();
+							const startFollowingStream = async (start) => {
+								try {
+									await runInStreamTextTracingChannelContext(start);
+								} catch (error) {
+									steeringRun?.end("error");
+									enqueueStepPart(controller, {
+										type: "error",
+										error
+									});
+									self.closeStream();
+								}
+							};
+							if (attemptInterrupted) {
+								await startFollowingStream(redoStep);
+								return;
+							}
 							if (!hasReceivedTerminalChunk && !hasReceivedOutputChunk) {
 								enqueueStepPart(controller, {
 									type: "error",
@@ -16346,15 +17208,20 @@ var DefaultStreamTextResult = class {
 							for (const output of stepToolOutputs) if (output.type === "tool-result" || output.type === "tool-error") pendingDeferredToolCalls.delete(output.toolCallId);
 							cleanupStepTimeouts();
 							let steeringEndReason = "finished";
+							let stoppedBy = "model";
 							const shouldStartNextStep = async () => {
 								if (stepFinishReason === "interrupted") return false;
 								if (clientToolCalls.length !== clientToolOutputs.length + deniedToolApprovalResponses.length) {
 									steeringEndReason = "waiting-for-tool-results";
+									stoppedBy = getPendingToolCallStoppedBy(recordedSteps[recordedSteps.length - 1]);
 									return false;
 								}
 								if (clientToolCalls.length === 0 && pendingDeferredToolCalls.size === 0) {
 									const isTruncated = stepFinishReason === "length" || stepFinishReason === "content-filter";
-									if (!steeringRun?.hasPendingMessages() && (isTruncated || !steeringRun?.promoteQueuedMessage())) return false;
+									if (!steeringRun?.hasPendingMessages() && (isTruncated || !steeringRun?.promoteQueuedMessage())) {
+										stoppedBy = getModelStoppedBy(recordedSteps[recordedSteps.length - 1]);
+										return false;
+									}
 									if (stepFinishReason === "error") {
 										steeringEndReason = "error";
 										return false;
@@ -16365,29 +17232,22 @@ var DefaultStreamTextResult = class {
 									steps: recordedSteps
 								})) {
 									steeringEndReason = "stop-condition";
+									stoppedBy = "stop-condition";
 									return false;
 								}
 								return true;
 							};
-							if (await shouldStartNextStep()) try {
-								await runInStreamTextTracingChannelContext(() => streamStep({
-									currentStep: currentStep + 1,
-									usage: combinedUsage
-								}));
-							} catch (error) {
-								steeringRun?.end("error");
-								enqueueStepPart(controller, {
-									type: "error",
-									error
-								});
-								self.closeStream();
-							}
+							if (await shouldStartNextStep()) await startFollowingStream(() => streamStep({
+								currentStep: currentStep + 1,
+								usage: combinedUsage
+							}));
 							else {
 								steeringRun?.end(steeringEndReason);
 								enqueueStepPart(controller, {
 									type: "finish",
 									finishReason: stepFinishReason,
 									rawFinishReason: stepRawFinishReason,
+									stoppedBy,
 									totalUsage: combinedUsage
 								});
 								self.closeStream();
@@ -16498,6 +17358,10 @@ var DefaultStreamTextResult = class {
 		if (this.retention.replay) this.consumeStream();
 		return this._rawFinishReason.promise;
 	}
+	get stoppedBy() {
+		if (this.retention.replay) this.consumeStream();
+		return this._stoppedBy.promise;
+	}
 	/**
 	* Split out a new stream from the original stream.
 	* The original stream is replaced to allow for further splitting,
@@ -16564,6 +17428,10 @@ var DefaultStreamTextResult = class {
 		});
 		this.rejectResultPromise({
 			delayedPromise: this._rawFinishReason,
+			error
+		});
+		this.rejectResultPromise({
+			delayedPromise: this._stoppedBy,
 			error
 		});
 		this.rejectResultPromise({
@@ -16712,37 +17580,6 @@ function isCausedByAbort(error) {
 	return false;
 }
 //#endregion
-//#region src/agent/default-stop-condition.ts
-/**
-* Logs the warning for the default stopWhen condition.
-*/
-function logDefaultStopConditionWarning({ stepCount, provider, modelId }) {
-	logWarnings({
-		provider,
-		model: modelId,
-		warnings: [{
-			type: "other",
-			message: `The tool loop stopped because it reached the default stopWhen condition, isStepCount(${stepCount}). To allow more steps, set stopWhen to isStepCount(...) with a higher limit or provide a custom stop condition. Learn more: https://ai-sdk.dev/docs/agents/loop-control`
-		}]
-	});
-}
-/**
-* Stop conditions are only evaluated when the tool loop can otherwise continue,
-* so logging here avoids warning when a call finishes naturally at the limit.
-*/
-function createDefaultStopCondition(stepCount) {
-	return ({ steps }) => {
-		if (steps.length !== stepCount) return false;
-		const { provider, modelId } = steps[steps.length - 1].model;
-		logDefaultStopConditionWarning({
-			stepCount,
-			provider,
-			modelId
-		});
-		return true;
-	};
-}
-//#endregion
 //#region src/agent/tool-loop-agent.ts
 /**
 * A tool loop agent is an agent that runs tools in a loop. In each step,
@@ -16791,7 +17628,7 @@ var ToolLoopAgent = class {
 		const { onStart: _settingsStableOnStart, experimental_onStart: _settingsExperimentalOnStart, onStepStart: _settingsStableOnStepStart, experimental_onStepStart: _settingsExperimentalOnStepStart, onToolExecutionStart: _settingsOnToolExecutionStart, onToolExecutionEnd: _settingsOnToolExecutionEnd, onStepEnd: _settingsOnStepEnd, onStepFinish: _settingsOnStepFinish, onError: _settingsOnError, onAbort: _settingsOnAbort, onFinish: _settingsOnFinish, onEnd: _settingsOnEnd, ...settingsWithoutCallbacks } = this.settings;
 		const baseCallArgs = {
 			...settingsWithoutCallbacks,
-			stopWhen: this.settings.stopWhen ?? createDefaultStopCondition(20),
+			stopWhen: this.settings.stopWhen ?? createDefaultStopCondition(20, this.settings.onWarning),
 			...options
 		};
 		const { instructions, allowSystemInMessages, messages, prompt, runtimeContext, ...callArgs } = await this.settings.prepareCall?.(baseCallArgs) ?? baseCallArgs;
@@ -17360,60 +18197,159 @@ function convertUserContentUIPart(part) {
 	};
 }
 //#endregion
-//#region src/ui/validate-ui-messages.ts
+//#region src/util/normalize-json-value.ts
+const invalid = Symbol("invalid");
 /**
-* Returns the path to the first value that can never be part of a JSON value
-* (a non-finite number, bigint, symbol, or function), if there is one.
+* Validates that a value is a JSON value: `null`, a string, a finite number, a
+* boolean, an array of JSON values, or a plain object with JSON values.
+*
+* The value is validated in a single pass that does not allocate memory for
+* its valid parts, so that validating untrusted input costs little more than
+* the input itself. A recursive union schema tries (and reports the issues of)
+* every alternative for every nested value and returns a copy of the value.
+*
+* It accepts the same values as a record schema of JSON values, except that a
+* JSON value cannot contain itself:
+*
+* - Object properties can be `undefined`. Array elements cannot.
+* - Objects must be plain objects without enumerable symbol keys.
+* - Own `__proto__` keys are removed. Only the objects with such a key and the
+*   arrays and objects that contain them are copied. Everything else is
+*   returned as is.
+*
+* @returns The JSON value, or the path to the first invalid value.
 */
-function findInvalidJsonValuePath(value, path = [], visited = /* @__PURE__ */ new WeakSet()) {
+function normalizeJsonValue(value) {
+	const path = [];
+	const normalized = normalize(value, path, /* @__PURE__ */ new Set());
+	return normalized === invalid ? {
+		success: false,
+		path
+	} : {
+		success: true,
+		value: normalized
+	};
+}
+/**
+* Returns the normalized value, or `invalid` with the path to the invalid
+* value in `path`.
+*
+* @param ancestors - The arrays and objects that contain `value`. Tracking
+* them instead of all visited values detects cycles with memory proportional
+* to the nesting depth.
+*/
+function normalize(value, path, ancestors) {
 	switch (typeof value) {
-		case "number": return Number.isFinite(value) ? void 0 : [...path];
-		case "bigint":
-		case "symbol":
-		case "function": return [...path];
+		case "string":
+		case "boolean": return value;
+		case "number": return Number.isFinite(value) ? value : invalid;
 		case "object": {
-			if (value === null || visited.has(value)) return;
-			visited.add(value);
-			const keys = Array.isArray(value) ? value.keys() : Object.keys(value);
-			for (const key of keys) {
-				if (key === "__proto__") continue;
-				path.push(key);
-				const invalidPath = findInvalidJsonValuePath(value[key], path, visited);
-				if (invalidPath != null) return invalidPath;
-				path.pop();
-			}
-			return;
+			if (value === null) return value;
+			if (ancestors.has(value)) return invalid;
+			ancestors.add(value);
+			const normalized = Array.isArray(value) ? normalizeArray(value, path, ancestors) : normalizeObject(value, path, ancestors);
+			ancestors.delete(value);
+			return normalized;
 		}
-		default: return;
+		default: return invalid;
 	}
 }
+function normalizeArray(array, path, ancestors) {
+	let copy;
+	for (let index = 0; index < array.length; index++) {
+		const element = array[index];
+		path.push(index);
+		const normalized = normalize(element, path, ancestors);
+		if (normalized === invalid) return invalid;
+		path.pop();
+		if (copy != null) copy.push(normalized);
+		else if (normalized !== element) {
+			copy = array.slice(0, index);
+			copy.push(normalized);
+		}
+	}
+	return copy ?? array;
+}
+function normalizeObject(object, path, ancestors) {
+	if (!isPlainObject(object) || hasEnumerableSymbolKey(object)) return invalid;
+	const keys = Object.keys(object);
+	let copy;
+	for (let index = 0; index < keys.length; index++) {
+		const key = keys[index];
+		if (key === "__proto__") {
+			copy ??= copyProperties(object, keys, index);
+			continue;
+		}
+		const property = object[key];
+		let normalized = property;
+		if (property !== void 0) {
+			path.push(key);
+			normalized = normalize(property, path, ancestors);
+			if (normalized === invalid) return invalid;
+			path.pop();
+		}
+		if (copy != null) copy[key] = normalized;
+		else if (normalized !== property) {
+			copy = copyProperties(object, keys, index);
+			copy[key] = normalized;
+		}
+	}
+	return copy ?? object;
+}
 /**
-* Rejects values that contain an invalid JSON value with a single issue before
-* `schema` validates them.
-*
-* The JSON value schema is a recursive union. It reports the issues of every
-* alternative at every nesting level around an invalid value, so the size of a
-* validation error would grow much faster than the (untrusted) input.
-*
-* @param jsonValuePath - Path from the validated value to the JSON value.
+* Copies the properties of the first `count` keys, which are known to be valid.
 */
-function withJsonValueCheck(schema, jsonValuePath = []) {
-	return z$1.pipe(z$1.unknown().check((context) => {
-		let jsonValue = context.value;
-		for (const key of jsonValuePath) jsonValue = jsonValue != null && typeof jsonValue === "object" ? jsonValue[key] : void 0;
-		const invalidPath = findInvalidJsonValuePath(jsonValue);
-		if (invalidPath != null) context.issues.push({
+function copyProperties(object, keys, count) {
+	const copy = {};
+	for (let index = 0; index < count; index++) copy[keys[index]] = object[keys[index]];
+	return copy;
+}
+/**
+* Same check as record schemas, which accepts plain objects from other realms
+* and objects without a prototype.
+*/
+function isPlainObject(object) {
+	const constructor = object.constructor;
+	if (typeof constructor !== "function") return true;
+	const prototype = constructor.prototype;
+	return prototype !== null && typeof prototype === "object" && Object.prototype.hasOwnProperty.call(prototype, "isPrototypeOf");
+}
+function hasEnumerableSymbolKey(object) {
+	const symbols = Object.getOwnPropertySymbols(object);
+	for (let index = 0; index < symbols.length; index++) if (Object.prototype.propertyIsEnumerable.call(object, symbols[index])) return true;
+	return false;
+}
+//#endregion
+//#region src/ui/validate-ui-messages.ts
+/**
+* Validates a JSON value in a single pass and reports an invalid JSON value
+* with a single issue.
+*
+* UI messages are untrusted input. The recursive JSON value schema tries
+* every alternative for every nested value and returns a copy of the value,
+* so accepting a value would need several times the memory of the value. It
+* also reports the issues of every alternative at every nesting level around
+* an invalid value, so the size of a validation error would grow much faster
+* than the input.
+*/
+const jsonValueSchema = z$1.pipe(z$1.unknown(), z$1.transform((value, context) => {
+	const result = normalizeJsonValue(value);
+	if (!result.success) {
+		context.issues.push({
 			code: "custom",
 			message: "Invalid JSON value. Expected null, a string, a finite number, a boolean, an array, or an object.",
-			input: context.value,
-			path: [...jsonValuePath, ...invalidPath]
+			input: value,
+			path: result.path
 		});
-	}), schema);
-}
-const toolMetadataSchema = withJsonValueCheck(z$1.record(z$1.string(), z$1.optional(jsonValueSchema)));
-const providerMetadataSchema = withJsonValueCheck(providerMetadataSchema$1);
+		return z$1.NEVER;
+	}
+	return result.value;
+}));
+const validatedJsonValueSchema = z$1.custom();
+const toolMetadataSchema = z$1.pipe(jsonValueSchema, z$1.record(z$1.string(), validatedJsonValueSchema));
+const providerMetadataSchema = z$1.pipe(jsonValueSchema, z$1.record(z$1.string(), z$1.record(z$1.string(), validatedJsonValueSchema)));
 const providerReferenceSchema$1 = z$1.record(z$1.string(), z$1.string());
-const uiCitationSchema = withJsonValueCheck(citationSchema, ["source", "providerMetadata"]);
+const uiCitationSchema = createCitationSchema(providerMetadataSchema);
 function isEmptyObject(value) {
 	return value != null && typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 0;
 }
@@ -17878,7 +18814,8 @@ async function safeValidateUIMessagesInternal({ messages, metadataSchema, dataSc
 					if (!result.success) inputError = result.error;
 					else if (inputSchemaInput != null) try {
 						const refine = getOwn(experimental_refineToolInput, toolName);
-						if (!isDeepEqualData(refine == null ? result.value : await refine(result.value), toolPart.input)) inputError = new TypeValidationError$1({
+						const reconstructedInput = refine == null ? result.value : await refine(result.value);
+						if (!isDeepEqualData(reconstructedInput, toolPart.input)) inputError = new TypeValidationError$1({
 							value: toolPart.input,
 							cause: "Tool input does not match the output reconstructed from inputSchemaInput.",
 							context: inputValidationContext
@@ -18117,7 +19054,7 @@ var RetryableNoImageResultError = class extends Error {
 */
 async function generateImage({ model: modelArg, prompt: promptArg, n = 1, maxImagesPerCall, size, aspectRatio, seed, providerOptions, maxRetries: maxRetriesArg, abortSignal, headers }) {
 	const model = resolveImageModel(modelArg);
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const { retry } = prepareRetries({
 		maxRetries: maxRetriesArg,
 		abortSignal,
@@ -18326,7 +19263,7 @@ async function cancelBatch({ provider, batch, providerOptions, abortSignal, head
 			batchId: batch.id,
 			providerOptions,
 			abortSignal: operationAbortSignal,
-			headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`)
+			headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`)
 		});
 	} catch (error) {
 		throw wrapGatewayError(error);
@@ -18351,7 +19288,7 @@ async function listBatches({ provider, providerOptions, limit, cursor, maxRetrie
 		const { batches, nextCursor, providerMetadata } = await retry(() => doListBatches({
 			providerOptions,
 			abortSignal: operationAbortSignal,
-			headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`),
+			headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`),
 			...limit != null && { limit },
 			...cursor != null && { cursor }
 		}));
@@ -18372,12 +19309,13 @@ async function listBatches({ provider, providerOptions, limit, cursor, maxRetrie
 /**
 * Starts a batch.
 */
-async function startBatch({ provider, requests, providerOptions, webhookUrl, abortSignal, headers, timeout }) {
+async function startBatch({ provider, requests, providerOptions, output, webhookUrl, abortSignal, headers, timeout }) {
 	validateRequests(requests);
 	const batchApi = resolveBatchApi(provider);
 	const operationAbortSignal = mergeAbortSignals(abortSignal, getTotalTimeoutMs(timeout));
 	const supportedUrls = await batchApi.supportedUrls;
 	operationAbortSignal?.throwIfAborted();
+	const responseFormat = await output?.responseFormat;
 	const normalizedRequests = [];
 	const toolsByName = /* @__PURE__ */ new Map();
 	for (const request of requests) {
@@ -18401,6 +19339,7 @@ async function startBatch({ provider, requests, providerOptions, webhookUrl, abo
 					modelId: request.model,
 					options: {
 						...prepareLanguageModelCallOptions(request),
+						responseFormat,
 						prompt: await convertToLanguageModelPrompt({
 							prompt: standardizedPrompt,
 							supportedUrls,
@@ -18445,7 +19384,7 @@ async function startBatch({ provider, requests, providerOptions, webhookUrl, abo
 		}
 		operationAbortSignal?.throwIfAborted();
 	}
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	try {
 		const { batchId, warnings, ...status } = await batchApi.doStartBatch({
 			requests: normalizedRequests,
@@ -18501,7 +19440,7 @@ async function getBatchStatus({ provider, batch, providerOptions, maxRetries, ab
 			batchId: batch.id,
 			providerOptions,
 			abortSignal: operationAbortSignal,
-			headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`)
+			headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`)
 		}));
 	} catch (error) {
 		throw wrapGatewayError(error);
@@ -18510,7 +19449,7 @@ async function getBatchStatus({ provider, batch, providerOptions, maxRetries, ab
 /**
 * Streams complete terminal results for the requests in a batch.
 */
-function getBatchResults({ provider, batch, tools, providerOptions, maxRetries, abortSignal, headers, timeout }) {
+function getBatchResults({ provider, batch, tools, output, providerOptions, maxRetries, abortSignal, headers, timeout }) {
 	const batchApi = resolveBatchApi(provider);
 	validateBatchReference({
 		batchApi,
@@ -18527,6 +19466,7 @@ function getBatchResults({ provider, batch, tools, providerOptions, maxRetries, 
 			controller.enqueue(await convertBatchItemResult({
 				item,
 				tools,
+				output,
 				abortSignal: operationAbortSignal
 			}));
 		},
@@ -18540,7 +19480,7 @@ function getBatchResults({ provider, batch, tools, providerOptions, maxRetries, 
 				batchId: batch.id,
 				providerOptions,
 				abortSignal: operationAbortSignal,
-				headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`)
+				headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`)
 			}))).pipeTo(transform.writable, { signal: operationAbortSignal });
 		} catch (error) {
 			await transform.writable.abort(wrapGatewayError(error)).catch(() => {});
@@ -18592,7 +19532,7 @@ function validateBatchReference({ batchApi, batch }) {
 		message: `provider ${batchApi.provider} is not compatible with batch provider ${batch.provider}`
 	});
 }
-async function convertBatchItemResult({ item, tools, abortSignal }) {
+async function convertBatchItemResult({ item, tools, output, abortSignal }) {
 	switch (item.type) {
 		case "text": switch (item.status) {
 			case "succeeded": return {
@@ -18603,7 +19543,11 @@ async function convertBatchItemResult({ item, tools, abortSignal }) {
 					result: item.result,
 					tools,
 					abortSignal
-				})
+				}),
+				...output != null ? await parseBatchOutput({
+					result: item.result,
+					output
+				}) : {}
 			};
 			case "failed": return {
 				type: item.type,
@@ -18666,6 +19610,42 @@ function convertImageResult(result) {
 		usage: result.usage
 	};
 }
+/**
+* Parses the structured output of a successful text item. Failures are
+* reported as `outputError` so that one malformed item does not affect the
+* rest of the batch or discard the item's text and usage.
+*/
+async function parseBatchOutput({ result, output }) {
+	const generatedText = result.content.filter((part) => {
+		return part.type === "text";
+	}).map((part) => part.text).join("");
+	const finishReason = result.finishReason.unified;
+	if (!(finishReason === "stop" || finishReason !== "tool-calls" && generatedText.length > 0)) {
+		const error = new NoOutputGeneratedError();
+		return { outputError: {
+			message: error.message,
+			type: error.name
+		} };
+	}
+	const textForOutput = (await output.responseFormat)?.type === "json" ? result.structuredOutputText ?? generatedText : generatedText;
+	try {
+		return { output: await output.parseCompleteOutput({ text: textForOutput }, {
+			response: {
+				id: result.response?.id ?? "",
+				timestamp: result.response?.timestamp ?? /* @__PURE__ */ new Date(0),
+				modelId: result.response?.modelId ?? "",
+				headers: result.response?.headers
+			},
+			usage: asLanguageModelUsage(result.usage),
+			finishReason
+		}) };
+	} catch (error) {
+		return { outputError: {
+			message: error instanceof Error ? error.message : String(error),
+			type: error instanceof Error ? error.name : "Error"
+		} };
+	}
+}
 async function convertGenerateResult({ result, tools, abortSignal }) {
 	const toolCalls = await Promise.all(result.content.filter((part) => part.type === "tool-call").map((toolCall) => parseToolCall({
 		toolCall,
@@ -18703,7 +19683,7 @@ async function convertGenerateResult({ result, tools, abortSignal }) {
 * Filters runtime context before sending operation events to telemetry integrations.
 * User callbacks continue to receive the original context.
 */
-function createRestrictedTelemetryDispatcher$2({ telemetry }) {
+function createRestrictedTelemetryDispatcher$3({ telemetry }) {
 	const dispatcher = createTelemetryDispatcher({ telemetry });
 	return {
 		...dispatcher,
@@ -18734,7 +19714,7 @@ function validateEmbeddingDimensions(dimensions) {
 }
 //#endregion
 //#region src/embed/embed.ts
-const originalGenerateCallId$6 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$7 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
@@ -18759,7 +19739,7 @@ const originalGenerateCallId$6 = (0,dist/* createIdGenerator */.hK)({
 *
 * @returns A result object that contains the embedding, the value, and additional information.
 */
-async function dist_embed({ model: modelArg, value, dimensions, providerOptions, maxRetries: maxRetriesArg, abortSignal, headers, experimental_telemetry, telemetry = experimental_telemetry, runtimeContext = {}, onStart, experimental_onStart, onEnd, experimental_onEnd, _internal: { generateCallId = originalGenerateCallId$6 } = {} }) {
+async function dist_embed({ model: modelArg, value, dimensions, providerOptions, maxRetries: maxRetriesArg, abortSignal, headers, experimental_telemetry, telemetry = experimental_telemetry, runtimeContext = {}, onStart, experimental_onStart, onEnd, experimental_onEnd, _internal: { generateCallId = originalGenerateCallId$7 } = {} }) {
 	validateEmbeddingDimensions(dimensions);
 	const model = resolveEmbeddingModel(modelArg);
 	const { maxRetries, retry } = prepareRetries({
@@ -18768,9 +19748,9 @@ async function dist_embed({ model: modelArg, value, dimensions, providerOptions,
 	});
 	const resolvedOnStart = onStart ?? experimental_onStart;
 	const resolvedOnEnd = onEnd ?? experimental_onEnd;
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const callId = generateCallId();
-	const telemetryDispatcher = createRestrictedTelemetryDispatcher$2({ telemetry });
+	const telemetryDispatcher = createRestrictedTelemetryDispatcher$3({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
 	const startEvent = {
 		callId,
@@ -18923,7 +19903,7 @@ function splitArray(array, chunkSize) {
 }
 //#endregion
 //#region src/embed/embed-many.ts
-const originalGenerateCallId$5 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$6 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
@@ -18957,7 +19937,7 @@ const originalGenerateCallId$5 = (0,dist/* createIdGenerator */.hK)({
 *
 * @returns A result object that contains the embeddings, the value, and additional information.
 */
-async function embedMany({ model: modelArg, values, dimensions, maxParallelCalls = Infinity, maxRetries: maxRetriesArg, abortSignal, headers, providerOptions, experimental_telemetry, telemetry = experimental_telemetry, runtimeContext = {}, onStart, experimental_onStart, onEnd, experimental_onEnd, _internal: { generateCallId = originalGenerateCallId$5 } = {} }) {
+async function embedMany({ model: modelArg, values, dimensions, maxParallelCalls = Infinity, maxRetries: maxRetriesArg, abortSignal, headers, providerOptions, experimental_telemetry, telemetry = experimental_telemetry, runtimeContext = {}, onStart, experimental_onStart, onEnd, experimental_onEnd, _internal: { generateCallId = originalGenerateCallId$6 } = {} }) {
 	validateEmbeddingDimensions(dimensions);
 	const model = resolveEmbeddingModel(modelArg);
 	const { maxRetries, retry } = prepareRetries({
@@ -18966,9 +19946,9 @@ async function embedMany({ model: modelArg, values, dimensions, maxParallelCalls
 	});
 	const resolvedOnStart = onStart ?? experimental_onStart;
 	const resolvedOnEnd = onEnd ?? experimental_onEnd;
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const callId = generateCallId();
-	const telemetryDispatcher = createRestrictedTelemetryDispatcher$2({ telemetry });
+	const telemetryDispatcher = createRestrictedTelemetryDispatcher$3({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
 	const startEvent = {
 		callId,
@@ -19255,12 +20235,13 @@ async function prepareDecisionState({ state, abortSignal, download }) {
 		value: state
 	}];
 	if (state.every((part) => part.type !== "file")) return state;
+	const files = state.filter((part) => part.type === "file");
 	const message = (await convertToLanguageModelPrompt({
 		prompt: {
 			instructions: void 0,
 			messages: [{
 				role: "user",
-				content: state.filter((part) => part.type === "file")
+				content: files
 			}]
 		},
 		supportedUrls: {},
@@ -19279,7 +20260,7 @@ async function prepareDecisionState({ state, abortSignal, download }) {
 }
 //#endregion
 //#region src/decide/restricted-telemetry-dispatcher.ts
-function createRestrictedTelemetryDispatcher$1({ telemetry }) {
+function createRestrictedTelemetryDispatcher$2({ telemetry }) {
 	const dispatcher = createTelemetryDispatcher({ telemetry });
 	return {
 		...dispatcher,
@@ -19302,7 +20283,7 @@ function createRestrictedTelemetryDispatcher$1({ telemetry }) {
 //#endregion
 //#region src/decide/validate-decision.ts
 const tolerance = 1e-6;
-function isRecord$1(value) {
+function dist_isRecord$1(value) {
 	if (value == null || typeof value !== "object" || Array.isArray(value)) return false;
 	const prototype = Object.getPrototypeOf(value);
 	return prototype === Object.prototype || prototype === null;
@@ -19363,11 +20344,11 @@ function invalidAnswer$1(answers, message) {
 function isProbability(value) {
 	return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
 }
-function hasExactKeys(value, keys) {
+function dist_hasExactKeys(value, keys) {
 	return Object.keys(value).length === keys.length && keys.every((key) => Object.hasOwn(value, key));
 }
 function validateDistribution(value, keys, answers, id, roundingError) {
-	if (!isRecord$1(value) || !hasExactKeys(value, keys) || !Object.values(value).every(isProbability)) invalidAnswer$1(answers, `Question "${id}" must have a complete distribution of finite probabilities in [0, 1].`);
+	if (!dist_isRecord$1(value) || !dist_hasExactKeys(value, keys) || !Object.values(value).every(isProbability)) invalidAnswer$1(answers, `Question "${id}" must have a complete distribution of finite probabilities in [0, 1].`);
 	const sum = Object.values(value).reduce((total, probability) => total + probability, 0);
 	if (Math.abs(sum - 1) > tolerance + keys.length * roundingError) invalidAnswer$1(answers, `Question "${id}" probabilities must sum to 1 within the declared rounding precision.`);
 }
@@ -19379,11 +20360,11 @@ function validateDecisionAnswers({ questions, answers, rounding }) {
 	}
 	const probabilityError = roundingError(rounding?.probabilityDecimals);
 	const scoreError = roundingError(rounding?.scoreDecimals);
-	if (!isRecord$1(answers) || !hasExactKeys(answers, Object.keys(questions))) invalidAnswer$1(answers, "Decision must return exactly one answer for every question.");
+	if (!dist_isRecord$1(answers) || !dist_hasExactKeys(answers, Object.keys(questions))) invalidAnswer$1(answers, "Decision must return exactly one answer for every question.");
 	for (const [id, question] of Object.entries(questions)) {
 		const answer = answers[id];
-		if (isRecord$1(answer) && answer.type === "refusal") continue;
-		if (!isRecord$1(answer) || answer.type !== question.type) invalidAnswer$1(answers, `Question "${id}" returned an answer with the wrong type.`);
+		if (dist_isRecord$1(answer) && answer.type === "refusal") continue;
+		if (!dist_isRecord$1(answer) || answer.type !== question.type) invalidAnswer$1(answers, `Question "${id}" returned an answer with the wrong type.`);
 		switch (question.type) {
 			case "choice":
 				if (typeof answer.choice !== "string" || !Object.hasOwn(question.criteria, answer.choice)) invalidAnswer$1(answers, `Question "${id}" selected an unknown option.`);
@@ -19405,7 +20386,7 @@ function validateDecisionAnswers({ questions, answers, rounding }) {
 				break;
 			case "box": {
 				const box = answer.box;
-				if (!isRecord$1(box) || !hasExactKeys(box, [
+				if (!dist_isRecord$1(box) || !dist_hasExactKeys(box, [
 					"top",
 					"bottom",
 					"left",
@@ -19419,12 +20400,12 @@ function validateDecisionAnswers({ questions, answers, rounding }) {
 }
 //#endregion
 //#region src/decide/decide.ts
-const originalGenerateCallId$4 = (0,dist/* createIdGenerator */.hK)({
+const originalGenerateCallId$5 = (0,dist/* createIdGenerator */.hK)({
 	prefix: "call",
 	size: 24
 });
 /** Decide answers to typed questions against one shared state. Experimental. */
-async function decide({ model: modelArg, state, questions, maxOutputTokens, reasoning, maxRetries, abortSignal, experimental_download: download, headers, providerOptions = {}, telemetry, runtimeContext = {}, onStart, onEnd, _internal: { generateCallId = originalGenerateCallId$4 } = {} }) {
+async function decide({ model: modelArg, state, questions, maxOutputTokens, reasoning, maxRetries, abortSignal, experimental_download: download, headers, providerOptions = {}, telemetry, runtimeContext = {}, onStart, onEnd, _internal: { generateCallId = originalGenerateCallId$5 } = {} }) {
 	const model = resolveDecisionModel(modelArg);
 	prepareLanguageModelCallOptions({ maxOutputTokens });
 	validateDecisionInput({
@@ -19442,7 +20423,7 @@ async function decide({ model: modelArg, state, questions, maxOutputTokens, reas
 		maxRetries,
 		abortSignal
 	});
-	const telemetryDispatcher = createRestrictedTelemetryDispatcher$1({ telemetry });
+	const telemetryDispatcher = createRestrictedTelemetryDispatcher$2({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
 	const startEvent = {
 		callId,
@@ -19492,7 +20473,7 @@ async function decide({ model: modelArg, state, questions, maxOutputTokens, reas
 						maxOutputTokens,
 						reasoning,
 						abortSignal,
-						headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`),
+						headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`),
 						providerOptions
 					});
 				});
@@ -19561,6 +20542,63 @@ async function decide({ model: modelArg, state, questions, maxOutputTokens, reas
 /** @deprecated Use `experimental_decide` instead. */
 const experimental_evaluate = (/* unused pure expression or super */ null && (decide));
 //#endregion
+//#region src/extract/restricted-telemetry-dispatcher.ts
+function toTelemetryEvent(event) {
+	return {
+		...event,
+		headers: void 0,
+		providerOptions: {},
+		state: redactFileLocations(event.state)
+	};
+}
+function redactFileLocations(state) {
+	if (!Array.isArray(state)) return state;
+	return state.map((part) => {
+		if (part?.type !== "text" && part?.type !== "file") return part;
+		const copy = { ...part };
+		delete copy.providerOptions;
+		if (copy.type === "file" && isFileLocation(copy.data)) copy.data = "[redacted]";
+		return copy;
+	});
+}
+function isFileLocation(data) {
+	if (data instanceof URL) return true;
+	if (typeof data === "string") try {
+		return new URL(data).protocol !== "data:";
+	} catch {
+		return false;
+	}
+	return isProviderReference(data) || data != null && typeof data === "object" && "type" in data && (data.type === "url" || data.type === "reference");
+}
+function createRestrictedTelemetryDispatcher$1({ telemetry }) {
+	const dispatcher = createTelemetryDispatcher({ telemetry });
+	return {
+		...dispatcher,
+		experimental_onExtractionModelCallStart: (event) => dispatcher.experimental_onExtractionModelCallStart?.({
+			...event,
+			state: redactFileLocations(event.state)
+		}),
+		experimental_onExtractionModelCallEnd: (event) => dispatcher.experimental_onExtractionModelCallEnd?.({
+			...event,
+			state: redactFileLocations(event.state)
+		}),
+		onStart: (event) => dispatcher.experimental_onExtractStart?.({
+			...toTelemetryEvent(event),
+			runtimeContext: filterIncludedContext({
+				context: event.runtimeContext,
+				includeContext: telemetry?.includeRuntimeContext
+			})
+		}),
+		onEnd: (event) => dispatcher.experimental_onExtractEnd?.({
+			...toTelemetryEvent(event),
+			runtimeContext: filterIncludedContext({
+				context: event.runtimeContext,
+				includeContext: telemetry?.includeRuntimeContext
+			})
+		})
+	};
+}
+//#endregion
 //#region src/extract/validate-extraction.ts
 const durationUnits = (/* unused pure expression or super */ null && ([
 	"seconds",
@@ -19602,7 +20640,7 @@ function isValue(field, value) {
 	}
 }
 function isSource(source, state) {
-	if (!isRecord$1(source) || typeof source.part !== "number" || !Number.isInteger(source.part) || source.part < 0 || source.part >= state.length) return false;
+	if (!dist_isRecord$1(source) || typeof source.part !== "number" || !Number.isInteger(source.part) || source.part < 0 || source.part >= state.length) return false;
 	const part = state[source.part];
 	switch (source.type) {
 		case "text": return part.type === "text" && typeof source.start === "number" && typeof source.end === "number" && Number.isInteger(source.start) && Number.isInteger(source.end) && source.start >= 0 && source.start < source.end && source.end <= part.text.length;
@@ -19629,11 +20667,11 @@ function invalidAnswer(answers, message) {
 	});
 }
 function validateExtractionAnswers({ fields, state, answers }) {
-	if (!isRecord$1(answers) || !hasExactKeys(answers, Object.keys(fields))) invalidAnswer(answers, "Extraction must return exactly one answer for every field.");
+	if (!dist_isRecord$1(answers) || !dist_hasExactKeys(answers, Object.keys(fields))) invalidAnswer(answers, "Extraction must return exactly one answer for every field.");
 	for (const [id, field] of Object.entries(fields)) {
 		const answer = answers[id];
-		if (isRecord$1(answer) && answer.type === "refusal") continue;
-		if (!isRecord$1(answer) || answer.type !== field.type) invalidAnswer(answers, `Field "${id}" returned an answer with the wrong type.`);
+		if (dist_isRecord$1(answer) && answer.type === "refusal") continue;
+		if (!dist_isRecord$1(answer) || answer.type !== field.type) invalidAnswer(answers, `Field "${id}" returned an answer with the wrong type.`);
 		if (answer.pNull !== void 0 && !isProbability(answer.pNull) || answer.confidence !== void 0 && !isProbability(answer.confidence)) invalidAnswer(answers, `Field "${id}" must return pNull and confidence as finite probabilities in [0, 1].`);
 		if (field.type === "list") {
 			const item = field.items === "number" ? {
@@ -19644,7 +20682,7 @@ function validateExtractionAnswers({ fields, state, answers }) {
 			const value = answer.value;
 			if (value !== null && !(isDenseArray(value) && value.every((entry) => isValue(item, entry)))) invalidAnswer(answers, `Field "${id}" must return null or a list of ${field.items} values.`);
 			const items = answer.items;
-			if (items !== void 0 && !(isDenseArray(items) && Array.isArray(value) && items.length === value.length && items.every((entry) => isRecord$1(entry) && (entry.confidence === void 0 || isProbability(entry.confidence)) && (entry.source === void 0 || isSource(entry.source, state))))) invalidAnswer(answers, `Field "${id}" must return one item entry per list value, with confidences in [0, 1] and sources inside the state.`);
+			if (items !== void 0 && !(isDenseArray(items) && Array.isArray(value) && items.length === value.length && items.every((entry) => dist_isRecord$1(entry) && (entry.confidence === void 0 || isProbability(entry.confidence)) && (entry.source === void 0 || isSource(entry.source, state))))) invalidAnswer(answers, `Field "${id}" must return one item entry per list value, with confidences in [0, 1] and sources inside the state.`);
 			continue;
 		}
 		if (answer.value !== null && !isValue(field, answer.value)) invalidAnswer(answers, `Field "${id}" must return null or a valid ${field.type} value.`);
@@ -19654,8 +20692,12 @@ function validateExtractionAnswers({ fields, state, answers }) {
 }
 //#endregion
 //#region src/extract/extract.ts
+const originalGenerateCallId$4 = (0,dist/* createIdGenerator */.hK)({
+	prefix: "call",
+	size: 24
+});
 /** Extract typed field values from one shared state. Experimental. */
-async function extract({ model: modelArg, state, fields, referenceDate, maxOutputTokens, reasoning, maxRetries, abortSignal, experimental_download: download, headers, providerOptions = {} }) {
+async function extract({ model: modelArg, state, fields, referenceDate, maxOutputTokens, reasoning, maxRetries, abortSignal, experimental_download: download, headers, providerOptions = {}, telemetry, runtimeContext = {}, onStart, onEnd, _internal: { generateCallId = originalGenerateCallId$4 } = {} }) {
 	const model = resolveExtractionModel(modelArg);
 	prepareLanguageModelCallOptions({ maxOutputTokens });
 	validateExtractionInput({
@@ -19669,62 +20711,139 @@ async function extract({ model: modelArg, state, fields, referenceDate, maxOutpu
 		provider: model.provider,
 		modelId: model.modelId
 	});
-	const { retry } = prepareRetries({
+	const callId = generateCallId();
+	const { maxRetries: resolvedMaxRetries, retry } = prepareRetries({
 		maxRetries,
 		abortSignal
 	});
-	const preparedState = await prepareDecisionState({
+	const telemetryDispatcher = createRestrictedTelemetryDispatcher$1({ telemetry });
+	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
+	const startEvent = {
+		callId,
+		operationId: "ai.extract",
+		runtimeContext,
+		provider: model.provider,
+		modelId: model.modelId,
 		state,
-		abortSignal,
-		download
-	});
-	const result = await retry(async () => {
-		abortSignal?.throwIfAborted();
-		return await model.doExtract({
-			state: preparedState,
-			fields,
-			referenceDate,
-			maxOutputTokens,
-			reasoning,
-			abortSignal,
-			headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`),
-			providerOptions
-		});
-	});
-	abortSignal?.throwIfAborted();
-	validateExtractionAnswers({
 		fields,
-		state: preparedState,
-		answers: result.answers
-	});
-	const refusedFieldIds = Object.keys(fields).filter((id) => result.answers[id]?.type === "refusal");
-	if (refusedFieldIds.length > 0) throw new Experimental_ExtractionRefusalError$1({
-		fieldIds: refusedFieldIds,
-		provider: model.provider,
-		modelId: model.modelId
-	});
-	logWarnings({
-		warnings: result.warnings,
-		provider: model.provider,
-		model: model.modelId
-	});
-	const inputTokens = result.usage?.inputTokens;
-	const outputTokens = result.usage?.outputTokens;
-	return {
-		answers: result.answers,
-		usage: {
-			inputTokens,
-			outputTokens,
-			totalTokens: inputTokens != null && outputTokens != null ? inputTokens + outputTokens : void 0
-		},
-		warnings: result.warnings,
-		providerMetadata: result.providerMetadata,
-		response: {
-			...result.response,
-			timestamp: result.response?.timestamp ?? /* @__PURE__ */ new Date(),
-			modelId: result.response?.modelId ?? model.modelId
-		}
+		referenceDate,
+		maxOutputTokens,
+		reasoning,
+		maxRetries: resolvedMaxRetries,
+		headers,
+		providerOptions
 	};
+	return await runInTracingChannelSpan({
+		type: "experimental_extract",
+		event: toTelemetryEvent(startEvent),
+		execute: async () => {
+			await notify({
+				event: startEvent,
+				callbacks: [onStart, telemetryDispatcher.onStart]
+			});
+			try {
+				const preparedState = await prepareDecisionState({
+					state,
+					abortSignal,
+					download
+				});
+				const modelCallEvent = {
+					callId,
+					operationId: "ai.extract.doExtract",
+					provider: model.provider,
+					modelId: model.modelId,
+					state: preparedState,
+					fields,
+					referenceDate
+				};
+				await notify({
+					event: modelCallEvent,
+					callbacks: [telemetryDispatcher.experimental_onExtractionModelCallStart]
+				});
+				const result = await retry(async () => {
+					abortSignal?.throwIfAborted();
+					return await model.doExtract({
+						state: preparedState,
+						fields,
+						referenceDate,
+						maxOutputTokens,
+						reasoning,
+						abortSignal,
+						headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`),
+						providerOptions
+					});
+				});
+				abortSignal?.throwIfAborted();
+				const answers = dist_isRecord$1(result.answers) ? Object.fromEntries(Object.entries(result.answers).map(([id, answer]) => {
+					if (!dist_isRecord$1(answer) || answer.type === "refusal") return [id, answer];
+					if (answer.value === "" || Array.isArray(answer.value) && answer.value.length === 0) {
+						const normalized = {
+							...answer,
+							value: null
+						};
+						if (normalized.type === "list") delete normalized.items;
+						return [id, normalized];
+					}
+					return [id, answer];
+				})) : result.answers;
+				validateExtractionAnswers({
+					fields,
+					state: preparedState,
+					answers
+				});
+				const refusedFieldIds = Object.keys(fields).filter((id) => answers[id]?.type === "refusal");
+				if (refusedFieldIds.length > 0) throw new Experimental_ExtractionRefusalError$1({
+					fieldIds: refusedFieldIds,
+					provider: model.provider,
+					modelId: model.modelId
+				});
+				await notify({
+					event: {
+						...modelCallEvent,
+						...result,
+						answers
+					},
+					callbacks: [telemetryDispatcher.experimental_onExtractionModelCallEnd]
+				});
+				logWarnings({
+					warnings: result.warnings,
+					provider: model.provider,
+					model: model.modelId
+				});
+				const inputTokens = result.usage?.inputTokens;
+				const outputTokens = result.usage?.outputTokens;
+				const extractionResult = {
+					answers,
+					usage: {
+						inputTokens,
+						outputTokens,
+						totalTokens: inputTokens != null && outputTokens != null ? inputTokens + outputTokens : void 0
+					},
+					warnings: result.warnings,
+					providerMetadata: result.providerMetadata,
+					response: {
+						...result.response,
+						timestamp: result.response?.timestamp ?? /* @__PURE__ */ new Date(),
+						modelId: result.response?.modelId ?? model.modelId
+					}
+				};
+				await notify({
+					event: {
+						...startEvent,
+						...extractionResult
+					},
+					callbacks: [onEnd, telemetryDispatcher.onEnd]
+				});
+				return extractionResult;
+			} catch (error) {
+				await telemetryDispatcher.onError?.({
+					callId,
+					error
+				});
+				throw error;
+			}
+		}
+	});
 }
 //#endregion
 //#region src/generate-text/extract-reasoning-content.ts
@@ -20192,7 +21311,7 @@ async function generateObject(options) {
 		enumValues
 	});
 	const callSettings = prepareLanguageModelCallOptions(settings);
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const telemetryDispatcher = createTelemetryDispatcher({ telemetry });
 	const resolvedOnStart = onStart ?? experimental_onStart;
 	const resolvedOnStepStart = onStepStart ?? experimental_onStepStart;
@@ -20226,14 +21345,15 @@ async function generateObject(options) {
 		callbacks: [resolvedOnStart, telemetryDispatcher.onStart]
 	});
 	try {
+		const standardizedPrompt = await standardizePrompt({
+			instructions,
+			system,
+			prompt,
+			messages,
+			allowSystemInMessages
+		});
 		const promptMessages = await convertToLanguageModelPrompt({
-			prompt: await standardizePrompt({
-				instructions,
-				system,
-				prompt,
-				messages,
-				allowSystemInMessages
-			}),
+			prompt: standardizedPrompt,
 			supportedUrls: await model.supportedUrls,
 			download,
 			abortSignal,
@@ -20290,22 +21410,23 @@ async function generateObject(options) {
 			provider: model.provider,
 			model: model.modelId
 		});
+		const stepFinishEvent = {
+			callId,
+			stepNumber: 0,
+			provider: model.provider,
+			modelId: model.modelId,
+			finishReason,
+			usage,
+			objectText: text,
+			msToFirstChunk: void 0,
+			reasoning,
+			warnings,
+			request,
+			response,
+			providerMetadata: resultProviderMetadata
+		};
 		await notify({
-			event: {
-				callId,
-				stepNumber: 0,
-				provider: model.provider,
-				modelId: model.modelId,
-				finishReason,
-				usage,
-				objectText: text,
-				msToFirstChunk: void 0,
-				reasoning,
-				warnings,
-				request,
-				response,
-				providerMetadata: resultProviderMetadata
-			},
+			event: stepFinishEvent,
 			callbacks: [resolvedOnStepEnd, telemetryDispatcher.onObjectStepEnd]
 		});
 		const object = await parseAndValidateObjectResultWithRepair(generateResult.structuredOutputText ?? text, outputStrategy, repairText, {
@@ -20492,27 +21613,6 @@ var SerialJobExecutor = class {
 		});
 	}
 };
-//#endregion
-//#region src/util/simulate-readable-stream.ts
-/**
-* Creates a ReadableStream that emits the provided values with an optional delay between each value.
-*
-* @param options - The configuration options
-* @param options.chunks - Array of values to be emitted by the stream
-* @param options.initialDelayInMs - Optional initial delay in milliseconds before emitting the first value (default: 0). Can be set to `null` to skip the initial delay. The difference between `initialDelayInMs: null` and `initialDelayInMs: 0` is that `initialDelayInMs: null` will emit the values without any delay, while `initialDelayInMs: 0` will emit the values with a delay of 0 milliseconds.
-* @param options.chunkDelayInMs - Optional delay in milliseconds between emitting each value (default: 0). Can be set to `null` to skip the delay. The difference between `chunkDelayInMs: null` and `chunkDelayInMs: 0` is that `chunkDelayInMs: null` will emit the values without any delay, while `chunkDelayInMs: 0` will emit the values with a delay of 0 milliseconds.
-* @returns A ReadableStream that emits the provided values
-*/
-function simulateReadableStream({ chunks, initialDelayInMs = 0, chunkDelayInMs = 0, _internal }) {
-	const delay$3 = _internal?.delay ?? delay;
-	let index = 0;
-	return new ReadableStream({ async pull(controller) {
-		if (index < chunks.length) {
-			await delay$3(index === 0 ? initialDelayInMs : chunkDelayInMs);
-			controller.enqueue(chunks[index++]);
-		} else controller.close();
-	} });
-}
 //#endregion
 //#region src/generate-object/stream-object.ts
 const originalGenerateId = (0,dist/* createIdGenerator */.hK)({
@@ -21075,7 +22175,7 @@ var DefaultStreamObjectResult = class {
 };
 //#endregion
 //#region src/generate-speech/generated-audio-file.ts
-var DefaultGeneratedAudioFile = class extends DefaultGeneratedFile {
+var DefaultGeneratedAudioFile = class extends default_stop_condition_D8PwkeWe_DefaultGeneratedFile {
 	constructor({ data, mediaType }) {
 		super({
 			data,
@@ -21123,7 +22223,7 @@ const originalGenerateCallId$3 = (0,dist/* createIdGenerator */.hK)({
 async function generateSpeech({ model, text, voice, outputFormat, instructions, speed, language, providerOptions = {}, maxRetries: maxRetriesArg, abortSignal, headers, telemetry, _internal: { generateCallId = originalGenerateCallId$3 } = {} }) {
 	const resolvedModel = resolveSpeechModel(model);
 	if (!resolvedModel) throw new Error("Model could not be resolved");
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const { maxRetries, retry } = prepareRetries({
 		maxRetries: maxRetriesArg,
 		abortSignal
@@ -21180,8 +22280,8 @@ async function generateSpeech({ model, text, voice, outputFormat, instructions, 
 					data: result.audio,
 					mediaType: detectedMediaType ?? getResponseAudioMediaType(result.response.headers) ?? getOutputFormatMediaType(outputFormat) ?? "audio/mp3"
 				});
-				if (telemetryDispatcher.onEnd != null) await notify({
-					event: {
+				if (telemetryDispatcher.onEnd != null) {
+					const endEvent = {
 						callId,
 						operationId: "ai.generateSpeech",
 						provider: resolvedModel.provider,
@@ -21196,9 +22296,12 @@ async function generateSpeech({ model, text, voice, outputFormat, instructions, 
 						warnings: result.warnings,
 						providerMetadata: result.providerMetadata,
 						response: getTelemetryResponseMetadata(result.response)
-					},
-					callbacks: [telemetryDispatcher.onEnd]
-				});
+					};
+					await notify({
+						event: endEvent,
+						callbacks: [telemetryDispatcher.onEnd]
+					});
+				}
 				return new DefaultSpeechResult({
 					audio,
 					warnings: result.warnings,
@@ -21305,7 +22408,7 @@ function streamSpeech({ model, text, voice, outputFormat, instructions, speed, l
 		message: `The ${resolvedModel.provider} model "${resolvedModel.modelId}" does not support streaming speech.` + (typeof model === "string" ? " String model IDs resolve through the global provider (AI Gateway by default). If that provider does not support streaming speech, pass a provider model instance instead (e.g. elevenLabs.speech('eleven_flash_v2_5')) or upgrade @ai-sdk/gateway to a version with streaming speech support." : "")
 	});
 	const textStream = toTextStream$1(text);
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const usagePromise = new DelayedPromise();
 	const warningsPromise = new DelayedPromise();
 	const responsesPromise = new DelayedPromise();
@@ -21819,7 +22922,7 @@ function detectToolDrift(current, baseline) {
 const defaultDownload$1 = createDownload();
 async function experimental_generateVideo({ model: modelArg, prompt: promptArg, n = 1, maxVideosPerCall, aspectRatio, resolution, duration, fps, seed, frameImages, inputReferences, generateAudio, providerOptions, maxRetries: maxRetriesArg, abortSignal, headers, download: downloadFn = defaultDownload$1, poll, webhook }) {
 	const model = resolveVideoModel(modelArg);
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const { maxRetries, retry } = prepareRetries({
 		maxRetries: maxRetriesArg,
 		abortSignal
@@ -22235,7 +23338,7 @@ async function experimental_startVideo({ model: modelArg, prompt: promptArg, n =
 		generateAudio,
 		providerOptions: providerOptions ?? {},
 		headers: {
-			...withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`),
+			...withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`),
 			...callerIdempotencyKey ? {} : { "idempotency-key": `aisdk_vid_${generateId$1()}` }
 		},
 		abortSignal,
@@ -22274,7 +23377,7 @@ async function experimental_getVideoStatus(modelArg, { operation, headers, abort
 	});
 	return retry(() => model.doStatus({
 		operation,
-		headers: withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`),
+		headers: withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`),
 		abortSignal
 	}));
 }
@@ -23136,7 +24239,7 @@ const outputSchema = dist_z.discriminatedUnion("type", [
 	}),
 	dist_z.object({
 		type: dist_z.literal("json"),
-		value: jsonValueSchema,
+		value: jsonValueSchema$1,
 		providerOptions: providerMetadataSchema$1.optional()
 	}),
 	dist_z.object({
@@ -23151,7 +24254,7 @@ const outputSchema = dist_z.discriminatedUnion("type", [
 	}),
 	dist_z.object({
 		type: dist_z.literal("error-json"),
-		value: jsonValueSchema,
+		value: jsonValueSchema$1,
 		providerOptions: providerMetadataSchema$1.optional()
 	}),
 	dist_z.object({
@@ -23907,7 +25010,7 @@ var BrowserRealtimeTransport = class {
 };
 //#endregion
 //#region src/realtime/browser-realtime-live-websocket.ts
-/** Continuous PCM16 audio-chunk media for an application-owned WebSocket relay. */
+/** Continuous PCM16 audio-chunk media over a WebSocket relay or client-secret connection. */
 var BrowserRealtimeLiveWebSocket = class {
 	constructor(options) {
 		this.options = options;
@@ -23958,9 +25061,18 @@ var BrowserRealtimeLiveWebSocket = class {
 		});
 	}
 	connect(options) {
+		if (this.prepare(options) !== this.generation) return;
+		this.open({
+			mode: "relay",
+			url: options.url,
+			protocols: options.protocols
+		});
+	}
+	/** Resets media and primes playback; call while still in the user gesture. */
+	prepare(options) {
 		const generation = this.generation + 1;
 		this.dispose();
-		if (generation !== this.generation) return;
+		if (generation !== this.generation) return generation;
 		for (const format of [this.config.inputAudioFormat, this.config.outputAudioFormat]) {
 			if (format?.type !== "audio/pcm") throw new UnsupportedFunctionalityError$1({ functionality: "Continuous browser WebSocket audio supports PCM16 only" });
 			if (format.rate == null || !Number.isFinite(format.rate) || format.rate < 8e3 || format.rate > 96e3) throw new Error("Invalid realtime PCM sample rate");
@@ -23971,10 +25083,12 @@ var BrowserRealtimeLiveWebSocket = class {
 		this.audio.resumePlayback().catch((error) => {
 			if (generation === this.generation) this.options.onError(error);
 		});
+		return generation;
+	}
+	/** Opens the socket through an application relay or with a client secret. */
+	open(connection) {
 		this.transport.connect({
-			mode: "relay",
-			url: options.url,
-			protocols: options.protocols,
+			...connection,
 			onOpen: () => {
 				return this.transport.sendEvent({
 					type: this.options.model.capabilities?.startup ?? "session-update",
@@ -25021,7 +26135,7 @@ var AbstractRealtimeSession = class {
 			if (model.getWebRTCConfig == null) throw new Error("Realtime model does not support WebRTC configuration");
 			return;
 		}
-		if (this.continuous && api.websocket == null) throw new Error("Continuous PCM sessions require an application WebSocket relay");
+		if (this.continuous && api.token != null && !model.capabilities?.connections?.includes("client-secret-websocket")) throw new Error("Realtime model does not support client-secret-websocket");
 		if (api.token != null && model.getWebSocketConfig == null) throw new Error("Realtime model does not support client-secret WebSocket configuration");
 	}
 	async connect(connectOptions) {
@@ -25148,38 +26262,42 @@ var AbstractRealtimeSession = class {
 					capture: connectOptions?.capture,
 					timeoutMs: this.options.startupTimeoutMs ?? 3e4
 				});
-			} else if (api.websocket != null && model.capabilities?.conversation === "continuous") {
-				this.pcm = new BrowserRealtimeLiveWebSocket({
+			} else if (this.continuous) {
+				const pcm = new BrowserRealtimeLiveWebSocket({
 					...callbacks,
 					sessionConfig,
 					sampleRate: this.options.sampleRate,
 					maxPlaybackBufferSeconds: this.options.maxPlaybackBufferSeconds
 				});
-				this.pcm.connect({
+				this.pcm = pcm;
+				if (api.websocket != null) pcm.connect({
 					url: api.websocket,
 					protocols: api.protocols,
 					stream: connectOptions?.stream,
 					capture: connectOptions?.capture
 				});
+				else if (api.token != null) {
+					pcm.prepare({
+						stream: connectOptions?.stream,
+						capture: connectOptions?.capture
+					});
+					const setup = await this.fetchRealtimeSetup(api.token, sessionConfig, attempt);
+					if (setup == null || !current() || this.pcm !== pcm) return;
+					if (setup.tools != null && setup.tools.length > 0) throw new UnsupportedFunctionalityError$1({ functionality: "Realtime setup tools for continuous sessions; client delegation is application-owned" });
+					pcm.open({
+						mode: "client-secret",
+						token: setup.token,
+						url: setup.url
+					});
+				}
 			} else {
 				this.ensureAudio();
 				let config = sessionConfig ?? {};
 				let token;
 				let url = api.websocket;
 				if (api.token != null) {
-					const response = await fetch(api.token, {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ sessionConfig }),
-						signal: attempt.abort.signal
-					});
-					if (!current()) return;
-					if (!response.ok) throw new Error(`Failed to fetch realtime setup: ${response.status}`);
-					const payload = await response.json().catch(() => {
-						throw new Error("Invalid realtime setup response");
-					});
-					if (!current() || attempt.closing) return;
-					const setup = validateRealtimeSetup(payload);
+					const setup = await this.fetchRealtimeSetup(api.token, sessionConfig, attempt);
+					if (setup == null) return;
 					token = setup.token;
 					url = setup.url;
 					config = {
@@ -25217,6 +26335,23 @@ var AbstractRealtimeSession = class {
 		} catch (error) {
 			if (current()) this.fail(error);
 		}
+	}
+	/** Fetches the application's token setup; undefined when the attempt ended. */
+	async fetchRealtimeSetup(endpoint, sessionConfig, attempt) {
+		const current = () => this.attempt === attempt && attempt.active;
+		const response = await fetch(endpoint, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ sessionConfig }),
+			signal: attempt.abort.signal
+		});
+		if (!current()) return void 0;
+		if (!response.ok) throw new Error(`Failed to fetch realtime setup: ${response.status}`);
+		const payload = await response.json().catch(() => {
+			throw new Error("Invalid realtime setup response");
+		});
+		if (!current() || attempt.closing) return void 0;
+		return validateRealtimeSetup(payload);
 	}
 	fail(error, drain, report = true) {
 		const attempt = this.attempt;
@@ -25670,6 +26805,7 @@ var AbstractRealtimeSession = class {
 * @param {Record<string, RerankingModel>} [options.rerankingModels] - A record of reranking models, where keys are model IDs and values are reranking model instances.
 * @param {Record<string, VideoModel>} [options.videoModels] - A record of video models, where keys are model IDs and values are video model instances.
 * @param {Record<string, DecisionModel>} [options.decisionModels] - Experimental decision models or default-provider model IDs, keyed by alias.
+* @param {Record<string, ExtractionModel>} [options.extractionModels] - Experimental extraction models or default-provider model IDs, keyed by alias.
 * @param {FilesV4} [options.files] - A files interface for uploading files.
 * @param {SkillsV4} [options.skills] - A skills interface for uploading skills.
 * @param {ProviderV2 | ProviderV3 | ProviderV4} [options.fallbackProvider] - An optional fallback provider to use when a requested model is not found in the custom provider.
@@ -25677,7 +26813,7 @@ var AbstractRealtimeSession = class {
 *
 * @throws {NoSuchModelError} Throws when a requested model is not found and no fallback provider is available.
 */
-function customProvider({ languageModels, embeddingModels, imageModels, transcriptionModels, speechModels, rerankingModels, videoModels, decisionModels: decisionModelsArg, evaluationModels, files, skills, fallbackProvider: fallbackProviderArg }) {
+function customProvider({ languageModels, embeddingModels, imageModels, transcriptionModels, speechModels, rerankingModels, videoModels, decisionModels: decisionModelsArg, evaluationModels, extractionModels, files, skills, fallbackProvider: fallbackProviderArg }) {
 	const decisionModels = decisionModelsArg ?? evaluationModels;
 	const fallbackProvider = fallbackProviderArg == null ? void 0 : asProviderV4(fallbackProviderArg);
 	const baseProvider = {
@@ -25751,6 +26887,18 @@ function customProvider({ languageModels, embeddingModels, imageModels, transcri
 		},
 		evaluationModel(modelId) {
 			return asEvaluationModel(this.decisionModel(modelId));
+		},
+		extractionModel(modelId) {
+			if (extractionModels != null && Object.hasOwn(extractionModels, modelId)) return resolveExtractionModel(extractionModels[modelId]);
+			const provider = fallbackProviderArg;
+			if (typeof provider?.extractionModel === "function") {
+				const model = provider.extractionModel(modelId);
+				if (model != null) return resolveExtractionModel(model);
+			}
+			throw new NoSuchModelError$1({
+				modelId,
+				modelType: "extractionModel"
+			});
 		},
 		videoModel(modelId) {
 			if (videoModels != null && modelId in videoModels) return resolveVideoModel(videoModels[modelId]);
@@ -25836,11 +26984,13 @@ var DefaultProviderRegistry = class {
 		const videoModel = provider.videoModel?.bind(provider);
 		const decisionProvider = provider;
 		const decisionModel = (decisionProvider.decisionModel ?? decisionProvider.evaluationModel)?.bind(provider);
+		const extractionModel = provider.extractionModel?.bind(provider);
 		const registeredProvider = videoModel == null ? providerV4 : Object.assign(Object.create(Object.getPrototypeOf(providerV4)), {
 			...providerV4,
 			videoModel: (modelId) => asVideoModelV4(videoModel(modelId))
 		});
 		if (registeredProvider !== provider && decisionModel != null) Object.assign(registeredProvider, { decisionModel });
+		if (registeredProvider !== provider && extractionModel != null) Object.assign(registeredProvider, { extractionModel });
 		this.providers[id] = registeredProvider;
 	}
 	getProvider(id, modelType) {
@@ -25947,6 +27097,15 @@ var DefaultProviderRegistry = class {
 	evaluationModel(id) {
 		return asEvaluationModel(this.decisionModel(id));
 	}
+	extractionModel(id) {
+		const [providerId, modelId] = this.splitId(id, "extractionModel");
+		const model = this.getProvider(providerId, "extractionModel").extractionModel?.(modelId);
+		if (model == null) throw new NoSuchModelError$1({
+			modelId: id,
+			modelType: "extractionModel"
+		});
+		return resolveExtractionModel(model);
+	}
 	files(id) {
 		const files = this.getProvider(id, "languageModel").files?.();
 		if (files == null) throw new Error(`The provider "${id}" does not support file uploads. Make sure it exposes a files() method.`);
@@ -25964,7 +27123,7 @@ var DefaultProviderRegistry = class {
 * Filters runtime context before sending operation events to telemetry integrations.
 * User callbacks continue to receive the original context.
 */
-function createRestrictedTelemetryDispatcher({ telemetry }) {
+function dist_createRestrictedTelemetryDispatcher({ telemetry }) {
 	const dispatcher = createTelemetryDispatcher({ telemetry });
 	return {
 		...dispatcher,
@@ -26012,7 +27171,7 @@ async function rerank({ model: modelArg, documents, query, topN, maxRetries: max
 	const callId = generateCallId();
 	const resolvedOnStart = onStart ?? experimental_onStart;
 	const resolvedOnEnd = onEnd ?? experimental_onEnd;
-	const telemetryDispatcher = createRestrictedTelemetryDispatcher({ telemetry });
+	const telemetryDispatcher = dist_createRestrictedTelemetryDispatcher({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
 	if (documents.length === 0) {
 		await notify({
@@ -26240,7 +27399,7 @@ async function transcribe({ model, audio, providerOptions = {}, timestampGranula
 		maxRetries: maxRetriesArg,
 		abortSignal
 	});
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const callId = generateCallId();
 	const telemetryDispatcher = createTelemetryDispatcher({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
@@ -26360,26 +27519,27 @@ async function transcribe({ model, audio, providerOptions = {}, timestampGranula
 					model: resolvedModel.modelId
 				});
 				if (result.text == null) throw new NoTranscriptGeneratedError({ responses: [result.response] });
-				await notify({
-					event: {
-						callId,
-						operationId: "ai.transcribe",
-						provider: resolvedModel.provider,
-						modelId: resolvedModel.modelId,
-						audio: {
-							byteLength,
-							mediaType
-						},
-						text: result.text,
-						segments: result.segments,
-						words: result.words,
-						language: result.language,
-						durationInSeconds: result.durationInSeconds,
-						usage: result.usage,
-						warnings: result.warnings,
-						providerMetadata: result.providerMetadata,
-						response: result.response
+				const endEvent = {
+					callId,
+					operationId: "ai.transcribe",
+					provider: resolvedModel.provider,
+					modelId: resolvedModel.modelId,
+					audio: {
+						byteLength,
+						mediaType
 					},
+					text: result.text,
+					segments: result.segments,
+					words: result.words,
+					language: result.language,
+					durationInSeconds: result.durationInSeconds,
+					usage: result.usage,
+					warnings: result.warnings,
+					providerMetadata: result.providerMetadata,
+					response: result.response
+				};
+				await notify({
+					event: endEvent,
 					callbacks: [telemetryDispatcher.onEnd]
 				});
 				return new DefaultTranscriptionResult({
@@ -26452,7 +27612,7 @@ function streamTranscribe({ model, audio, inputAudioFormat, providerOptions = {}
 		functionality: "streaming transcription",
 		message: `The ${resolvedModel.provider} model "${resolvedModel.modelId}" does not support streaming transcription.` + (typeof model === "string" ? " String model IDs resolve through the global provider (AI Gateway by default). If that provider does not support streaming transcription, pass a provider model instance instead (e.g. openai.transcription('gpt-realtime-whisper')) or upgrade @ai-sdk/gateway to a version with streaming transcription support." : "")
 	});
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const callId = generateCallId();
 	const telemetryDispatcher = createTelemetryDispatcher({ telemetry });
 	const runInTracingChannelSpan = telemetryDispatcher.runInTracingChannelSpan ?? (async ({ execute }) => await execute());
@@ -26540,8 +27700,8 @@ function streamTranscribe({ model, audio, inputAudioFormat, providerOptions = {}
 					responsesPromise.resolve([currentResponseMetadata()]);
 					providerMetadataPromise.resolve(value.providerMetadata ?? {});
 					telemetrySettled = true;
-					if (telemetryDispatcher.experimental_onStreamTranscriptionEnd != null) await notify({
-						event: {
+					if (telemetryDispatcher.experimental_onStreamTranscriptionEnd != null) {
+						const endEvent = {
 							callId,
 							operationId: "ai.streamTranscribe",
 							provider: resolvedModel.provider,
@@ -26558,9 +27718,12 @@ function streamTranscribe({ model, audio, inputAudioFormat, providerOptions = {}
 							warnings,
 							providerMetadata: value.providerMetadata,
 							response: currentResponseMetadata()
-						},
-						callbacks: [telemetryDispatcher.experimental_onStreamTranscriptionEnd]
-					});
+						};
+						await notify({
+							event: endEvent,
+							callbacks: [telemetryDispatcher.experimental_onStreamTranscriptionEnd]
+						});
+					}
 			}
 		},
 		flush() {
@@ -26720,7 +27883,7 @@ const experimental_transcribe = (options) => {
 function streamTranslate({ model, audio, inputAudioFormat, targetLanguage, sourceLanguage, outputAudioFormat, providerOptions = {}, abortSignal, headers, includeRawChunks, _internal: { currentDate = () => /* @__PURE__ */ new Date() } = {} }) {
 	const resolvedModel = resolveSpeechTranslationModel(model);
 	const doStream = resolvedModel.doStream.bind(resolvedModel);
-	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${dist_VERSION}`);
+	const headersWithUserAgent = withUserAgentSuffix(headers ?? {}, `ai/${VERSION}`);
 	const sourceTextPromise = new DelayedPromise();
 	const translationTextPromise = new DelayedPromise();
 	const durationInSecondsPromise = new DelayedPromise();
@@ -26916,7 +28079,7 @@ async function callCompletionApi({ api, prompt, credentials, headers, body, stre
 			headers: withUserAgentSuffix({
 				"Content-Type": "application/json",
 				...headers
-			}, `ai-sdk/${dist_VERSION}`, getRuntimeEnvironmentUserAgent()),
+			}, `ai-sdk/${VERSION}`, getRuntimeEnvironmentUserAgent()),
 			signal: abortController.signal
 		}).catch((err) => {
 			throw err;
@@ -27099,7 +28262,7 @@ var HttpChatTransport = class {
 		});
 		let api = preparedRequest?.api;
 		if (api == null) {
-			if (options.chatId === "." || options.chatId === "..") throw new InvalidArgumentError({
+			if (options.chatId === "." || options.chatId === "..") throw new default_stop_condition_D8PwkeWe_InvalidArgumentError({
 				parameter: "chatId",
 				value: options.chatId,
 				message: "Chat IDs must not be \".\" or \"..\" when using the default reconnect URL."
@@ -27895,11 +29058,11 @@ function createAbortError(signal) {
 function asError(error) {
 	return error instanceof Error ? error : new Error(String(error));
 }
-function isRecord(value) {
+function dist_isRecord(value) {
 	return value != null && typeof value === "object" && !Array.isArray(value);
 }
 function isStringRecord(value) {
-	return isRecord(value) && Object.values(value).every((item) => typeof item === "string");
+	return dist_isRecord(value) && Object.values(value).every((item) => typeof item === "string");
 }
 function isSequence(value) {
 	return Number.isSafeInteger(value) && value >= 0;
@@ -27909,7 +29072,7 @@ function isSequence(value) {
 */
 async function safeValidateWebSocketChatTransportRequest({ value }) {
 	try {
-		if (!isRecord(value) || typeof value.type !== "string") throw new Error("Invalid WebSocket chat request frame.");
+		if (!dist_isRecord(value) || typeof value.type !== "string") throw new Error("Invalid WebSocket chat request frame.");
 		if (value.type === "abort") {
 			if (typeof value.requestId !== "string") throw new Error("Invalid WebSocket chat abort request.");
 			return {
@@ -27917,7 +29080,7 @@ async function safeValidateWebSocketChatTransportRequest({ value }) {
 				data: value
 			};
 		}
-		if (typeof value.requestId !== "string" || typeof value.id !== "string" || !isStringRecord(value.headers) || !isRecord(value.body)) throw new Error("Invalid WebSocket chat request frame.");
+		if (typeof value.requestId !== "string" || typeof value.id !== "string" || !isStringRecord(value.headers) || !dist_isRecord(value.body)) throw new Error("Invalid WebSocket chat request frame.");
 		if (value.type === "resume") {
 			if (value.lastSequence !== void 0 && !isSequence(value.lastSequence)) throw new Error("Invalid WebSocket chat resume sequence.");
 			return {
@@ -28280,7 +29443,7 @@ var WebSocketChatTransport = class {
 	async handleResponseFrame(connection, text) {
 		if (this.connection !== connection) return;
 		const parsed = await safeParseJSON({ text });
-		if (!parsed.success || !isRecord(parsed.value)) throw new Error("Invalid WebSocket chat response frame.");
+		if (!parsed.success || !dist_isRecord(parsed.value)) throw new Error("Invalid WebSocket chat response frame.");
 		const type = parsed.value.type;
 		const requestId = parsed.value.requestId;
 		if (typeof type !== "string" || typeof requestId !== "string") throw new Error("Invalid WebSocket chat response frame.");
