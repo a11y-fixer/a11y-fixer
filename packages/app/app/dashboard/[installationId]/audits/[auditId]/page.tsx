@@ -1,5 +1,7 @@
 // Reviewer view for one conformance audit: the reconciled criteria table where
-// a tester records a verdict per success criterion, plus the publish gate.
+// a tester records a verdict per success criterion, plus publishing. An audit can
+// always be published; any unconfirmed machine Supports downgrades to "Not
+// Evaluated" in the published document until a person confirms it.
 // Thin Server Component; reconciliation + labels come from src/conformance/*.
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -19,10 +21,10 @@ export default async function AuditDetailPage({
   searchParams,
 }: {
   params: Promise<{ installationId: string; auditId: string }>;
-  searchParams: Promise<{ published?: string; blocked?: string }>;
+  searchParams: Promise<{ published?: string }>;
 }) {
   const { installationId, auditId } = await params;
-  const { published, blocked } = await searchParams;
+  const { published } = await searchParams;
   const id = Number(installationId);
   if (!Number.isInteger(id)) notFound();
 
@@ -81,21 +83,15 @@ export default async function AuditDetailPage({
 
       {published && (
         <p className="panel tone-good" role="status">
-          Audit published. No Supports claim rests on automated evidence alone.
-        </p>
-      )}
-      {blocked && (
-        <p className="panel tone-bad" role="status">
-          Can&apos;t publish yet: {blocked} criterion(s) claimed Supports still need reviewer confirmation
-          (highlighted below).
+          Audit published. Any criterion not confirmed by a person publishes as “Not Evaluated”.
         </p>
       )}
 
       {!isPublished && (
         <section className="panel" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-          <span className={page.canPublish ? 'tone-good' : 'tone-warn'}>{page.readiness}</span>
+          <span className={page.unconfirmedCount > 0 ? 'tone-warn' : 'tone-good'}>{page.readiness}</span>
           <form method="post" action={`/api/installations/${id}/audits/${auditId}/publish`}>
-            <button type="submit" disabled={!page.canPublish}>
+            <button type="submit">
               Publish
             </button>
           </form>
@@ -203,7 +199,7 @@ export default async function AuditDetailPage({
               <tr
                 key={row.wcagId}
                 id={`sc-${row.wcagId.replace(/\./g, '')}`}
-                className={row.blocksPublish ? 'tone-bad' : undefined}
+                className={row.willDowngrade ? 'tone-warn' : undefined}
               >
                 <td>
                   <strong>{row.wcagId}</strong> {row.title}

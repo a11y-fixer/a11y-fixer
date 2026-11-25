@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { SuccessCriterion } from '@a11y-fixer/core';
 import type { CriterionVerdictRecord, VerdictSource, VerdictValue } from '../db/store.js';
-import { reconcile, canPublish, publishBlockers, summarizeReconciled } from './reconcile.js';
+import { reconcile, unconfirmedSupports, forPublication, summarizeReconciled } from './reconcile.js';
 
 function sc(id: string): SuccessCriterion {
   return {
@@ -86,42 +86,73 @@ describe('reconcile', () => {
     expect(row.needsHumanReview).toBe(true);
   });
 
-  it('keeps the publish gate closed when a machine supports is only "confirmed" by an authorless human row', () => {
+  it('treats a machine supports "confirmed" only by an authorless human row as unconfirmed', () => {
     const orphanHuman: CriterionVerdictRecord = { ...verdict('1.1.1', 'human', 'supports'), authorId: null };
     const out = reconcile([sc('1.1.1')], [verdict('1.1.1', 'machine', 'supports'), orphanHuman]);
-    expect(canPublish(out)).toBe(false);
-    expect(publishBlockers(out).map(b => b.wcagId)).toEqual(['1.1.1']);
+    expect(unconfirmedSupports(out).map(b => b.wcagId)).toEqual(['1.1.1']);
   });
 });
 
-describe('publish readiness', () => {
-  it('blocks publishing when a criterion is supports on machine evidence alone', () => {
+describe('unconfirmedSupports', () => {
+  it('lists criteria that are supports on machine evidence alone', () => {
     const out = reconcile(CATALOG, [
       verdict('1.1.1', 'machine', 'supports'),
       verdict('1.4.3', 'human', 'supports'),
       verdict('2.4.6', 'machine', 'partially_supports'),
     ]);
-    expect(canPublish(out)).toBe(false);
-    expect(publishBlockers(out).map(b => b.wcagId)).toEqual(['1.1.1']);
+    expect(unconfirmedSupports(out).map(b => b.wcagId)).toEqual(['1.1.1']);
   });
 
-  it('allows publishing once every machine-only supports is human-confirmed', () => {
+  it('is empty once every machine-only supports is human-confirmed', () => {
     const out = reconcile(CATALOG, [
       verdict('1.1.1', 'human', 'supports'),
       verdict('1.4.3', 'human', 'supports'),
-      // machine partial/not-evaluated do not block publishing
       verdict('2.4.6', 'machine', 'partially_supports'),
     ]);
-    expect(canPublish(out)).toBe(true);
-    expect(publishBlockers(out)).toEqual([]);
+    expect(unconfirmedSupports(out)).toEqual([]);
   });
 
-  it('does not treat machine partially_supports or not_evaluated as blockers', () => {
+  it('does not list machine partially_supports or not_evaluated', () => {
     const out = reconcile([sc('1.1.1'), sc('1.4.3')], [
       verdict('1.1.1', 'machine', 'partially_supports'),
       // 1.4.3 has no verdict → not_evaluated
     ]);
-    expect(canPublish(out)).toBe(true);
+    expect(unconfirmedSupports(out)).toEqual([]);
+  });
+});
+
+describe('forPublication', () => {
+  it('downgrades an unconfirmed machine supports to not_evaluated and notes why', () => {
+    const out = forPublication(reconcile([sc('1.1.1')], [verdict('1.1.1', 'machine', 'supports')]));
+    expect(out[0].verdict).toBe('not_evaluated');
+    expect(out[0].source).toBe('machine');
+    expect(out[0].needsHumanReview).toBe(true);
+    expect(out[0].remarks).toMatch(/not confirmed|Not Evaluated/i);
+  });
+
+  it('preserves existing remarks when it appends the unverified note', () => {
+    const out = forPublication(reconcile([sc('1.1.1')], [verdict('1.1.1', 'machine', 'supports', 'auto-checked')]));
+    expect(out[0].remarks).toMatch(/^auto-checked /);
+  });
+
+  it('leaves a human-confirmed supports unchanged', () => {
+    const out = forPublication(
+      reconcile([sc('1.1.1')], [verdict('1.1.1', 'human', 'supports', 'tester confirmed')]),
+    );
+    expect(out[0].verdict).toBe('supports');
+    expect(out[0].source).toBe('human');
+    expect(out[0].remarks).toBe('tester confirmed');
+  });
+
+  it('leaves machine partially_supports, does_not_support and not_evaluated unchanged', () => {
+    const out = forPublication(
+      reconcile([sc('1.1.1'), sc('1.4.3'), sc('2.4.6')], [
+        verdict('1.1.1', 'machine', 'partially_supports'),
+        verdict('1.4.3', 'machine', 'does_not_support'),
+        // 2.4.6 → not_evaluated
+      ]),
+    );
+    expect(out.map(r => r.verdict)).toEqual(['partially_supports', 'does_not_support', 'not_evaluated']);
   });
 });
 

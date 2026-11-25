@@ -1,6 +1,6 @@
-// Publish a conformance audit — gated on the honesty rule: refuses while any
-// criterion is claimed Supports on machine evidence alone (publishAudit returns
-// the blockers). POST only, same-origin guarded, viewer-authorized.
+// Publish a conformance audit. Publishing is never blocked: the honesty rule is
+// enforced at render time (an unconfirmed machine Supports downgrades to "Not
+// Evaluated" in the document). POST only, same-origin guarded, viewer-authorized.
 import { NextResponse } from 'next/server';
 import { SUCCESS_CRITERIA } from '@a11y-fixer/core/wcag';
 import { getSignedInUser } from '../../../../../../lib/auth.js';
@@ -65,6 +65,5 @@ export async function POST(
     }
   }
   const base = `${env.appBaseUrl()}/dashboard/${id}/audits/${auditId}`;
-  const query = result.published ? '?published=1' : `?blocked=${result.blockers.length}`;
-  return NextResponse.redirect(`${base}${query}`, { status: 303 });
+  return NextResponse.redirect(`${base}?published=1`, { status: 303 });
 }

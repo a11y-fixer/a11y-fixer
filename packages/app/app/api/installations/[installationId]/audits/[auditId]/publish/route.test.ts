@@ -1,16 +1,15 @@
-// Tests for the publish route shell: the security wiring above the honesty-gated
-// publishAudit core (CSRF same-origin 403, auth, 404-not-403 enumeration defense,
-// cross-tenant audit-ownership 404) and the gate's redirect branch (?published=1
-// vs ?blocked=N). Mirrors ../verdict/route.test.ts: the pure guards run for real;
-// only env/auth/store/orchestrator boundaries are mocked.
+// Tests for the publish route shell: the security wiring above the publishAudit
+// core (CSRF same-origin 403, auth, 404-not-403 enumeration defense, cross-tenant
+// audit-ownership 404) and the success path (publish → ?published=1 → freeze a
+// revision). Mirrors ../verdict/route.test.ts: the pure guards run for real; only
+// env/auth/store/orchestrator boundaries are mocked.
 //
-// Value: protects=the publish route's security wiring and the honesty-gate
-// redirect branch (published vs blocked); fails_when=the same-origin guard,
-// installation authz or auditBelongsTo ownership check is removed or inverted,
-// or the blocked/published redirect is swapped; why_new=the publish route is new
-// on this branch and had no shell test (only publishAudit's core was covered);
-// seam=none; no_claim=does not prove publishAudit's blocker logic (mocked); that
-// is covered by audit-service.test.ts and reconcile.test.ts.
+// Value: protects=the publish route's security wiring and the publish→redirect→
+// revision path; fails_when=the same-origin guard, installation authz or
+// auditBelongsTo ownership check is removed or inverted, or the published redirect
+// changes; why_new=the publish route is new on this branch and had no shell test
+// (only publishAudit's core was covered); seam=none; no_claim=does not prove the
+// render-time Supports downgrade (that is covered by reconcile/audit-document tests).
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditRecord } from '../../../../../../../src/db/store.js';
 
@@ -68,7 +67,7 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
     getSignedInUser.mockResolvedValue({ id: 'user-1' });
     listInstallationsForUser.mockResolvedValue([42]);
     getAudit.mockResolvedValue(auditRecord(42));
-    publishAudit.mockResolvedValue({ published: true, blockers: [] });
+    publishAudit.mockResolvedValue({ published: true });
     createRevisionForAudit.mockResolvedValue(null);
   });
   afterEach(() => vi.clearAllMocks());
@@ -101,15 +100,6 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
     );
   });
 
-  it('303-redirects with ?blocked=N when machine-only Supports claims remain', async () => {
-    publishAudit.mockResolvedValue({ published: false, blockers: ['1.1.1', '1.4.3'] });
-    const res = await POST(postRequest('https://app.example.com'), params('42', 'a1'));
-    expect(res.status).toBe(303);
-    expect(res.headers.get('location')).toBe(
-      'https://app.example.com/dashboard/42/audits/a1?blocked=2',
-    );
-  });
-
   it('freezes an immutable revision when the publish succeeds', async () => {
     await POST(postRequest('https://app.example.com'), params('42', 'a1'));
     expect(createRevisionForAudit).toHaveBeenCalledWith(
@@ -118,12 +108,6 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
       'a1',
       expect.objectContaining({ newSlug: expect.any(Function) }),
     );
-  });
-
-  it('does NOT create a revision when the honesty gate blocks publish', async () => {
-    publishAudit.mockResolvedValue({ published: false, blockers: ['1.1.1'] });
-    await POST(postRequest('https://app.example.com'), params('42', 'a1'));
-    expect(createRevisionForAudit).not.toHaveBeenCalled();
   });
 
   it('still 303-redirects published (not 500) when the revision snapshot write fails', async () => {
