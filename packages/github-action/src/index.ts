@@ -29,6 +29,7 @@ import {
   type OctokitLike,
 } from './report.js';
 import { uploadSarif, type SarifOctokitLike } from './sarif.js';
+import { sendTelemetry, runtimeContext } from './telemetry.js';
 import path from 'node:path';
 
 /** PR number from the event payload, when this run is on a pull request. */
@@ -278,6 +279,10 @@ export async function run(): Promise<void> {
   // store and feeds them back as house-style examples. On by default; opt out
   // with `learning: off`. Never leaves the repo.
   const learningEnabled = (core.getInput('learning') || 'on').toLowerCase() !== 'off';
+  // Opt-in anonymous usage telemetry. Off unless explicitly enabled. See
+  // ./telemetry.ts — it sends only non-identifying counts/environment and never
+  // fails or slows the run.
+  const telemetryEnabled = ['on', 'true'].includes((core.getInput('telemetry') || 'off').toLowerCase());
 
   // This is paid, source-available software. Two ways to run it:
   //   1. a valid license key (private/company repos — the paying buyer), or
@@ -315,6 +320,33 @@ export async function run(): Promise<void> {
 
   const rootDir = path.resolve(dir);
 
+  // Emit one opt-in, anonymous usage event for this run (no-op unless enabled).
+  // Best-effort and awaited with a short internal timeout, so it bounds the run.
+  async function reportTelemetry(counts: {
+    violationsBefore: number;
+    violationsAfter: number;
+    fixesApplied?: number;
+    fixesReverted?: number;
+    regressions?: number;
+  }): Promise<void> {
+    if (!telemetryEnabled) return;
+    await sendTelemetry({
+      ...runtimeContext(),
+      mode,
+      licensed: license.valid,
+      publicRepo,
+      usedUrl: Boolean(url),
+      usedHtml: html,
+      usedMarkdown: markdown,
+      usedComponents: components,
+      violationsBefore: counts.violationsBefore,
+      violationsAfter: counts.violationsAfter,
+      fixesApplied: counts.fixesApplied ?? 0,
+      fixesReverted: counts.fixesReverted ?? 0,
+      regressions: counts.regressions ?? 0,
+    });
+  }
+
   try {
     if (mode === 'check') {
       const violations = await scanAll(rootDir, { url, html, markdown, components, cookies });
@@ -322,6 +354,8 @@ export async function run(): Promise<void> {
       // Surface results on the PR (Check Run + inline annotations + sticky
       // comment) before deciding the job outcome. Best-effort, never fails here.
       await reportToGitHub(violations, githubToken, summaryMarkdown(violations));
+
+      await reportTelemetry({ violationsBefore: violations.length, violationsAfter: violations.length });
 
       if (violations.length > 0) {
         const summary = violations
@@ -335,6 +369,7 @@ export async function run(): Promise<void> {
       const violations = await scanAll(rootDir, { url, html, markdown, components, cookies });
       core.setOutput('violations', JSON.stringify(violations));
       core.info(`Found ${violations.length} violation(s).`);
+      await reportTelemetry({ violationsBefore: violations.length, violationsAfter: violations.length });
     } else if (mode === 'fix') {
       // URL scanning can't reliably map live DOM nodes back to repo source, so
       // fixers would no-op and no PR could be built. Fix mode is therefore
@@ -412,6 +447,14 @@ export async function run(): Promise<void> {
       // Run is `neutral`, not `failure`, so it never hard-blocks a merge the way a
       // required `check`-mode gate would. Best-effort; never fails the run.
       await reportToGitHub(report.finalAfter, githubToken, summaryMarkdown(before, report.finalAfter), { neutral: true });
+
+      await reportTelemetry({
+        violationsBefore: before.length,
+        violationsAfter: report.finalAfter.length,
+        fixesApplied: applied.length,
+        fixesReverted: report.revertedFixes.length,
+        regressions: report.regressions.length,
+      });
 
       // Close the loop: record each verified AI fix as a `proposed` learning
       // record (correlated to the generation that produced its value), then
