@@ -7,7 +7,7 @@
 import type { SuccessCriterion } from '@a11y-fixer/core';
 import type { AuditRecord, CriterionVerdictRecord, Store, VerdictValue } from '../db/store.js';
 import { deriveMachineVerdicts } from './derive.js';
-import { reconcile, canPublish, publishBlockers, type ReconciledCriterion } from './reconcile.js';
+import { reconcile, unconfirmedSupports, type ReconciledCriterion } from './reconcile.js';
 
 /** Injected side-effect sources, so callers (and tests) control time and ids. */
 export interface AuditDeps {
@@ -123,9 +123,12 @@ export async function recordHumanVerdict(
 export interface AuditView {
   audit: AuditRecord;
   reconciled: ReconciledCriterion[];
-  canPublish: boolean;
-  /** Criteria blocking publish (machine-only `supports`). */
-  blockers: ReconciledCriterion[];
+  /**
+   * Criteria claimed `supports` on machine evidence alone. These do not block
+   * publishing; they will render as `not_evaluated` in the published document
+   * until a reviewer confirms them.
+   */
+  unconfirmed: ReconciledCriterion[];
 }
 
 /** Load an audit with its reconciled criteria, or null if the audit is unknown. */
@@ -141,20 +144,18 @@ export async function loadAuditView(
   return {
     audit,
     reconciled,
-    canPublish: canPublish(reconciled),
-    blockers: publishBlockers(reconciled),
+    unconfirmed: unconfirmedSupports(reconciled),
   };
 }
 
 export interface PublishResult {
   published: boolean;
-  /** WCAG ids still blocking publish when `published` is false. */
-  blockers: string[];
 }
 
 /**
- * Publish an audit — but only if no criterion is claimed `supports` on machine
- * evidence alone. Returns the blocking WCAG ids instead of publishing otherwise.
+ * Publish an audit. Publishing is never blocked: the honesty posture is enforced
+ * when the document renders (`forPublication` downgrades any machine-only
+ * `supports` to `not_evaluated`), not by refusing to publish. Idempotent.
  */
 export async function publishAudit(
   store: Store,
@@ -167,15 +168,8 @@ export async function publishAudit(
 
   // Idempotent: a published audit is finalized. Re-publishing must not rewrite
   // its publishedAt (the recorded publication time of a conformance document).
-  if (audit.status === 'published') return { published: true, blockers: [] };
-
-  const verdicts = await store.listVerdicts(auditId);
-  const reconciled = reconcile(criteria, verdicts);
-  const blockers = publishBlockers(reconciled);
-  if (blockers.length > 0) {
-    return { published: false, blockers: blockers.map(b => b.wcagId) };
-  }
+  if (audit.status === 'published') return { published: true };
 
   await store.setAuditStatus(auditId, 'published', deps.now());
-  return { published: true, blockers: [] };
+  return { published: true };
 }

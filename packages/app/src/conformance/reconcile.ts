@@ -5,9 +5,13 @@
 //   - A human verdict always wins over the machine draft for the same criterion.
 //   - Where no human has reviewed, the machine verdict stands but is flagged
 //     `needsHumanReview`.
-//   - A document may NOT be published while any criterion is claimed `supports`
-//     on machine evidence alone (see `publishBlockers`). Automated tools cannot
-//     prove conformance, only the absence of detectable failures.
+//   - A document may be published at any time, but a `supports` claim resting on
+//     machine evidence alone is DOWNGRADED to `not_evaluated` in the published
+//     document (`forPublication`). Automated tools cannot prove conformance, only
+//     the absence of detectable failures, so an unconfirmed machine pass is
+//     reported as "not evaluated" rather than claimed as "Supports". The reviewer
+//     UI still sees the undowngraded draft (via `reconcile`) so a person can
+//     confirm it; confirming upgrades the row to a real human `supports`.
 import type { SuccessCriterion } from '@a11y-fixer/core';
 import type { CriterionVerdictRecord, VerdictSource, VerdictValue } from '../db/store.js';
 
@@ -86,16 +90,42 @@ export function reconcile(
 }
 
 /**
- * Criteria that block publishing: claimed `supports` on machine evidence alone.
- * These must get a human verdict before the document can assert conformance.
+ * Criteria claimed `supports` on machine evidence alone. These do not block
+ * publishing, but they are downgraded to `not_evaluated` in the published
+ * document (`forPublication`) until a reviewer confirms them. The reviewer UI
+ * lists these so a tester knows exactly which rows a human pass would upgrade.
  */
-export function publishBlockers(reconciled: readonly ReconciledCriterion[]): ReconciledCriterion[] {
+export function unconfirmedSupports(reconciled: readonly ReconciledCriterion[]): ReconciledCriterion[] {
   return reconciled.filter(r => r.verdict === 'supports' && r.source === 'machine');
 }
 
-/** True when nothing blocks publishing (no machine-only `supports` claims). */
-export function canPublish(reconciled: readonly ReconciledCriterion[]): boolean {
-  return publishBlockers(reconciled).length === 0;
+/**
+ * The note appended to a downgraded criterion's remarks, so the published
+ * document explains why an automated pass reads as "Not Evaluated".
+ */
+const UNVERIFIED_NOTE =
+  'Automated checks found no failures, but a person has not confirmed this criterion, so it is reported as Not Evaluated.';
+
+/**
+ * Transform reconciled rows for publication under the honesty posture: an
+ * unconfirmed machine `supports` is downgraded to `not_evaluated` (automated
+ * tools can only prove the absence of detectable failures, never conformance).
+ * Human-confirmed verdicts and every other verdict pass through unchanged. This
+ * is what the published document — and its frozen revision snapshot — renders;
+ * `reconcile` itself is left intact for the reviewer UI.
+ */
+export function forPublication(reconciled: readonly ReconciledCriterion[]): ReconciledCriterion[] {
+  return reconciled.map(r => {
+    if (r.verdict === 'supports' && r.source === 'machine') {
+      return {
+        ...r,
+        verdict: 'not_evaluated' as const,
+        remarks: r.remarks ? `${r.remarks} ${UNVERIFIED_NOTE}` : UNVERIFIED_NOTE,
+        needsHumanReview: true,
+      };
+    }
+    return r;
+  });
 }
 
 /** Counts of reconciled verdicts by value, plus how many still need review. */

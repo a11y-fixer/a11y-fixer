@@ -59,8 +59,11 @@ export interface CriterionRowView {
   source: string;
   remarks: string;
   needsHumanReview: boolean;
-  /** True when this row blocks publishing (machine-only Supports). */
-  blocksPublish: boolean;
+  /**
+   * True when this row is a machine-only Supports: it publishes as "Not
+   * Evaluated" until a reviewer confirms it.
+   */
+  willDowngrade: boolean;
 }
 
 export function criterionRow(r: ReconciledCriterion): CriterionRowView {
@@ -75,7 +78,7 @@ export function criterionRow(r: ReconciledCriterion): CriterionRowView {
     source: sourceLabel(r.source),
     remarks: r.remarks,
     needsHumanReview: r.needsHumanReview,
-    blocksPublish: r.verdict === 'supports' && r.source === 'machine',
+    willDowngrade: r.verdict === 'supports' && r.source === 'machine',
   };
 }
 
@@ -84,7 +87,8 @@ export interface AuditPageView {
   rows: CriterionRowView[];
   /** One-line readiness summary. */
   readiness: string;
-  canPublish: boolean;
+  /** Machine-only Supports claims that will publish as "Not Evaluated". */
+  unconfirmedCount: number;
   reviewedCount: number;
   totalCount: number;
 }
@@ -93,18 +97,20 @@ export function auditPageView(view: AuditView): AuditPageView {
   const rows = view.reconciled.map(criterionRow);
   const totalCount = rows.length;
   const reviewedCount = rows.filter(r => !r.needsHumanReview).length;
-  // The publish gate only guarantees that no criterion is claimed Supports on
-  // automated evidence alone — NOT that every criterion was human-reviewed. Say
-  // exactly that, and show the real review progress, so the copy never overstates
-  // what happened (the honesty posture of the feature).
-  const readiness = view.canPublish
-    ? `Ready to publish — no criterion is claimed Supports on automated evidence alone (${reviewedCount}/${totalCount} criteria reviewed by a person).`
-    : `Not ready to publish — ${view.blockers.length} criterion(s) claimed Supports still need reviewer confirmation.`;
+  const unconfirmedCount = view.unconfirmed.length;
+  // An audit can always be published; the honesty posture is enforced when the
+  // document renders (unconfirmed machine Supports downgrade to Not Evaluated).
+  // Say exactly that, and show the real review progress, so the copy never
+  // overstates what a person actually checked.
+  const readiness =
+    unconfirmedCount > 0
+      ? `Ready to publish. ${unconfirmedCount} criterion(s) pass automated checks but aren't reviewer-confirmed; they'll publish as “Not Evaluated” until a person confirms them (${reviewedCount}/${totalCount} criteria reviewed by a person).`
+      : `Ready to publish (${reviewedCount}/${totalCount} criteria reviewed by a person).`;
   return {
     status: statusView(view.audit.status),
     rows,
     readiness,
-    canPublish: view.canPublish,
+    unconfirmedCount,
     reviewedCount,
     totalCount,
   };

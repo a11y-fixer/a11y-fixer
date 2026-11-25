@@ -135,10 +135,10 @@ describe('recordHumanVerdict', () => {
 });
 
 describe('loadAuditView', () => {
-  it('returns the reconciled view and publish-readiness', async () => {
+  it('returns the reconciled view and unconfirmed machine supports', async () => {
     const store = new MemoryStore();
-    // 1.4.3 has a violation → machine partially_supports (not a blocker); 1.1.1
-    // is clean → machine supports, the sole publish blocker.
+    // 1.4.3 has a violation → machine partially_supports; 1.1.1 is clean →
+    // machine supports, the sole unconfirmed claim (downgrades on publish).
     await store.replaceViolations(500, [violation('1.4.3')]);
     const audit = await createDraftAudit(
       store,
@@ -149,9 +149,8 @@ describe('loadAuditView', () => {
     const view = await loadAuditView(store, CATALOG, audit.id);
     expect(view).not.toBeNull();
     expect(view!.reconciled).toHaveLength(3);
-    // 1.1.1 is machine supports → blocks publish until human-confirmed.
-    expect(view!.canPublish).toBe(false);
-    expect(view!.blockers.map(b => b.wcagId)).toEqual(['1.1.1']);
+    // 1.1.1 is machine supports → unconfirmed, renders as Not Evaluated until confirmed.
+    expect(view!.unconfirmed.map(b => b.wcagId)).toEqual(['1.1.1']);
   });
 
   it('returns null for an unknown audit', async () => {
@@ -176,15 +175,15 @@ describe('publishAudit', () => {
     );
   });
 
-  it('refuses to publish while a machine-only supports claim remains', async () => {
+  it('publishes even while a machine-only supports claim remains (it downgrades in the document)', async () => {
     const result = await publishAudit(store, CATALOG, audit.id, deterministicDeps());
-    expect(result.published).toBe(false);
-    expect(result.blockers).toContain('1.1.1');
-    expect((await store.getAudit(audit.id))?.status).not.toBe('published');
+    expect(result.published).toBe(true);
+    const published = await store.getAudit(audit.id);
+    expect(published?.status).toBe('published');
+    expect(published?.publishedAt).toBe('2026-01-01T00:00:00Z');
   });
 
-  it('publishes once every machine-only supports is human-confirmed', async () => {
-    // 1.1.1 is the only machine supports (1.4.3 is partial, 1.2.1 not_evaluated).
+  it('publishes with human-confirmed verdicts too', async () => {
     await recordHumanVerdict(
       store,
       { auditId: audit.id, wcagId: '1.1.1', verdict: 'supports', remarks: 'confirmed', authorId: 'u1' },
@@ -192,9 +191,7 @@ describe('publishAudit', () => {
     );
     const result = await publishAudit(store, CATALOG, audit.id, deterministicDeps());
     expect(result.published).toBe(true);
-    const published = await store.getAudit(audit.id);
-    expect(published?.status).toBe('published');
-    expect(published?.publishedAt).toBe('2026-01-01T00:00:00Z');
+    expect((await store.getAudit(audit.id))?.status).toBe('published');
   });
 
   it('throws for an unknown audit', async () => {

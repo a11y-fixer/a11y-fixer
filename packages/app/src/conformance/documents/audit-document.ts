@@ -12,6 +12,7 @@ import type { SuccessCriterion } from '@a11y-fixer/core';
 import type { AuditRecord, AuditRevisionRecord, Store } from '../../db/store.js';
 import { RevisionVersionConflictError } from '../../db/store.js';
 import type { ReconciledCriterion } from '../reconcile.js';
+import { forPublication } from '../reconcile.js';
 import { loadAuditView } from '../audit-service.js';
 import { buildAcr } from './vpat.js';
 import { buildStatement } from './statement.js';
@@ -86,7 +87,12 @@ async function resolveLiveContext(
     conformanceTarget: CONFORMANCE_TARGET,
   };
   const feedbackContact = installation ? `https://github.com/${installation.account}` : 'the vendor';
-  return { audit: view.audit, ctx: { meta, feedbackContact, reconciled: view.reconciled } };
+  // The honesty posture: downgrade any unconfirmed machine `supports` to
+  // `not_evaluated` for the document (and the frozen snapshot), so a published
+  // conformance document never claims conformance no person verified. The
+  // reviewer UI reads `view.reconciled` directly and still sees the machine draft.
+  const reconciled = forPublication(view.reconciled);
+  return { audit: view.audit, ctx: { meta, feedbackContact, reconciled } };
 }
 
 export interface BuildAuditDocumentParams {
