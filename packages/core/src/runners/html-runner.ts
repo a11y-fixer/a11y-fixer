@@ -10,6 +10,11 @@ import { scanHtmlContent } from './render-locate.js';
  * Every violation node is stamped with its source location in the file it came
  * from, so the existing fixers can apply edits and the PR builder can list the
  * changed files. Mirrors `EslintRunner.scan()`'s shape.
+ *
+ * Angular external templates (`*.component.html`) are *excluded* here: they are
+ * HTML fragments, not whole documents, so scanning them as a page would emit
+ * false document-level findings (`document-title`, `html-has-lang`, `region`, …).
+ * They are handled by the component scanner (`scanComponents`) as fragments instead.
  */
 export class HtmlFileRunner {
   constructor(
@@ -18,7 +23,8 @@ export class HtmlFileRunner {
   ) {}
 
   async scan(): Promise<A11yViolation[]> {
-    const files = await collectFiles(this.rootDir, /\.html?$/i);
+    const files = (await collectFiles(this.rootDir, /\.html?$/i))
+      .filter((f) => !/\.component\.html$/i.test(f));
     const all: A11yViolation[] = [];
 
     for (const file of files) {

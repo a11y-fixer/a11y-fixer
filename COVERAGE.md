@@ -137,12 +137,23 @@ of two **disjoint** core paths per run, plus two optional source-tree paths
   without alt (emitted as `md-html-img-alt`).
 - **Component path** (`components: true`): a scanner
   ([`packages/core/src/scanner/components/`](./packages/core/src/scanner/components/))
-  that isolates the template markup of `.vue`/`.svelte`/`.astro` (blanking
-  `<script>`/`<style>`/frontmatter in place so lines map 1:1) and runs it through
+  that isolates the template markup of each supported format and runs it through
   the **same axe-core** detector as the HTML path — so it surfaces, and fixes,
-  the same element-level rules. Whole-document rules (`document-title`,
-  `html-has-lang`, `region`, `landmark-one-main`, `page-has-heading-one`, …) are
-  dropped, since a component fragment doesn't own them. Requires puppeteer.
+  the same element-level rules. How each format is masked is declared once as a
+  `FrameworkSpec` (`specs.ts`); adding a format is one spec entry. Supported:
+  - `.vue`/`.svelte`/`.astro` — blank `<script>`/`<style>`/frontmatter in place.
+  - Handlebars (`.hbs`/`.handlebars`) — pure HTML; `{{…}}`/`{{#if}}`/`{{> …}}` are inert.
+  - Blade (`.blade.php`) — blank `<?php ?>`, `@php…@endphp`, and `{{-- --}}` comments;
+    `{{ $x }}`, `{!! !!}`, and `@directives` are left inert.
+  - Angular — external `.component.html` templates (routed here as fragments, *not*
+    through the `--html` document path, to avoid false document-level findings) and
+    inline `template:` string literals in `.component.ts`.
+
+  Masking preserves `\n`/`\r` so lines map 1:1 to source. Whole-document rules
+  (`document-title`, `html-has-lang`, `region`, `landmark-one-main`,
+  `page-has-heading-one`, …) are dropped, since a component fragment doesn't own
+  them. Requires puppeteer. Raw non-Blade `.php` is **not** supported (such files
+  are often whole documents, not fragments).
 
 So the tool *detects* far more than it fixes. The two tiers above now cover
 accessible names, alt/title text, page and element language, contrast,
@@ -190,10 +201,12 @@ Practically:
   the rest (no source-level markup to edit deterministically).
 - **Markdown path** auto-fixes image alt, link text, heading order, and empty
   table headers in `.md`/`.markdown`/`.mdx` source, independent of the core path.
-- **Component path** reuses axe + the HTML fixers against `.vue`/`.svelte`/`.astro`
-  template markup, so it auto-fixes the same element-level set as the HTML path
-  (e.g. `image-alt` → `<img alt>`) directly in the component source. Directive-
-  bound attributes (`:src`, `v-if`, Svelte/Astro expressions) are skipped for v1.
+- **Component path** reuses axe + the HTML fixers against component/template
+  markup (`.vue`/`.svelte`/`.astro`, Handlebars, Blade, Angular), so it auto-fixes
+  the same element-level set as the HTML path (e.g. `image-alt` → `<img alt>`)
+  directly in the source. Directive-/expression-bound attributes are skipped for
+  v1: `:src`/`v-if` (Vue), Svelte/Astro expressions, Angular `[attr]`/`*ngIf`/
+  `(event)` bindings, and Blade `{{ }}`/`{!! !!}` echoes.
 
 So the fixable coverage on any given repo is **whichever core path you ran**
 (optionally plus Markdown and/or components), not the union. The

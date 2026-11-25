@@ -19,7 +19,7 @@ export function checkCommand(): Command {
     .argument('<dir>', 'Directory to check')
     .option('--html', 'Check static .html/.htm files with axe-core (requires puppeteer)', false)
     .option('--markdown', 'Also check .md/.markdown/.mdx files (static source; no browser required)', false)
-    .option('--components', 'Also check .vue/.svelte/.astro template markup with axe-core (requires puppeteer)', false)
+    .option('--components', 'Also check component/template markup (.vue/.svelte/.astro, .hbs, .blade.php, Angular .component.html/.component.ts) with axe-core (requires puppeteer)', false)
     .option('--url <url>', 'URL to check with axe-core (requires puppeteer)')
     .option('--baseline [file]', `Compare against a baseline file (default: ${DEFAULT_BASELINE_FILE}); fail only on new violations`)
     .option('--update-baseline', 'Write the current violations to the baseline file and exit 0', false)

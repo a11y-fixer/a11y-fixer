@@ -10,7 +10,7 @@ export function scanCommand(): Command {
     .option('--static', 'Static JSX scan only (no browser required)', false)
     .option('--html', 'Scan static .html/.htm files with axe-core (requires puppeteer)', false)
     .option('--markdown', 'Also scan .md/.markdown/.mdx files (static source; no browser required)', false)
-    .option('--components', 'Also scan .vue/.svelte/.astro template markup with axe-core (requires puppeteer)', false)
+    .option('--components', 'Also scan component/template markup (.vue/.svelte/.astro, .hbs, .blade.php, Angular .component.html/.component.ts) with axe-core (requires puppeteer)', false)
     .option('--url <url>', 'URL to scan with axe-core (requires puppeteer)')
     .option('--concurrency <n>', 'Parallel scan concurrency', '4')
     .action(async (dir: string, opts: { static: boolean; html: boolean; markdown: boolean; components: boolean; url?: string; concurrency: string }) => {
@@ -29,7 +29,7 @@ export function scanCommand(): Command {
         console.log(`Also scanning ${rootDir} (Markdown)...`);
       }
       if (opts.components) {
-        console.log(`Also scanning ${rootDir} (Vue/Svelte/Astro)...`);
+        console.log(`Also scanning ${rootDir} (Vue/Svelte/Astro/Handlebars/Blade/Angular)...`);
       }
 
       const base = await scanSource(rootDir, { url, html: opts.html });
