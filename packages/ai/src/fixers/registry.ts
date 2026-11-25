@@ -4,6 +4,7 @@ import { AltTextFixer, type ScreenshotProvider } from './alt-text.js';
 import { LinkTextFixer } from './link-text.js';
 import { LinkNameFixer } from './link-name.js';
 import { ButtonNameFixer } from './button-name.js';
+import { InputLabelFixer } from './input-label.js';
 import { FormLabelFixer } from './form-label.js';
 import { SelectNameFixer } from './select-name.js';
 import { InputButtonNameFixer } from './input-button-name.js';
@@ -90,6 +91,11 @@ export function buildFullRegistry(
   registry.register(new LinkNameFixer(aiProvider, rootDir));
   registry.register(new LinkTextFixer(aiProvider, rootDir));
   registry.register(new ButtonNameFixer(aiProvider, rootDir));
+  // Input accessible-name fixer. Keyed on the JSX path's unique
+  // `a11y-custom/input-must-have-label` id (no broad collider at 1.3.1), so its
+  // position is free — but it must precede registerCoreFixers so it beats the
+  // deterministic EslintFixer, which can only human-flag the same finding.
+  registry.register(new InputLabelFixer(aiProvider, rootDir));
   registry.register(new FormLabelFixer(aiProvider, rootDir));
   registry.register(new SelectNameFixer(aiProvider, rootDir));
   registry.register(new InputButtonNameFixer(aiProvider, rootDir));

@@ -39,6 +39,8 @@ const CANDIDATES: LinkCandidate[] = [
 export class MarkdownLinkTextFixer implements Fixer {
   readonly wcagId = '2.4.4';
   readonly bucket = 'ai-assisted' as const;
+  // Independent per-element edit — fix every occurrence, not just nodes[0].
+  readonly perNode = true;
 
   constructor(
     private readonly aiProvider: AIProvider,

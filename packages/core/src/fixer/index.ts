@@ -17,6 +17,17 @@ export interface FixResult {
 export interface Fixer {
   readonly wcagId: string;
   readonly bucket: FixerBucket;
+  /**
+   * When `true`, {@link FixerRegistry.applyAll} invokes {@link Fixer.fix} once
+   * per node in a violation (each call sees a single-node copy), so every
+   * occurrence is fixed — not just `nodes[0]`. Opt-in because it is only safe
+   * for fixers whose fix is an independent per-element edit (e.g. inserting an
+   * `aria-label` on one element). Fixers that act at file or document scope, or
+   * that need the whole node set at once (ESLint `--fix` over a file, heading
+   * order, a single `<title>`), must leave this unset/`false` and handle all
+   * nodes within one `fix()` call.
+   */
+  readonly perNode?: boolean;
   canFix(violation: A11yViolation): boolean;
   fix(violation: A11yViolation): Promise<FixResult>;
 }

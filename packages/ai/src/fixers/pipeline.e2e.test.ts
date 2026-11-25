@@ -100,10 +100,13 @@ describe('AI fixer pipeline (real core, fake provider)', () => {
     // The real edit is on disk, not just in the FixResult.
     expect(await readFile(file, 'utf8')).toContain('<img alt="Company logo" src="logo.png" />');
 
-    // Re-scanning the mutated source proves the violation is actually resolved.
+    // Re-scanning the mutated source proves the violations are actually resolved.
+    // The JSX path now auto-fixes the accessible-name defects too: the img alt
+    // (1.1.1), the input aria-label (1.3.1) and the button aria-label (4.1.2) are
+    // all applied, so a re-scan clears all three. The empty anchor (2.4.4) and
+    // empty heading (2.4.6) still require a human.
     const after = await scanSource(dir, { html: false });
-    expect(after.some(v => v.wcagId === '1.1.1')).toBe(false);
-    expect(after.length).toBe(before.length - 1);
+    expect(after.map(v => v.wcagId).sort()).toEqual(['2.4.4', '2.4.6']);
   });
 
   it("human-flags an empty anchor rather than inventing link text (generic-text guard)", async () => {

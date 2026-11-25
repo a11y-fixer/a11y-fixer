@@ -52,6 +52,25 @@ const customPlugin: { rules: Record<string, Rule.RuleModule> } = {
               if (child.type === 'JSXText') {
                 return child.value.trim().length > 0;
               }
+              // A dynamic child — `{children}`, `{label}`, `{count} items`, a
+              // conditional — provides a label at runtime that static analysis
+              // can't read. Treat it as content: flagging a pass-through button
+              // (e.g. a `<button>{props.children}</button>` primitive) and then
+              // stamping a static aria-label would OVERRIDE every caller's real
+              // label — worse than the original. Ignore the empty-ish literals
+              // that render nothing.
+              if (child.type === 'JSXExpressionContainer') {
+                const expr = child.expression;
+                if (!expr || expr.type === 'JSXEmptyExpression') return false;
+                if (
+                  expr.type === 'Literal' &&
+                  (expr.value === null || expr.value === false || expr.value === '')
+                ) {
+                  return false;
+                }
+                if (expr.type === 'Identifier' && expr.name === 'undefined') return false;
+                return true;
+              }
               if (child.type === 'JSXElement') {
                 const childAttrs: any[] = child.openingElement?.attributes ?? [];
                 const isHidden = childAttrs.some(

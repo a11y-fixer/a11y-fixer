@@ -17,6 +17,8 @@ const TH_TAGS = new Set(['th']);
 export class EmptyTableHeaderFixer implements Fixer {
   readonly wcagId = '1.3.1';
   readonly bucket = 'ai-assisted' as const;
+  // Independent per-element edit — fix every occurrence, not just nodes[0].
+  readonly perNode = true;
 
   constructor(
     private readonly aiProvider: AIProvider,

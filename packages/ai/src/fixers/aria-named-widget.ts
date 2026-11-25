@@ -97,6 +97,8 @@ export async function fixAriaNamedWidget(
 export abstract class AriaNamedWidgetFixer implements Fixer {
   abstract readonly config: AriaNamedWidgetConfig;
   readonly bucket = 'ai-assisted' as const;
+  // Independent per-element edit — fix every occurrence, not just nodes[0].
+  readonly perNode = true;
 
   constructor(
     protected readonly aiProvider: AIProvider,
