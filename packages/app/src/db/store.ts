@@ -257,6 +257,12 @@ export interface ActionRunRecord {
   platform: string;
   arch: string;
   nodeVersion: string;
+  /**
+   * ISO-8601 time the row was recorded. The Action never sends this — the
+   * database assigns it on insert — so it is absent on the write path and
+   * populated only when reading rows back for the telemetry view.
+   */
+  createdAt?: string | null;
 }
 
 export interface Store {
@@ -268,6 +274,12 @@ export interface Store {
 
   /** Append one anonymous Action usage event (opt-in telemetry). */
   recordActionRun(event: ActionRunRecord): Promise<void>;
+
+  /**
+   * The most recent Action usage events, newest first, capped at `limit`. Used
+   * by the author-only telemetry view; anonymous rows have no owner to scope by.
+   */
+  listRecentActionRuns(limit: number): Promise<ActionRunRecord[]>;
 
   upsertInstallation(record: InstallationRecord): Promise<void>;
   removeInstallation(installationId: number): Promise<void>;
@@ -331,6 +343,8 @@ export interface Store {
 
   /** Record (or update) a signed-in dashboard user. */
   upsertUser(record: UserRecord): Promise<void>;
+  /** Fetch a user by their Supabase Auth id (for the GitHub login), or null. */
+  getUser(userId: string): Promise<UserRecord | null>;
   /**
    * Link a user to an installation they can view (idempotent). Called at login
    * after reconciling GitHub's `GET /user/installations`.

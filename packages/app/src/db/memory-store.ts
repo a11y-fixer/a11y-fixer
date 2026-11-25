@@ -41,7 +41,17 @@ export class MemoryStore implements Store {
   }
 
   async recordActionRun(event: ActionRunRecord): Promise<void> {
-    this.actionRuns.push({ ...event });
+    // The DB assigns created_at on insert; mirror that here so reads have a
+    // time axis, without requiring the write path to provide one.
+    this.actionRuns.push({ createdAt: new Date().toISOString(), ...event });
+  }
+
+  async listRecentActionRuns(limit: number): Promise<ActionRunRecord[]> {
+    return this.actionRuns
+      .slice()
+      .reverse()
+      .slice(0, limit)
+      .map(run => ({ ...run }));
   }
 
   async upsertInstallation(record: InstallationRecord): Promise<void> {
@@ -188,6 +198,11 @@ export class MemoryStore implements Store {
 
   async upsertUser(record: UserRecord): Promise<void> {
     this.users.set(record.userId, { ...record });
+  }
+
+  async getUser(userId: string): Promise<UserRecord | null> {
+    const existing = this.users.get(userId);
+    return existing ? { ...existing } : null;
   }
 
   async linkUserInstallation(userId: string, installationId: number): Promise<void> {
