@@ -40,7 +40,7 @@ export interface SupabaseLike {
       eq(column: string, value: unknown): Promise<{ error: unknown }>;
     };
     insert(values: unknown): Promise<{ error: unknown }>;
-    select(columns?: string): {
+    select(columns?: string): Promise<{ data: unknown[] | null; error: unknown }> & {
       eq(column: string, value: unknown): Promise<{ data: unknown[] | null; error: unknown }> & {
         order(column: string, options?: { ascending?: boolean }): Promise<{ data: unknown[] | null; error: unknown }>;
       };
@@ -625,5 +625,12 @@ export class SupabaseStore implements Store {
       signature: r.signature as string,
       keyId: r.key_id as string,
     }));
+  }
+
+  async listSubjectKeys(): Promise<string[]> {
+    // Read from the head table: one row per subject that has any claim.
+    const { data, error } = await this.db.from('conformance_subject_head').select('subject_key');
+    throwOn(error, 'listSubjectKeys');
+    return ((data ?? []) as Record<string, unknown>[]).map(r => r.subject_key as string);
   }
 }

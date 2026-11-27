@@ -248,4 +248,8 @@ export class MemoryStore implements Store {
   async listClaims(subjectKey: string): Promise<SignedClaimRecord[]> {
     return this.claims.filter(c => c.subjectKey === subjectKey).map(c => ({ ...c }));
   }
+
+  async listSubjectKeys(): Promise<string[]> {
+    return [...this.subjectHeads.keys()];
+  }
 }
