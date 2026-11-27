@@ -12,7 +12,8 @@
     "dev": "next dev --webpack",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "ledger:verify": "tsx scripts/ledger-verify.ts"
+    "ledger:verify": "tsx scripts/ledger-verify.ts",
+    "conformance:check-key": "node scripts/check-conformance-key.mjs"
   },
   "dependencies": {
     "@a11y-fixer/core": "workspace:*",

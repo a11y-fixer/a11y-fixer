@@ -146,3 +146,78 @@ Then walk the end-to-end checklist, which exercises every milestone:
 
 Pregate reminder: any new test-lane gate for new files must land on `main` **first**
 (detached worktree → `git push origin HEAD:main`), mirroring M0/M1/M2.
+
+---
+
+## 5. Conformance signing key (Phase 1 ledger)
+
+The Conformance Ledger signs every claim with a **dedicated** Ed25519 key — separate
+from `LICENSE_SIGNING_KEY` (decision D1), so a license-key leak or rotation can never
+touch ledger integrity. It is **optional**: with the key unset the webhook still ingests
+scans and `publish` still succeeds, but no signed claims are written and published
+statements read *not-yet-warranted*. Provisioning the key is what flips statements to
+**warranted**. Set these on the **`a11y-fixer-app`** project only (the website doesn't
+sign or verify claims), for **Production + Preview**:
+
+| Value | Env var | Notes |
+|---|---|---|
+| Private key | `CONFORMANCE_SIGNING_KEY` | PKCS#8 PEM of the Ed25519 private key. **Sealed/sensitive. Never commit or log.** |
+| Key id | `CONFORMANCE_KEY_ID` | current key's id, e.g. `conformance-2026` |
+| Public key | `CONFORMANCE_PUBLIC_KEY` | SPKI PEM of the public half (used to verify) |
+| Keyring (optional) | `CONFORMANCE_KEYRING` | JSON `{keyId: spkiPem}` of **all** keys ever used — rotation-safe; preferred over `CONFORMANCE_PUBLIC_KEY` once you expect to rotate |
+
+Unlike the license key (whose public half is embedded in the Action), the conformance
+public key is **not committed anywhere** — "publishing it to the keyring" just means
+setting `CONFORMANCE_PUBLIC_KEY` (or `CONFORMANCE_KEYRING`). An empty keyring makes
+verification fail **closed** (`unknown-key`), which is the safe default.
+
+### Generate the keypair (readable local / sealed on Vercel)
+
+macOS LibreSSL can't emit ed25519 via `openssl genpkey`; generate with Node:
+
+```sh
+node --input-type=module -e '
+import { generateKeyPairSync } from "node:crypto";
+import { writeFileSync, chmodSync } from "node:fs";
+const { privateKey, publicKey } = generateKeyPairSync("ed25519");
+writeFileSync("conformance-key.pem", privateKey.export({ type: "pkcs8", format: "pem" }), { mode: 0o600 });
+writeFileSync("conformance-pub.pem", publicKey.export({ type: "spki", format: "pem" }));
+'
+```
+
+Keep the private PEM as a readable local file **only** long enough to provision Vercel,
+then move it to 1Password and delete the local copy (per `docs/security/secrets-runbook.md`,
+same discipline as `LICENSE_SIGNING_KEY`).
+
+### Prove the pair before trusting it
+
+```sh
+CONFORMANCE_SIGNING_KEY="$(cat conformance-key.pem)" \
+CONFORMANCE_PUBLIC_KEY="$(cat conformance-pub.pem)" \
+CONFORMANCE_KEY_ID=conformance-2026 \
+pnpm --filter @a11y-fixer/app conformance:check-key
+```
+
+Prints ✅ when the private key, the pinned public key, and the key id all agree (and a
+sign→verify round-trip + tamper check pass); exits non-zero otherwise, so CI/ops can gate
+on it. Run it **before** provisioning Vercel — the `a11y-fixer-app` project marks env vars
+write-only, so `vercel env pull` returns `[SENSITIVE]` placeholders and can't re-verify the
+deployed values. The authoritative post-provisioning check is the end-to-end one below.
+
+### Verify the ledger end-to-end
+
+After provisioning, publish one real audit, then:
+
+```sh
+pnpm --filter @a11y-fixer/app ledger:verify   # exits non-zero on any broken chain
+```
+
+Confirm the backing claims landed, the chain verifies, and the public statement + ledger
+dashboard (`/dashboard/<installationId>/ledger`) read **warranted**.
+
+### Rotation
+
+Mint a new key with a new `CONFORMANCE_KEY_ID` (e.g. `conformance-2027`), add its public
+half to `CONFORMANCE_KEYRING` **alongside** the old one, and point `CONFORMANCE_SIGNING_KEY`
+at the new private key. New claims sign with the new id; historical claims still verify
+against the retained old public key. History is never rewritten.
