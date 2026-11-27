@@ -56,6 +56,15 @@ class FakeSupabase implements SupabaseLike {
         },
       }),
       select: (columns?: string) => ({
+        // A bare `await select(cols)` returns all rows (e.g. listSubjectKeys). This
+        // is a LAZY thenable: it records only when actually awaited, so the common
+        // `.select().eq()` path (below) never logs a spurious bare select.
+        then: <T>(
+          onFulfilled: (v: { data: unknown[] | null; error: unknown }) => T,
+        ) => {
+          record({ op: 'select', selectColumns: columns });
+          return Promise.resolve({ data: this.selectData, error: this.error }).then(onFulfilled);
+        },
         eq: (column: string, value: unknown) => {
           record({ op: 'select', selectColumns: columns, filterColumn: column, filterValue: value });
           const result = { data: this.selectData, error: this.error };
@@ -354,6 +363,25 @@ describe('SupabaseStore conformance reads: row mapping', () => {
       },
     ]);
     expect(db.only()).toMatchObject({ table: 'violations', op: 'select', filterColumn: 'check_run_id', filterValue: 500 });
+  });
+
+  it('listSubjectKeys reads the head table and returns the subject keys', async () => {
+    const db = new FakeSupabase();
+    db.selectData = [{ subject_key: 'page:7:a.html' }, { subject_key: 'page:7:b.html' }];
+    const store = new SupabaseStore(db);
+    expect(await store.listSubjectKeys()).toEqual(['page:7:a.html', 'page:7:b.html']);
+    expect(db.only()).toMatchObject({
+      table: 'conformance_subject_head',
+      op: 'select',
+      selectColumns: 'subject_key',
+    });
+  });
+
+  it('listSubjectKeys returns [] when the head table is empty', async () => {
+    const db = new FakeSupabase();
+    db.selectData = null;
+    const store = new SupabaseStore(db);
+    expect(await store.listSubjectKeys()).toEqual([]);
   });
 
   it('getAudit maps a row and returns null when absent', async () => {

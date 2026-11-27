@@ -78,8 +78,18 @@ Shipped in `packages/app/src/conformance/` + `packages/licensing/` + `packages/a
    activates the moment the key env is set. STILL TODO (ops, not code):
    **provision `CONFORMANCE_SIGNING_KEY` + `CONFORMANCE_KEY_ID` + public key** on
    Vercel (sealed), verify with a `check-signing-key.mjs`-style script.
-3. **`ledger:verify` CLI** + dashboard read-model (deferred; `verifyLedger` is the
-   backing function and is tested).
+3. ~~**`ledger:verify` CLI** + dashboard read-model~~ **DONE (2026-11-26):**
+   `src/conformance/ledger-verify.ts` adds `buildLedgerReadModel` (walks every
+   subject via the new `Store.listSubjectKeys`, re-verifies each chain, then
+   collapses it to its current per-criterion state — an unverified chain reports
+   its verdict and NO criteria, so a tampered subject can't masquerade as clean)
+   and `formatLedgerReport` (the CLI's text + ok flag). The executable is
+   `scripts/ledger-verify.ts` (run `pnpm --filter @a11y-fixer/app ledger:verify`,
+   `-- --subject <key>` for one subject), via `tsx`; it reads the PUBLIC keyring
+   only and exits non-zero on any failed chain so CI/ops can gate on it. Fully
+   unit-tested (tamper → fail, supersede collapse, empty keyring fails closed).
+   The read-model is the data layer a dashboard page renders later (that page is
+   still a follow-on).
 4. **CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`
    (land the policy on `main` first, per the mint-path pregate note).
 

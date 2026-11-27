@@ -11,7 +11,8 @@
     "build:next": "next build --webpack",
     "dev": "next dev --webpack",
     "test": "vitest run",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "ledger:verify": "tsx scripts/ledger-verify.ts"
   },
   "dependencies": {
     "@a11y-fixer/core": "workspace:*",
@@ -31,6 +32,7 @@
     "@types/react": "^19.3.1",
     "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "^5.1.1",
+    "tsx": "^4.20.3",
     "typescript": "^5.9.3",
     "vitest": "^5.1.1"
   }
