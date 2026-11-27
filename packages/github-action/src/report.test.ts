@@ -169,6 +169,23 @@ describe('buildScanReport', () => {
     const report = buildScanReport([violation()], { sha: 'abc', prNumber: 1, mode: 'check', conclusion: 'failure' });
     expect(JSON.parse(JSON.stringify(report))).toEqual(report);
   });
+
+  it('pins the wire schema at a11y-fixer.scan/2', () => {
+    expect(SCAN_REPORT_SCHEMA).toBe('a11y-fixer.scan/2');
+  });
+
+  it('carries null provenance by default (fail-only: no pass claims derivable)', () => {
+    const report = buildScanReport([violation()], { sha: 'abc', prNumber: 1, mode: 'check', conclusion: 'failure' });
+    expect(report).toMatchObject({ engine: null, engineVersion: null, scanPath: null });
+  });
+
+  it('stamps engine/version/scanPath when a scan context is supplied', () => {
+    const report = buildScanReport([violation()], {
+      sha: 'abc', prNumber: 1, mode: 'check', conclusion: 'failure',
+      context: { engine: 'axe-core', engineVersion: '4.14.1', scanPath: 'html' },
+    });
+    expect(report).toMatchObject({ engine: 'axe-core', engineVersion: '4.14.1', scanPath: 'html' });
+  });
 });
 
 /** Minimal octokit double capturing calls, with spies for assertions. */

@@ -183,7 +183,36 @@ function chunk<T>(items: T[], size: number): T[][] {
  * Keep this shape in sync with the parser in
  * `packages/app/src/webhooks/handlers/check-run.ts`.
  */
-export const SCAN_REPORT_SCHEMA = 'a11y-fixer.scan/1';
+export const SCAN_REPORT_SCHEMA = 'a11y-fixer.scan/2';
+
+/**
+ * The axe-core version this Action runs. Provenance for the scan contract's
+ * `engineVersion`, recorded on every claim the ledger derives. KEEP IN SYNC with
+ * `packages/core`'s `axe-core` dependency — it is the version that actually ran.
+ * (It is not yet load-bearing for pass-eligibility, which keys only on scanPath,
+ * so a small drift records the wrong provenance string but never a wrong `pass`.)
+ */
+export const AXE_CORE_VERSION = '4.14.1';
+
+/** Which scanner path produced a report. Mirrors the app's evaluated-set keys. */
+export type ScanPath = 'html' | 'jsx' | 'markdown';
+
+/**
+ * Provenance the ingester needs to turn "no violation" into a `pass` claim. Only
+ * a single-engine, single-path run can carry it honestly: a run that merged, say,
+ * HTML pages and Markdown files cannot stamp one `scanPath`, because a `pass` for
+ * a page-level criterion would then leak onto the Markdown files. So the caller
+ * sets this ONLY for an unambiguous axe-on-HTML run; otherwise every field is
+ * null and the ledger stays fail-only (never a silent pass).
+ */
+export interface ScanContext {
+  engine: string | null;
+  engineVersion: string | null;
+  scanPath: ScanPath | null;
+}
+
+/** The empty context: fail-only, no `pass` claims can be derived. */
+export const NO_SCAN_CONTEXT: ScanContext = { engine: null, engineVersion: null, scanPath: null };
 
 /**
  * Caps that keep `output.text` comfortably under GitHub's 64KB limit even on a
@@ -221,6 +250,11 @@ export interface ScanReport {
   /** True when the per-row `violations` list was capped below `counts.total`. */
   truncated: boolean;
   violations: ScanReportViolation[];
+  /** Scanner provenance. Non-null only on an unambiguous single-path run (see
+   * ScanContext); null → the ledger records fail claims only, never a pass. */
+  engine: string | null;
+  engineVersion: string | null;
+  scanPath: ScanPath | null;
 }
 
 /** Repo-relative source locations for a violation, capped. */
@@ -240,11 +274,18 @@ function reportLocations(v: A11yViolation): ScanReportLocation[] {
  */
 export function buildScanReport(
   violations: A11yViolation[],
-  meta: { sha: string; prNumber: number | null; mode: 'check' | 'fix'; conclusion: ScanReport['conclusion'] },
+  meta: {
+    sha: string;
+    prNumber: number | null;
+    mode: 'check' | 'fix';
+    conclusion: ScanReport['conclusion'];
+    context?: ScanContext;
+  },
 ): ScanReport {
   const counts = { critical: 0, serious: 0, moderate: 0, minor: 0, total: violations.length };
   for (const v of violations) counts[v.impact] += 1;
   const capped = violations.slice(0, SCAN_REPORT_VIOLATIONS_CAP);
+  const context = meta.context ?? NO_SCAN_CONTEXT;
   return {
     schema: SCAN_REPORT_SCHEMA,
     sha: meta.sha,
@@ -261,6 +302,9 @@ export function buildScanReport(
       helpUrl: v.helpUrl,
       locations: reportLocations(v),
     })),
+    engine: context.engine,
+    engineVersion: context.engineVersion,
+    scanPath: context.scanPath,
   };
 }
 
@@ -272,7 +316,7 @@ export async function postCheckRun(
   octokit: OctokitLike,
   target: { owner: string; repo: string; sha: string },
   violations: A11yViolation[],
-  opts: { neutral?: boolean; prNumber?: number | null } = {},
+  opts: { neutral?: boolean; prNumber?: number | null; context?: ScanContext } = {},
 ): Promise<void> {
   const annotations = toAnnotations(violations);
   const batches = chunk(annotations, ANNOTATION_BATCH);
@@ -296,6 +340,7 @@ export async function postCheckRun(
     prNumber: opts.prNumber ?? null,
     mode: opts.neutral ? 'fix' : 'check',
     conclusion,
+    context: opts.context,
   });
   const output = {
     title:
