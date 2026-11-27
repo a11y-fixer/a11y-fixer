@@ -177,3 +177,25 @@ export function pageSubjectKey(repoId: number, path: string): string {
 export function componentSubjectKey(repoId: number, path: string, locator: string): string {
   return `repo:${repoId}|path:${path}|node:${locator}`;
 }
+
+/**
+ * The repo id embedded in a subject key (`repo:<id>|...`), or null if the key
+ * isn't a recognized subject identity. Lets a per-installation view scope the
+ * ledger to the repos it owns without a new column.
+ */
+export function repoIdOfSubjectKey(subjectKey: string): number | null {
+  const m = /^repo:(\d+)\|/.exec(subjectKey);
+  if (!m) return null;
+  const id = Number(m[1]);
+  return Number.isInteger(id) ? id : null;
+}
+
+/**
+ * The source path in a subject key (`...|path:<path>`), or null if absent. A
+ * trailing component locator (`|node:<locator>`) is dropped so a page and its
+ * components report the same path.
+ */
+export function pathOfSubjectKey(subjectKey: string): string | null {
+  const m = /\|path:(.*?)(?:\|node:.*)?$/.exec(subjectKey);
+  return m ? m[1] : null;
+}
