@@ -65,17 +65,27 @@ Shipped in `packages/app/src/conformance/` + `packages/licensing/` + `packages/a
 
 ### Remaining to make pass-claims live end-to-end (separate, scoped)
 
-1. **Emit contract v2 from the Action** (`report.ts`: add `engine`,`engineVersion`,
-   `scanPath`; bump `SCAN_REPORT_SCHEMA` to `/2`) **and rebuild the `ncc` dist bundle**.
-   Until then the app ingests v1 → fail-only (the parser already accepts both). This
-   is the one trap-laden step (committed dist, bundle externals) — do it on its own.
-2. **Provision `CONFORMANCE_SIGNING_KEY` + `CONFORMANCE_KEY_ID` + public key** on
-   Vercel (sealed), and call `conformanceSigningConfigFromEnv()` in the Next webhook
-   route. Verify key handling with a check script like `check-signing-key.mjs`.
+1. ~~**Emit contract v2 from the Action**~~ **DONE (2026-11-26, same PR).**
+   `report.ts` bumps `SCAN_REPORT_SCHEMA` to `/2` and carries
+   `engine`/`engineVersion`/`scanPath`; `index.ts` stamps the pass-enabling
+   provenance ONLY for an unambiguous axe-on-HTML run (`html && !markdown &&
+   !components`) and null otherwise (fail-only, no silent pass). The `ncc` dist is
+   rebuilt; the committed-bundle smoke test (createRequire guard + scan + report.ts
+   path) passes. Shipped WITH the app's v2 acceptance so the contract version moves
+   atomically — the app never sees a `/2` it can't parse.
+2. ~~**Call `conformanceSigningConfigFromEnv()` in the webhook route**~~ **DONE
+   (2026-11-26, same PR):** threaded through `handleWebhookRequest`; the ledger
+   activates the moment the key env is set. STILL TODO (ops, not code):
+   **provision `CONFORMANCE_SIGNING_KEY` + `CONFORMANCE_KEY_ID` + public key** on
+   Vercel (sealed), verify with a `check-signing-key.mjs`-style script.
 3. **`ledger:verify` CLI** + dashboard read-model (deferred; `verifyLedger` is the
    backing function and is tested).
 4. **CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`
    (land the policy on `main` first, per the mint-path pregate note).
+
+Follow-ons from the Reconciliation section above (own PRs): fold the two scan→WCAG
+derivations onto one source; make a published `audit_revision` reference the signed
+claims that back it.
 
 ## What Phase 1 builds
 
