@@ -44,7 +44,20 @@
       "packages/app/src/github/list-workflows.test.ts",
       "packages/app/src/github/scan-orchestrator.test.ts",
       "packages/app/src/licensing/issue.test.ts",
-      "packages/app/src/licensing/provision.test.ts"
+      "packages/app/src/licensing/provision.test.ts",
+      "packages/app/src/conformance/claim.test.ts",
+      "packages/app/src/conformance/ledger.test.ts",
+      "packages/app/src/conformance/ledger-verify.test.ts",
+      "packages/app/src/conformance/ledger-derive.test.ts",
+      "packages/app/src/conformance/warranty.test.ts",
+      "packages/app/src/conformance/derive.test.ts",
+      "packages/app/src/conformance/reconcile.test.ts",
+      "packages/app/src/conformance/wcag-matrix.test.ts",
+      "packages/app/src/conformance/keyring.test.ts",
+      "packages/app/src/conformance/audit-service.test.ts",
+      "packages/app/src/conformance/audit-authz.test.ts",
+      "packages/app/src/conformance/view-model.test.ts",
+      "packages/app/src/conformance/documents/audit-document.test.ts"
     ],
     "packages/ai/src/scan/markdown.ts": [
       "packages/ai/src/scan/markdown.test.ts"

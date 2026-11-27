@@ -1,8 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { generateKeyPairSync } from 'node:crypto';
 import type { SuccessCriterion } from '@a11y-fixer/core';
 import { MemoryStore } from '../../db/memory-store.js';
 import { RevisionVersionConflictError } from '../../db/store.js';
 import { createDraftAudit, publishAudit, type AuditDeps } from '../audit-service.js';
+import { auditSubjectKey, type PublicKeyring } from '../claim.js';
+import { verifyAuditWarranty } from '../warranty.js';
+import type { ReconciledCriterion } from '../reconcile.js';
+import type { DocumentContext, WarrantySigning } from './audit-document.js';
 import {
   buildAuditDocument,
   buildDocumentFromRevision,
@@ -10,6 +15,15 @@ import {
   documentFilename,
   type RevisionDeps,
 } from './audit-document.js';
+
+const kp = generateKeyPairSync('ed25519');
+const SIGNING: WarrantySigning = {
+  signingKeyPem: kp.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString(),
+  keyId: 'conformance-2026',
+};
+const RING: PublicKeyring = {
+  'conformance-2026': kp.publicKey.export({ type: 'spki', format: 'pem' }).toString(),
+};
 
 function sc(id: string, level: SuccessCriterion['level']): SuccessCriterion {
   return {
@@ -151,6 +165,54 @@ describe('revisions (immutable published snapshots)', () => {
     const rev = await store.getRevisionByAudit(auditId);
     expect(buildDocumentFromRevision(rev!, 'statement').kind).toBe('statement');
     expect(buildDocumentFromRevision(rev!, 'letter').kind).toBe('letter');
+  });
+
+  it('without signing config, freezes a revision with no backing claims', async () => {
+    const auditId = await publishedAudit(10, 'abc1234def');
+    const rev = await store.getRevisionByAudit(auditId);
+    expect((rev!.snapshot as DocumentContext).backingClaims).toBeUndefined();
+    expect(await store.listClaims(auditSubjectKey(10))).toHaveLength(0);
+  });
+
+  describe('warranty link (signed backing claims)', () => {
+    async function publishSigned(repoId: number, headSha: string): Promise<string> {
+      const audit = await createDraftAudit(store, CATALOG, { repoId, installationId: 1, headSha, checkRunId: 500 }, deps);
+      // One supports, one does_not_support — both human-reviewed, so both warrantable.
+      await store.upsertVerdict({ id: `v-${repoId}-a`, auditId: audit.id, wcagId: '1.1.1', source: 'human', verdict: 'supports', remarks: '', evidence: null, authorId: 'u1', updatedAt: 't' });
+      await store.upsertVerdict({ id: `v-${repoId}-b`, auditId: audit.id, wcagId: '1.4.3', source: 'human', verdict: 'does_not_support', remarks: '', evidence: null, authorId: 'u1', updatedAt: 't' });
+      await publishAudit(store, CATALOG, audit.id, deps);
+      await createRevisionForAudit(store, CATALOG, audit.id, revDeps, SIGNING);
+      return audit.id;
+    }
+
+    it('freezes backing claim ids into the snapshot and signs them into the ledger', async () => {
+      const auditId = await publishSigned(10, 'abc1234def');
+      const rev = await store.getRevisionByAudit(auditId);
+      const backing = (rev!.snapshot as DocumentContext).backingClaims;
+      expect(backing!.subjectKey).toBe(auditSubjectKey(10));
+      expect(backing!.claimIds).toHaveLength(2);
+      const onChain = await store.listClaims(auditSubjectKey(10));
+      expect(onChain.map(c => c.id).sort()).toEqual([...backing!.claimIds].sort());
+    });
+
+    it('end-to-end: the frozen revision verifies against the signed ledger', async () => {
+      const auditId = await publishSigned(10, 'abc1234def');
+      const rev = await store.getRevisionByAudit(auditId);
+      const snap = rev!.snapshot as DocumentContext;
+      const verdict = await verifyAuditWarranty(
+        store,
+        snap.backingClaims ?? null,
+        snap.reconciled as ReconciledCriterion[],
+        RING,
+      );
+      expect(verdict).toEqual({ ok: true, backed: true, claims: 2 });
+    });
+
+    it('writes the backing claims once: a re-publish is idempotent (no duplicate chain growth)', async () => {
+      const auditId = await publishSigned(10, 'abc1234def');
+      await createRevisionForAudit(store, CATALOG, auditId, revDeps, SIGNING);
+      expect(await store.listClaims(auditSubjectKey(10))).toHaveLength(2);
+    });
   });
 
   it('retries on a version collision and still freezes a revision', async () => {

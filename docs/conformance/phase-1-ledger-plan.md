@@ -37,9 +37,10 @@ These are **complementary layers, not duplicates**:
 - **Share the scan→criterion derivation.** Both files map axe/jsx rule ids → WCAG
   ids independently; fold them onto one source so a `fail` claim and a
   `partially_supports` verdict can never disagree about the same scan.
-- **Make the ledger back the published statement.** A published `audit_revision`
-  should reference the signed claims that prove it, so the public statement is
-  verifiable against the chain (the real Phase 4 warranty story).
+- ~~**Make the ledger back the published statement.**~~ **DONE (2026-11-26):** a
+  published `audit_revision` now references the signed claims that prove it
+  (`warranty.ts` + `backingClaims` in the snapshot), verifiable against the chain
+  via `verifyAuditWarranty`. See the warranty-link note below.
 
 ### Implementation status
 
@@ -90,16 +91,34 @@ Shipped in `packages/app/src/conformance/` + `packages/licensing/` + `packages/a
    unit-tested (tamper → fail, supersede collapse, empty keyring fails closed).
    The read-model is the data layer a dashboard page renders later (that page is
    still a follow-on).
-4. **CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`
-   (land the policy on `main` first, per the mint-path pregate note).
+4. ~~**CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`~~
+   **DONE (2026-11-26):** the `packages/app/src/**` lane now runs the integrity-critical
+   conformance suites (claim, ledger, ledger-verify, ledger-derive, warranty, derive,
+   reconcile, wcag-matrix, keyring, audit-service, audit-authz, view-model,
+   documents/audit-document). A conformance change can no longer land without its
+   tamper-evidence tests running.
 
 Follow-ons from the Reconciliation section above: ~~fold the two scan→WCAG
 derivations onto one source~~ **PARTIALLY DONE (2026-11-26):** criterion LEVEL is
 now sourced once from the core catalog (`wcag-matrix.ts` keeps only the producer
 bucket; `levelOf` reads `getSuccessCriterion`), with a drift test — a `fail` claim
 and a `partially_supports` verdict can no longer disagree on criterion identity or
-level. STILL OPEN: make a published `audit_revision` reference the signed claims
-that back it (the Phase 4 warranty link).
+level. ~~STILL OPEN: make a published `audit_revision` reference the signed claims
+that back it (the Phase 4 warranty link).~~ **DONE (2026-11-26) — the warranty link:**
+`warranty.ts` maps a published audit's human-reviewed verdicts to `human`-method
+claim drafts on a repo-level audit subject (`repo:<id>|audit:conformance`);
+`createRevisionForAudit` (given the signing config) signs them into the ledger and
+freezes their claim ids into the revision snapshot (`DocumentContext.backingClaims`,
+no DB migration — the snapshot is app-owned JSON). `verifyAuditWarranty` re-verifies
+the backing chain AND cross-checks that the frozen snapshot still matches the signed
+claims, so tampering **either** the snapshot **or** a claim voids the warranty. The
+publish route passes `conformanceSigningConfigFromEnv()`; absent the key, publish
+still succeeds and the statement is simply not-yet-warranted (graceful, matching the
+keyring's run-without-key posture). Writes happen once, before the version-retry loop
+and `insertRevision`, so a signing failure leaves no revision and a re-publish retries
+cleanly. Tests: `warranty.test.ts` (mapper + 6 verifier cases incl. chain-invalid,
+claim-missing, snapshot-divergence, tampered-claim) and `audit-document.test.ts`
+(signed end-to-end verify, no-key path, idempotent re-publish).
 
 **Dashboard read-model surface DONE (2026-11-26):** `app/dashboard/[installationId]/ledger/page.tsx`
 renders the whole-ledger read-model for an installation (filters to its repos,
