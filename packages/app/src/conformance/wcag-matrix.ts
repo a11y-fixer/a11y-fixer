@@ -17,7 +17,10 @@
 // (absence of a violation == conformant). For R/S/H, a detected violation is a
 // real `fail`, but "no violation" never proves conformance — see PASS_ELIGIBLE.
 // 4.1.1 (Parsing) is intentionally absent: removed in WCAG 2.2.
-import { getSuccessCriterion } from '@a11y-fixer/core';
+// Import from the light `/wcag` subpath, NOT the package barrel: the barrel pulls
+// core's puppeteer/vue-backed scanner graph, which must never enter the webhook
+// server bundle (ledger-derive -> wcag-matrix is on that import chain).
+import { getSuccessCriterion } from '@a11y-fixer/core/wcag';
 
 export type Bucket = 'M' | 'R' | 'S' | 'H';
 

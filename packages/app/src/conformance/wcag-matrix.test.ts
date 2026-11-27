@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSuccessCriterion } from '@a11y-fixer/core';
+import { getSuccessCriterion } from '@a11y-fixer/core/wcag';
 import { WCAG_2_2_BUCKETS, levelOf, bucketOf } from './wcag-matrix.js';
 
 // The reconciliation guarantee: the ledger's criterion set and the core catalog
