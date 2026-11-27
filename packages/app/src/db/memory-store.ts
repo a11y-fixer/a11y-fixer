@@ -1,6 +1,7 @@
 // In-memory Store for unit tests and local development. Not for production.
 import { RevisionVersionConflictError } from './store.js';
 import type {
+  ActionRunRecord,
   AuditRecord,
   AuditRevisionRecord,
   AuditStatus,
@@ -30,11 +31,27 @@ export class MemoryStore implements Store {
   readonly verdicts = new Map<string, CriterionVerdictRecord[]>();
   /** Published revisions keyed by revision id. */
   readonly revisions = new Map<string, AuditRevisionRecord>();
+  /** Anonymous Action usage events, in arrival order. */
+  readonly actionRuns: ActionRunRecord[] = [];
 
   async recordEventOnce(deliveryId: string): Promise<boolean> {
     if (this.deliveries.has(deliveryId)) return false;
     this.deliveries.add(deliveryId);
     return true;
+  }
+
+  async recordActionRun(event: ActionRunRecord): Promise<void> {
+    // The DB assigns created_at on insert; mirror that here so reads have a
+    // time axis, without requiring the write path to provide one.
+    this.actionRuns.push({ createdAt: new Date().toISOString(), ...event });
+  }
+
+  async listRecentActionRuns(limit: number): Promise<ActionRunRecord[]> {
+    return this.actionRuns
+      .slice()
+      .reverse()
+      .slice(0, limit)
+      .map(run => ({ ...run }));
   }
 
   async upsertInstallation(record: InstallationRecord): Promise<void> {
@@ -181,6 +198,11 @@ export class MemoryStore implements Store {
 
   async upsertUser(record: UserRecord): Promise<void> {
     this.users.set(record.userId, { ...record });
+  }
+
+  async getUser(userId: string): Promise<UserRecord | null> {
+    const existing = this.users.get(userId);
+    return existing ? { ...existing } : null;
   }
 
   async linkUserInstallation(userId: string, installationId: number): Promise<void> {
