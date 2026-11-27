@@ -5,6 +5,7 @@
 // everything here means the whole HTTP edge is unit-testable with a plain Web
 // `Request` and the in-memory Store — no Next.js runtime, no network.
 import { processWebhook, type WebhookResult } from '../webhooks/process.js';
+import type { ConformanceConfig } from '../webhooks/handlers/check-run.js';
 import type { Store } from '../db/store.js';
 
 /**
@@ -30,8 +31,17 @@ export function resultToStatus(result: WebhookResult): number {
  * Read a GitHub webhook `Request`, run the full pipeline once, and return the
  * `Response` to send back. The raw body is read with `req.text()` BEFORE any
  * parsing so the HMAC is checked against the exact bytes GitHub signed.
+ *
+ * `conformance` is optional: when provided (a signing key is configured) check_run
+ * ingestion also appends signed conformance claims; when omitted the ledger stays
+ * off and scans are ingested exactly as before.
  */
-export async function handleWebhookRequest(req: Request, store: Store, secret: string): Promise<Response> {
+export async function handleWebhookRequest(
+  req: Request,
+  store: Store,
+  secret: string,
+  conformance?: ConformanceConfig,
+): Promise<Response> {
   const rawBody = await req.text();
   const result = await processWebhook({
     secret,
@@ -40,6 +50,7 @@ export async function handleWebhookRequest(req: Request, store: Store, secret: s
     deliveryId: req.headers.get('x-github-delivery'),
     signature: req.headers.get('x-hub-signature-256'),
     store,
+    conformance,
   });
   return new Response(result, { status: resultToStatus(result) });
 }

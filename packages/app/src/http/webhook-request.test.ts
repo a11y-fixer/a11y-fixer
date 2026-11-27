@@ -1,4 +1,4 @@
-import { createHmac } from 'node:crypto';
+import { createHmac, generateKeyPairSync } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { handleWebhookRequest, resultToStatus } from './webhook-request.js';
 import { MemoryStore } from '../db/memory-store.js';
@@ -78,5 +78,70 @@ describe('handleWebhookRequest', () => {
     };
     const res = await handleWebhookRequest(request(bad, headers), store, SECRET);
     expect(res.status).toBe(400);
+  });
+});
+
+describe('handleWebhookRequest — conformance config threading', () => {
+  const kp = generateKeyPairSync('ed25519');
+  const CONF = {
+    signingKeyPem: kp.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString(),
+    keyId: 'conformance-2026',
+  };
+
+  const checkRunBody = JSON.stringify({
+    action: 'completed',
+    installation: { id: 100 },
+    repository: { id: 42, full_name: 'acme/web', private: false, default_branch: 'main' },
+    check_run: {
+      id: 9001,
+      name: 'a11y-fixer',
+      head_sha: 'abc123',
+      status: 'completed',
+      conclusion: 'failure',
+      completed_at: '2026-01-02T03:04:05Z',
+      output: {
+        annotations_count: 1,
+        text: JSON.stringify({
+          schema: 'a11y-fixer.scan/2',
+          sha: 'abc123',
+          engine: 'axe-core',
+          engineVersion: '4.9.1',
+          scanPath: 'html',
+          mode: 'check',
+          conclusion: 'failure',
+          counts: { critical: 1, serious: 0, moderate: 0, minor: 0, total: 1 },
+          truncated: false,
+          violations: [
+            { id: 'image-alt', wcagId: '1.1.1', impact: 'critical', description: 'alt', helpUrl: 'h', locations: [{ path: 'src/a.html', line: 3 }] },
+          ],
+        }),
+      },
+      pull_requests: [{ number: 7 }],
+    },
+  });
+
+  function checkRunHeaders(delivery: string): Record<string, string> {
+    return {
+      'content-type': 'application/json',
+      'x-github-event': 'check_run',
+      'x-github-delivery': delivery,
+      'x-hub-signature-256': `sha256=${createHmac('sha256', SECRET).update(checkRunBody).digest('hex')}`,
+    };
+  }
+
+  it('appends signed claims when a conformance config is passed', async () => {
+    const store = new MemoryStore();
+    const res = await handleWebhookRequest(request(checkRunBody, checkRunHeaders('c1')), store, SECRET, CONF);
+    expect(res.status).toBe(202);
+    expect(store.scans.has(9001)).toBe(true);
+    expect(store.claims.length).toBeGreaterThan(0);
+  });
+
+  it('writes no claims when the config is omitted (ledger off), but still ingests the scan', async () => {
+    const store = new MemoryStore();
+    const res = await handleWebhookRequest(request(checkRunBody, checkRunHeaders('c2')), store, SECRET);
+    expect(res.status).toBe(202);
+    expect(store.scans.has(9001)).toBe(true);
+    expect(store.claims.length).toBe(0);
   });
 });
