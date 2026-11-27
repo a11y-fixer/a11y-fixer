@@ -22,6 +22,9 @@
     ],
     "packages/app/db/**": [],
     "packages/app/github-app-manifest.json": [],
+    "packages/app/scripts/**": [
+      "packages/app/src/conformance/check-conformance-key.test.ts"
+    ],
     "packages/app/app/**": [],
     "packages/app/next.config.ts": [],
     "packages/app/tsconfig.src.json": [],

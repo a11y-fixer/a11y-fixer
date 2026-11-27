@@ -17,3 +17,5 @@ packages/cli/dist/
 
 # Local license issuance ledger (contains customer identifiers — never commit).
 .licenses/
+.vercel
+.env*
