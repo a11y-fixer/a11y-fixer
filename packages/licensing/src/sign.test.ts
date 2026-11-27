@@ -135,6 +135,12 @@ describe('signPayload / verifyPayload (shared Ed25519 primitive)', () => {
     expect(verifyPayload('msg', 'not-a-real-signature', publicPem)).toBe(false);
   });
 
+  it('returns false (never throws) when the public key is truthy but not a valid PEM', () => {
+    // A non-empty garbage key passes the required-key guard, so createPublicKey
+    // throws inside the try — the catch must swallow it and return false.
+    expect(verifyPayload('msg', 'sig', 'not-a-valid-pem')).toBe(false);
+  });
+
   it('requires keys', () => {
     expect(() => signPayload('x', '')).toThrow(/key/);
     expect(() => verifyPayload('x', 'sig', '')).toThrow(/key/);
