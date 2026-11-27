@@ -77,6 +77,7 @@ export default async function InstallationPage({
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
         <h1>Repositories</h1>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <Link href={`/dashboard/${id}/ledger`}>Conformance ledger →</Link>
           <Link href={`/dashboard/${id}/audits`}>Conformance audits →</Link>
           {!view.isEmpty && (
             <form method="post" action={`/api/installations/${id}/scan`}>
