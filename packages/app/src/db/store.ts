@@ -416,4 +416,10 @@ export interface Store {
 
   /** All claims on a subject's chain, in append (chain) order. */
   listClaims(subjectKey: string): Promise<SignedClaimRecord[]>;
+
+  /**
+   * Every subject key that has at least one claim. The enumeration primitive the
+   * ledger verifier and dashboard read-model walk; order is unspecified.
+   */
+  listSubjectKeys(): Promise<string[]>;
 }

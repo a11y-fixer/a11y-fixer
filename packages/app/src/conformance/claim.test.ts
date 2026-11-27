@@ -7,6 +7,8 @@ import {
   verifyClaim,
   pageSubjectKey,
   componentSubjectKey,
+  repoIdOfSubjectKey,
+  pathOfSubjectKey,
   type ClaimBody,
   type PublicKeyring,
 } from './claim.js';
@@ -144,5 +146,18 @@ describe('subject keys', () => {
   });
   it('component key nests a locator under the page', () => {
     expect(componentSubjectKey(1, 'a.html', 'button#x')).toBe('repo:1|path:a.html|node:button#x');
+  });
+
+  it('repoIdOfSubjectKey extracts the repo id, or null for a foreign key', () => {
+    expect(repoIdOfSubjectKey(pageSubjectKey(42, 'src/a.html'))).toBe(42);
+    expect(repoIdOfSubjectKey(componentSubjectKey(7, 'a.html', 'btn'))).toBe(7);
+    expect(repoIdOfSubjectKey('flow:checkout')).toBeNull();
+    expect(repoIdOfSubjectKey('repo:x|path:a')).toBeNull();
+  });
+
+  it('pathOfSubjectKey returns the path, dropping any component locator', () => {
+    expect(pathOfSubjectKey(pageSubjectKey(1, 'src/a.html'))).toBe('src/a.html');
+    expect(pathOfSubjectKey(componentSubjectKey(1, 'src/a.html', 'button#x'))).toBe('src/a.html');
+    expect(pathOfSubjectKey('flow:checkout')).toBeNull();
   });
 });

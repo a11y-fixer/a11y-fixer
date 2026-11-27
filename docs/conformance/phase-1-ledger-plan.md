@@ -78,14 +78,33 @@ Shipped in `packages/app/src/conformance/` + `packages/licensing/` + `packages/a
    activates the moment the key env is set. STILL TODO (ops, not code):
    **provision `CONFORMANCE_SIGNING_KEY` + `CONFORMANCE_KEY_ID` + public key** on
    Vercel (sealed), verify with a `check-signing-key.mjs`-style script.
-3. **`ledger:verify` CLI** + dashboard read-model (deferred; `verifyLedger` is the
-   backing function and is tested).
+3. ~~**`ledger:verify` CLI** + dashboard read-model~~ **DONE (2026-11-26):**
+   `src/conformance/ledger-verify.ts` adds `buildLedgerReadModel` (walks every
+   subject via the new `Store.listSubjectKeys`, re-verifies each chain, then
+   collapses it to its current per-criterion state — an unverified chain reports
+   its verdict and NO criteria, so a tampered subject can't masquerade as clean)
+   and `formatLedgerReport` (the CLI's text + ok flag). The executable is
+   `scripts/ledger-verify.ts` (run `pnpm --filter @a11y-fixer/app ledger:verify`,
+   `-- --subject <key>` for one subject), via `tsx`; it reads the PUBLIC keyring
+   only and exits non-zero on any failed chain so CI/ops can gate on it. Fully
+   unit-tested (tamper → fail, supersede collapse, empty keyring fails closed).
+   The read-model is the data layer a dashboard page renders later (that page is
+   still a follow-on).
 4. **CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`
    (land the policy on `main` first, per the mint-path pregate note).
 
-Follow-ons from the Reconciliation section above (own PRs): fold the two scan→WCAG
-derivations onto one source; make a published `audit_revision` reference the signed
-claims that back it.
+Follow-ons from the Reconciliation section above: ~~fold the two scan→WCAG
+derivations onto one source~~ **PARTIALLY DONE (2026-11-26):** criterion LEVEL is
+now sourced once from the core catalog (`wcag-matrix.ts` keeps only the producer
+bucket; `levelOf` reads `getSuccessCriterion`), with a drift test — a `fail` claim
+and a `partially_supports` verdict can no longer disagree on criterion identity or
+level. STILL OPEN: make a published `audit_revision` reference the signed claims
+that back it (the Phase 4 warranty link).
+
+**Dashboard read-model surface DONE (2026-11-26):** `app/dashboard/[installationId]/ledger/page.tsx`
+renders the whole-ledger read-model for an installation (filters to its repos,
+re-verifies each chain on load, shows verified/tampered + per-criterion state),
+linked from the installation dashboard.
 
 ## What Phase 1 builds
 
