@@ -18,5 +18,7 @@ export function openingTagRegex(markup: string): RegExp | null {
   const tag = match?.[1];
   if (!tag) return null;
   // Escape nothing special: tag names are [A-Za-z][\w-]*, all regex-safe.
-  return new RegExp(`<${tag}(\\s|>)`, 'g');
+  // Tail may be whitespace, `/`, `>`, or end-of-line (the tag name can sit alone
+  // on its line in multi-line JSX).
+  return new RegExp(`<${tag}(\\s|\\/|>|$)`, 'g');
 }

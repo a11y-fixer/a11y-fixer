@@ -32,17 +32,28 @@ export class FixerRegistry {
         continue;
       }
 
-      try {
-        const result = await fixer.fix(violation);
-        results.push(result);
-      } catch (err) {
-        results.push({
-          wcagId: violation.wcagId,
-          bucket: fixer.bucket,
-          applied: false,
-          description: `Fixer failed: ${err instanceof Error ? err.message : String(err)}`,
-          before: violation.nodes[0]?.html ?? '',
-        });
+      // Per-node fixers (independent per-element edits) run once for every
+      // occurrence, so all nodes are fixed — not just nodes[0]. Each call sees a
+      // single-node shallow copy of the violation. Other fixers handle the whole
+      // node set in one call (file-level ESLint --fix, a single <title>, etc.).
+      const units =
+        fixer.perNode && violation.nodes.length > 1
+          ? violation.nodes.map(node => ({ ...violation, nodes: [node] }))
+          : [violation];
+
+      for (const unit of units) {
+        try {
+          const result = await fixer.fix(unit);
+          results.push(result);
+        } catch (err) {
+          results.push({
+            wcagId: unit.wcagId,
+            bucket: fixer.bucket,
+            applied: false,
+            description: `Fixer failed: ${err instanceof Error ? err.message : String(err)}`,
+            before: unit.nodes[0]?.html ?? '',
+          });
+        }
       }
     }
 

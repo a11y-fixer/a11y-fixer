@@ -17,6 +17,8 @@ const HEADING_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 export class EmptyHeadingFixer implements Fixer {
   readonly wcagId = '1.3.1';
   readonly bucket = 'ai-assisted' as const;
+  // Independent per-element edit — fix every occurrence, not just nodes[0].
+  readonly perNode = true;
 
   constructor(
     private readonly aiProvider: AIProvider,

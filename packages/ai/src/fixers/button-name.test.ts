@@ -40,13 +40,34 @@ describe('ButtonNameFixer', () => {
   beforeEach(async () => { dir = await mkdtemp(path.join(tmpdir(), 'btnname-')); });
   afterEach(async () => { await rm(dir, { recursive: true, force: true }); });
 
-  it('canFix matches axe button-name, not other rules sharing WCAG 4.1.2', () => {
+  it('canFix matches both the axe and JSX button rules, not other 4.1.2 rules', () => {
     const fixer = new ButtonNameFixer(makeProvider(), dir);
     expect(fixer.canFix(violation('x.tsx', 1))).toBe(true);
+
+    // The JSX static path's inline rule for the same defect is also claimed.
+    const jsx = { ...violation('x.tsx', 1), id: 'a11y-custom/button-must-have-label' };
+    expect(fixer.canFix(jsx)).toBe(true);
 
     // A different rule sharing WCAG 4.1.2 must not be claimed.
     const other = { ...violation('x.tsx', 1), id: 'aria-props' };
     expect(fixer.canFix(other)).toBe(false);
+  });
+
+  it('human-flags (does not insert) when the AI output is an unusable non-answer', async () => {
+    const file = path.join(dir, 'App.tsx');
+    await writeFile(file, '<button><svg /></button>');
+    const provider = makeProvider({
+      suggestAccessibleName: vi
+        .fn()
+        .mockResolvedValue('I need more context to provide an accurate aria-label'),
+    });
+    const fixer = new ButtonNameFixer(provider, dir);
+
+    const result = await fixer.fix(violation(file, 1));
+
+    expect(result.bucket).toBe('human-flagged');
+    const contents = await readFile(file, 'utf8');
+    expect(contents).not.toContain('aria-label'); // garbage never written
   });
 
   it('adds an aria-label to the button on the recorded line', async () => {

@@ -20,6 +20,8 @@ import { addAttributeToElement } from '@a11y-fixer/core';
 export class SvgImgAltFixer implements Fixer {
   readonly wcagId = '1.1.1';
   readonly bucket = 'ai-assisted' as const;
+  // Independent per-element edit — fix every occurrence, not just nodes[0].
+  readonly perNode = true;
 
   constructor(
     private readonly aiProvider: AIProvider,
