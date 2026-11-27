@@ -13,6 +13,8 @@ import type { AuditRecord, AuditRevisionRecord, Store } from '../../db/store.js'
 import { RevisionVersionConflictError } from '../../db/store.js';
 import type { ReconciledCriterion } from '../reconcile.js';
 import { loadAuditView } from '../audit-service.js';
+import { writeClaims } from '../ledger.js';
+import { reconciledToClaimDrafts, type WarrantyBacking } from '../warranty.js';
 import { buildAcr } from './vpat.js';
 import { buildStatement } from './statement.js';
 import { buildRoadmap } from './roadmap.js';
@@ -39,6 +41,13 @@ export interface DocumentContext {
   meta: DocumentMeta;
   feedbackContact: string;
   reconciled: readonly ReconciledCriterion[];
+  /**
+   * The signed ledger claims backing this document's human-attested verdicts, or
+   * absent when the conformance signing key wasn't provisioned at publish time.
+   * Frozen into the revision snapshot so the public statement is verifiable
+   * against the tamper-evident ledger (see src/conformance/warranty.ts).
+   */
+  backingClaims?: WarrantyBacking;
 }
 
 /** Build any document kind from a resolved context. */
@@ -134,6 +143,18 @@ export interface RevisionDeps {
 }
 
 /**
+ * The dedicated conformance signing key, when provisioned. When absent, a
+ * revision is frozen WITHOUT backing claims (publish still succeeds; the
+ * statement is simply not-yet-warranted until the key lands).
+ */
+export interface WarrantySigning {
+  /** PKCS#8 PEM of the dedicated CONFORMANCE_SIGNING_KEY. */
+  signingKeyPem: string;
+  /** Keyring id for the signing key. */
+  keyId: string;
+}
+
+/**
  * Freeze a published audit's current document context into an immutable revision.
  * Idempotent: if the audit already has a revision, returns it unchanged (a
  * published revision is never rewritten). Returns null if the audit is unknown.
@@ -144,13 +165,37 @@ export async function createRevisionForAudit(
   criteria: readonly SuccessCriterion[],
   auditId: string,
   deps: RevisionDeps,
+  signing?: WarrantySigning,
 ): Promise<AuditRevisionRecord | null> {
   const existing = await store.getRevisionByAudit(auditId);
   if (existing) return existing;
 
   const resolved = await resolveLiveContext(store, criteria, auditId);
   if (!resolved) return null;
-  const { audit, ctx } = resolved;
+  const { audit } = resolved;
+  const ctx = resolved.ctx;
+
+  // Warranty link: sign the human-attested verdicts into the ledger and freeze
+  // their claim ids into the snapshot. Done ONCE here, before the version-retry
+  // loop (claims don't depend on the version) and before insertRevision, so a
+  // signing failure propagates, leaves no revision, and a re-publish retries
+  // cleanly. When no key is provisioned the revision freezes without backing.
+  if (signing) {
+    const publishedAt = audit.publishedAt ?? deps.now();
+    const drafts = reconciledToClaimDrafts(audit.repoId, audit.headSha, ctx.reconciled, publishedAt);
+    if (drafts.length > 0) {
+      const signed = await writeClaims({
+        store,
+        drafts,
+        signingKeyPem: signing.signingKeyPem,
+        keyId: signing.keyId,
+      });
+      ctx.backingClaims = {
+        subjectKey: drafts[0].body.subjectKey,
+        claimIds: signed.map(c => c.id),
+      };
+    }
+  }
 
   // The per-repo version is computed from a read, so two audits in the same repo
   // published at once can pick the same next version and collide on

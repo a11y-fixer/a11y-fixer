@@ -117,6 +117,9 @@ describe('POST /api/installations/[installationId]/audits/[auditId]/publish', ()
       expect.anything(),
       'a1',
       expect.objectContaining({ newSlug: expect.any(Function) }),
+      // Signing config from env: undefined in test (CONFORMANCE_SIGNING_KEY unset),
+      // so the revision freezes without backing claims.
+      undefined,
     );
   });
 

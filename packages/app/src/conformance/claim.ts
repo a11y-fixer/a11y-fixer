@@ -179,6 +179,16 @@ export function componentSubjectKey(repoId: number, path: string, locator: strin
 }
 
 /**
+ * Canonical subject identity for a repo's published conformance audit — the
+ * repo-level VPAT/ACR subject the warranty's signed claims attach to (one chain
+ * per repo, distinct from the per-page scanner subjects). Stable across
+ * publications so successive audits supersede on the same chain.
+ */
+export function auditSubjectKey(repoId: number): string {
+  return `repo:${repoId}|audit:conformance`;
+}
+
+/**
  * The repo id embedded in a subject key (`repo:<id>|...`), or null if the key
  * isn't a recognized subject identity. Lets a per-installation view scope the
  * ledger to the repos it owns without a new column.

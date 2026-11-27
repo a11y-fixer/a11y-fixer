@@ -11,6 +11,7 @@ import { authorizeInstallationView } from '../../../../../../../src/auth/install
 import { auditBelongsTo } from '../../../../../../../src/conformance/audit-authz.js';
 import { publishAudit, type AuditDeps } from '../../../../../../../src/conformance/audit-service.js';
 import { createRevisionForAudit, type RevisionDeps } from '../../../../../../../src/conformance/documents/audit-document.js';
+import { conformanceSigningConfigFromEnv } from '../../../../../../../src/conformance/keyring.js';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -55,7 +56,15 @@ export async function POST(
   // revision (buildAuditDocument falls back to a live render until then).
   if (result.published) {
     try {
-      const rev = await createRevisionForAudit(store, SUCCESS_CRITERIA, auditId, revisionDeps);
+      // Signing config is optional: when CONFORMANCE_SIGNING_KEY isn't provisioned
+      // the revision freezes without backing claims (publish still succeeds).
+      const rev = await createRevisionForAudit(
+        store,
+        SUCCESS_CRITERIA,
+        auditId,
+        revisionDeps,
+        conformanceSigningConfigFromEnv(),
+      );
       // null = retries exhausted or the audit vanished mid-publish: the audit is
       // published without a public link. The dashboard shows a "retry public link"
       // control (re-POST is idempotent and recreates it), so log for visibility.
