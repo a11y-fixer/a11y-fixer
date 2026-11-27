@@ -93,9 +93,18 @@ Shipped in `packages/app/src/conformance/` + `packages/licensing/` + `packages/a
 4. **CI pregate**: add `src/conformance/*` → test lanes to `.gstack/pregate.json`
    (land the policy on `main` first, per the mint-path pregate note).
 
-Follow-ons from the Reconciliation section above (own PRs): fold the two scan→WCAG
-derivations onto one source; make a published `audit_revision` reference the signed
-claims that back it.
+Follow-ons from the Reconciliation section above: ~~fold the two scan→WCAG
+derivations onto one source~~ **PARTIALLY DONE (2026-11-26):** criterion LEVEL is
+now sourced once from the core catalog (`wcag-matrix.ts` keeps only the producer
+bucket; `levelOf` reads `getSuccessCriterion`), with a drift test — a `fail` claim
+and a `partially_supports` verdict can no longer disagree on criterion identity or
+level. STILL OPEN: make a published `audit_revision` reference the signed claims
+that back it (the Phase 4 warranty link).
+
+**Dashboard read-model surface DONE (2026-11-26):** `app/dashboard/[installationId]/ledger/page.tsx`
+renders the whole-ledger read-model for an installation (filters to its repos,
+re-verifies each chain on load, shows verified/tampered + per-criterion state),
+linked from the installation dashboard.
 
 ## What Phase 1 builds
 
