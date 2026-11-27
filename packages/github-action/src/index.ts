@@ -26,7 +26,10 @@ import {
   upsertStickyComment,
   summaryMarkdown,
   toAnnotations,
+  AXE_CORE_VERSION,
+  NO_SCAN_CONTEXT,
   type OctokitLike,
+  type ScanContext,
 } from './report.js';
 import { uploadSarif, type SarifOctokitLike } from './sarif.js';
 import { sendTelemetry, runtimeContext } from './telemetry.js';
@@ -62,11 +65,28 @@ function reportHeadSha(): string {
  * Best-effort — a missing permission or API error only warns, it never fails an
  * otherwise-successful run (and needs no GitHub Advanced Security).
  */
+/**
+ * The scan contract can carry `pass`-enabling provenance ONLY for a run that used
+ * one engine on one path: a mixed run (e.g. HTML pages + Markdown files) cannot
+ * honestly stamp a single `scanPath`, because the ingester would then emit a
+ * page-level `pass` onto the Markdown files. So we populate it for an unambiguous
+ * axe-on-HTML run (`html` with no `markdown`/`components` mixed in) and leave it
+ * empty otherwise — the ledger then records fail claims only, never a silent pass.
+ * A URL-only scan yields no repo-relative locations, so it produces no pass claims
+ * regardless; requiring `html` keeps the rule simple and conservative.
+ */
+function scanContextFor(flags: { html: boolean; markdown: boolean; components: boolean }): ScanContext {
+  if (flags.html && !flags.markdown && !flags.components) {
+    return { engine: 'axe-core', engineVersion: AXE_CORE_VERSION, scanPath: 'html' };
+  }
+  return NO_SCAN_CONTEXT;
+}
+
 async function reportToGitHub(
   violations: A11yViolation[],
   githubToken: string,
   comment: string,
-  opts: { neutral?: boolean } = {},
+  opts: { neutral?: boolean; context?: ScanContext } = {},
 ): Promise<void> {
   if (!githubToken) return;
   // Everything here is best-effort: even constructing octokit or reading the repo
@@ -85,7 +105,7 @@ async function reportToGitHub(
   }
 
   try {
-    await postCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, violations, { neutral: opts.neutral, prNumber: pullRequestNumber() ?? null });
+    await postCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, violations, { neutral: opts.neutral, prNumber: pullRequestNumber() ?? null, context: opts.context });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     core.warning(`Could not create the a11y-fixer check run (grant \`checks: write\`?): ${msg}`);
@@ -353,7 +373,9 @@ export async function run(): Promise<void> {
 
       // Surface results on the PR (Check Run + inline annotations + sticky
       // comment) before deciding the job outcome. Best-effort, never fails here.
-      await reportToGitHub(violations, githubToken, summaryMarkdown(violations));
+      await reportToGitHub(violations, githubToken, summaryMarkdown(violations), {
+        context: scanContextFor({ html, markdown, components }),
+      });
 
       await reportTelemetry({ violationsBefore: violations.length, violationsAfter: violations.length });
 
@@ -446,7 +468,10 @@ export async function run(): Promise<void> {
       // on the triggering PR, if any. Fix mode reports informationally: the Check
       // Run is `neutral`, not `failure`, so it never hard-blocks a merge the way a
       // required `check`-mode gate would. Best-effort; never fails the run.
-      await reportToGitHub(report.finalAfter, githubToken, summaryMarkdown(before, report.finalAfter), { neutral: true });
+      await reportToGitHub(report.finalAfter, githubToken, summaryMarkdown(before, report.finalAfter), {
+        neutral: true,
+        context: scanContextFor({ html, markdown, components }),
+      });
 
       await reportTelemetry({
         violationsBefore: before.length,

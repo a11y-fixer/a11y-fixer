@@ -29,3 +29,9 @@ export interface SignLicenseResult {
 
 /** Mints and signs a license token. The one true minting algorithm. */
 export function signLicense(opts: SignLicenseOptions): SignLicenseResult;
+
+/** Signs the exact bytes given with the Ed25519 PKCS#8 PEM key; base64url out. */
+export function signPayload(bytes: Buffer | string, pem: string): string;
+
+/** Verifies a base64url signature over the exact bytes against an SPKI PEM public key. Never throws. */
+export function verifyPayload(bytes: Buffer | string, sigB64: string, pubPem: string): boolean;

@@ -13,12 +13,27 @@
 // detail rows (e.g. an older Action version).
 import type { ScanRecord, Store, ViolationRecord } from '../../db/store.js';
 import type { CheckRunEvent } from '../events.js';
+import { deriveClaims, type DerivableScan } from '../../conformance/ledger-derive.js';
+import { writeClaims } from '../../conformance/ledger.js';
+import type { ScanPath } from '../../conformance/evaluated-set.js';
 
 /** The Check Run name the Action posts; must match github-action `report.ts`. */
 export const A11Y_FIXER_CHECK_NAME = 'a11y-fixer';
 
-/** Must match `SCAN_REPORT_SCHEMA` in the Action's report.ts. */
-const SCAN_REPORT_SCHEMA = 'a11y-fixer.scan/1';
+/**
+ * Accepted scan-contract schemas. v1 carries violations only (fail-only claims);
+ * v2 adds engine + version + scanPath, which unlock `pass` claims. Both are
+ * accepted so the ledger keeps ingesting while the Action is upgraded v1 -> v2.
+ */
+const SCAN_REPORT_SCHEMAS = new Set(['a11y-fixer.scan/1', 'a11y-fixer.scan/2']);
+
+/** Conformance signing config; when provided, the handler appends ledger claims. */
+export interface ConformanceConfig {
+  /** PKCS#8 PEM of the dedicated CONFORMANCE_SIGNING_KEY. */
+  signingKeyPem: string;
+  /** Keyring id for the signing key (verifiers look the public key up by this). */
+  keyId: string;
+}
 
 interface ScanReportLocation {
   path: string;
@@ -37,6 +52,14 @@ interface ScanReport {
   counts: { critical: number; serious: number; moderate: number; minor: number; total: number };
   truncated: boolean;
   violations: ScanReportViolation[];
+  /** v2 only: the scanning engine, its version, and the scan path. null on v1. */
+  engine: string | null;
+  engineVersion: string | null;
+  scanPath: ScanPath | null;
+}
+
+function parseScanPath(v: unknown): ScanPath | null {
+  return v === 'html' || v === 'jsx' || v === 'markdown' ? v : null;
 }
 
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -96,10 +119,12 @@ export function parseScanReport(text: string | null | undefined): ScanReport | n
   } catch {
     return null;
   }
-  if (!isObject(raw) || raw.schema !== SCAN_REPORT_SCHEMA) return null;
+  if (!isObject(raw) || typeof raw.schema !== 'string' || !SCAN_REPORT_SCHEMAS.has(raw.schema)) {
+    return null;
+  }
   const counts = isObject(raw.counts) ? raw.counts : {};
   return {
-    schema: SCAN_REPORT_SCHEMA,
+    schema: raw.schema,
     counts: {
       critical: num(counts.critical),
       serious: num(counts.serious),
@@ -109,6 +134,33 @@ export function parseScanReport(text: string | null | undefined): ScanReport | n
     },
     truncated: raw.truncated === true,
     violations: parseViolations(raw.violations),
+    engine: typeof raw.engine === 'string' ? raw.engine : null,
+    engineVersion: typeof raw.engineVersion === 'string' ? raw.engineVersion : null,
+    scanPath: parseScanPath(raw.scanPath),
+  };
+}
+
+/** Flatten a parsed report into the (one-row-per-location) shape deriveClaims wants. */
+function toDerivableScan(report: ScanReport, repoId: number, headSha: string, assertedAt: string): DerivableScan {
+  const violations = [] as DerivableScan['violations'];
+  for (const v of report.violations) {
+    if (v.locations.length === 0) {
+      violations.push({ ruleId: v.id, wcagId: v.wcagId, impact: v.impact, path: null, line: null });
+      continue;
+    }
+    for (const loc of v.locations) {
+      violations.push({ ruleId: v.id, wcagId: v.wcagId, impact: v.impact, path: loc.path, line: loc.line });
+    }
+  }
+  return {
+    repoId,
+    headSha,
+    assertedAt,
+    truncated: report.truncated,
+    engine: report.engine,
+    engineVersion: report.engineVersion,
+    scanPath: report.scanPath,
+    violations,
   };
 }
 
@@ -132,6 +184,7 @@ export async function handleCheckRun(
   event: CheckRunEvent,
   store: Store,
   now: () => Date = () => new Date(),
+  conformance?: ConformanceConfig,
 ): Promise<void> {
   if (event.action !== 'completed') return;
 
@@ -159,4 +212,26 @@ export async function handleCheckRun(
 
   await store.upsertScan(record);
   if (report) await store.replaceViolations(run.id, toViolationRecords(report));
+
+  // Conformance ledger: derive signed claims from the scan and append them.
+  // Only runs when a signing key is configured; a scan with no parsed contract
+  // yields no claims. Fatal-safe: ledger failures must not drop the scan record,
+  // so they are caught and logged, not rethrown.
+  if (conformance && report) {
+    try {
+      const drafts = deriveClaims(
+        toDerivableScan(report, event.repository.id, run.head_sha, record.createdAt),
+      );
+      if (drafts.length > 0) {
+        await writeClaims({
+          store,
+          drafts,
+          signingKeyPem: conformance.signingKeyPem,
+          keyId: conformance.keyId,
+        });
+      }
+    } catch (err) {
+      console.error('[conformance] claim append failed for check_run', run.id, err);
+    }
+  }
 }

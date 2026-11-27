@@ -227,6 +227,75 @@ create index if not exists audit_revisions_installation_id_idx on audit_revision
 -- The public permalink looks a revision up by slug; keep that lookup indexed.
 create unique index if not exists audit_revisions_public_slug_idx on audit_revisions (public_slug);
 
+-- Phase 1: the Conformance Ledger. An append-only, Ed25519-signed, per-subject
+-- chained log of conformance claims with content-addressed evidence. Signed with
+-- the DEDICATED conformance key (CONFORMANCE_SIGNING_KEY), never the license key.
+-- Design: docs/conformance/claim-model.md + phase-1-ledger-plan.md.
+
+-- Content-addressed evidence blobs, deduplicated by hash. The same scan output
+-- backing several claims is stored once.
+create table if not exists conformance_evidence (
+  hash             text primary key,              -- sha-256 (hex) of the canonical blob
+  type             text        not null,          -- 'scan-output' in Phase 1
+  producer_version text        not null,
+  blob             jsonb       not null,
+  created_at       timestamptz not null default now()
+);
+
+-- One row per signed claim. APPEND-ONLY: never updated or deleted (enforced by
+-- the trigger + revoked privileges below, not just by convention). `id` is the
+-- content address of the assertion; `seq` gives a stable chain/append order.
+create table if not exists conformance_claim (
+  id            text primary key,                 -- sha-256 (hex) of the assertion content
+  seq           bigint generated always as identity,
+  subject_kind  text        not null check (subject_kind in ('flow','page','component')),
+  subject_key   text        not null,
+  criterion     text        not null,
+  wcag_version  text        not null default '2.2',
+  level         text        not null check (level in ('A','AA')),
+  state         text        not null check (state in ('pass','fail','not-applicable','not-evaluated','human-reviewed')),
+  method        text        not null check (method in ('deterministic','runtime','semantic','human')),
+  confidence    real        not null check (confidence >= 0 and confidence <= 1),
+  asserted_by   text        not null,
+  asserted_at   timestamptz not null,
+  prev_claim_id text references conformance_claim(id),
+  supersedes    text references conformance_claim(id),
+  evidence_hash text references conformance_evidence(hash),
+  signature     text        not null,
+  key_id        text        not null
+);
+
+create index if not exists conformance_claim_subject_idx
+  on conformance_claim (subject_key, criterion, asserted_at desc);
+create index if not exists conformance_claim_subject_seq_idx
+  on conformance_claim (subject_key, seq);
+
+-- Per-subject chain head: the latest claim id on a subject's chain. Mutable
+-- (unlike the claims themselves): advanced on every append.
+create table if not exists conformance_subject_head (
+  subject_key   text primary key,
+  head_claim_id text        not null references conformance_claim(id),
+  updated_at    timestamptz not null default now()
+);
+
+-- Append-only enforcement at the DB, not just the app: block UPDATE/DELETE on the
+-- claim log. A correction is a NEW claim that supersedes the old one.
+create or replace function conformance_claim_append_only()
+  returns trigger language plpgsql as $$
+begin
+  raise exception 'conformance_claim is append-only (no % allowed)', tg_op;
+end;
+$$;
+
+drop trigger if exists conformance_claim_no_mutate on conformance_claim;
+create trigger conformance_claim_no_mutate
+  before update or delete on conformance_claim
+  for each row execute function conformance_claim_append_only();
+
+-- Belt and braces: the app's role should also lack UPDATE/DELETE on the log.
+-- (Service role bypasses this; apply a scoped grant in the deploy runbook.)
+-- revoke update, delete on conformance_claim from <app_role>;
+
 -- Row-level security. The service-role key bypasses RLS (webhook sink + any
 -- server-side admin reads are unaffected). These policies constrain ONLY the
 -- dashboard's user-scoped client, which presents the user's Supabase Auth JWT.
@@ -241,6 +310,12 @@ alter table licenses enable row level security;
 alter table audits enable row level security;
 alter table criterion_verdicts enable row level security;
 alter table audit_revisions enable row level security;
+-- Ledger tables: RLS on with NO select policy = deny-all to the dashboard's
+-- anon client. The service-role webhook sink (which writes claims) bypasses RLS.
+-- A user-scoped read policy arrives with the Phase 1 read-model (deferred).
+alter table conformance_evidence enable row level security;
+alter table conformance_claim enable row level security;
+alter table conformance_subject_head enable row level security;
 
 -- A user sees only their own row and their own installation links.
 create policy users_self_select on users

@@ -12,10 +12,12 @@ import type {
   AuditRevisionRecord,
   AuditStatus,
   CriterionVerdictRecord,
+  EvidenceBlobRecord,
   InstallationRecord,
   LicenseRecord,
   RepoRecord,
   ScanRecord,
+  SignedClaimRecord,
   Store,
   SubscriptionRecord,
   UserRecord,
@@ -26,7 +28,10 @@ import { RevisionVersionConflictError } from './store.js';
 /** The slice of the supabase-js client this store uses. */
 export interface SupabaseLike {
   from(table: string): {
-    upsert(values: unknown, options?: { onConflict?: string; ignoreDuplicates?: boolean }): Promise<{ error: unknown }>;
+    upsert(
+      values: unknown,
+      options?: { onConflict?: string; ignoreDuplicates?: boolean },
+    ): Promise<{ error: unknown }>;
     delete(): {
       eq(column: string, value: unknown): Promise<{ error: unknown }>;
       in(column: string, values: unknown[]): Promise<{ error: unknown }>;
@@ -512,5 +517,113 @@ export class SupabaseStore implements Store {
     const { data, error } = await this.db.from('user_installations').select('installation_id').eq('user_id', userId);
     throwOn(error, 'listInstallationsForUser');
     return (data ?? []).map(row => (row as Record<string, unknown>).installation_id as number);
+  }
+
+  // --- Conformance ledger (Phase 1) ---------------------------------------
+
+  async putEvidence(record: EvidenceBlobRecord): Promise<void> {
+    // Content-addressed: ignore a duplicate hash (never overwrite evidence).
+    const { error } = await this.db.from('conformance_evidence').upsert(
+      {
+        hash: record.hash,
+        type: record.type,
+        producer_version: record.producerVersion,
+        blob: record.blob,
+        created_at: record.createdAt,
+      },
+      { onConflict: 'hash', ignoreDuplicates: true },
+    );
+    throwOn(error, 'putEvidence');
+  }
+
+  async getEvidence(hash: string): Promise<EvidenceBlobRecord | null> {
+    const { data, error } = await this.db.from('conformance_evidence').select().eq('hash', hash);
+    throwOn(error, 'getEvidence');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    if (!row) return null;
+    return {
+      hash: row.hash as string,
+      type: row.type as string,
+      producerVersion: row.producer_version as string,
+      blob: row.blob,
+      createdAt: row.created_at as string,
+    };
+  }
+
+  async getSubjectHead(subjectKey: string): Promise<string | null> {
+    const { data, error } = await this.db
+      .from('conformance_subject_head')
+      .select('head_claim_id')
+      .eq('subject_key', subjectKey);
+    throwOn(error, 'getSubjectHead');
+    const row = (data ?? [])[0] as Record<string, unknown> | undefined;
+    return row ? (row.head_claim_id as string) : null;
+  }
+
+  async appendClaims(claims: SignedClaimRecord[]): Promise<void> {
+    if (claims.length === 0) return;
+    // Append-only insert: ON CONFLICT (id) DO NOTHING via ignoreDuplicates, so a
+    // redelivered claim (same content id) is a no-op and nothing is ever updated.
+    const { error } = await this.db.from('conformance_claim').upsert(
+      claims.map(c => ({
+        id: c.id,
+        subject_kind: c.subjectKind,
+        subject_key: c.subjectKey,
+        criterion: c.criterion,
+        wcag_version: c.wcagVersion,
+        level: c.level,
+        state: c.state,
+        method: c.method,
+        confidence: c.confidence,
+        asserted_by: c.assertedBy,
+        asserted_at: c.assertedAt,
+        prev_claim_id: c.prevClaimId,
+        supersedes: c.supersedes,
+        evidence_hash: c.evidenceHash,
+        signature: c.signature,
+        key_id: c.keyId,
+      })),
+      { onConflict: 'id', ignoreDuplicates: true },
+    );
+    throwOn(error, 'appendClaims(insert)');
+
+    // Advance each affected subject's head to the last claim appended for it.
+    const lastBySubject = new Map<string, string>();
+    for (const c of claims) lastBySubject.set(c.subjectKey, c.id);
+    const { error: headErr } = await this.db.from('conformance_subject_head').upsert(
+      [...lastBySubject].map(([subjectKey, headId]) => ({
+        subject_key: subjectKey,
+        head_claim_id: headId,
+        updated_at: claims[claims.length - 1].assertedAt,
+      })),
+      { onConflict: 'subject_key' },
+    );
+    throwOn(headErr, 'appendClaims(head)');
+  }
+
+  async listClaims(subjectKey: string): Promise<SignedClaimRecord[]> {
+    const { data, error } = await this.db.from('conformance_claim').select().eq('subject_key', subjectKey);
+    throwOn(error, 'listClaims');
+    const rows = (data ?? []) as Record<string, unknown>[];
+    // Return in chain (append) order: `seq` is a monotonic identity column.
+    rows.sort((a, b) => (a.seq as number) - (b.seq as number));
+    return rows.map(r => ({
+      id: r.id as string,
+      subjectKind: r.subject_kind as SignedClaimRecord['subjectKind'],
+      subjectKey: r.subject_key as string,
+      criterion: r.criterion as string,
+      wcagVersion: r.wcag_version as string,
+      level: r.level as SignedClaimRecord['level'],
+      state: r.state as SignedClaimRecord['state'],
+      method: r.method as SignedClaimRecord['method'],
+      confidence: r.confidence as number,
+      assertedBy: r.asserted_by as string,
+      assertedAt: r.asserted_at as string,
+      prevClaimId: (r.prev_claim_id as string | null) ?? null,
+      supersedes: (r.supersedes as string | null) ?? null,
+      evidenceHash: (r.evidence_hash as string | null) ?? null,
+      signature: r.signature as string,
+      keyId: r.key_id as string,
+    }));
   }
 }

@@ -1,2 +1,2 @@
-export { signLicense } from './sign.mjs';
+export { signLicense, signPayload, verifyPayload } from './sign.mjs';
 export type { LicensePayload, SignLicenseOptions, SignLicenseResult } from './sign.mjs';

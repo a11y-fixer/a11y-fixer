@@ -2,6 +2,7 @@
 // all verify/idempotency/route logic + status mapping lives in
 // `src/http/webhook-request.ts` and is unit-tested there with a plain Request.
 import { handleWebhookRequest } from '../../../../src/http/webhook-request.js';
+import { conformanceSigningConfigFromEnv } from '../../../../src/conformance/keyring.js';
 import { serviceRoleStore } from '../../../lib/supabase.js';
 
 // The raw body must be read verbatim for HMAC verification; never cache.
@@ -15,5 +16,7 @@ function webhookSecret(): string {
 }
 
 export async function POST(req: Request): Promise<Response> {
-  return handleWebhookRequest(req, serviceRoleStore(), webhookSecret());
+  // Optional: when CONFORMANCE_SIGNING_KEY + CONFORMANCE_KEY_ID are set, check_run
+  // ingestion also appends signed conformance-ledger claims. Unset → ledger off.
+  return handleWebhookRequest(req, serviceRoleStore(), webhookSecret(), conformanceSigningConfigFromEnv());
 }
