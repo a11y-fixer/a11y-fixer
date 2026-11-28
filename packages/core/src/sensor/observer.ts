@@ -4,15 +4,19 @@
 // adds NO new CI browser dependency. It observes; it never judges (judge.ts does)
 // and never signs (the backend does). Text and accessible names are hashed the
 // instant they leave the page context — raw strings never enter a fact or a blob.
+//
+// This file is THIN browser glue (page.evaluate, launch, settle timing) and is
+// excluded from coverage; the decision logic lives in observe-logic.ts and is
+// unit-tested there.
 import { launchBrowser } from '../detector/load-puppeteer.js';
-import {
-  hashContent,
-  hashText,
-  redactRouteLabel,
-  type RegionFingerprint,
-  type RouteChangeFacts,
-} from './facts.js';
+import { hashText, type RouteChangeFacts } from './facts.js';
 import { resolveFlowName, type DiscoveredRoute } from './route-discovery.js';
+import {
+  buildFacts,
+  selectInternalLinks,
+  type InternalLink,
+  type RawSnapshot,
+} from './observe-logic.js';
 
 /** One observed transition: the flow it belongs to and its raw facts. */
 export interface SensorObservation {
@@ -62,7 +66,7 @@ export async function runRouteSensor(opts: RunSensorOptions): Promise<SensorObse
       let targets: InternalLink[];
       try {
         await page.goto(fromUrl, { waitUntil: 'networkidle0' });
-        targets = await discoverInternalLinks(page, routePaths);
+        targets = selectInternalLinks(await readHrefs(page), routePaths);
       } catch {
         continue; // route didn't load; skip, never a fabricated fail
       }
@@ -86,30 +90,12 @@ export async function runRouteSensor(opts: RunSensorOptions): Promise<SensorObse
   }
 }
 
-interface InternalLink {
-  selectorIndex: number;
-  toPath: string;
-}
-
-/** Collect internal links on the current page that target another known route. */
-async function discoverInternalLinks(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  page: any,
-  routePaths: Set<string>,
-): Promise<InternalLink[]> {
-  const hrefs: string[] = await page.$$eval('a[href]', (els: Element[]) =>
+/** Read every anchor href on the current page, in document order. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function readHrefs(page: any): Promise<string[]> {
+  return page.$$eval('a[href]', (els: Element[]) =>
     els.map(el => (el as HTMLAnchorElement).getAttribute('href') ?? ''),
   );
-  const links: InternalLink[] = [];
-  const seen = new Set<string>();
-  hrefs.forEach((href, selectorIndex) => {
-    if (!href.startsWith('/') || href.startsWith('//')) return; // internal, same-origin only
-    const path = href.split(/[?#]/, 1)[0] || '/';
-    if (!routePaths.has(path) || seen.has(path)) return;
-    seen.add(path);
-    links.push({ selectorIndex, toPath: path });
-  });
-  return links.sort((a, b) => a.toPath.localeCompare(b.toPath));
 }
 
 /** Observe one A → B client-side transition and build its facts. */
@@ -132,42 +118,13 @@ async function observeTransition(
   const settled = await waitForSettle(page, cfg.settleQuietMs, cfg.settleTimeoutMs);
   const after = await captureSnapshot(page);
 
-  const beforeSignatures = new Set(before.elementSignatures);
-  const focusMovedIntoNewContent =
-    after.focusSignature != null && !beforeSignatures.has(after.focusSignature);
-
-  return {
-    fromLabel: redactRouteLabel(new URL(fromUrl).pathname),
-    toLabel: redactRouteLabel(target.toPath),
+  return buildFacts({
+    fromPath: new URL(fromUrl).pathname,
+    toPath: target.toPath,
     settled,
-    liveRegionsBefore: fingerprint(before.regions),
-    liveRegionsAfter: fingerprint(after.regions),
-    focusMovedIntoNewContent,
-  };
-}
-
-interface RawRegion {
-  role: string;
-  name: string | null;
-  text: string;
-  childCount: number;
-  ariaBusy: boolean;
-}
-interface RawSnapshot {
-  regions: RawRegion[];
-  elementSignatures: string[];
-  focusSignature: string | null;
-}
-
-/** Hash the raw (possibly PII-bearing) region strings into safe fingerprints. */
-function fingerprint(regions: RawRegion[]): RegionFingerprint[] {
-  return regions.map(r => ({
-    role: r.role,
-    nameHash: r.name != null ? hashContent(r.name) : null,
-    textHash: hashContent(r.text),
-    childCount: r.childCount,
-    ariaBusy: r.ariaBusy,
-  }));
+    before,
+    after,
+  });
 }
 
 /** Capture live regions, focus signature, and element signatures from the page. */
