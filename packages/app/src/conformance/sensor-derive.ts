@@ -8,7 +8,10 @@
 //
 // Claims are emitted at (flow, criterion) granularity on `flow:` subjects. See
 // docs/conformance/phase-2-sensor-plan.md.
-import { judgeObservation, canonicalizeFacts, type RouteChangeFacts } from '@a11y-fixer/core';
+// Import from the pure `./sensor` subpath, NOT the main barrel: the barrel pulls
+// in the Vue component scanner (and its optional template engines), which a
+// Next.js server bundle can't resolve.
+import { judgeObservation, canonicalizeFacts, type RouteChangeFacts } from '@a11y-fixer/core/sensor';
 import { flowSubjectKeyForName } from './claim.js';
 import type { ClaimDraft } from './ledger.js';
 import { levelOf } from './wcag-matrix.js';
