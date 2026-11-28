@@ -5,6 +5,8 @@ import {
   scanSource,
   scanComponents,
   dedupeFixFiles,
+  NextAppRouterDiscovery,
+  runRouteSensor,
 } from '@a11y-fixer/core';
 import type { A11yViolation, FixResult } from '@a11y-fixer/core';
 import { buildFullRegistry, AISDKProvider, resolveAIConfig, CachingProvider, LearningProvider, scanMarkdown } from '@a11y-fixer/ai';
@@ -32,8 +34,10 @@ import {
   type ScanContext,
 } from './report.js';
 import { uploadSarif, type SarifOctokitLike } from './sarif.js';
+import { postSensorCheckRun } from './sensor-report.js';
 import { sendTelemetry, runtimeContext } from './telemetry.js';
 import path from 'node:path';
+import { stat } from 'node:fs/promises';
 
 /** PR number from the event payload, when this run is on a pull request. */
 function pullRequestNumber(): number | undefined {
@@ -228,6 +232,68 @@ async function maybeOpenPR(
   core.info(`PR created: ${pr.url}`);
 }
 
+/** First existing directory among candidates, or null. */
+async function firstExistingDir(candidates: string[]): Promise<string | null> {
+  for (const candidate of candidates) {
+    try {
+      if ((await stat(candidate)).isDirectory()) return candidate;
+    } catch {
+      // not here; try the next candidate
+    }
+  }
+  return null;
+}
+
+/**
+ * The opt-in runtime sensor (WCAG 4.1.3 SPA route-change). Auto-discovers routes
+ * from the app's router config, drives real client-side transitions in headless
+ * Chrome against a RUNNING app (`url`), and posts a facts-only Check Run the control
+ * plane judges + signs. Entirely best-effort: a missing URL, no routes, or any
+ * driver error only warns — it never fails an otherwise-successful run.
+ */
+async function maybeRunRuntimeSensor(
+  rootDir: string,
+  opts: { enabled: boolean; url: string; appDir: string; githubToken: string },
+): Promise<void> {
+  if (!opts.enabled) return;
+  if (!opts.url) {
+    core.warning('`runtime-sensor` is set but `runtime-sensor-url` is empty — start your app and pass its base URL. Skipping.');
+    return;
+  }
+  try {
+    const appDir =
+      opts.appDir ||
+      (await firstExistingDir([path.resolve(rootDir, 'app'), path.resolve(rootDir, 'src/app')])) ||
+      '';
+    if (!appDir) {
+      core.warning('Runtime sensor: no Next.js app directory found (looked for app/ and src/app/). Set `runtime-sensor-app-dir`. Skipping.');
+      return;
+    }
+    const routes = await new NextAppRouterDiscovery(appDir).discover();
+    if (routes.length === 0) {
+      core.info('Runtime sensor: no routes discovered — nothing to observe.');
+      return;
+    }
+    const observations = await runRouteSensor({ baseUrl: opts.url, routes });
+    if (observations.length === 0) {
+      core.info('Runtime sensor: no route transitions observed.');
+      return;
+    }
+    if (!opts.githubToken) {
+      core.info(`Runtime sensor: observed ${observations.length} transition(s), but no github-token — skipping Check Run.`);
+      return;
+    }
+    const octokit = github.getOctokit(opts.githubToken) as unknown as OctokitLike;
+    const { owner, repo } = github.context.repo;
+    await postSensorCheckRun(octokit, { owner, repo, sha: reportHeadSha() }, observations, {
+      prNumber: pullRequestNumber() ?? null,
+    });
+    core.info(`Runtime sensor: posted ${observations.length} route transition(s).`);
+  } catch (err) {
+    core.warning(`Runtime sensor skipped: ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
 /** Total number of learned examples across all buckets, for a log line. */
 function examplesCount(examples: Record<string, string[] | undefined>): number {
   return Object.values(examples).reduce((n, v) => n + (v?.length ?? 0), 0);
@@ -263,6 +329,13 @@ export async function run(): Promise<void> {
   // `html`, getInput (not getBooleanInput) so an absent input doesn't throw.
   const components = core.getInput('components').toLowerCase() === 'true';
   const baseBranch = core.getInput('base-branch') || 'main';
+
+  // Opt-in runtime sensor (WCAG 4.1.3 SPA route-change). Needs a running app URL
+  // and auto-discovers routes from the Next.js app directory. getInput, not
+  // getBooleanInput, so an absent input never throws on older workflow files.
+  const runtimeSensor = core.getInput('runtime-sensor').toLowerCase() === 'true';
+  const runtimeSensorUrl = core.getInput('runtime-sensor-url');
+  const runtimeSensorAppDir = core.getInput('runtime-sensor-app-dir');
 
   const cookiesRaw = core.getInput('cookies');
   let cookies: CookieParam[] | undefined;
@@ -368,6 +441,15 @@ export async function run(): Promise<void> {
   }
 
   try {
+    // Opt-in runtime sensor runs alongside any mode (best-effort, never fails the
+    // run). It posts its own `a11y-fixer-runtime` Check Run, separate from the scan.
+    await maybeRunRuntimeSensor(rootDir, {
+      enabled: runtimeSensor,
+      url: runtimeSensorUrl,
+      appDir: runtimeSensorAppDir ? path.resolve(runtimeSensorAppDir) : '',
+      githubToken,
+    });
+
     if (mode === 'check') {
       const violations = await scanAll(rootDir, { url, html, markdown, components, cookies });
 

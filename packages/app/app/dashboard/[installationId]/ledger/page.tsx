@@ -9,6 +9,7 @@ import { serviceRoleStore } from '../../../lib/supabase.js';
 import { authorizeInstallationView } from '../../../../src/auth/installations.js';
 import { conformanceKeyringFromEnv } from '../../../../src/conformance/keyring.js';
 import { buildLedgerReadModel } from '../../../../src/conformance/ledger-verify.js';
+import { flowRegressions } from '../../../../src/conformance/flow-regression.js';
 import { repoIdOfSubjectKey, pathOfSubjectKey } from '../../../../src/conformance/claim.js';
 
 export const dynamic = 'force-dynamic';
@@ -64,6 +65,7 @@ export default async function LedgerPage({
   });
 
   const model = await buildLedgerReadModel(store, keyring, keys);
+  const regressions = await flowRegressions(store, keyring, keys);
 
   const stateOrder: SubjectState[] = [
     'pass',
@@ -97,6 +99,26 @@ export default async function LedgerPage({
           {model.subjects.filter(s => !s.verdict.ok).length} subject chain(s) FAILED verification —
           do not trust them.
         </p>
+      )}
+
+      {regressions.length > 0 && (
+        <div className="panel tone-warn" role="status">
+          <strong>
+            {regressions.length} runtime regression{regressions.length === 1 ? '' : 's'}
+          </strong>{' '}
+          — a previously-announced route change now fails {regressions[0].criterion} (silent
+          transition).
+          <ul style={{ margin: '0.5rem 0 0' }}>
+            {regressions.map(r => (
+              <li key={`${r.subjectKey}:${r.criterion}`} className="muted">
+                {flowLabelOf(r.subjectKey)}: passed {r.priorPassAt} → failed {r.regressedAt}
+              </li>
+            ))}
+          </ul>
+          <p className="muted" style={{ margin: '0.5rem 0 0' }}>
+            {regressions[0].caveat}
+          </p>
+        </div>
       )}
 
       {model.subjects.length === 0 ? (
@@ -140,3 +162,9 @@ export default async function LedgerPage({
 }
 
 type SubjectState = 'pass' | 'fail' | 'not-applicable' | 'not-evaluated' | 'human-reviewed';
+
+/** The flow portion of a `repo:<id>|flow:<flowId>` subject key, for display. */
+function flowLabelOf(subjectKey: string): string {
+  const m = /\|flow:(.+)$/.exec(subjectKey);
+  return m ? `flow ${m[1]}` : subjectKey;
+}

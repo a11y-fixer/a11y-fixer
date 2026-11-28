@@ -33,3 +33,21 @@ export function passEligibleCriteria(scanPath: ScanPath): ReadonlySet<string> {
   // Defensive: never return a criterion the matrix does not classify M.
   return new Set(seed.filter(c => bucketOf(c) === 'M'));
 }
+
+// The runtime producer's analog of PASS_ELIGIBLE: which criteria a runtime sensor
+// run may assert a `pass` for. Same risk-#1 discipline — a PINNED, deliberately
+// tiny allowlist of R-primary (runtime-observable) criteria where a positive
+// observation genuinely proves conformance for the observed flow. First (and only)
+// entry: 4.1.3 Status Messages — a route change that announces (live-region text
+// delta or focus into the new subtree) is directly observable as conforming.
+const RUNTIME_PASS_ELIGIBLE: readonly string[] = ['4.1.3'];
+
+/**
+ * The criteria a runtime sensor run may assert a `pass` for. Returns a Set for
+ * O(1) membership. Every returned criterion is guarded to be R-primary (runtime-
+ * observable), so a matrix edit that reclassifies one drops it automatically —
+ * the runtime producer never silently asserts a pass outside its proven bucket.
+ */
+export function runtimePassEligibleCriteria(): ReadonlySet<string> {
+  return new Set(RUNTIME_PASS_ELIGIBLE.filter(c => bucketOf(c) === 'R'));
+}

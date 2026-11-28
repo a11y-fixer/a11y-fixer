@@ -60,6 +60,16 @@ inputs:
     description: 'Base branch for the fix-mode PR (default: main)'
     required: false
     default: 'main'
+  runtime-sensor:
+    description: 'Opt-in runtime sensor (WCAG 4.1.3 status messages / SPA route-change announcement). Auto-discovers routes from your Next.js app router and drives real client-side transitions in headless Chrome against a RUNNING app, posting a separate "a11y-fixer-runtime" Check Run. Requires runtime-sensor-url. Runs alongside any mode; best-effort (never fails the run).'
+    required: false
+    default: 'false'
+  runtime-sensor-url:
+    description: 'Base URL of your already-running app for the runtime sensor (e.g. http://localhost:3000). Start your app in CI before this step. Required when runtime-sensor is true.'
+    required: false
+  runtime-sensor-app-dir:
+    description: 'Path to the Next.js App Router directory for route auto-discovery (optional). Defaults to <dir>/app then <dir>/src/app.'
+    required: false
   cache-file:
     description: 'Path to a JSON file for caching AI results across runs (optional). Pair with actions/cache to cut Anthropic spend. In-run deduplication is always on; this only adds cross-run persistence.'
     required: false

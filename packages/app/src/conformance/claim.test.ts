@@ -7,6 +7,9 @@ import {
   verifyClaim,
   pageSubjectKey,
   componentSubjectKey,
+  flowSubjectKey,
+  flowSubjectKeyForName,
+  flowId,
   repoIdOfSubjectKey,
   pathOfSubjectKey,
   type ClaimBody,
@@ -137,6 +140,26 @@ describe('claim invariants (claim-model.md)', () => {
     expect(() => signClaim(body({ confidence: 1.5 }), PEM, KEY_ID)).toThrow(/confidence/);
     expect(() => signClaim(body({ subjectKey: '' }), PEM, KEY_ID)).toThrow(/subjectKey/);
   });
+
+  it('forces a runtime pass/fail (directly observed) to confidence 1', () => {
+    expect(() =>
+      signClaim(body({ method: 'runtime', state: 'pass', confidence: 0.9 }), PEM, KEY_ID),
+    ).toThrow(/confidence 1/);
+    expect(() =>
+      signClaim(body({ method: 'runtime', state: 'fail', confidence: 0.5 }), PEM, KEY_ID),
+    ).toThrow(/confidence 1/);
+  });
+
+  it('accepts a directly-observed runtime pass@1.0 and a sampled runtime not-evaluated (<1)', () => {
+    expect(() => signClaim(body({ method: 'runtime', state: 'pass', confidence: 1 }), PEM, KEY_ID)).not.toThrow();
+    expect(() =>
+      signClaim(
+        body({ method: 'runtime', state: 'not-evaluated', confidence: 0.4, evidenceHash: null }),
+        PEM,
+        KEY_ID,
+      ),
+    ).not.toThrow();
+  });
 });
 
 describe('subject keys', () => {
@@ -146,6 +169,18 @@ describe('subject keys', () => {
   });
   it('component key nests a locator under the page', () => {
     expect(componentSubjectKey(1, 'a.html', 'button#x')).toBe('repo:1|path:a.html|node:button#x');
+  });
+
+  it('flow key keeps the repo prefix so repoIdOfSubjectKey scopes it', () => {
+    expect(flowSubjectKey(5, 'abc123')).toBe('repo:5|flow:abc123');
+    expect(repoIdOfSubjectKey(flowSubjectKey(5, 'abc123'))).toBe(5);
+    expect(pathOfSubjectKey(flowSubjectKey(5, 'abc123'))).toBeNull();
+  });
+
+  it('flowId is a stable hash of the normalized name (A3), independent of case/spacing', () => {
+    expect(flowId('/dashboard')).toBe(flowId('  /DASHBOARD  '));
+    expect(flowSubjectKeyForName(5, '/orders')).toBe(flowSubjectKey(5, flowId('/orders')));
+    expect(() => flowId('   ')).toThrow();
   });
 
   it('repoIdOfSubjectKey extracts the repo id, or null for a foreign key', () => {
