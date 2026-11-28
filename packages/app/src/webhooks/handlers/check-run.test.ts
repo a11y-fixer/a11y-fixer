@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { generateKeyPairSync } from 'node:crypto';
 import { MemoryStore } from '../../db/memory-store.js';
-import { handleCheckRun, parseScanReport } from './check-run.js';
+import { handleCheckRun, parseScanReport, A11Y_FIXER_SENSOR_CHECK_NAME, type ConformanceConfig } from './check-run.js';
 import { routeEvent } from '../router.js';
 import type { CheckRunEvent } from '../events.js';
+import { SENSOR_REPORT_SCHEMA } from '../../conformance/sensor-derive.js';
+import { flowSubjectKeyForName } from '../../conformance/claim.js';
 
 const repository = { id: 42, full_name: 'acme/web', private: false, default_branch: 'main' };
 
@@ -160,5 +163,70 @@ describe('handleCheckRun — embedded scan contract', () => {
     await routeEvent('check_run', event({ output: { text: scanContract() } }), store);
     expect(store.scans.has(9001)).toBe(true);
     expect(store.violations.get(9001)).toHaveLength(3);
+  });
+});
+
+describe('handleCheckRun — runtime sensor ingest', () => {
+  const kp = generateKeyPairSync('ed25519');
+  const conformance: ConformanceConfig = {
+    signingKeyPem: kp.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString(),
+    keyId: 'conformance-2026',
+  };
+
+  /** A silent route change (no announcement, no focus move) → the backend judges fail. */
+  function sensorContract(): string {
+    return JSON.stringify({
+      schema: SENSOR_REPORT_SCHEMA,
+      sha: 'abc123',
+      prNumber: 7,
+      engine: 'puppeteer',
+      engineVersion: '25.18.1',
+      flows: [
+        {
+          flowName: '/dashboard',
+          criterion: '4.1.3',
+          facts: {
+            fromLabel: '/',
+            toLabel: '/dashboard',
+            settled: true,
+            liveRegionsBefore: [],
+            liveRegionsAfter: [],
+            focusMovedIntoNewContent: false,
+          },
+        },
+      ],
+    });
+  }
+
+  function sensorEvent(): CheckRunEvent {
+    return event({ name: A11Y_FIXER_SENSOR_CHECK_NAME, output: { text: sensorContract() } });
+  }
+
+  it('appends a signed runtime fail claim on the flow subject', async () => {
+    const store = new MemoryStore();
+    await handleCheckRun(sensorEvent(), store, undefined, conformance);
+    const subject = flowSubjectKeyForName(42, '/dashboard');
+    const claims = await store.listClaims(subject);
+    expect(claims).toHaveLength(1);
+    expect(claims[0]).toMatchObject({ method: 'runtime', state: 'fail', criterion: '4.1.3', subjectKind: 'flow' });
+    // No scans/violations row — the sensor doesn't use the static scanner table.
+    expect(store.scans.has(9001)).toBe(false);
+  });
+
+  it('does nothing without a signing key configured', async () => {
+    const store = new MemoryStore();
+    await handleCheckRun(sensorEvent(), store); // no conformance config
+    expect(await store.listSubjectKeys()).toEqual([]);
+  });
+
+  it('ignores a malformed sensor contract', async () => {
+    const store = new MemoryStore();
+    await handleCheckRun(
+      event({ name: A11Y_FIXER_SENSOR_CHECK_NAME, output: { text: 'garbage' } }),
+      store,
+      undefined,
+      conformance,
+    );
+    expect(await store.listSubjectKeys()).toEqual([]);
   });
 });

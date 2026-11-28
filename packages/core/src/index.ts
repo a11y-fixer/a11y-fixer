@@ -24,6 +24,29 @@ export { scanSource } from './runners/scan-source.js';
 export type { ScanSourceOptions } from './runners/scan-source.js';
 export { WCAG_TO_ESLINT, ESLINT_TO_WCAG, AUTO_FIXABLE_RULES } from './runners/wcag-eslint-map.js';
 
+// Runtime sensor (Phase 2 — WCAG 4.1.3 SPA route-change). The pure facts/judge/
+// discovery pieces carry no browser dependency (the backend imports the judge);
+// the observer reuses the shared puppeteer loader.
+export {
+  hashText,
+  hashContent,
+  normalizeText,
+  redactRouteLabel,
+  canonicalizeFacts,
+  liveRegionTextChanged,
+  EMPTY_TEXT_HASH,
+} from './sensor/facts.js';
+export type { RegionFingerprint, RouteChangeFacts } from './sensor/facts.js';
+export { judgeObservation } from './sensor/judge.js';
+export type { Observation } from './sensor/judge.js';
+export {
+  NextAppRouterDiscovery,
+  resolveFlowName,
+} from './sensor/route-discovery.js';
+export type { RouteDiscovery, DiscoveredRoute } from './sensor/route-discovery.js';
+export { runRouteSensor } from './sensor/observer.js';
+export type { RunSensorOptions, SensorObservation } from './sensor/observer.js';
+
 export {
   SUCCESS_CRITERIA,
   SECTION_508_INCORPORATION,

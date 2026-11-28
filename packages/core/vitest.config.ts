@@ -8,7 +8,10 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts', 'src/**/index.ts', '**/vitest.config.ts'],
+      // observer.ts is thin Puppeteer glue (page.evaluate, launch, settle timing)
+      // that needs a real browser; its decision logic lives in observe-logic.ts
+      // and is unit-tested there.
+      exclude: ['src/**/*.test.ts', 'src/**/index.ts', 'src/sensor/observer.ts', '**/vitest.config.ts'],
       reporter: ['text', 'html'],
       // Branches sit lower by design: the uncovered ones are defensive type
       // guards and input-default fallbacks, not untested logic.

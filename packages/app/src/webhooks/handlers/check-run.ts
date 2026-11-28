@@ -16,9 +16,13 @@ import type { CheckRunEvent } from '../events.js';
 import { deriveClaims, type DerivableScan } from '../../conformance/ledger-derive.js';
 import { writeClaims } from '../../conformance/ledger.js';
 import type { ScanPath } from '../../conformance/evaluated-set.js';
+import { parseSensorReport, sensorDerive } from '../../conformance/sensor-derive.js';
 
 /** The Check Run name the Action posts; must match github-action `report.ts`. */
 export const A11Y_FIXER_CHECK_NAME = 'a11y-fixer';
+
+/** The Check Run name the runtime sensor posts; must match github-action `sensor-report.ts`. */
+export const A11Y_FIXER_SENSOR_CHECK_NAME = 'a11y-fixer-runtime';
 
 /**
  * Accepted scan-contract schemas. v1 carries violations only (fail-only claims);
@@ -189,10 +193,34 @@ export async function handleCheckRun(
   if (event.action !== 'completed') return;
 
   const run = event.check_run;
-  if (run.name !== A11Y_FIXER_CHECK_NAME) return;
+  if (run.name !== A11Y_FIXER_CHECK_NAME && run.name !== A11Y_FIXER_SENSOR_CHECK_NAME) return;
 
   const installationId = event.installation?.id;
   if (installationId === undefined) return;
+
+  // Runtime sensor runs post a separate check carrying raw route-change facts. We
+  // re-judge and append `runtime` claims; no scans/violations row (that table is
+  // the static scanner's). Fatal-safe like the scanner path.
+  if (run.name === A11Y_FIXER_SENSOR_CHECK_NAME) {
+    if (!conformance) return;
+    const sensorReport = parseSensorReport(run.output?.text);
+    if (!sensorReport) return;
+    try {
+      const assertedAt = run.completed_at ?? now().toISOString();
+      const drafts = sensorDerive(sensorReport, event.repository.id, assertedAt);
+      if (drafts.length > 0) {
+        await writeClaims({
+          store,
+          drafts,
+          signingKeyPem: conformance.signingKeyPem,
+          keyId: conformance.keyId,
+        });
+      }
+    } catch (err) {
+      console.error('[conformance] runtime claim append failed for check_run', run.id, err);
+    }
+    return;
+  }
 
   // The embedded contract gives the exact total (and per-violation detail); when
   // it's absent, fall back to the Check Run's annotation count.

@@ -14,6 +14,10 @@
     "./wcag": {
       "import": "./dist/wcag/catalog.js",
       "types": "./dist/wcag/catalog.d.ts"
+    },
+    "./sensor": {
+      "import": "./dist/sensor/index.js",
+      "types": "./dist/sensor/index.d.ts"
     }
   },
   "files": [

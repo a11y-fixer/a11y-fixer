@@ -166,6 +166,19 @@ function assertWellFormed(body: ClaimBody): void {
   if (body.method === 'semantic' && body.state === 'human-reviewed') {
     throw new Error('claim: semantic method cannot assert human-reviewed.');
   }
+  // Invariant (runtime producer): a runtime claim that DIRECTLY observes an
+  // outcome (pass/fail) asserts full confidence — the sensor saw the DOM change
+  // or it did not; there is no partial belief. Sampled inference (anything other
+  // than a directly observed pass/fail, e.g. a not-evaluated backstop) may carry
+  // `confidence < 1`. This keeps a signed, confidence-1.0 runtime `pass` honest:
+  // it means the sensor positively observed the announcement, never guessed it.
+  if (
+    body.method === 'runtime' &&
+    (body.state === 'pass' || body.state === 'fail') &&
+    body.confidence !== 1
+  ) {
+    throw new Error('claim: runtime pass/fail must assert confidence 1 (directly observed).');
+  }
 }
 
 /** Canonical subject identity for a page/file: stable across commits (sha is evidence, not identity). */
@@ -176,6 +189,37 @@ export function pageSubjectKey(repoId: number, path: string): string {
 /** Canonical subject identity for a component: a locator within a page. */
 export function componentSubjectKey(repoId: number, path: string, locator: string): string {
   return `repo:${repoId}|path:${path}|node:${locator}`;
+}
+
+/**
+ * Canonical subject identity for a user flow (e.g. an SPA route transition) — the
+ * `flow` subject kind the runtime sensor produces on. `flowId` is a STABLE hashed
+ * id derived from a human-assigned flow name (see `flowId`/`flowSubjectKeyForName`),
+ * never a URL pair, so a router refactor renames routes without forking the
+ * conformance chain. Keeps the `repo:<id>|` prefix so `repoIdOfSubjectKey` scopes
+ * it to the owning installation like every other subject.
+ */
+export function flowSubjectKey(repoId: number, flowId: string): string {
+  return `repo:${repoId}|flow:${flowId}`;
+}
+
+/**
+ * The stable flow id: a short sha-256 of the human-assigned flow NAME, lowercased
+ * and whitespace-collapsed so trivial renames (case, spacing) alias onto the same
+ * id. A deliberate rename to a genuinely new name yields a new id; callers that
+ * want the old chain to follow the new name supply an alias map (see the sensor's
+ * `resolveFlowId`). URL/route paths are evidence, never identity — they must not
+ * feed this hash (A3: a router refactor must not fork history).
+ */
+export function flowId(flowName: string): string {
+  const normalized = flowName.trim().toLowerCase().replace(/\s+/g, ' ');
+  if (!normalized) throw new Error('flowId: `flowName` must be non-empty.');
+  return createHash('sha256').update(normalized, 'utf8').digest('hex').slice(0, 16);
+}
+
+/** Convenience: the flow subject key for a repo + human-assigned flow name. */
+export function flowSubjectKeyForName(repoId: number, flowName: string): string {
+  return flowSubjectKey(repoId, flowId(flowName));
 }
 
 /**
